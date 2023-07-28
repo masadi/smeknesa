@@ -27,39 +27,12 @@ export default [
     },
   },
   {
-    path: '/register',
-    name: 'auth-register',
-    component: () => import('@/views/pages/Register.vue'),
-    meta: {
-      layout: 'full',
-      resource: 'Auth',
-      redirectIfLoggedIn: true,
-      pageTitle: 'Registrasi Pengguna',
-    },
-  },
-  {
     path: '/logout',
     name: 'logout',
     component: () => import('@/views/pages/Logout.vue'),
     meta: {
       resource: 'Web',
       action: 'read',
-    }
-  },
-  {
-    path: '/profile',
-    name: 'profile',
-    component: () => import('@/views/pages/Profile.vue'),
-    meta: {
-      resource: 'Web',
-      action: 'read',
-      pageTitle: 'Profil Pengguna',
-      breadcrumb: [
-        {
-          text: 'Profil Pengguna',
-          active: true,
-        },
-      ],
     }
   },
   {

@@ -2,7 +2,8 @@ export default [
   {
     path: '/referensi/password-pd',
     name: 'referensi-password-pd',
-    component: () => import('@/views/referensi/peserta-didik/Password.vue'),
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/referensi/peserta-didik/Password.vue'),
     meta: {
       resource: 'Guru',
       action: 'read',
@@ -21,7 +22,8 @@ export default [
   {
     path: '/referensi/kompetensi-dasar',
     name: 'referensi-kompetensi-dasar',
-    component: () => import('@/views/referensi/kompetensi-dasar/Index.vue'),
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/referensi/kompetensi-dasar/Index.vue'),
     meta: {
       resource: 'Guru',
       action: 'read',
@@ -46,7 +48,8 @@ export default [
   {
     path: '/referensi/capaian-pembelajaran',
     name: 'referensi-capaian-pembelajaran',
-    component: () => import('@/views/referensi/capaian-pembelajaran/Index.vue'),
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/referensi/capaian-pembelajaran/Index.vue'),
     meta: {
       resource: 'Guru',
       action: 'read',
@@ -71,7 +74,8 @@ export default [
   {
     path: '/referensi/tujuan-pembelajaran',
     name: 'referensi-tujuan-pembelajaran',
-    component: () => import('@/views/referensi/tujuan-pembelajaran/Index.vue'),
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/referensi/tujuan-pembelajaran/Index.vue'),
     meta: {
       resource: 'Guru',
       action: 'read',
@@ -96,7 +100,8 @@ export default [
   {
     path: '/referensi/uji-kompetensi-keahlian',
     name: 'referensi-ukk',
-    component: () => import('@/views/referensi/ukk/Index.vue'),
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/referensi/ukk/Index.vue'),
     meta: {
       resource: 'Kaprog',
       action: 'read',
@@ -121,7 +126,8 @@ export default [
   {
     path: '/penilaian/input-nilai',
     name: 'input-nilai',
-    component: () => import('@/views/penilaian/InputNilai.vue'),
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/penilaian/InputNilai.vue'),
     meta: {
       resource: 'Guru',
       action: 'read',
@@ -140,7 +146,8 @@ export default [
   {
     path: '/penilaian/nilai-akhir',
     name: 'penilaian-nilai-akhir',
-    component: () => import('@/views/penilaian/NilaiAkhir.vue'),
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/penilaian/NilaiAkhir.vue'),
     meta: {
       resource: 'Guru',
       action: 'read',
@@ -159,7 +166,8 @@ export default [
   {
     path: '/penilaian/capaian-kompetensi',
     name: 'penilaian-capaian-kompetensi',
-    component: () => import('@/views/penilaian/CapaianKompetensi.vue'),
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/penilaian/CapaianKompetensi.vue'),
     meta: {
       resource: 'Guru',
       action: 'read',
@@ -178,7 +186,8 @@ export default [
   {
     path: '/penilaian/sikap',
     name: 'penilaian-sikap',
-    component: () => import('@/views/penilaian/PenilaianSikap.vue'),
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/penilaian/PenilaianSikap.vue'),
     meta: {
       resource: 'Guru',
       action: 'read',
@@ -203,7 +212,8 @@ export default [
   {
     path: '/penilaian/input-nilai-sikap',
     name: 'penilaian-input-sikap',
-    component: () => import('@/views/penilaian/InputPenilaianSikap.vue'),
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/penilaian/InputPenilaianSikap.vue'),
     meta: {
       resource: 'Guru',
       action: 'read',
@@ -223,7 +233,8 @@ export default [
   {
     path: '/penilaian/ekstrakurikuler',
     name: 'penilaian-ekstrakurikuler',
-    component: () => import('@/views/penilaian/Ekstrakurikuler.vue'),
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/penilaian/Ekstrakurikuler.vue'),
     meta: {
       resource: 'Ekskul',
       action: 'read',
@@ -242,7 +253,8 @@ export default [
   {
     path: '/nilai-projek/perencanaan',
     name: 'perencanaan-projek',
-    component: () => import('@/views/penilaian/projek/Perencanaan.vue'),
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/penilaian/projek/Perencanaan.vue'),
     meta: {
       resource: 'Guru',
       action: 'read',
@@ -267,7 +279,8 @@ export default [
   {
     path: '/nilai-projek/penilaian',
     name: 'penilaian-projek',
-    component: () => import('@/views/penilaian/projek/Penilaian.vue'),
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/penilaian/projek/Penilaian.vue'),
     meta: {
       resource: 'Guru',
       action: 'read',
@@ -286,7 +299,8 @@ export default [
   {
     path: '/nilai-ukk/perencanaan',
     name: 'perencanaan-ukk',
-    component: () => import('@/views/penilaian/ukk/Perencanaan.vue'),
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/penilaian/ukk/Perencanaan.vue'),
     meta: {
       resource: 'Guru',
       action: 'read',
@@ -311,7 +325,8 @@ export default [
   {
     path: '/nilai-ukk/penilaian',
     name: 'penilaian-ukk',
-    component: () => import('@/views/penilaian/ukk/Penilaian.vue'),
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/penilaian/ukk/Penilaian.vue'),
     meta: {
       resource: 'Guru',
       action: 'read',

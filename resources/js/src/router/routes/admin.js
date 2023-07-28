@@ -1,64 +1,7 @@
 export default [
   {
-    path: '/sinkronisasi/dapodik',
-    name: 'sinkronisasi-dapodik',
-    component: () => import('@/views/sinkronisasi/Index.vue'),
-    meta: {
-      resource: 'Administrator',
-      action: 'read',
-      pageTitle: 'Ambil Data Dapodik',
-      breadcrumb: [
-        {
-          text: 'Sinkronisasi',
-        },
-        {
-          text: 'Ambil Data Dapodik',
-          active: true,
-        },
-      ],
-    },
-  },
-  {
-    path: '/sinkronisasi/erapor',
-    name: 'sinkronisasi-erapor',
-    component: () => import('@/views/sinkronisasi/Erapor.vue'),
-    meta: {
-      resource: 'Administrator',
-      action: 'read',
-      pageTitle: 'Kirim Data e-Rapor',
-      breadcrumb: [
-        {
-          text: 'Sinkronisasi',
-        },
-        {
-          text: 'Kirim Data e-Rapor',
-          active: true,
-        },
-      ],
-    },
-  },
-  {
-    path: '/sinkronisasi/kirim-nilai-dapodik',
-    name: 'sinkronisasi-nilai',
-    component: () => import('@/views/sinkronisasi/Dapodik.vue'),
-    meta: {
-      resource: 'Administrator',
-      action: 'read',
-      pageTitle: 'Nilai Dapodik',
-      breadcrumb: [
-        {
-          text: 'Sinkronisasi',
-        },
-        {
-          text: 'Kirim Nilai Dapodik',
-          active: true,
-        },
-      ],
-    },
-  },
-  {
-    path: '/setting/umum',
-    name: 'setting-umum',
+    path: '/pengaturan-umum',
+    name: 'pengaturan-umum',
     component: () => import('@/views/pengaturan/Umum.vue'),
     meta: {
       resource: 'Administrator',
@@ -76,34 +19,10 @@ export default [
     },
   },
   {
-    path: '/setting/users',
-    name: 'setting-users',
-    component: () => import('@/views/pengaturan/Pengguna.vue'),
-    meta: {
-      resource: 'Administrator',
-      action: 'read',
-      pageTitle: 'Akses Pengguna',
-      breadcrumb: [
-        {
-          text: 'Pengaturan',
-        },
-        {
-          text: 'Akses Pengguna',
-          active: true,
-        },
-      ],
-      tombol_add: {
-        action: 'generatePengguna',
-        link: '',
-        variant: 'success',
-        text: 'Atur Ulang Pengguna'
-      },
-    },
-  },
-  {
     path: '/referensi/guru',
     name: 'referensi-guru',
-    component: () => import('@/views/referensi/gtk/Guru.vue'),
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/referensi/gtk/Guru.vue'),
     meta: {
       resource: 'Administrator',
       action: 'read',
@@ -122,7 +41,8 @@ export default [
   {
     path: '/referensi/tendik',
     name: 'referensi-tendik',
-    component: () => import('@/views/referensi/gtk/Tendik.vue'),
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/referensi/gtk/Tendik.vue'),
     meta: {
       resource: 'Administrator',
       action: 'read',
@@ -141,7 +61,8 @@ export default [
   {
     path: '/referensi/instruktur',
     name: 'referensi-instruktur',
-    component: () => import('@/views/referensi/gtk/Instruktur.vue'),
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/referensi/gtk/Instruktur.vue'),
     meta: {
       resource: 'Administrator',
       action: 'read',
@@ -166,7 +87,8 @@ export default [
   {
     path: '/referensi/asesor',
     name: 'referensi-asesor',
-    component: () => import('@/views/referensi/gtk/Asesor.vue'),
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/referensi/gtk/Asesor.vue'),
     meta: {
       resource: 'Administrator',
       action: 'read',
@@ -191,7 +113,8 @@ export default [
   {
     path: '/referensi/rombongan-belajar',
     name: 'referensi-rombongan-belajar',
-    component: () => import('@/views/referensi/rombongan-belajar/Reguler.vue'),
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/referensi/rombongan-belajar/Reguler.vue'),
     meta: {
       resource: 'Rombel',
       action: 'read',
@@ -210,7 +133,8 @@ export default [
   {
     path: '/referensi/rombel-pilihan',
     name: 'referensi-rombel-pilihan',
-    component: () => import('@/views/referensi/rombongan-belajar/MatpelPilihan.vue'),
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/referensi/rombongan-belajar/MatpelPilihan.vue'),
     meta: {
       resource: 'Rombel',
       action: 'read',
@@ -229,7 +153,8 @@ export default [
   {
     path: '/referensi/peserta-didik-aktif',
     name: 'referensi-peserta-didik-aktif',
-    component: () => import('@/views/referensi/peserta-didik/Aktif.vue'),
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/referensi/peserta-didik/Aktif.vue'),
     meta: {
       resource: 'Web',
       action: 'read',
@@ -248,7 +173,8 @@ export default [
   {
     path: '/referensi/peserta-didik-keluar',
     name: 'referensi-peserta-didik-keluar',
-    component: () => import('@/views/referensi/peserta-didik/Keluar.vue'),
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/referensi/peserta-didik/Keluar.vue'),
     meta: {
       resource: 'Administrator',
       action: 'read',
@@ -267,7 +193,8 @@ export default [
   {
     path: '/referensi/mata-pelajaran',
     name: 'referensi-mata-pelajaran',
-    component: () => import('@/views/referensi/mata-pelajaran/Index.vue'),
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/referensi/mata-pelajaran/Index.vue'),
     meta: {
       resource: 'Administrator',
       action: 'read',
@@ -286,7 +213,8 @@ export default [
   {
     path: '/referensi/ekstrakurikuler',
     name: 'referensi-ekstrakurikuler',
-    component: () => import('@/views/referensi/ekstrakurikuler/Index.vue'),
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/referensi/ekstrakurikuler/Index.vue'),
     meta: {
       resource: 'Administrator',
       action: 'read',
@@ -305,7 +233,8 @@ export default [
   {
     path: '/referensi/dudi',
     name: 'referensi-dudi',
-    component: () => import('@/views/referensi/dudi/Index.vue'),
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/referensi/dudi/Index.vue'),
     meta: {
       resource: 'Administrator',
       action: 'read',
@@ -322,51 +251,29 @@ export default [
     },
   },
   {
-    path: '/unduhan',
-    name: 'unduhan',
-    component: () => import('@/views/pages/Unduhan.vue'),
-    meta: {
-      resource: 'Web',
-      action: 'read',
-      pageTitle: 'Pusat Unduhan',
-      breadcrumb: [
-        {
-          text: 'Pusat Unduhan',
-          active: true,
-        },
-      ],
-    },
-  },
-  {
-    path: '/changelog',
-    name: 'changelog',
-    component: () => import('@/views/pages/Changelog.vue'),
+    path: '/pengguna',
+    name: 'pengguna',
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/pengaturan/Pengguna.vue'),
     meta: {
       resource: 'Administrator',
       action: 'read',
-      pageTitle: 'Daftar Perubahan',
+      pageTitle: 'Akses Pengguna',
       breadcrumb: [
         {
-          text: 'Daftar Perubahan',
+          text: 'Pengaturan',
+        },
+        {
+          text: 'Akses Pengguna',
           active: true,
         },
       ],
-    },
-  },
-  {
-    path: '/check-update',
-    name: 'check-update',
-    component: () => import('@/views/pages/Update.vue'),
-    meta: {
-      resource: 'Administrator',
-      action: 'read',
-      pageTitle: 'Cek Pembaharuan',
-      breadcrumb: [
-        {
-          text: 'Cek Pembaharuan',
-          active: true,
-        },
-      ],
+      tombol_add: {
+        action: 'generatePengguna',
+        link: '',
+        variant: 'success',
+        text: 'Atur Ulang Pengguna'
+      },
     },
   },
 ]

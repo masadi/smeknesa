@@ -36,9 +36,9 @@ const router = new VueRouter({
     ...general,
     ...admin,
     ...guru,
-    ...walas,
-    ...pembimbing,
-    ...wakakur,
+    //...walas,
+    //...pembimbing,
+    //...wakakur,
     //...pages,
     {
       path: '*',
@@ -51,9 +51,9 @@ router.beforeEach((to, _, next) => {
   const isLoggedIn = isUserLoggedIn()
   const title = to.meta.pageTitle
   if (title) {
-    document.title = title +' | e-Rapor SMK'
+    document.title = title +' | SMKN 1 SAMPANG'
   } else {
-    document.title = 'e-Rapor SMK'
+    document.title = 'SMKN 1 SAMPANG'
   }
   if (!canNavigate(to)) {
     // Redirect to login if not logged in
