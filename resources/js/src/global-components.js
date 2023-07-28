@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 import { library } from '@fortawesome/fontawesome-svg-core'
 //import { brand_icon } from '@fortawesome/free-brands-svg-icons'
-//import { faCircleQuestion } from '@fortawesome/free-regular-svg-icons'
+import { faSquareCheck } from '@fortawesome/free-regular-svg-icons'
 import { faFacebook, faTelegram, faWhatsapp } from '@fortawesome/free-brands-svg-icons'
 import { 
     faHouse, 
@@ -72,6 +72,9 @@ import {
     faStreetView,
     faPlus,
     faChartLine,
+    faFilePen,
+    faBuildingUser,
+    faAddressBook,
 } from '@fortawesome/free-solid-svg-icons'
 library.add(
     faHouse, 
@@ -139,4 +142,8 @@ library.add(
     faStreetView,
     faPlus,
     faChartLine,
+    faSquareCheck,
+    faFilePen,
+    faBuildingUser,
+    faAddressBook,
 )

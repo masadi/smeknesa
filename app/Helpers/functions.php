@@ -19,6 +19,12 @@ function get_setting($key, $sekolah_id = NULL, $semester_id = NULL){
     })->first();
     return ($data) ? $data->value : NULL;
 }
+/*
+function get_setting($key){
+    $data = Setting::ofKey($key)->first();
+    return ($data) ? $data->value : NULL;
+}
+*/
 function filter_agama_siswa($pembelajaran_id, $rombongan_belajar_id){
     $ref_agama = Agama::all();
 	$agama_id = [];
@@ -443,9 +449,6 @@ function http_client($satuan, $data_sync){
 function merdeka($nama_kurikulum){
     return Str::contains($nama_kurikulum, 'Merdeka');
 }
-function loggedUser(){
-    return auth()->user();
-}
 function get_fase($tingkat){
     if(in_array($tingkat, [1,2])){
         $fase = 'A';
@@ -461,4 +464,135 @@ function get_fase($tingkat){
         $fase = 'F';
     }
     return $fase;
+}
+function semester_id(){
+    return get_setting('semester_id');
+    return request()->header('X-Semester-Id') ?? get_setting('semester_id');
+    return request()->header('X-Semester-Id');
+}
+function periode_aktif(){
+    return get_setting('periode_aktif');
+    return request()->header('X-Periode-Aktif') ?? get_setting('periode_aktif');
+    return request()->header('X-Periode-Aktif');
+}
+function sekolah_id(){
+    $data = Sekolah::first();
+    return $data->sekolah_id;
+}
+function tahun_ajaran_id(){
+    $data = Semester::find(semester_id());
+    return ($data) ? $data->tahun_ajaran_id : NULL;
+}
+function tanggal_semester(){
+    $semester = Semester::find(semester_id());
+    $data = [
+        'tanggal_mulai' => $semester->tanggal_mulai,
+        'tanggal_selesai' => $semester->tanggal_selesai,
+        'tanggal_cetak' => ($semester->tanggal_cetak) ? tanggalIndo($semester->tanggal_cetak) : tanggalIndo($semester->tanggal_selesai),
+    ];
+    return $data;
+}
+function tanggalIndo($tanggal){
+    return ($tanggal) ? Carbon::createFromTimeStamp(strtotime($tanggal))->translatedFormat('j F Y') : NULL;
+}
+function tanggalSekarang(){
+    return strtoupper(Carbon::now()->translatedFormat('j F Y'));
+}
+function kabupaten($nama){
+    return str_replace('KABUPATEN ', '', $nama);
+}
+function agama($id){
+    $data = [
+        1 => "Islam",
+        2 => "Kristen",
+        3 => "Katholik",
+        4 => "Hindu",
+        5 => "Buddha",
+        6 => "Kong Hu Chu",
+        7 => "Kepercayaan kpd Tuhan YME",
+        98 => "Tidak diisi",
+        99 => "Lainnya",
+    ];
+    return $data[$id];
+}
+function rupiah($angka){
+    return number_format($angka, 0, '.', '.');
+}
+function loggedUser(){
+    return auth()->user();
+}
+function persen($jml, $total){
+    return ($jml) ? round($jml / $total * 100) : 0;
+    //return ($jml) ?? round($jml / $total * 100,2);
+}
+function nilai_asesmen($penilaian_id, $data_nilai){
+    $push_nilai = '';
+    foreach($data_nilai as $key => $nilai){
+        if($data_nilai[$key] && $data_nilai[$key]->penilaian_id == $penilaian_id){
+            $push_nilai = $data_nilai[$key]->angka;
+        }
+    }
+    return $push_nilai;
+}
+function rerata_asesmen($data_nilai, $data_asesmen){
+    $push_nilai = [];
+    foreach($data_asesmen as $asesmen){
+        foreach($data_nilai as $nilai){
+            if($nilai && $nilai->penilaian_id == $asesmen->penilaian_id){
+                $push_nilai[] = $nilai;
+            }
+        }
+    }
+    return ceil(collect($push_nilai)->avg('angka'));
+}
+function nilai_tp($tp_id, $data_nilai){
+    $push_nilai = '';
+    foreach($data_nilai as $key => $nilai){
+        if($data_nilai[$key] && $data_nilai[$key]->tp_id == $tp_id){
+            $push_nilai = $data_nilai[$key]->angka;
+        }
+    }
+    return $push_nilai;
+}
+function rerata_tp($data_nilai, $data_tp){
+    $push_nilai = [];
+    foreach($data_tp as $tp){
+        foreach($data_nilai as $nilai){
+            if($nilai && $nilai->tp_id == $tp->tp_id){
+                $push_nilai[] = $nilai;
+            }
+        }
+    }
+    return ceil(collect($push_nilai)->avg('angka'));
+}
+function all_provinsi(){
+    return Indonesia::allProvinces();
+}
+function get_kabupaten($provinsi_id){
+    $data = Kabupaten::where('province_code', $provinsi_id)->get();
+    return $data;
+}
+function get_kecamatan($kabupaten_id){
+    $data = Kecamatan::where('city_code', $kabupaten_id)->get();
+    return $data;
+}
+function get_desa($kecamatan_id){
+    $data = Kelurahan::where('district_code', $kecamatan_id)->get();
+    return $data;
+}
+function hp($nohp) {
+    $nohp = str_replace(" ","",$nohp);
+    $nohp = str_replace("(","",$nohp);
+    $nohp = str_replace(")","",$nohp);
+    $nohp = str_replace(".","",$nohp);
+
+    if(!preg_match('/[^+0-9]/',trim($nohp))){
+        if(substr(trim($nohp), 0, 3)=='+62'){
+            $hp = str_replace('+','',trim($nohp));
+        }
+        elseif(substr(trim($nohp), 0, 1)=='0'){
+            $hp = '62'.substr(trim($nohp), 1);
+        }
+    }
+    return $hp;
 }

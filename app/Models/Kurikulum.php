@@ -9,7 +9,7 @@ class Kurikulum extends Model
 {
     use HasFactory;
     public $incrementing = false;
-	protected $table = 'ref.kurikulum';
+	protected $table = 'kurikulum';
 	protected $primaryKey = 'kurikulum_id';
 	protected $guarded = [];
 }

@@ -57,7 +57,7 @@ Vue.mixin({
         },
         hasRole: function (role) {
             for (var i = 0; i < this.user.roles.length; i++) {
-                if (this.user.roles[i] == role) {
+                if (this.user.roles[i].name == role) {
                     return true
                 }
             }

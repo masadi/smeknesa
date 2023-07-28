@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Sekolah;
 use App\Models\User;
 use App\Models\Guru;
 use App\Models\Peserta_didik;
@@ -45,9 +46,23 @@ class AuthController extends Controller
         if(!$semester){
             $semester = Semester::where('periode_aktif', 1)->first();
         }
-        $team = Team::where('name', $semester->nama)->first();
+        //$team = Team::where('name', $semester->nama)->first();
+        $team = Team::firstOrCreate([
+            'name' => $semester->nama,
+            'display_name' => $semester->nama,
+            'description' => $semester->nama,
+        ]);
         $user = $request->user();
+        if($user->sekolah_id && !$user->peserta_didik_id && !$user->guru_id){
+            if(!$user->hasRole('administrator', $semester->nama)){
+                $user->attachRole('administrator', $team);
+            }
+        }
         $user->last_login_at = date('Y-m-d H:i:s');
+        if(!$user->sekolah_id){
+            $sekolah = Sekolah::first();
+            $user->sekolah_id = $sekolah->sekolah_id;
+        }
         $user->save();
         $tokenResult = $user->createToken('Personal Access Token');
         $token = $tokenResult->plainTextToken;
@@ -56,11 +71,17 @@ class AuthController extends Controller
         //$user->roles->unique()->implode('display_name', ', ');
         $user->roles = $user->roles()->wherePivot(config('laratrust.foreign_keys.team'), $team->id)->get();
         //$user->roles;
-        $user->abilities = $user->allPermissions(['description as action', 'name as subject'], $semester->nama);
+        $user->ability = $user->allPermissions(['description as action', 'name as subject'], $semester->nama);
         $user->semester = $semester;
+        $abilities = [];
+        foreach($user->ability as $ability){
+            $output['action'] = $ability->action;
+            $output['subject'] = $ability->subject;
+            $abilities[] = $output;
+        }
         return response()->json([
-            'userData' => $user,
-            'userAbilities' => $user->abilities,
+            'user' => $user,
+            'userAbilities' => $abilities,
             'accessToken' =>$token,
             'token_type' => 'Bearer',
             'semester_id' => ($semester) ? $semester->semester_id : NULL,

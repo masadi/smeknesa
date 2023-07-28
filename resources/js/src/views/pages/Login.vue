@@ -59,17 +59,6 @@
                   <small class="text-danger">{{ errors[0] }}</small>
                 </validation-provider>
               </b-form-group>
-              <b-form-group label="Tahun Pelajaran" label-for="semester_id">
-                <b-overlay :show="busy" opacity="0.6" size="md" spinner-variant="secondary">
-                  <!--b-form-select v-model="semester_id" :options="data_semester"></b-form-select-->
-                  <v-select id="tingkat" v-model="semester_id" :reduce="nama => nama.semester_id" label="nama" :options="data_semester" placeholder="== Pilih Tahun Pelajaran ==" :searchable="false" :clearable="false">
-                    <template #no-options="{ search, searching, loading }">
-                      Tidak ada data untuk ditampilkan
-                    </template>
-                  </v-select>
-                </b-overlay>
-              </b-form-group>
-              <!-- checkbox -->
               <b-form-group>
                 <b-form-checkbox id="remember-me" v-model="status" name="checkbox-1">
                   Simpan Login
@@ -86,12 +75,6 @@
               </b-button>
             </b-form>
           </validation-observer>
-          <b-card-text class="text-center mt-2">
-            <span>Penggguna Baru? </span>
-            <b-link :to="{name:'auth-register'}">
-              <span>&nbsp;Register Disini</span>
-            </b-link>
-          </b-card-text>
         </b-col>
       </b-col>
       <!-- /Login-->
@@ -196,14 +179,6 @@ export default {
       return this.logoImg
     }
   },
-  created() {
-    this.$http.get('/auth/semester').then(response => {
-      this.busy = false
-      let getData = response.data
-      this.semester_id = getData.semester_id
-      this.data_semester = getData.semester
-    })
-  },
   methods: {
     login() {
       this.show = false
@@ -212,16 +187,15 @@ export default {
           this.$http.post('/auth/login', {
             email: this.userEmail,
             password: this.password,
-            semester_id: this.semester_id,
-            //c_password: this.password
           }).then(response => {
             const userData = response.data
             if(userData.user){
-              localStorage.setItem('semester_id', this.semester_id)
+              localStorage.setItem('semester_id', userData.semester_id)
+              localStorage.setItem('periode_aktif', userData.periode_aktif)
               localStorage.setItem('accessToken', userData.accessToken)
               localStorage.setItem('refreshToken', userData.accessToken)
               localStorage.setItem('userData', JSON.stringify(userData.user))
-              this.$ability.update(userData.user.ability)
+              this.$ability.update(userData.userAbilities)
               this.show = true
               var replace = '/';
               /*if(userData.user.role === 'Siswa'){
@@ -235,7 +209,7 @@ export default {
                     title: `Selamat Datang ${userData.user.name}`,
                     icon: 'CoffeeIcon',
                     variant: 'success',
-                    text: `Anda telah berhasil masuk sebagai ${userData.user.role}. Sekarang Anda dapat mulai berselancar di Aplikasi e-Rapor SMK!`,
+                    text: `Anda telah berhasil masuk sebagai ${userData.user.role}. Sekarang Anda dapat mulai berselancar di Aplikasi AKADEMIK!`,
                   },
                 })
               })

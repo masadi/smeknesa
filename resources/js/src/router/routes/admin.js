@@ -4,7 +4,7 @@ export default [
     name: 'pengaturan-umum',
     component: () => import('@/views/pengaturan/Umum.vue'),
     meta: {
-      resource: 'Administrator',
+      resource: 'Web',
       action: 'read',
       pageTitle: 'Pengaturan Umum',
       breadcrumb: [
@@ -24,7 +24,7 @@ export default [
     component: () => import('@/views/error/Blank.vue'),
     //component: () => import('@/views/referensi/gtk/Guru.vue'),
     meta: {
-      resource: 'Administrator',
+      resource: 'Ref_Guru',
       action: 'read',
       pageTitle: 'Data Guru',
       breadcrumb: [
@@ -39,112 +39,40 @@ export default [
     },
   },
   {
-    path: '/referensi/tendik',
-    name: 'referensi-tendik',
+    path: '/referensi/periodik',
+    name: 'referensi-periodik',
     component: () => import('@/views/error/Blank.vue'),
     //component: () => import('@/views/referensi/gtk/Tendik.vue'),
     meta: {
-      resource: 'Administrator',
+      resource: 'Ref_Periodik',
       action: 'read',
-      pageTitle: 'Data Tendik',
+      pageTitle: 'Referensi Periodik',
       breadcrumb: [
         {
           text: 'Referensi',
         },
         {
-          text: 'Data Tenaga kependidikan',
+          text: 'Referensi Periodik',
           active: true,
         },
       ],
     },
   },
   {
-    path: '/referensi/instruktur',
-    name: 'referensi-instruktur',
+    path: '/referensi/sekolah',
+    name: 'referensi-sekolah',
     component: () => import('@/views/error/Blank.vue'),
     //component: () => import('@/views/referensi/gtk/Instruktur.vue'),
     meta: {
-      resource: 'Administrator',
+      resource: 'Ref_Sekolah',
       action: 'read',
-      pageTitle: 'Data Instruktur',
+      pageTitle: 'Data Sekolah',
       breadcrumb: [
         {
           text: 'Referensi',
         },
         {
-          text: 'Data Instruktur',
-          active: true,
-        },
-      ],
-      tombol_add: {
-        action: 'modal-instruktur',
-        link: '',
-        variant: 'primary',
-        text: 'Tambah Data'
-      },
-    },
-  },
-  {
-    path: '/referensi/asesor',
-    name: 'referensi-asesor',
-    component: () => import('@/views/error/Blank.vue'),
-    //component: () => import('@/views/referensi/gtk/Asesor.vue'),
-    meta: {
-      resource: 'Administrator',
-      action: 'read',
-      pageTitle: 'Data Asesor',
-      breadcrumb: [
-        {
-          text: 'Referensi',
-        },
-        {
-          text: 'Data Asesor',
-          active: true,
-        },
-      ],
-      tombol_add: {
-        action: 'modal-asesor',
-        link: '',
-        variant: 'primary',
-        text: 'Tambah Data'
-      },
-    },
-  },
-  {
-    path: '/referensi/rombongan-belajar',
-    name: 'referensi-rombongan-belajar',
-    component: () => import('@/views/error/Blank.vue'),
-    //component: () => import('@/views/referensi/rombongan-belajar/Reguler.vue'),
-    meta: {
-      resource: 'Rombel',
-      action: 'read',
-      pageTitle: 'Data Rombongan Belajar',
-      breadcrumb: [
-        {
-          text: 'Referensi',
-        },
-        {
-          text: 'Data Rombongan Belajar',
-          active: true,
-        },
-      ],
-    },
-  },
-  {
-    path: '/referensi/rombel-pilihan',
-    name: 'referensi-rombel-pilihan',
-    component: () => import('@/views/error/Blank.vue'),
-    //component: () => import('@/views/referensi/rombongan-belajar/MatpelPilihan.vue'),
-    meta: {
-      resource: 'Rombel',
-      action: 'read',
-      pageTitle: 'Rombel Matpel Pilihan',
-      breadcrumb: [
-        {
-          text: 'Referensi',
-        },
-        {
-          text: 'Rombel Matpel Pilihan',
+          text: 'Data Sekolah',
           active: true,
         },
       ],
@@ -156,7 +84,7 @@ export default [
     component: () => import('@/views/error/Blank.vue'),
     //component: () => import('@/views/referensi/peserta-didik/Aktif.vue'),
     meta: {
-      resource: 'Web',
+      resource: 'Ref_Pd',
       action: 'read',
       pageTitle: 'Data Peserta Didik Aktif',
       breadcrumb: [
@@ -171,23 +99,49 @@ export default [
     },
   },
   {
-    path: '/referensi/peserta-didik-keluar',
-    name: 'referensi-peserta-didik-keluar',
+    path: '/referensi/password-pd',
+    name: 'referensi-password-pd',
     component: () => import('@/views/error/Blank.vue'),
     //component: () => import('@/views/referensi/peserta-didik/Keluar.vue'),
     meta: {
-      resource: 'Administrator',
+      resource: 'Password_pd',
       action: 'read',
-      pageTitle: 'Data Peserta Didik Keluar',
+      pageTitle: 'Data Password Peserta Didik',
       breadcrumb: [
         {
           text: 'Referensi',
         },
         {
-          text: 'Data Peserta Didik Keluar',
+          text: 'Data Password Peserta Didik',
           active: true,
         },
       ],
+    },
+  },
+  {
+    path: '/referensi/jurusan',
+    name: 'referensi-jurusan',
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/referensi/gtk/Asesor.vue'),
+    meta: {
+      resource: 'Ref_Jurusan',
+      action: 'read',
+      pageTitle: 'Data Jurusan',
+      breadcrumb: [
+        {
+          text: 'Referensi',
+        },
+        {
+          text: 'Data Jurusan',
+          active: true,
+        },
+      ],
+      tombol_add: {
+        action: 'modal-jurusan',
+        link: '',
+        variant: 'primary',
+        text: 'Tambah Data'
+      },
     },
   },
   {
@@ -196,7 +150,7 @@ export default [
     component: () => import('@/views/error/Blank.vue'),
     //component: () => import('@/views/referensi/mata-pelajaran/Index.vue'),
     meta: {
-      resource: 'Administrator',
+      resource: 'Ref_Mapel',
       action: 'read',
       pageTitle: 'Data Mata Pelajaran',
       breadcrumb: [
@@ -211,40 +165,117 @@ export default [
     },
   },
   {
-    path: '/referensi/ekstrakurikuler',
-    name: 'referensi-ekstrakurikuler',
+    path: '/referensi/kelas',
+    name: 'referensi-kelas',
     component: () => import('@/views/error/Blank.vue'),
-    //component: () => import('@/views/referensi/ekstrakurikuler/Index.vue'),
+    //component: () => import('@/views/referensi/rombongan-belajar/Reguler.vue'),
     meta: {
-      resource: 'Administrator',
+      resource: 'Ref_Kelas',
       action: 'read',
-      pageTitle: 'Data Ekstrakurikuler',
+      pageTitle: 'Data Kelas',
       breadcrumb: [
         {
           text: 'Referensi',
         },
         {
-          text: 'Data Ekstrakurikuler',
+          text: 'Data Kelas',
           active: true,
         },
       ],
     },
   },
   {
-    path: '/referensi/dudi',
-    name: 'referensi-dudi',
+    path: '/whatsapp',
+    name: 'whatsapp',
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/referensi/rombongan-belajar/MatpelPilihan.vue'),
+    meta: {
+      resource: 'Whatsapp',
+      action: 'read',
+      pageTitle: 'Data Pesan Whatsapp',
+      breadcrumb: [
+        {
+          text: 'Data Pesan Whatsapp',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/presensi/guru',
+    name: 'presensi-guru',
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/referensi/ekstrakurikuler/Index.vue'),
+    meta: {
+      resource: 'Presensi_Guru',
+      action: 'read',
+      pageTitle: 'Presensi Guru',
+      breadcrumb: [
+        {
+          text: 'Presensi',
+        },
+        {
+          text: 'Presensi Guru',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/presensi/siswa',
+    name: 'presensi-siswa',
     component: () => import('@/views/error/Blank.vue'),
     //component: () => import('@/views/referensi/dudi/Index.vue'),
     meta: {
-      resource: 'Administrator',
+      resource: 'Presensi_Pd',
       action: 'read',
-      pageTitle: 'Data DUDI',
+      pageTitle: 'Presensi Siswa',
       breadcrumb: [
         {
-          text: 'Referensi',
+          text: 'Presensi',
         },
         {
-          text: 'Data DUDI',
+          text: 'Presensi Siswa',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/presensi/rekap-guru',
+    name: 'presensi-rekap-guru',
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/referensi/dudi/Index.vue'),
+    meta: {
+      resource: 'Presensi_Rekap_Guru',
+      action: 'read',
+      pageTitle: 'Rekap Presensi Guru',
+      breadcrumb: [
+        {
+          text: 'Presensi',
+        },
+        {
+          text: 'Rekap Presensi Guru',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/presensi/rekap-siswa',
+    name: 'presensi-rekap-pd',
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/referensi/dudi/Index.vue'),
+    meta: {
+      resource: 'Presensi_Rekap_Pd',
+      action: 'read',
+      pageTitle: 'Rekap Presensi Siswa',
+      breadcrumb: [
+        {
+          text: 'Presensi',
+        },
+        {
+          text: 'Rekap Presensi Siswa',
           active: true,
         },
       ],
@@ -256,7 +287,7 @@ export default [
     component: () => import('@/views/error/Blank.vue'),
     //component: () => import('@/views/pengaturan/Pengguna.vue'),
     meta: {
-      resource: 'Administrator',
+      resource: 'Akun',
       action: 'read',
       pageTitle: 'Akses Pengguna',
       breadcrumb: [

@@ -1,19 +1,19 @@
 export default [
   {
-    path: '/referensi/password-pd',
-    name: 'referensi-password-pd',
+    path: '/jadwal-mengajar',
+    name: 'jadwal-mengajar',
     component: () => import('@/views/error/Blank.vue'),
     //component: () => import('@/views/referensi/peserta-didik/Password.vue'),
     meta: {
-      resource: 'Guru',
+      resource: 'Jadwal',
       action: 'read',
-      pageTitle: 'Data Password Peserta Didik',
+      pageTitle: 'Referensi Jadwal Mengajar',
       breadcrumb: [
         {
           text: 'Referensi',
         },
         {
-          text: 'Data Password Peserta Didik',
+          text: 'Referensi Jadwal Mengajar',
           active: true,
         },
       ],

@@ -10,11 +10,9 @@ class Setting extends Model
     use HasFactory;
     public $timestamps = false;
     protected $guarded = [];
-    /*
     protected $table = 'settings';
     protected $primaryKey = 'key';
-    protected $fillable = ['key', 'value'];
-    public function getKeyAttribute($value)
+    /*public function getKeyAttribute($value)
     {
         return $value;
     }
@@ -22,11 +20,9 @@ class Setting extends Model
     {
         $key = $query->where('key', '=', $key)->first();
         return $key->value;
-    }
-	static function scopeOfType($query, $key)
+    }*/
+    public function scopeOfKey($query, $key)
     {
-        $key = $query->where('key', $key)->first();
-		return $key->value;
+        return $query->where('key', $key);
     }
-    */
 }

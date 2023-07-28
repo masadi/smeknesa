@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
 
 class Sekolah extends Model
 {
@@ -39,17 +38,14 @@ class Sekolah extends Model
 	public function peserta_didik(){
 		return $this->hasMany(Peserta_didik::class, 'sekolah_id', 'sekolah_id');
 	}
-	public function anggota_rombel(){
-		return $this->hasMany(Anggota_rombel::class, 'sekolah_id', 'sekolah_id');
-	}
 	public function pd_aktif()
 	{
 		return $this->hasMany(Peserta_didik::class, 'sekolah_id', 'sekolah_id')->whereHas('anggota_rombel', function(Builder $query){
 			$query->whereHas('rombongan_belajar', function(Builder $query){
 				$query->where('jenis_rombel', 1);
-				$query->where('semester_id', request()->semester_id);
+				$query->where('semester_id', session('semester_aktif'));
 			});
-			$query->where('semester_id', request()->semester_id);
+			$query->where('semester_id', session('semester_aktif'));
 		});
 	}
 	
@@ -58,9 +54,9 @@ class Sekolah extends Model
 		return $this->hasMany(Peserta_didik::class, 'sekolah_id', 'sekolah_id')->whereDoesntHave('anggota_rombel', function(Builder $query){
 			$query->whereHas('rombongan_belajar', function(Builder $query){
 				//$query->where('jenis_rombel', 1);
-				$query->where('semester_id', request()->semester_id);
+				$query->where('semester_id', session('semester_aktif'));
 			});
-			$query->where('semester_id', request()->semester_id);
+			$query->where('semester_id', session('semester_aktif'));
 		});
 	}
 	public function pembelajaran()
@@ -77,51 +73,38 @@ class Sekolah extends Model
 			$query->where('jenis_rombel', 51);
 		});
 	}
-	public function dudi()
-	{
-		return $this->hasMany(Dudi::class, 'sekolah_id', 'sekolah_id');
-	}
-	public function mou()
-	{
-		return $this->hasMany(Mou::class, 'sekolah_id', 'sekolah_id');
-	}
-	public function rencana_penilaian()
-    {
-        return $this->hasManyThrough(
-            Rencana_penilaian::class,
-            Pembelajaran::class,
-            'sekolah_id', // Foreign key on the environments table...
-            'pembelajaran_id', // Foreign key on the deployments table...
-            'sekolah_id', // Local key on the projects table...
-            'pembelajaran_id' // Local key on the environments table...
+	public function presensi_guru(){
+		return $this->hasManyThrough(
+            Presensi::class,
+			Guru::class,
+			'sekolah_id',
+			'guru_id',
+			'sekolah_id',
+			'guru_id',
         );
-    }
-	public function rencana_pengetahuan(){
-		return $this->rencana_penilaian()->where('kompetensi_id', 1);
 	}
-	public function rencana_keterampilan(){
-		return $this->rencana_penilaian()->where('kompetensi_id', 2);
+	public function presensi_pd(){
+		return $this->hasManyThrough(
+            Presensi::class,
+			Anggota_rombel::class,
+			'sekolah_id',
+			'anggota_rombel_id',
+			'sekolah_id',
+			'anggota_rombel_id'
+        );
 	}
-	public function kd_nilai(){
-		return $this->hasMany(Kd_nilai::class, 'sekolah_id', 'sekolah_id');
+	public function all_nilai(){
+		return $this->hasManyThrough(
+            Nilai::class,
+			Pembelajaran::class,
+			'sekolah_id',
+			'pembelajaran_id',
+			'sekolah_id',
+			'pembelajaran_id'
+        );
+		return $this->hasMany(Nilai::class, 'pembelajaran_id', 'pembelajaran_id');
 	}
-	public function nilai_pengetahuan(){
-		return $this->kd_nilai()->whereHas('rencana_penilaian', function($query){
-			$query->where('kompetensi_id', 1);
-		});
-	}
-	public function nilai_keterampilan(){
-		return $this->kd_nilai()->whereHas('rencana_penilaian', function($query){
-			$query->where('kompetensi_id', 2);
-		});
-	}
-	public function nilai_akhir(){
-		return $this->hasMany(Nilai_akhir::class, 'sekolah_id', 'sekolah_id');
-	}
-	public function cp(){
-		return $this->hasMany(Deskripsi_mata_pelajaran::class, 'sekolah_id', 'sekolah_id');
-	}
-	public function nilai_projek(){
-		return $this->hasMany(Catatan_budaya_kerja::class, 'sekolah_id', 'sekolah_id');
+	public function kabupaten(){
+		return $this->hasOne(Kabupaten::class, 'code', 'kabupaten_id');
 	}
 }

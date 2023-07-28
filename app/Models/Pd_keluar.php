@@ -14,5 +14,4 @@ class Pd_keluar extends Model
 	protected $table = 'pd_keluar';
 	protected $primaryKey = 'pd_keluar_id';
 	protected $guarded = [];
-
 }

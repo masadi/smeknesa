@@ -13,7 +13,7 @@
       @click="() => updateGroupOpen(!isOpen)"
     >
       <!--feather-icon :icon="item.icon || 'CircleIcon'" /-->
-      <font-awesome-icon :icon="'fa-solid fa-'+item.icon" size="2xl" />
+      <font-awesome-icon :icon="[item.type || 'fas', item.icon]" />
       <span class="menu-title text-truncate">{{ t(item.title) }}</span>
       <b-badge
         v-if="item.tag"

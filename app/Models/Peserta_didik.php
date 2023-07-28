@@ -5,62 +5,68 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+use App\Traits\Uuid;
 use Carbon\Carbon;
 
 class Peserta_didik extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, Uuid, SoftDeletes;
     public $incrementing = false;
 	public $keyType = 'string';
 	protected $table = 'peserta_didik';
 	protected $primaryKey = 'peserta_didik_id';
 	protected $guarded = [];
-	protected $appends = ['tanggal_lahir_indo'];
+    protected $appends = ['nama_lengkap', 'tanggal_lahir_indo', 'diterima_indo'];
 	
-	public function getTanggalLahirIndoAttribute()
-	{
-		return (isset($this->attributes['tanggal_lahir'])) ? Carbon::parse($this->attributes['tanggal_lahir'])->translatedFormat('d F Y') : '';
-	}
 	public function anggota_rombel()
 	{
 		return $this->hasOne(Anggota_rombel::class, 'peserta_didik_id', 'peserta_didik_id');
 	}
-	public function anggota_pilihan()
-	{
-		return $this->hasOne(Anggota_rombel::class, 'peserta_didik_id', 'peserta_didik_id')->whereHas('rombongan_belajar', function($query){
-			$query->where('jenis_rombel', 16);
-		});
+	public function kelas(){
+		return $this->hasOneThrough(
+            Rombongan_belajar::class,
+            Anggota_rombel::class,
+            'peserta_didik_id', // Foreign key on the cars table...
+            'rombongan_belajar_id', // Foreign key on the owners table...
+            'peserta_didik_id', // Local key on the mechanics table...
+            'rombongan_belajar_id' // Local key on the cars table...
+        );
 	}
-	public function anggota_ekskul()
-	{
-		return $this->hasOne(Anggota_rombel::class, 'peserta_didik_id', 'peserta_didik_id')->whereHas('rombongan_belajar', function($query){
-			$query->where('jenis_rombel', 51);
-		});
+	public function keluar(){
+		return $this->hasOneThrough(
+            Jenis_keluar::class,
+            Pd_keluar::class,
+            'peserta_didik_id', // Foreign key on the cars table...
+            'id', // Foreign key on the owners table...
+            'peserta_didik_id', // Local key on the mechanics table...
+            'jenis_keluar_id' // Local key on the cars table...
+        );
 	}
-	public function pd_keluar()
+    public function pd_keluar()
 	{
 		return $this->hasOne(Pd_keluar::class, 'peserta_didik_id', 'peserta_didik_id');
 	}
-	public function all_anggota_rombel()
+	public function kenaikan_kelas()
 	{
-		return $this->hasMany(Anggota_rombel::class, 'peserta_didik_id', 'peserta_didik_id');
+		return $this->hasOneThrough(
+            Kenaikan_kelas::class,
+            Anggota_rombel::class,
+            'peserta_didik_id', // Foreign key on the cars table...
+            'anggota_rombel_id', // Foreign key on the owners table...
+            'peserta_didik_id', // Local key on the mechanics table...
+            'anggota_rombel_id' // Local key on the cars table...
+        );
+		return $this->hasOne(Kenaikan_kelas::class, 'peserta_didik_id', 'peserta_didik_id');
 	}
-	public function anggota_akt_pd()
+    public function getTanggalLahirIndoAttribute()
 	{
-		return $this->hasOne(Anggota_akt_pd::class, 'peserta_didik_id', 'peserta_didik_id');
+		return (isset($this->attributes['tanggal_lahir']) && $this->attributes['tanggal_lahir']) ? Carbon::parse($this->attributes['tanggal_lahir'])->translatedFormat('d F Y') : '-';
 	}
-	public function getTanggalLahirAttribute()
+	public function getDiterimaIndoAttribute()
 	{
-		return Carbon::parse($this->attributes['tanggal_lahir'])->translatedFormat('d F Y');
+		return (isset($this->attributes['diterima']) && $this->attributes['diterima']) ? Carbon::parse($this->attributes['diterima'])->translatedFormat('d F Y') : '-';
 	}
-	public function getDiterimaAttribute()
-	{
-		return ($this->attributes['diterima']) ? Carbon::parse($this->attributes['diterima'])->translatedFormat('d F Y') : '-';
-	}
-	public function getNamaAttribute()
+	public function getNamaLengkapAttribute()
 	{
 		return strtoupper($this->attributes['nama']);
 	}
@@ -68,90 +74,49 @@ class Peserta_didik extends Model
 	{
 		return strtoupper($this->attributes['tempat_lahir']);
 	}
-	public function agama()
+	public function pengguna(){
+		return $this->hasOne(User::class, 'peserta_didik_id', 'peserta_didik_id');
+	}
+	public function nilai(){
+		return $this->hasManyThrough(
+            Nilai::class,
+			Anggota_rombel::class,
+			'peserta_didik_id',
+			'anggota_rombel_id',
+			'peserta_didik_id',
+			'anggota_rombel_id'
+        );
+    }
+	public function presensi()
 	{
-		return $this->belongsTo(Agama::class, 'agama_id', 'agama_id');
+		return $this->hasManyThrough(
+            Presensi::class,
+			Anggota_rombel::class,
+			'peserta_didik_id',
+			'anggota_rombel_id',
+			'peserta_didik_id',
+			'anggota_rombel_id'
+        );
+		return $this->hasMany(Presensi::class, 'peserta_didik_id', 'peserta_didik_id');
+	}
+	public function desa()
+	{
+		return $this->belongsTo(Kelurahan::class, 'desa_id', 'code');
+	}
+	public function kecamatan()
+	{
+		return $this->belongsTo(Kecamatan::class, 'kecamatan_id', 'code');
+	}
+	public function kabupaten()
+	{
+		return $this->belongsTo(Kabupaten::class, 'kabupaten_id', 'code');
+	}
+	public function provinsi()
+	{
+		return $this->belongsTo(Provinsi::class, 'provinsi_id', 'code');
 	}
 	public function user()
 	{
 		return $this->belongsTo(User::class, 'peserta_didik_id', 'peserta_didik_id');
-	}
-	public function kelas(){
-		return $this->hasOneThrough(
-            Rombongan_belajar::class,
-            Anggota_rombel::class,
-            'peserta_didik_id',
-            'rombongan_belajar_id', 
-            'peserta_didik_id',
-            'rombongan_belajar_id'
-        );
-	}
-	public function pekerjaan_ayah(){
-		return $this->hasOne(Pekerjaan::class, 'pekerjaan_id', 'kerja_ayah');
-	}
-	public function pekerjaan_ibu(){
-		return $this->hasOne(Pekerjaan::class, 'pekerjaan_id', 'kerja_ibu');
-	}
-	public function pekerjaan_wali(){
-		return $this->hasOne(Pekerjaan::class, 'pekerjaan_id', 'kerja_wali');
-	}
-	public function wilayah(){
-		return $this->hasOne(Mst_wilayah::class, 'kode_wilayah', 'kode_wilayah')->with(['parrentRecursive']);
-    }
-	public function sekolah(){
-		return $this->hasOne(Sekolah::class, 'sekolah_id', 'sekolah_id');
-	}
-	public function nilai_ekskul(){
-		return $this->hasManyThrough(
-            Nilai_ekstrakurikuler::class,
-            Anggota_rombel::class,
-            'peserta_didik_id', 
-            'anggota_rombel_id',
-            'peserta_didik_id',
-            'anggota_rombel_id'
-        );
-	}
-	public function nilai_ukk(){
-		return $this->hasOneThrough(
-            Nilai_ukk::class,
-            Anggota_rombel::class,
-            'peserta_didik_id',
-            'anggota_rombel_id',
-            'peserta_didik_id',
-            'anggota_rombel_id'
-        );
-		//return $this->hasOne(Nilai_ukk::class, 'peserta_didik_id', 'peserta_didik_id');
-	}
-	public function nilai_akhir_pengetahuan(){
-		return $this->hasOneThrough(
-            Nilai_akhir::class,
-            Anggota_rombel::class,
-            'peserta_didik_id',
-            'anggota_rombel_id',
-            'peserta_didik_id',
-            'anggota_rombel_id'
-        )->where('kompetensi_id', 1);
-		//return $this->hasOne(Nilai_akhir::class, 'anggota_rombel_id', 'anggota_rombel_id')->where('kompetensi_id', 1);
-	}
-	public function nilai_akhir_kurmer(){
-		return $this->hasOneThrough(
-            Nilai_akhir::class,
-            Anggota_rombel::class,
-            'peserta_didik_id',
-            'anggota_rombel_id',
-            'peserta_didik_id',
-            'anggota_rombel_id'
-        )->where('kompetensi_id', 4);
-		//return $this->hasOne(Nilai_akhir::class, 'pembelajaran_id', 'pembelajaran_id')->where('kompetensi_id', 4);
-	}
-	public function deskripsi_mapel(){
-		return $this->hasOneThrough(
-            Deskripsi_mata_pelajaran::class,
-            Anggota_rombel::class,
-            'peserta_didik_id',
-            'anggota_rombel_id',
-            'peserta_didik_id',
-            'anggota_rombel_id'
-        );
 	}
 }

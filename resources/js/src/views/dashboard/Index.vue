@@ -1,6 +1,6 @@
 <template>
   <div>
-    <template v-if="hasRole('admin') || hasRole('tu')">
+    <template v-if="hasRole('administrator') || hasRole('tu')">
       <dashboard-admin></dashboard-admin>
     </template>
     <template v-else-if="hasRole('guru')">

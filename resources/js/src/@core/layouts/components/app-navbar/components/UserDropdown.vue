@@ -20,6 +20,10 @@
         </template>
       </template>
 
+      <b-dropdown-item :to="{ name: 'pengaturan-umum' }" link-class="d-flex align-items-center" v-if="hasRole('administrator')">
+        <feather-icon size="16" icon="ToolIcon" class="mr-50" />
+        <span>System Setting</span>
+      </b-dropdown-item>
       <b-dropdown-item :to="{ name: 'profile' }" link-class="d-flex align-items-center">
         <feather-icon size="16" icon="UserIcon" class="mr-50" />
         <span>Profile</span>

@@ -5,15 +5,24 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\Uuid;
 
 class Pembelajaran extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, Uuid;
     public $incrementing = false;
 	public $keyType = 'string';
 	protected $table = 'pembelajaran';
 	protected $primaryKey = 'pembelajaran_id';
 	protected $guarded = [];
+	protected $appends = ['nama_rombel'];
+	public function getNamaRombelAttribute(){
+		$nama_rombel = NULL;
+		if(isset($this->attributes['nama_mata_pelajaran']) && $this->rombongan_belajar){
+			$nama_rombel = $this->rombongan_belajar->nama;
+		}
+		return $nama_rombel;
+	}
 	public function guru(){
 		return $this->hasOne(Guru::class, 'guru_id', 'guru_id');
 	}
@@ -26,30 +35,43 @@ class Pembelajaran extends Model
 	public function rombongan_belajar(){
 		return $this->hasOne(Rombongan_belajar::class, 'rombongan_belajar_id', 'rombongan_belajar_id');
 	}
-	public function rencana_pengetahuan(){
-		return $this->hasMany(Rencana_penilaian::class, 'pembelajaran_id', 'pembelajaran_id')->where('kompetensi_id', '=', 1);
+	public function nilai(){
+		return $this->hasMany(Nilai::class, 'pembelajaran_id', 'pembelajaran_id');
+	}
+	public function anggota_rombel(){
+		return $this->hasManyThrough(
+            Anggota_rombel::class,
+			Rombongan_belajar::class,
+			'rombongan_belajar_id',
+			'rombongan_belajar_id',
+			'rombongan_belajar_id',
+			'rombongan_belajar_id'
+        );
+    }
+	public function pd(){
+		return $this->hasOneThrough(
+            Anggota_rombel::class,
+			Nilai::class,
+			'pembelajaran_id',
+			'anggota_rombel_id',
+			'pembelajaran_id',
+			'anggota_rombel_id'
+        );
+    }
+	public function nilai_formatif(){
+		return $this->hasMany(Nilai::class, 'pembelajaran_id', 'pembelajaran_id')->where('jenis_penilaian_id', 2);
+	}
+	public function nilai_sumatif(){
+		return $this->hasMany(Nilai::class, 'pembelajaran_id', 'pembelajaran_id')->where('jenis_penilaian_id', 3);
+	}
+	public function all_nilai(){
+		return $this->hasMany(Nilai::class, 'pembelajaran_id', 'pembelajaran_id');
 	}
 	public function rencana_keterampilan(){
 		return $this->hasMany(Rencana_penilaian::class, 'pembelajaran_id', 'pembelajaran_id')->where('kompetensi_id', '=', 2);
 	}
 	public function rencana_pk(){
 		return $this->hasMany(Rencana_penilaian::class, 'pembelajaran_id', 'pembelajaran_id')->where('kompetensi_id', '=', 3);
-	}
-	public function rencana_projek(){
-		return $this->hasMany(Rencana_budaya_kerja::class, 'pembelajaran_id', 'pembelajaran_id');
-	}
-	public function rencana_projek_count(){
-		return $this->hasManyThrough(
-            Rencana_budaya_kerja::class,
-			Pembelajaran::class,
-			'induk_pembelajaran_id',
-			'pembelajaran_id',
-			'pembelajaran_id',
-			'pembelajaran_id'
-        );
-	}
-	public function projek(){
-		return $this->hasOne(Rencana_budaya_kerja::class, 'pembelajaran_id', 'pembelajaran_id');
 	}
 	public function rencana_pengetahuan_dinilai(){
 		return $this->hasMany(Rencana_penilaian::class, 'pembelajaran_id', 'pembelajaran_id')->where('kompetensi_id', '=', 1)->whereHas('nilai');
@@ -75,17 +97,7 @@ class Pembelajaran extends Model
 	public function nilai_akhir_kurmer(){
 		return $this->hasOne(Nilai_akhir::class, 'pembelajaran_id', 'pembelajaran_id')->where('kompetensi_id', '=', 4);
 	}
-	public function anggota_rombel(){
-		return $this->hasManyThrough(
-            Anggota_rombel::class,
-			Rombongan_belajar::class,
-			'rombongan_belajar_id',
-			'rombongan_belajar_id',
-			'rombongan_belajar_id',
-			'rombongan_belajar_id'
-        );
-    }
-	public function one_anggota_rombel(){
+	public function kelas(){
 		return $this->hasOneThrough(
             Anggota_rombel::class,
 			Rombongan_belajar::class,
@@ -219,7 +231,7 @@ class Pembelajaran extends Model
     }
 	private function check_2018()
 	{
-		$semester_id = request()->semester_id;
+		$semester_id = session('semester_aktif');
 		$tahun = substr($semester_id, 0, 4);
 		if ($tahun >= 2018) {
 			return true;
@@ -234,17 +246,28 @@ class Pembelajaran extends Model
 	{
 		return $this->hasMany(Pembelajaran::class, 'induk_pembelajaran_id', 'pembelajaran_id');
 	}
-	public function tp()
+	public function cp()
 	{
-		return $this->hasMany(Tujuan_pembelajaran::class, 'mata_pelajaran_id', 'mata_pelajaran_id');
+		return $this->hasMany(Capaian_pembelajaran::class, 'mata_pelajaran_id', 'mata_pelajaran_id');
 	}
-	public function all_nilai_akhir_pengetahuan(){
-		return $this->hasMany(Nilai_akhir::class, 'pembelajaran_id', 'pembelajaran_id')->where('kompetensi_id', 1);
+	public function jadwal()
+	{
+		return $this->belongsTo(Jadwal::class, 'pembelajaran_id', 'pembelajaran_id');
 	}
-	public function all_nilai_akhir_kurmer(){
-		return $this->hasMany(Nilai_akhir::class, 'pembelajaran_id', 'pembelajaran_id')->where('kompetensi_id', 4);
+	public function deskripsi_tercapai(){
+		return $this->hasOne(Deskripsi_mapel::class, 'pembelajaran_id', 'pembelajaran_id')->where('tercapai', 1);
 	}
-	public function matev_rapor(){
-		return $this->hasOne(Matev_rapor::class, 'pembelajaran_id', 'pembelajaran_id');
+	public function deskripsi_belum_tercapai(){
+		return $this->hasOne(Deskripsi_mapel::class, 'pembelajaran_id', 'pembelajaran_id')->where('tercapai', 0);
 	}
+	public function jam(){
+		return $this->hasManyThrough(
+            Jam::class,
+			Jadwal::class,
+			'pembelajaran_id',
+			'jadwal_id',
+			'pembelajaran_id',
+			'jadwal_id'
+        );
+    }
 }

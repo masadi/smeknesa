@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\Uuid;
 
 class Rombongan_belajar extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, Uuid;
     public $incrementing = false;
 	public $keyType = 'string';
 	protected $table = 'rombongan_belajar';
@@ -19,47 +19,21 @@ class Rombongan_belajar extends Model
 	{
 		return $this->hasOne(Guru::class, 'guru_id', 'guru_id');
 	}
+	public function kurikulum()
+	{
+		return $this->hasOne(Kurikulum::class, 'kurikulum_id', 'kurikulum_id');
+	}
 	
 	public function jurusan_sp()
 	{
 		return $this->hasOne(Jurusan_sp::class, 'jurusan_sp_id', 'jurusan_sp_id');
 	}
 
-	public function kurikulum()
-	{
-		return $this->hasOne(Kurikulum::class, 'kurikulum_id', 'kurikulum_id');
-	}
 	public function pembelajaran()
 	{
 		return $this->hasMany(Pembelajaran::class, 'rombongan_belajar_id', 'rombongan_belajar_id');
 	}
-	public function projek()
-	{
-		return $this->hasOne(Pembelajaran::class, 'rombongan_belajar_id', 'rombongan_belajar_id')->where(function($query){
-			$query->where('mata_pelajaran_id', '200040000');
-         	$query->has('tema');
-		});
-	}
-	public function nilai_pengetahuan(){
-		return $this->hasManyThrough(
-            Nilai_akhir::class,
-            Pembelajaran::class,
-            'rombongan_belajar_id',
-            'pembelajaran_id',
-            'rombongan_belajar_id',
-            'pembelajaran_id'
-        )->where('kompetensi_id', 1);
-	}
-	public function nilai_kurmer(){
-		return $this->hasManyThrough(
-            Nilai_akhir::class,
-            Pembelajaran::class,
-            'rombongan_belajar_id',
-            'pembelajaran_id',
-            'rombongan_belajar_id',
-            'pembelajaran_id'
-        )->where('kompetensi_id', 4);
-	}
+	
 	public function anggota_rombel()
 	{
 		return $this->hasMany(Anggota_rombel::class, 'rombongan_belajar_id', 'rombongan_belajar_id');
@@ -83,14 +57,14 @@ class Rombongan_belajar extends Model
 		return $this->hasManyThrough(
             Peserta_didik::class,
             Anggota_rombel::class,
-            'rombongan_belajar_id',
-            'peserta_didik_id',
-            'rombongan_belajar_id',
-            'peserta_didik_id'
+            'rombongan_belajar_id', // Foreign key on the environments table...
+            'peserta_didik_id', // Foreign key on the deployments table...
+            'rombongan_belajar_id', // Local key on the projects table...
+            'peserta_didik_id' // Local key on the environments table...
         );
 	}
-	public function rombel_empat_tahun()
+	public function rombel_trigger()
 	{
-		return $this->hasOne(Rombel_empat_tahun::class, 'rombongan_belajar_id', 'rombongan_belajar_id');
+		return $this->hasOne(Rombel_trigger::class, 'id_rombel_lama', 'rombongan_belajar_id');
 	}
 }

@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -14,51 +15,44 @@ use Carbon\Carbon;
 class User extends Authenticatable
 {
     use LaratrustUserTrait;
-    use HasApiTokens;
-    use HasFactory;
-    use Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
     use Uuid;
     public $incrementing = false;
     public $keyType = 'string';
 	protected $primaryKey = 'user_id';
-
+    protected $appends = ['login_terakhir', 'status_password'];
     /**
      * The attributes that are mass assignable.
      *
-     * @var string[]
+     * @var array<int, string>
      */
     protected $guarded = [];
-    protected $appends = ['login_terakhir'];
 
     /**
      * The attributes that should be hidden for serialization.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $hidden = [
-        //'password',
+        'password',
         'remember_token',
-        'two_factor_recovery_codes',
-        'two_factor_secret',
     ];
 
     /**
      * The attributes that should be cast.
      *
-     * @var array
+     * @var array<string, string>
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
-    /**
-     * The accessors to append to the model's array form.
-     *
-     * @var array
-     */
     public function guru()
     {
         return $this->hasOne(Guru::class, 'guru_id', 'guru_id');
+    }
+    public function pd()
+    {
+        return $this->hasOne(Peserta_didik::class, 'peserta_didik_id', 'peserta_didik_id');
     }
     public function sekolah()
     {
@@ -76,4 +70,17 @@ class User extends Authenticatable
             return '-';
         }
 	}
+    public function getStatusPasswordAttribute(){
+        return (Hash::check($this->attributes['default_password'], $this->attributes['password'])) ? $this->attributes['default_password'] : 'custom';
+    }
+    public function abilities(){
+        return $this->hasManyThrough(
+            Ability::class,
+            Role_user::class,
+            'user_id', // Foreign key on the environments table...
+            'role_id', // Foreign key on the deployments table...
+            'user_id', // Local key on the projects table...
+            'role_id' // Local key on the environments table...
+        );
+    }
 }

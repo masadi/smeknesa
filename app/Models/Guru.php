@@ -5,31 +5,37 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\Uuid;
 use Carbon\Carbon;
 
 class Guru extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, Uuid, SoftDeletes;
     public $incrementing = false;
 	public $keyType = 'string';
 	protected $table = 'guru';
 	protected $primaryKey = 'guru_id';
 	protected $guarded = [];
 	protected $appends = ['nama_lengkap', 'tanggal_lahir_indo'];
-
 	public function sekolah()
 	{
 		return $this->hasOne(Sekolah::class, 'sekolah_id', 'sekolah_id');
 	}
 	public function getTanggalLahirIndoAttribute()
 	{
-		return (isset($this->attributes['tanggal_lahir'])) ? Carbon::parse($this->attributes['tanggal_lahir'])->translatedFormat('d F Y') : '';
+		return (isset($this->attributes['tanggal_lahir']) && $this->attributes['tanggal_lahir']) ? strtoupper(Carbon::parse($this->attributes['tanggal_lahir'])->translatedFormat('d F Y')) : '-';
 	}
 	public function rombongan_belajar(){
-		return $this->hasOne(Rombongan_belajar::class, 'guru_id', 'guru_id')->where('semester_id', session('semester_aktif'))->where('jenis_rombel', 1);
+		return $this->hasOne(Rombongan_belajar::class, 'guru_id', 'guru_id');
 	}
-	public function getNamaLengkapAttribute()
-	{
+	public function pembelajaran(){
+		return $this->hasMany(Pembelajaran::class, 'guru_id', 'guru_id');
+	}
+	public function getTempatLahirAttribute(){
+		return strtoupper($this->attributes['tempat_lahir']);
+	}
+	public function getNamaLengkapAttribute(){
+		return strtoupper($this->attributes['nama']);
 		$gelar_depan = '';
 		$gelar_belakang = '';
 		if($this->gelar_depan()->exists()){
@@ -63,25 +69,21 @@ class Guru extends Model
 	public function pengguna(){
 		return $this->hasOne(User::class, 'guru_id', 'guru_id');
 	}
-	public function dudi(){
-		return $this->hasOneThrough(
-            Dudi::class,
-            Asesor::class,
-            'guru_id', // Foreign key on users table...
-            'dudi_id', // Foreign key on history table...
-            'guru_id', // Local key on suppliers table...
-            'dudi_id' // Local key on users table...
+	public function kajur(){
+		return $this->hasOne(Kajur::class, 'guru_id', 'guru_id');
+	}
+	public function presensi()
+	{
+		return $this->hasMany(Presensi::class, 'guru_id', 'guru_id');
+	}
+	public function jadwal(){
+		return $this->hasManyThrough(
+            Jadwal::class,
+            Pembelajaran::class,
+            'guru_id',
+            'pembelajaran_id',
+            'guru_id',
+            'pembelajaran_id'
         );
-	}
-	public function ptk_keluar(){
-		return $this->hasOne(Ptk_keluar::class, 'guru_id', 'guru_id');
-	}
-	public function agama()
-	{
-		return $this->hasOne(Agama::class, 'agama_id', 'agama_id');
-	}
-	public function bimbing_pd()
-	{
-		return $this->hasOne(Bimbing_pd::class, 'guru_id', 'guru_id');
 	}
 }
