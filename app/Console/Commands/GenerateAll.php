@@ -3,23 +3,23 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
+use App\Models\Agama;
 
-class CreateOrReplaceNilaiAkhirKurmerView extends Command
+class GenerateAll extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'view:CreateOrReplaceNilaiAkhirKurmerView';
+    protected $signature = 'generate:all';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command CreateOrReplaceNilaiAkhirKurmerView';
+    protected $description = 'Command description';
 
     /**
      * Create a new command instance.
@@ -38,6 +38,9 @@ class CreateOrReplaceNilaiAkhirKurmerView extends Command
      */
     public function handle()
     {
-        DB::statement("CREATE OR REPLACE VIEW view_nilai_akhir_kurmer AS SELECT pembelajaran_id, anggota_rombel_id, round(avg(nilai_tp), 0) AS nilai_akhir FROM view_nilai_kurmer_pertp GROUP BY pembelajaran_id, anggota_rombel_id;");
+        $data = ["Islam", "Kristen", "Katholik", "Hindu", "Budha", "Khonghucu", "Kepercayaan kpd Tuhan YME", "Tidak diisi", "lainnya"];
+        foreach($data as $d){
+            Agama::updateOrCreate(['nama' => $d]);
+        }
     }
 }

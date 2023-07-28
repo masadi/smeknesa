@@ -3,134 +3,101 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use App\Models\Rombongan_belajar;
-use App\Models\Pembelajaran;
-use App\Models\Rencana_penilaian;
-use App\Models\Capaian_pembelajaran;
-use App\Models\Kompetensi_dasar;
-use App\Exports\LeggerKDExport;
-use App\Exports\LeggerNilaiAkhirExport;
-use App\Exports\LeggerNilaiRaporExport;
-use App\Exports\AbsensiExport;
-use App\Exports\TemplateNilaiAkhir;
-use App\Exports\TemplateNilaiKd;
-use App\Exports\TemplateNilaiTp;
-use App\Exports\TemplateTp;
-use App\Exports\LeggerNilaiKurmerExport;
+use Rap2hpoutre\FastExcel\FastExcel;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\NilaiExport;
+use App\Models\User;
+use App\Models\Guru;
+use App\Models\Anggota_rombel;
+use App\Models\Kelompok;
+use App\Models\Pembelajaran;
+use PDF;
 
 class DownloadController extends Controller
 {
-    public function unduh_leger_kd(){
-        $rombongan_belajar = Rombongan_belajar::find(request()->route('rombongan_belajar_id'));
-		$nama_file = 'Leger Otentik Kelas ' . $rombongan_belajar->nama;
-		$nama_file = clean($nama_file);
-		$nama_file = $nama_file . '.xlsx';
-		return (new LeggerKDExport)->query(request()->route('rombongan_belajar_id'))->download($nama_file);
+    public function pdf(){
+        $data = [
+            'foo' => 'bar'
+        ];
+        $pdf = PDF::loadView('document', $data);
+        return $pdf->stream('document.pdf');
     }
-    public function unduh_leger_nilai_akhir(){
-        $rombongan_belajar = Rombongan_belajar::find(request()->route('rombongan_belajar_id'));
-		$nama_file = 'Leger Nilai Akhir Kelas ' . $rombongan_belajar->nama;
-		$nama_file = clean($nama_file);
-		$nama_file = $nama_file . '.xlsx';
-		return (new LeggerNilaiAkhirExport)->query(request()->route('rombongan_belajar_id'))->download($nama_file);
+    public function excel(){
+        return (new FastExcel(User::whereRoleIs('administrator', periode_aktif())->get()))->download('file.xlsx');
     }
-	public function unduh_leger_nilai_kurmer(){
-        $rombongan_belajar = Rombongan_belajar::find(request()->route('rombongan_belajar_id'));
-		$merdeka = Str::contains($rombongan_belajar->kurikulum->nama_kurikulum, 'Merdeka');
-		$nama_file = 'Leger Nilai Akhir Kelas ' . $rombongan_belajar->nama;
-		$nama_file = clean($nama_file);
-		$nama_file = $nama_file . '.xlsx';
-		return (new LeggerNilaiKurmerExport)->query([
-			'rombongan_belajar' => $rombongan_belajar, 
-			'rombongan_belajar_id' => request()->route('rombongan_belajar_id'), 
-			'merdeka' => $merdeka,
-			'sekolah_id' => request()->route('sekolah_id'),
-			'semester_id' => request()->route('semester_id'),
-		])->download($nama_file);
+    public function nilai_cp(){
+        //echo request()->route('pembelajaran_id');
+        $data = Pembelajaran::find(request()->route('pembelajaran_id'));
+        return Excel::download(new NilaiExport(request()->route('pembelajaran_id')), 'Nilai Mata Pelajaran '.$data->nama_mata_pelajaran.' Kelas '.$data->rombongan_belajar->nama.'.xlsx');
+        //return FastExcel::data($data)->download('file.xlsx');
+        //return (new FastExcel($data))->download('file.xlsx');
+        //data($list)->
     }
-    public function unduh_leger_nilai_rapor(){
-        $rombongan_belajar = Rombongan_belajar::find(request()->route('rombongan_belajar_id'));
-		$nama_file = 'Leger Nilai Rapor Kelas ' . $rombongan_belajar->nama;
-		$nama_file = clean($nama_file);
-		$nama_file = $nama_file . '.xlsx';
-		return (new LeggerNilaiRaporExport)->query(request()->route('rombongan_belajar_id'))->download($nama_file);
+    public function rapor(){
+        $tanggal_semester = tanggal_semester();
+        $anggota = Anggota_rombel::with(['rombongan_belajar.semester', 'peserta_didik', 'sekolah'])->withCount([
+            'presensi as sakit' => function($query) use ($tanggal_semester){
+                $query->where('absen', 'S');
+                $query->whereBetween('tanggal', [$tanggal_semester['tanggal_mulai'], $tanggal_semester['tanggal_selesai']]);
+            },
+            'presensi as izin' => function($query) use ($tanggal_semester){
+                $query->where('absen', 'I');
+                $query->whereBetween('tanggal', [$tanggal_semester['tanggal_mulai'], $tanggal_semester['tanggal_selesai']]);
+            },
+            'presensi as alpa' => function($query) use ($tanggal_semester){
+                $query->where('absen', 'A');
+                $query->whereBetween('tanggal', [$tanggal_semester['tanggal_mulai'], $tanggal_semester['tanggal_selesai']]);
+            },
+        ])->find(request()->route('anggota_rombel_id'));
+        $data = [
+            'pd' => $anggota->peserta_didik,
+            'rombel' => $anggota->rombongan_belajar,
+            'sekolah' => $anggota->sekolah,
+            'tanggal_rapor' => $tanggal_semester['tanggal_cetak'],
+            'kepala_sekolah' => Guru::whereHas('pengguna', function($query){
+                $query->whereRoleIs('kepsek', periode_aktif());
+            })->first(),
+            'kelompok' => Kelompok::withWhereHas('pembelajaran', function ($query) {
+                $query->orderBy('no_urut');
+                $query->withWhereHas('rombongan_belajar', function ($query) {
+                    $query->whereHas('anggota_rombel', function($query){
+                        $query->where('anggota_rombel_id', request()->route('anggota_rombel_id'));
+                    });
+                });
+                $query->withAvg([
+                    'nilai as rerata' => function($query){
+                        $query->where('jenis_penilaian_id', '<>', 1);
+                        $query->whereHas('pd', function($query){
+                            $query->where('anggota_rombel.anggota_rombel_id', request()->route('anggota_rombel_id'));
+                            $query->where('anggota_rombel.semester_id', semester_id());
+                        });
+                    },
+                ], 'angka');
+                $query->with([
+                    'deskripsi_tercapai' => function($query){
+                        $query->where('anggota_rombel_id', request()->route('anggota_rombel_id'));
+                    },
+                    'deskripsi_belum_tercapai' => function($query){
+                        $query->where('anggota_rombel_id', request()->route('anggota_rombel_id'));
+                    },
+                ]);
+            })->orderBy('kelompok_id')->get(),
+        ];
+        $pdf = PDF::loadView('cetak.rapor', $data);
+        return $pdf->stream('document.pdf');
     }
-	public function template_nilai_akhir(){
-		if(request()->route('pembelajaran_id')){
-			$pembelajaran = Pembelajaran::find(request()->route('pembelajaran_id'));
-			$merdeka = Str::contains($pembelajaran->rombongan_belajar->kurikulum->nama_kurikulum, 'Merdeka');
-			$nama_file = 'Template Nilai Akhir Mata Pelajaran ' . $pembelajaran->nama_mata_pelajaran. ' Kelas '.$pembelajaran->rombongan_belajar->nama;
-			$nama_file = clean($nama_file);
-			$data = [
-				'pembelajaran_id' => request()->route('pembelajaran_id'), 
-				'rombongan_belajar_id' => $pembelajaran->rombongan_belajar_id, 
-				'merdeka' => $merdeka, 
-				'nama_mata_pelajaran' => $pembelajaran->nama_mata_pelajaran,
-				'kelas' => $pembelajaran->rombongan_belajar->nama,
-			];
-			$export = new TemplateNilaiAkhir($data);
-			return Excel::download($export, $nama_file . '.xlsx');
-			return (new TemplateNilaiAkhir)->query([
-				'pembelajaran_id' => request()->route('pembelajaran_id'), 
-				'rombongan_belajar_id' => $pembelajaran->rombongan_belajar_id, 
-				'merdeka' => $merdeka, 
-				'nama_mata_pelajaran' => $pembelajaran->nama_mata_pelajaran,
-				'kelas' => $pembelajaran->rombongan_belajar->nama,
-			])->download($nama_file . '.xlsx');
-		} else {
-			echo 'Akses tidak sah!';
-		}
-	}
-	public function template_nilai_kd(){
-		if(request()->route('rencana_penilaian_id')){
-			$rencana_penilaian = Rencana_penilaian::with(['pembelajaran'])->find(request()->route('rencana_penilaian_id'));
-			$kompetensi_id = ($rencana_penilaian->kompetensi_id == 1) ? 'Pengetahuan' : 'Keterampilan';
-			$nama_file = 'Template Nilai KD '.$kompetensi_id.' '.$rencana_penilaian->nama_penilaian.' Mata Pelajaran ' . $rencana_penilaian->pembelajaran->nama_mata_pelajaran;
-			$nama_file = clean($nama_file);
-			$nama_file = $nama_file . '.xlsx';
-			//return (new TemplateNilaiKd)->query(request()->route('rencana_penilaian_id'), $rencana_penilaian->pembelajaran->rombongan_belajar_id)->download($nama_file);
-			$data = [
-				'rencana_penilaian_id' => request()->route('rencana_penilaian_id'),
-				'rombongan_belajar_id' => $rencana_penilaian->pembelajaran->rombongan_belajar_id
-			];
-			$export = new TemplateNilaiKd($data);
-			return Excel::download($export, $nama_file);
-		} else {
-			echo 'Akses tidak sah!';
-		}
-	}
-	public function template_nilai_tp(){
-		if(request()->route('rencana_penilaian_id')){
-			$rencana_penilaian = Rencana_penilaian::with(['pembelajaran'])->find(request()->route('rencana_penilaian_id'));
-			$nama_file = 'Template Nilai TP '.$rencana_penilaian->nama_penilaian.' Mata Pelajaran ' . $rencana_penilaian->pembelajaran->nama_mata_pelajaran;
-			$nama_file = clean($nama_file);
-			$nama_file = $nama_file . '.xlsx';
-			return (new TemplateNilaiTp)->query(request()->route('rencana_penilaian_id'), $rencana_penilaian->pembelajaran->rombongan_belajar_id)->download($nama_file);
-		} else {
-			echo 'Akses tidak sah!';
-		}
-	}
-	public function template_tp(){
-		if(request()->route('id')){
-			$rombongan_belajar = Rombongan_belajar::find(request()->route('rombongan_belajar_id'));
-			$pembelajaran = Pembelajaran::find(request()->route('pembelajaran_id'));
-			if(Str::isUuid(request()->route('id'))){
-				$kd = Kompetensi_dasar::find(request()->route('id'));
-				$nama_file = 'Template TP Mata Pelajaran ' . $pembelajaran->nama_mata_pelajaran . ' Kelas '.$rombongan_belajar->nama;
-				$nama_file = clean($nama_file);
-				$nama_file = $nama_file . '.xlsx';
-				return (new TemplateTp)->query(request()->route('id'))->download($nama_file);
-			} else {
-				$cp = Capaian_pembelajaran::with(['pembelajaran'])->find(request()->route('id'));
-				$nama_file = 'Template TP Mata Pelajaran ' . $pembelajaran->nama_mata_pelajaran. ' Kelas '.$rombongan_belajar->nama;
-				$nama_file = clean($nama_file);
-				$nama_file = $nama_file . '.xlsx';
-				return (new TemplateTp)->query(request()->route('id'))->download($nama_file);
-			}
-		} else {
-			echo 'Akses tidak sah!';
-		}
-	}
+    public function remedial(){
+        $data = Anggota_rombel::with(['rombongan_belajar' => function($query){
+            $query->with(['semester', 'jurusan_sp.kajur', 'pembelajaran' => function($query){
+                $query->withWhereHas('nilai', function($query){
+                    $query->where('jenis_penilaian_id', 2);
+                    $query->where('angka', '<', 75);
+                    $query->with(['tp']);
+                    $query->where('anggota_rombel_id', request()->route('anggota_rombel_id'));
+                });
+            }]);
+        }, 'peserta_didik', 'sekolah'])->find(request()->route('anggota_rombel_id'));
+        $pdf = PDF::loadView('cetak.remedial', ['data' => $data]);
+        return $pdf->stream('document.pdf');
+    }
 }
