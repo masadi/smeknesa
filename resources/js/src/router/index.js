@@ -4,12 +4,9 @@ import VueRouter from 'vue-router'
 // Routes
 import { canNavigate } from '@/libs/acl/routeProtection'
 import { isUserLoggedIn, getUserData, getHomeRouteForLoggedInUser } from '@/auth/utils'
-import admin from './routes/admin'
 import general from './routes/general'
+import admin from './routes/admin'
 import guru from './routes/guru'
-import walas from './routes/walas'
-import pembimbing from './routes/pembimbing'
-import wakakur from './routes/wakakur'
 
 Vue.use(VueRouter)
 
