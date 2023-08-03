@@ -16,20 +16,22 @@
             <strong>Loading...</strong>
           </div>
         </template>
-        <template v-slot:cell(jurusan)="row">
-          {{row.item.jurusan.nama_jurusan}}
+        <template v-slot:cell(tanggal_mulai)="row">
+          {{row.item.tanggal_mulai_str}}
         </template>
-        <template v-slot:cell(status)="row">
-          <b-badge variant="success" v-if="row.item.status">Aktif</b-badge>
-          <b-badge variant="danger" v-else>Tidak Aktif</b-badge>
+        <template v-slot:cell(tanggal_selesai)="row">
+          {{row.item.tanggal_selesai_str}}
+        </template>
+        <template v-slot:cell(tanggal_selesai)="row">
+          {{row.item.tanggal_selesai_str}}
+        </template>
+        <template v-slot:cell(tanggal_cetak)="row">
+          {{row.item.tanggal_cetak_str}}
         </template>
         <template v-slot:cell(actions)="row">
           <b-dropdown id="dropdown-dropleft" dropleft text="Aksi" variant="success" size="sm">
-            <b-dropdown-item href="javascript:" @click="aksi(row.item.paket_ukk_id, 'add_unit')"><font-awesome-icon icon="fa-solid fa-plus" /> Tambah Unit</b-dropdown-item>
-            <b-dropdown-item href="javascript:" @click="aksi(row.item.paket_ukk_id, 'detil')"><font-awesome-icon icon="fa-solid fa-magnifying-glass" /> Detil</b-dropdown-item>
-            <b-dropdown-item href="javascript:" @click="aksi(row.item, 'status')" v-if="row.item.status"><font-awesome-icon icon="fa-solid fa-xmark" /> Non Aktifkan</b-dropdown-item>
-            <b-dropdown-item href="javascript:" @click="aksi(row.item, 'status')" v-else><font-awesome-icon icon="fa-solid fa-check" /> Aktifkan</b-dropdown-item>
-            <b-dropdown-item href="javascript:" @click="aksi(row.item.paket_ukk_id, 'edit')"><font-awesome-icon icon="fa-solid fa-pencil" /> Ubah</b-dropdown-item>
+            <b-dropdown-item href="javascript:" @click="aksi(row.item.semester_id, 'edit')"><font-awesome-icon icon="fa-solid fa-pencil" /> Edit</b-dropdown-item>
+            <b-dropdown-item href="javascript:" @click="aksi(row.item.semester_id, 'delete')"><font-awesome-icon icon="fa-solid fa-trash" /> Hapus</b-dropdown-item>
           </b-dropdown>
         </template>
       </b-table>
@@ -42,6 +44,10 @@
         <b-pagination v-model="meta.current_page" :total-rows="meta.total" :per-page="meta.per_page" align="right" @change="changePage" aria-controls="dw-datatable"></b-pagination>
       </b-col>
     </b-row>
+    <div>
+      Sorting By: <b>{{ sortBy }}</b>, Sort Direction:
+      <b>{{ sortDesc ? 'Descending' : 'Ascending' }}</b>
+    </div>
   </div>
 </template>
 

@@ -859,7 +859,6 @@ class ReferensiController extends Controller
             'periode_aktif' => 1,
             'tanggal_mulai' => request()->tanggal_mulai_ganjil,
             'tanggal_selesai' => request()->tanggal_selesai_genap,
-            'last_sync' => now(),
         ]);
         if($insert){
             $ganjil = Semester::create([
@@ -870,7 +869,6 @@ class ReferensiController extends Controller
                 'periode_aktif' => 0,
                 'tanggal_mulai' => request()->tanggal_mulai_ganjil,
                 'tanggal_selesai' => request()->tanggal_selesai_ganjil,
-                'last_sync' => now(),
                 'tanggal_cetak' => request()->tanggal_cetak_ganjil,
             ]);
             $genap = Semester::create([
@@ -881,7 +879,6 @@ class ReferensiController extends Controller
                 'periode_aktif' => 0,
                 'tanggal_mulai' => request()->tanggal_mulai_genap,
                 'tanggal_selesai' => request()->tanggal_selesai_genap,
-                'last_sync' => now(),
                 'tanggal_cetak' => request()->tanggal_cetak_genap,
             ]);
             $team_ganjil = Team::updateOrcreate([

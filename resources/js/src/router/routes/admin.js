@@ -19,6 +19,31 @@ export default [
     },
   },
   {
+    path: '/referensi/periodik',
+    name: 'referensi-periodik',
+    component: () => import('@/views/referensi/periodik/Index.vue'),
+    meta: {
+      resource: 'Ref_Periodik',
+      action: 'read',
+      pageTitle: 'Referensi Periodik',
+      breadcrumb: [
+        {
+          text: 'Referensi',
+        },
+        {
+          text: 'Referensi Periodik',
+          active: true,
+        },
+      ],
+      tombol_add: {
+        action: 'add-semester',
+        link: '',
+        variant: 'primary',
+        text: 'Tambah Data'
+      },
+    },
+  },
+  {
     path: '/referensi/guru',
     name: 'referensi-guru',
     component: () => import('@/views/error/Blank.vue'),
@@ -33,26 +58,6 @@ export default [
         },
         {
           text: 'Data Guru',
-          active: true,
-        },
-      ],
-    },
-  },
-  {
-    path: '/referensi/periodik',
-    name: 'referensi-periodik',
-    component: () => import('@/views/error/Blank.vue'),
-    //component: () => import('@/views/referensi/gtk/Tendik.vue'),
-    meta: {
-      resource: 'Ref_Periodik',
-      action: 'read',
-      pageTitle: 'Referensi Periodik',
-      breadcrumb: [
-        {
-          text: 'Referensi',
-        },
-        {
-          text: 'Referensi Periodik',
           active: true,
         },
       ],
