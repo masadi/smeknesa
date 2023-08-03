@@ -27,7 +27,7 @@ class DashboardController extends Controller
                     [
                         'title' => 'Guru',
                         'stats' => rupiah(Guru::count()),
-                        'icon' => 'tabler-user-check',
+                        'icon' => 'user-check',
                         'color' => 'info',
                     ],
                     [
@@ -35,7 +35,7 @@ class DashboardController extends Controller
                         'stats' => rupiah(Peserta_didik::whereHas('kelas', function($query){
                             $query->where('rombongan_belajar.semester_id', semester_id());
                         })->count()),
-                        'icon' => 'tabler-users',
+                        'icon' => 'users',
                         'color' => 'primary',
                     ],
                     [
@@ -43,15 +43,15 @@ class DashboardController extends Controller
                         'stats' => rupiah(Rombongan_belajar::where(function($query){
                             $query->where('semester_id', semester_id());
                         })->count()),
-                        'icon' => 'tabler-building',
-                        'color' => 'error',
+                        'icon' => 'building',
+                        'color' => 'danger',
                     ],
                     [
                         'title' => 'Mata Pelajaran',
                         'stats' => rupiah(Pembelajaran::whereHas('rombongan_belajar', function($query){
                             $query->where('semester_id', semester_id());
                         })->count()),
-                        'icon' => 'tabler-checklist',
+                        'icon' => 'list-check',
                         'color' => 'success',
                     ],
                 ],
@@ -67,7 +67,7 @@ class DashboardController extends Controller
                                 $query->where('guru_id', $this->loggedUser()->guru_id);
                             });
                         })->count()),
-                        'icon' => 'tabler-users',
+                        'icon' => 'users',
                         'color' => 'info',
                     ],
                     [
@@ -78,7 +78,7 @@ class DashboardController extends Controller
                                 $query->where('guru_id', $this->loggedUser()->guru_id);
                             });
                         })->count()),
-                        'icon' => 'tabler-building',
+                        'icon' => 'building',
                         'color' => 'primary',
                     ],
                     [
@@ -89,8 +89,8 @@ class DashboardController extends Controller
                                 $query->where('guru_id', $this->loggedUser()->guru_id);
                             });
                         })->count()),
-                        'icon' => 'tabler-checklist',
-                        'color' => 'error',
+                        'icon' => 'list-check',
+                        'color' => 'danger',
                     ],
                     [
                         'title' => 'Jam',
@@ -100,7 +100,7 @@ class DashboardController extends Controller
                                 $query->where('guru_id', $this->loggedUser()->guru_id);
                             });
                         })->sum('jam')),
-                        'icon' => 'tabler-clock-filled',
+                        'icon' => 'clock',
                         'color' => 'success',
                     ],
                 ],
@@ -118,15 +118,15 @@ class DashboardController extends Controller
             'aplikasi' => [
                 [
                     'title' => 'Versi Aplikasi',
-                    'color' => 'error',
+                    'color' => 'danger',
                     'stats' => get_setting('app_version'),
-                    'icon' => 'tabler-terminal-2',
+                    'icon' => 'terminal',
                 ],
                 [
                     'title' => 'Versi Database',
                     'color' => 'success',
                     'stats' => get_setting('db_version'),
-                    'icon' => 'tabler-database',
+                    'icon' => 'database',
                 ],
             ],
             'tanggal_whatsapp' => ($this->loggedUser()->hasRole('pengajar', periode_aktif())) ? get_setting('tanggal_whatsapp') : NULL,

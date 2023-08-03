@@ -13,6 +13,44 @@
       </b-col>
     </b-row>
     <b-row class="match-height" v-else>
+      <b-col cols="12" md="8">
+        <b-card no-body>
+          <b-card-header>
+            <h4 class="card-title">Statistik</h4>
+            <b-card-text class="text-muted">
+              {{periode_aktif}}
+            </b-card-text>
+          </b-card-header>
+          <b-card-body>
+            <b-row>
+              <b-col v-for="item in statistik" :key="item.title" cols="6" md="3">
+                <div class="d-flex">
+                  <b-avatar :variant="item.color" size="4em" class="mr-1">
+                    <font-awesome-icon :icon="`fa-solid fa-${item.icon}`" size="2xl" />
+                  </b-avatar>
+                  <div class="d-flex flex-column">
+                    <h3>{{ item.stats }}</h3>
+                    <span class="text-caption">
+                      {{ item.title }}
+                    </span>
+                  </div>
+                </div>
+              </b-col>
+            </b-row>
+          </b-card-body>
+        </b-card>
+      </b-col>
+      <b-col v-for="item in aplikasi" :key="item.title" cols="6" md="2">
+        <b-card no-body>
+          <b-card-body class="text-center">
+            <b-avatar :variant="item.color" size="4em" class="mb-1">
+              <font-awesome-icon :icon="`fa-solid fa-${item.icon}`" size="2xl" />
+            </b-avatar>
+            <h3>{{ item.stats }}</h3>
+            <span class="text-body-2">{{ item.title }}</span>
+          </b-card-body>
+        </b-card>
+      </b-col>
       <template v-for="(rekap, index) in rekapitulasi">
         <b-col cols="6" xl="2" md="4" sm="6">
           <b-card no-body>
@@ -34,85 +72,60 @@
 
 <script>
 import vc from 'version_compare'
-import { BRow, BCol, BCard, BCardBody, BSpinner, BTableSimple, BTr, BTd, BFormCheckbox, VBTooltip } from 'bootstrap-vue'
+import { BRow, BCol, BCard, BCardHeader, BCardText, BCardBody, BSpinner, BTableSimple, BTr, BTd, BFormCheckbox, VBTooltip, BAvatar, } from 'bootstrap-vue'
 
 export default {
   components: {
     BRow, 
     BCol,
     BCard,
+    BCardHeader, BCardText,
     BCardBody,
     BSpinner,
     BTableSimple,
     BTr, 
     BTd,
     BFormCheckbox,
-    VBTooltip
+    VBTooltip,
+    BAvatar
   },
   directives: {
     'b-tooltip': VBTooltip,
   },
   data() {
     return {
+      periode_aktif: '',
       isBusy: true,
+      statistik: [],
+      aplikasi: [],
       rekapitulasi: [],
       sekolah: null,
-      aplikasi: null,
       app: {},
     }
   },
   created() {
-    this.$http.post('/dashboard', {
-      sekolah_id: this.user.sekolah_id,
-      semester_id: this.user.semester.semester_id,
-      periode_aktif: this.user.semester.nama,
-    }).then(response => {
-      this.isBusy = false
-      let getData = response.data
-      console.log(getData);
-    })
+    this.periode_aktif = this.user.semester.nama
+    this.loadStatistics()
+    this.loadAplikasi()
   },
   methods: {
-    changeStatus(val){
-      console.log(val);
-      var text;
-      if(val){
-        text = 'Penilaian akan di aktifkan'
-      } else {
-        text = 'Penilaian akan di nonaktifkan'
-      }
-      this.$swal({
-        title: 'Apakah Anda yakin?',
-        text: text,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yakin!',
-        customClass: {
-          confirmButton: 'btn btn-primary',
-          cancelButton: 'btn btn-outline-danger ml-1',
-        },
-        buttonsStyling: false,
-        allowOutsideClick: () => !this.$swal.isLoading(),
-      }).then(result => {
-        if (result.value) {
-          this.$http.post('/dashboard/status-penilaian', {
-            status: status,
-            sekolah_id: this.user.sekolah_id,
-            semester_id: this.user.semester.semester_id,
-          }).then(response => {
-            let data = response.data
-            this.$swal({
-              icon: data.icon,
-              title: data.title,
-              text: data.text,
-              customClass: {
-                confirmButton: 'btn btn-success',
-              },
-            })
-          });
-        }
+    loadStatistics(){
+      this.$http.post('/dashboard', {
+        sekolah_id: this.user.sekolah_id,
+        semester_id: this.user.semester.semester_id,
+        periode_aktif: this.user.semester.nama,
+      }).then(response => {
+        this.isBusy = false
+        let getData = response.data
+        this.statistik = getData.statistics
       })
-    }
+    },
+    loadAplikasi(){
+      this.$http.get('/dashboard/aplikasi').then(response => {
+        let getData = response.data
+        this.aplikasi = getData.aplikasi
+      })
+    },
   },
 }
 </script>

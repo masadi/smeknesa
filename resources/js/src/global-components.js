@@ -75,6 +75,8 @@ import {
     faFilePen,
     faBuildingUser,
     faAddressBook,
+    faBuilding,
+    faClock,
 } from '@fortawesome/free-solid-svg-icons'
 library.add(
     faHouse, 
@@ -146,4 +148,6 @@ library.add(
     faFilePen,
     faBuildingUser,
     faAddressBook,
+    faBuilding,
+    faClock,
 )

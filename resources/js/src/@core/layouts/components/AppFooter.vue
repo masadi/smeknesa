@@ -3,7 +3,7 @@
     <p class="clearfix mb-0">
       <span class="float-md-left d-block d-md-inline-block mt-25">
         Hak Cipta &copy {{ new Date().getFullYear() }}
-        <b-link class="ml-25" href="https://smk.kemdikbud.go.id/" target="_blank">Direktorat SMK Kemdikbud RI</b-link>
+        <b-link class="ml-25" href="https://smkn1spg.sch.id/" target="_blank">SMKN 1 SAMPANG</b-link>
       </span>
       <span class="float-md-right d-none d-md-block">Versi {{app.appVersion}}
         <feather-icon
