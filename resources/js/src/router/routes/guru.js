@@ -160,32 +160,6 @@ export default [
     },
   },
   {
-    path: '/penilaian/sikap',
-    name: 'penilaian-sikap',
-    component: () => import('@/views/error/Blank.vue'),
-    //component: () => import('@/views/penilaian/PenilaianSikap.vue'),
-    meta: {
-      resource: 'Guru',
-      action: 'read',
-      pageTitle: 'Penilaian Sikap',
-      breadcrumb: [
-        {
-          text: 'Penilaian',
-        },
-        {
-          text: 'Penilaian Sikap',
-          active: true,
-        },
-      ],
-      tombol_add: {
-        action: 'add-modal',
-        link: '',
-        variant: 'success',
-        text: 'Tambah Data'
-      },
-    },
-  },
-  {
     path: '/wali-kelas/kenaikan',
     name: 'walas-kenaikan',
     component: () => import('@/views/error/Blank.vue'),
@@ -304,6 +278,139 @@ export default [
           active: true,
         },
       ],
+    },
+  },
+  {
+    path: '/magang/dudi',
+    name: 'magang-dudi',
+    component: () => import('@/views/error/Blank.vue'),
+    meta: {
+      resource: 'Magang_Dudi',
+      action: 'read',
+      pageTitle: 'Data DUDI',
+      breadcrumb: [
+        {
+          text: 'Magang',
+        },
+        {
+          text: 'Data DUDI',
+          active: true,
+        },
+      ]
+    },
+  },
+  {
+    path: '/magang/pembimbing',
+    name: 'magang-pembimbing',
+    component: () => import('@/views/error/Blank.vue'),
+    meta: {
+      resource: 'Magang_Pembimbing',
+      action: 'read',
+      pageTitle: 'Data Pembimbing',
+      breadcrumb: [
+        {
+          text: 'Magang',
+        },
+        {
+          text: 'Data Pembimbing',
+          active: true,
+        },
+      ]
+    },
+  },
+  {
+    path: '/magang/surat-permohonan',
+    name: 'magang-surat-permohonan',
+    component: () => import('@/views/error/Blank.vue'),
+    meta: {
+      resource: 'Magang_Permohonan',
+      action: 'read',
+      pageTitle: 'Surat Permohonan',
+      breadcrumb: [
+        {
+          text: 'Magang',
+        },
+        {
+          text: 'Surat Permohonan',
+          active: true,
+        },
+      ]
+    },
+  },
+  {
+    path: '/magang/absensi',
+    name: 'magang-absensi',
+    component: () => import('@/views/error/Blank.vue'),
+    meta: {
+      resource: 'Magang_Absensi',
+      action: 'read',
+      pageTitle: 'Absensi',
+      breadcrumb: [
+        {
+          text: 'Magang',
+        },
+        {
+          text: 'Absensi',
+          active: true,
+        },
+      ]
+    },
+  },
+  {
+    path: '/magang/monitoring',
+    name: 'magang-monitoring',
+    component: () => import('@/views/error/Blank.vue'),
+    meta: {
+      resource: 'Magang_Monitoring',
+      action: 'read',
+      pageTitle: 'Monitoring',
+      breadcrumb: [
+        {
+          text: 'Magang',
+        },
+        {
+          text: 'Monitoring',
+          active: true,
+        },
+      ]
+    },
+  },
+  {
+    path: '/magang/nilai',
+    name: 'magang-nilai',
+    component: () => import('@/views/error/Blank.vue'),
+    meta: {
+      resource: 'Magang_Nilai',
+      action: 'read',
+      pageTitle: 'Nilai',
+      breadcrumb: [
+        {
+          text: 'Magang',
+        },
+        {
+          text: 'Nilai',
+          active: true,
+        },
+      ]
+    },
+  },
+  {
+    path: '/magang/sertifikat',
+    name: 'magang-sertifikat',
+    component: () => import('@/views/error/Blank.vue'),
+    meta: {
+      resource: 'Magang_Sertifikat',
+      action: 'read',
+      pageTitle: 'Sertifikat',
+      breadcrumb: [
+        {
+          text: 'Magang',
+        },
+        {
+          text: 'Sertifikat',
+          active: true,
+        },
+      ]
     },
   },
 ]
