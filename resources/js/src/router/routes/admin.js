@@ -332,4 +332,21 @@ export default [
       },
     },
   },
+  {
+    path: '/profile',
+    name: 'profile',
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/pengaturan/Pengguna.vue'),
+    meta: {
+      resource: 'Web',
+      action: 'read',
+      pageTitle: 'Data Pengguna',
+      breadcrumb: [
+        {
+          text: 'Profil Pengguna',
+          active: true,
+        },
+      ]
+    },
+  },
 ]
