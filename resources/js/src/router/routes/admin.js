@@ -340,7 +340,7 @@ export default [
     meta: {
       resource: 'Web',
       action: 'read',
-      webTitle: 'Profil Pengguna',
+      pageTitle: 'Profil Pengguna',
     },
   },
 ]
