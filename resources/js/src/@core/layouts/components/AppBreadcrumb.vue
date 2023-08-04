@@ -1,5 +1,5 @@
 <template>
-  <b-row v-if="$route.meta.breadcrumb || $route.meta.pageTitle" class="content-header">
+  <b-row v-if="$route.meta.pageTitle" class="content-header">
 
     <!-- Content Left -->
     <b-col class="content-header-left mb-2" cols="12" md="9">
@@ -8,7 +8,7 @@
           <h2 class="content-header-title float-left pr-1 mb-0">
             {{ t($route.meta.pageTitle) }}
           </h2>
-          <div class="breadcrumb-wrapper">
+          <div class="breadcrumb-wrapper" v-if="$route.meta.breadcrumb">
             <b-breadcrumb>
               <b-breadcrumb-item to="/">
                 <feather-icon icon="HomeIcon" size="16" class="align-text-top" />
