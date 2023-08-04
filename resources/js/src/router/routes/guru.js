@@ -20,164 +20,140 @@ export default [
     },
   },
   {
-    path: '/referensi/kompetensi-dasar',
-    name: 'referensi-kompetensi-dasar',
+    path: '/penilaian/cp-tp',
+    name: 'penilaian-cp-tp',
     component: () => import('@/views/error/Blank.vue'),
     //component: () => import('@/views/referensi/kompetensi-dasar/Index.vue'),
     meta: {
-      resource: 'Guru',
+      resource: 'Penilaian',
       action: 'read',
-      pageTitle: 'Data KD',
+      pageTitle: 'CP & TP',
       breadcrumb: [
         {
-          text: 'Referensi',
+          text: 'Penilaian',
         },
         {
-          text: 'Data Kompetensi Dasar',
+          text: 'CP & TP',
           active: true,
         },
-      ],
-      tombol_add: {
-        action: 'add-modal',
-        link: '',
-        variant: 'success',
-        text: 'Tambah Data'
-      },
-    },
-  },
-  {
-    path: '/referensi/capaian-pembelajaran',
-    name: 'referensi-capaian-pembelajaran',
-    component: () => import('@/views/error/Blank.vue'),
-    //component: () => import('@/views/referensi/capaian-pembelajaran/Index.vue'),
-    meta: {
-      resource: 'Guru',
-      action: 'read',
-      pageTitle: 'Data Capaian Pembelajaran',
-      breadcrumb: [
-        {
-          text: 'Referensi',
-        },
-        {
-          text: 'Data Capaian Pembelajaran',
-          active: true,
-        },
-      ],
-      tombol_add: {
-        action: 'add-modal',
-        link: '',
-        variant: 'success',
-        text: 'Tambah Data'
-      },
-    },
-  },
-  {
-    path: '/referensi/tujuan-pembelajaran',
-    name: 'referensi-tujuan-pembelajaran',
-    component: () => import('@/views/error/Blank.vue'),
-    //component: () => import('@/views/referensi/tujuan-pembelajaran/Index.vue'),
-    meta: {
-      resource: 'Guru',
-      action: 'read',
-      pageTitle: 'Data Tujuan Pembelajaran',
-      breadcrumb: [
-        {
-          text: 'Referensi',
-        },
-        {
-          text: 'Data Tujuan Pembelajaran',
-          active: true,
-        },
-      ],
-      tombol_add: {
-        action: 'add-tp',
-        link: '',
-        variant: 'success',
-        text: 'Tambah Data'
-      },
-    },
-  },
-  {
-    path: '/referensi/uji-kompetensi-keahlian',
-    name: 'referensi-ukk',
-    component: () => import('@/views/error/Blank.vue'),
-    //component: () => import('@/views/referensi/ukk/Index.vue'),
-    meta: {
-      resource: 'Kaprog',
-      action: 'read',
-      pageTitle: 'UKK',
-      breadcrumb: [
-        {
-          text: 'Referensi',
-        },
-        {
-          text: 'Uji Kompetensi Keahliann',
-          active: true,
-        },
-      ],
-      tombol_add: {
-        action: 'add-ukk',
-        link: '',
-        variant: 'success',
-        text: 'Tambah Data'
-      },
+      ]
     },
   },
   {
     path: '/penilaian/input-nilai',
-    name: 'input-nilai',
+    name: 'penilaian-penilaian',
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/referensi/capaian-pembelajaran/Index.vue'),
+    meta: {
+      resource: 'Penilaian',
+      action: 'read',
+      pageTitle: 'Input Nilai',
+      breadcrumb: [
+        {
+          text: 'Penilaian',
+        },
+        {
+          text: 'Input Nilai',
+          active: true,
+        },
+      ]
+    },
+  },
+  {
+    path: '/penilaian/input-deskripsi',
+    name: 'penilaian-input-deskripsi',
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/referensi/tujuan-pembelajaran/Index.vue'),
+    meta: {
+      resource: 'Penilaian',
+      action: 'read',
+      pageTitle: 'Input Deskripsi',
+      breadcrumb: [
+        {
+          text: 'Penilaian',
+        },
+        {
+          text: 'Input Deskripsi',
+          active: true,
+        },
+      ]
+    },
+  },
+  {
+    path: '/penilaian/rekap',
+    name: 'penilaian-rekap',
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/referensi/ukk/Index.vue'),
+    meta: {
+      resource: 'Rekap_Nilai',
+      action: 'read',
+      pageTitle: 'Rekapitulasi Nilai',
+      breadcrumb: [
+        {
+          text: 'Penilaian',
+        },
+        {
+          text: 'Rekapitulasi Nilai',
+          active: true,
+        },
+      ]
+    },
+  },
+  {
+    path: '/penilaian/modul',
+    name: 'penilaian-modul',
     component: () => import('@/views/error/Blank.vue'),
     //component: () => import('@/views/penilaian/InputNilai.vue'),
     meta: {
-      resource: 'Guru',
+      resource: 'Modul',
       action: 'read',
-      pageTitle: 'Input Asesmen',
+      pageTitle: 'Modul',
       breadcrumb: [
         {
           text: 'Penilaian',
         },
         {
-          text: 'Input Asesmen',
+          text: 'Modul',
           active: true,
         },
       ],
     },
   },
   {
-    path: '/penilaian/nilai-akhir',
-    name: 'penilaian-nilai-akhir',
+    path: '/penilaian/kelulusan',
+    name: 'penilaian-kelulusan',
     component: () => import('@/views/error/Blank.vue'),
     //component: () => import('@/views/penilaian/NilaiAkhir.vue'),
     meta: {
-      resource: 'Guru',
+      resource: 'Kelulusan',
       action: 'read',
-      pageTitle: 'Input Nilai Akhir',
+      pageTitle: 'Kelulusan',
       breadcrumb: [
         {
           text: 'Penilaian',
         },
         {
-          text: 'Input Nilai Akhir',
+          text: 'Kelulusan',
           active: true,
         },
       ],
     },
   },
   {
-    path: '/penilaian/capaian-kompetensi',
-    name: 'penilaian-capaian-kompetensi',
+    path: '/penilaian/remedial',
+    name: 'penilaian-remedial',
     component: () => import('@/views/error/Blank.vue'),
     //component: () => import('@/views/penilaian/CapaianKompetensi.vue'),
     meta: {
-      resource: 'Guru',
+      resource: 'Remedial',
       action: 'read',
-      pageTitle: 'Capaian Kompetensi',
+      pageTitle: 'Remedial',
       breadcrumb: [
         {
           text: 'Penilaian',
         },
         {
-          text: 'Capaian Kompetensi',
+          text: 'Remedial',
           active: true,
         },
       ],
@@ -210,20 +186,20 @@ export default [
     },
   },
   {
-    path: '/penilaian/input-nilai-sikap',
-    name: 'penilaian-input-sikap',
+    path: '/wali-kelas/kenaikan',
+    name: 'walas-kenaikan',
     component: () => import('@/views/error/Blank.vue'),
     //component: () => import('@/views/penilaian/InputPenilaianSikap.vue'),
     meta: {
-      resource: 'Guru',
+      resource: 'Kenaikan',
       action: 'read',
-      pageTitle: 'Tambah Data Nilai Sikap',
+      pageTitle: 'Kenaikan Kelas',
       breadcrumb: [
         {
-          text: 'Penilaian',
+          text: 'Wali Kelas',
         },
         {
-          text: 'Tambah Data Nilai Sikap',
+          text: 'Kenaikan Kelas',
           active: true,
         },
       ],
@@ -231,112 +207,100 @@ export default [
     },
   },
   {
-    path: '/penilaian/ekstrakurikuler',
-    name: 'penilaian-ekstrakurikuler',
+    path: '/wali-kelas/cetak-rapor',
+    name: 'walas-cetak-rapor',
     component: () => import('@/views/error/Blank.vue'),
     //component: () => import('@/views/penilaian/Ekstrakurikuler.vue'),
     meta: {
-      resource: 'Ekskul',
+      resource: 'Kenaikan',
       action: 'read',
-      pageTitle: 'Penilaian Ekstrakurikuler',
+      pageTitle: 'Cetak Rapor',
       breadcrumb: [
         {
-          text: 'Penilaian',
+          text: 'Wali Kelas',
         },
         {
-          text: 'Nilai Ekstrakurikuler ',
+          text: 'Cetak Rapor',
           active: true,
         },
       ],
     },
   },
   {
-    path: '/nilai-projek/perencanaan',
-    name: 'perencanaan-projek',
+    path: '/wali-kelas/remedial',
+    name: 'walas-remedial',
     component: () => import('@/views/error/Blank.vue'),
     //component: () => import('@/views/penilaian/projek/Perencanaan.vue'),
     meta: {
-      resource: 'Guru',
+      resource: 'Kenaikan',
       action: 'read',
-      pageTitle: 'Rencana Penilaian P5',
+      pageTitle: 'Remedial',
       breadcrumb: [
         {
-          text: 'Penilaian Projek',
+          text: 'Wali Kelas',
         },
         {
-          text: 'Rencana Penilaian P5',
+          text: 'Remedial',
           active: true,
         },
-      ],
-      tombol_add: {
-        action: 'add-modal',
-        link: '',
-        variant: 'success',
-        text: 'Tambah Data'
-      },
+      ]
     },
   },
   {
-    path: '/nilai-projek/penilaian',
-    name: 'penilaian-projek',
+    path: '/monitoring/asesment-diagnosis',
+    name: 'monitoring-asesment-diagnosis',
     component: () => import('@/views/error/Blank.vue'),
     //component: () => import('@/views/penilaian/projek/Penilaian.vue'),
     meta: {
-      resource: 'Guru',
+      resource: 'Penilaian',
       action: 'read',
-      pageTitle: 'Proses Penilaian P5',
+      pageTitle: 'Asesmen Diagnosis',
       breadcrumb: [
         {
-          text: 'Penilaian Projek',
+          text: 'Monitoring',
         },
         {
-          text: 'Input Nilai Projek',
+          text: 'Asesmen Diagnosis',
           active: true,
         },
       ],
     },
   },
   {
-    path: '/nilai-ukk/perencanaan',
-    name: 'perencanaan-ukk',
+    path: '/monitoring/asesment-formatif',
+    name: 'monitoring-asesment-formatif',
     component: () => import('@/views/error/Blank.vue'),
     //component: () => import('@/views/penilaian/ukk/Perencanaan.vue'),
     meta: {
-      resource: 'Guru',
+      resource: 'Penilaian',
       action: 'read',
-      pageTitle: 'Rencana Penilaian UKK',
+      pageTitle: 'Asesmen Formatif',
       breadcrumb: [
         {
-          text: 'Penilaian Projek',
+          text: 'Monitoring',
         },
         {
-          text: 'Rencana Penilaian UKK',
+          text: 'Asesmen Formatif',
           active: true,
         },
-      ],
-      tombol_add: {
-        action: 'add-rencana',
-        link: '',
-        variant: 'success',
-        text: 'Tambah Data'
-      },
+      ]
     },
   },
   {
-    path: '/nilai-ukk/penilaian',
-    name: 'penilaian-ukk',
+    path: '/monitoring/asesment-sumatif',
+    name: 'monitoring-asesment-sumatif',
     component: () => import('@/views/error/Blank.vue'),
     //component: () => import('@/views/penilaian/ukk/Penilaian.vue'),
     meta: {
-      resource: 'Guru',
+      resource: 'Penilaian',
       action: 'read',
-      pageTitle: 'Proses Penilaian UKK',
+      pageTitle: 'Asesmen Sumatif',
       breadcrumb: [
         {
-          text: 'Penilaian Projek',
+          text: 'Monitoring',
         },
         {
-          text: 'Input Nilai Projek',
+          text: 'Asesmen Sumatif',
           active: true,
         },
       ],

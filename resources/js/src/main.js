@@ -6,7 +6,7 @@ import i18n from '@/libs/i18n'
 import router from './router'
 import store from './store'
 import App from './App.vue'
-
+import VueTablerIcons from "vue-tabler-icons";
 // Global Components
 import './global-components'
 
@@ -26,7 +26,9 @@ import '@/libs/tour'
 // BSV Plugin Registration
 Vue.use(ToastPlugin)
 Vue.use(ModalPlugin)
+Vue.use(VueTablerIcons);
 
+//Vue.component('checklist-icon', IconChecklist)
 // Composition API
 Vue.use(VueCompositionAPI)
 

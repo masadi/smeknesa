@@ -15,6 +15,7 @@
       <!--feather-icon :icon="item.icon || 'CircleIcon'" /-->
       <!--font-awesome-icon :icon="`fa-${item.type} fa-${item.icon}`" size="2xl" /-->
       <font-awesome-icon :icon="[item.type || 'fas', item.icon]" />
+      <!--component :is="`${item.icon}-icon`" /-->
       <span class="menu-title text-truncate">{{ t(item.title) }}</span>
       <b-badge
         v-if="item.tag"

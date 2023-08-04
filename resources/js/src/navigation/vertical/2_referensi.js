@@ -1,6 +1,6 @@
 export default [
     {
-      icon: 'list',
+      icon: 'list-check',
       title: 'Referensi',
       children: [
         {

@@ -77,6 +77,8 @@ import {
     faAddressBook,
     faBuilding,
     faClock,
+    faUniversalAccess,
+    faChartArea,
 } from '@fortawesome/free-solid-svg-icons'
 library.add(
     faHouse, 
@@ -150,4 +152,6 @@ library.add(
     faAddressBook,
     faBuilding,
     faClock,
+    faUniversalAccess,
+    faChartArea,
 )

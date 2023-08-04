@@ -1,6 +1,6 @@
 export default [
     {
-      icon: 'house',
+      icon: 'home',
       route: 'beranda',
       title: 'Beranda',
       resource: 'Web',

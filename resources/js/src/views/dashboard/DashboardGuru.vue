@@ -87,7 +87,7 @@ export default {
     BTd,
     BFormCheckbox,
     VBTooltip,
-    BAvatar
+    BAvatar,
   },
   directives: {
     'b-tooltip': VBTooltip,

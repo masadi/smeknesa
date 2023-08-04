@@ -95,6 +95,7 @@
     "vue-server-renderer": "2.6.14",
     "vue-slider-component": "^3.2.14",
     "vue-sweetalert2": "^4.1.1",
+    "vue-tabler-icons": "1.0",
     "vue-toastification": "1.7.11",
     "vue-tour": "^1.5.0",
     "vue-tree-halower": "^1.8.3",

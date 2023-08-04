@@ -11661,6 +11661,11 @@ vue-sweetalert2@^4.1.1:
   dependencies:
     sweetalert2 "10.x"
 
+vue-tabler-icons@1.0:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/vue-tabler-icons/-/vue-tabler-icons-1.0.3.tgz#93d878dc8e7241421579e4f9083eeb4999eeff0d"
+  integrity sha512-qHDhkZxB4RCIef/D1cNQKDnQGouz5fwYy1nY3MDuzHgtU8QJ9vPh31feWuBbq51s369Ba+AnO5KWKGPWLaq2Zg==
+
 vue-template-compiler@2.6.12:
   version "2.6.12"
   resolved "https://registry.yarnpkg.com/vue-template-compiler/-/vue-template-compiler-2.6.12.tgz#947ed7196744c8a5285ebe1233fe960437fcc57e"

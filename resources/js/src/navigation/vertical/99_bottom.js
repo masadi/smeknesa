@@ -1,10 +1,120 @@
 export default [
   {
-    icon: 'file-pen',
+    icon: 'file-circle-check',
     title: 'Jadwal Mengajar',
     route: 'jadwal-mengajar',
     resource: 'Jadwal',
     action: 'read',
+  },
+  {
+    icon: 'file-pen',
+    title: 'Penilaian',
+    children: [
+      {
+        icon: 'hand-point-right',
+        title: 'CP & TP',
+        route: 'penilaian-cp-tp',
+        resource: 'Penilaian',
+        action: 'read',
+      },
+      {
+        icon: 'hand-point-right',
+        title: 'Input Nilai',
+        route: 'penilaian-penilaian',
+        resource: 'Penilaian',
+        action: 'read',
+      },
+      {
+        icon: 'hand-point-right',
+        title: 'Input Deskripsi',
+        route: 'penilaian-input-deskripsi',
+        resource: 'Penilaian',
+        action: 'read',
+      },
+      {
+        icon: 'hand-point-right',
+        title: 'Rekap Nilai',
+        route: 'penilaian-rekap',
+        resource: 'Rekap_Nilai',
+        action: 'read',
+      },
+      {
+        icon: 'hand-point-right',
+        title: 'Modul',
+        route: 'penilaian-modul',
+        action: 'read',
+        resource: 'Modul',
+      },
+      {
+        icon: 'hand-point-right',
+        title: 'Kelulusan',
+        route: 'penilaian-kelulusan',
+        action: 'read',
+        resource: 'Kelulusan',
+      },
+      {
+        icon: 'hand-point-right',
+        title: 'Remedial',
+        route: 'penilaian-remedial',
+        action: 'read',
+        resource: 'Remedial',
+      },
+    ]
+  },
+  {
+    icon: 'universal-access',
+    //type: 'far',
+    title: 'Wali Kelas',
+    children: [
+      {
+        icon: 'hand-point-right',
+        title: 'Kenaikan',
+        route: 'penilaian-kenaikan',
+        resource: 'Kenaikan',
+        action: 'read',
+      },
+      {
+        icon: 'hand-point-right',
+        title: 'Cetak Rapor',
+        route: 'penilaian-cetak-rapor',
+        resource: 'Kenaikan',
+        action: 'read',
+      },
+      {
+        icon: 'hand-point-right',
+        title: 'Remedial',
+        route: 'penilaian-remedial',
+        resource: 'Kenaikan',
+        action: 'read',
+      },
+    ]
+  },
+  {
+    icon: 'chart-area',
+    title: 'Monitoring',
+    children: [
+      {
+        icon: 'hand-point-right',
+        title: 'Asesmen Diagnosis',
+        route: 'monitoring-asesment-diagnosis',
+        resource: 'Penilaian',
+        action: 'read',
+      },
+      {
+        icon: 'hand-point-right',
+        title: 'Asesmen Formatif',
+        route: 'monitoring-asesment-formatif',
+        resource: 'Penilaian',
+        action: 'read',
+      },
+      {
+        icon: 'hand-point-right',
+        title: 'Asesmen Sumatif',
+        route: 'monitoring-asesment-sumatif',
+        resource: 'Penilaian',
+        action: 'read',
+      },
+    ]
   },
   {
     icon: 'building-user',

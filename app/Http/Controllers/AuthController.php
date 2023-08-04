@@ -73,15 +73,15 @@ class AuthController extends Controller
         //$user->roles;
         $user->ability = $user->allPermissions(['description as action', 'name as subject'], $semester->nama);
         $user->semester = $semester;
-        $abilities = [];
+        /*$abilities = [];
         foreach($user->ability as $ability){
             $output['action'] = $ability->action;
             $output['subject'] = $ability->subject;
             $abilities[] = $output;
-        }
+        }*/
         return response()->json([
             'user' => $user,
-            'userAbilities' => $abilities,
+            'userAbilities' => $user->ability,
             'accessToken' =>$token,
             'token_type' => 'Bearer',
             'semester_id' => ($semester) ? $semester->semester_id : NULL,
