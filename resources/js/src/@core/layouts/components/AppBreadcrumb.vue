@@ -5,7 +5,8 @@
     <b-col class="content-header-left mb-2" cols="12" md="9">
       <b-row class="breadcrumbs-top">
         <b-col cols="12">
-          <h2 class="content-header-title float-left pr-1 mb-0">
+          <h2 class="float-left pr-1 mb-0" v-bind:class="{'content-header-title': $route.meta.breadcrumb }">
+          <!--h2 class="content-header-title float-left pr-1 mb-0"-->
             {{ t($route.meta.pageTitle) }}
           </h2>
           <div class="breadcrumb-wrapper" v-if="$route.meta.breadcrumb">

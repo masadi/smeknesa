@@ -7,12 +7,6 @@ export default [
       resource: 'Web',
       action: 'read',
       pageTitle: 'Beranda',
-      breadcrumb: [
-        {
-          text: 'Beranda',
-          active: true,
-        },
-      ],
     },
   },
   {
