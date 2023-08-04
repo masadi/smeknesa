@@ -6,7 +6,6 @@ export default [
     meta: {
       resource: 'Web',
       action: 'read',
-      pageTitle: 'Beranda',
     },
   },
   {
