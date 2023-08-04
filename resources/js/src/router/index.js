@@ -46,7 +46,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, _, next) => {
   const isLoggedIn = isUserLoggedIn()
-  const title = to.meta.pageTitle
+  const title = to.meta.pageTitle || to.meta.webTitle
   if (title) {
     document.title = title +' | SMKN 1 SAMPANG'
   } else {
