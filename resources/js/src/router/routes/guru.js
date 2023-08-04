@@ -433,11 +433,11 @@ export default [
     },
   },
   {
-    path: '/tatib/rekap-pelanggaran',
-    name: 'tatib-rekap-pelanggaran',
+    path: '/tatib/catatan-pelanggaran',
+    name: 'tatib-catatan-pelanggaran',
     component: () => import('@/views/error/Blank.vue'),
     meta: {
-      resource: 'Tatib_Rekap',
+      resource: 'Tatib_Pelanggaran',
       action: 'read',
       pageTitle: 'Catatan Pelanggaran',
       breadcrumb: [
@@ -446,6 +446,25 @@ export default [
         },
         {
           text: 'Catatan Pelanggaran',
+          active: true,
+        },
+      ]
+    },
+  },
+  {
+    path: '/tatib/rekap-pelanggaran',
+    name: 'tatib-rekap-pelanggaran',
+    component: () => import('@/views/error/Blank.vue'),
+    meta: {
+      resource: 'Tatib_Rekap',
+      action: 'read',
+      pageTitle: 'Rekap Pelanggaran',
+      breadcrumb: [
+        {
+          text: 'Tatib',
+        },
+        {
+          text: 'Rekap Pelanggaran',
           active: true,
         },
       ]
