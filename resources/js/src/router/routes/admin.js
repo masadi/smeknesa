@@ -340,13 +340,7 @@ export default [
     meta: {
       resource: 'Web',
       action: 'read',
-      pageTitle: 'Data Pengguna',
-      breadcrumb: [
-        {
-          text: 'Profil Pengguna',
-          active: true,
-        },
-      ]
+      pageTitle: 'Profil Pengguna',
     },
   },
 ]
