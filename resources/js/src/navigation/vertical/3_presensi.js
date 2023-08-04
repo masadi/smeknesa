@@ -41,11 +41,24 @@ export default [
       ]
     },
     {
-      icon: 'users',
-      title: 'Akun',
-      route: 'pengguna',
-      resource: 'Akun',
-      action: 'read',
+      icon: 'user-shield',
+      title: 'Hak Akses Pengguna',
+      children: [
+        {
+          icon: 'user-shield',
+          title: 'Hak Akses',
+          route: 'hak-akses',
+          resource: 'Hak_Akses',
+          action: 'read',
+        },
+        {
+          icon: 'users',
+          title: 'Akun',
+          route: 'pengguna',
+          resource: 'Akun',
+          action: 'read',
+        },
+      ]
     },
   ]
   

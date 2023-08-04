@@ -234,6 +234,11 @@ class GenerateAkses extends Command
                 'subject' => 'Whatsapp',
                 'roles' => ['administrator'],
             ],
+            [
+                'action' => 'read',
+                'subject' => 'Hak_Akses',
+                'roles' => ['administrator'],
+            ],
         ];
         Permission::truncate();
         foreach($abilities as $ab){

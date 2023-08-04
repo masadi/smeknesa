@@ -287,12 +287,12 @@ export default [
     },
   },
   {
-    path: '/pengguna',
-    name: 'pengguna',
+    path: '/hak-akses',
+    name: 'hak-akses',
     component: () => import('@/views/error/Blank.vue'),
     //component: () => import('@/views/pengaturan/Pengguna.vue'),
     meta: {
-      resource: 'Akun',
+      resource: 'Hak_Akses',
       action: 'read',
       pageTitle: 'Akses Pengguna',
       breadcrumb: [
@@ -301,6 +301,26 @@ export default [
         },
         {
           text: 'Akses Pengguna',
+          active: true,
+        },
+      ]
+    },
+  },
+  {
+    path: '/pengguna',
+    name: 'pengguna',
+    component: () => import('@/views/error/Blank.vue'),
+    //component: () => import('@/views/pengaturan/Pengguna.vue'),
+    meta: {
+      resource: 'Akun',
+      action: 'read',
+      pageTitle: 'Data Pengguna',
+      breadcrumb: [
+        {
+          text: 'Pengaturan',
+        },
+        {
+          text: 'Data Pengguna',
           active: true,
         },
       ],
