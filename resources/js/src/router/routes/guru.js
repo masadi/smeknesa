@@ -413,4 +413,153 @@ export default [
       ]
     },
   },
+  {
+    path: '/tatib/sekolah',
+    name: 'tatib-sekolah',
+    component: () => import('@/views/error/Blank.vue'),
+    meta: {
+      resource: 'Tatib_Sekolah',
+      action: 'read',
+      pageTitle: 'Tata Tertib Sekolah',
+      breadcrumb: [
+        {
+          text: 'Tatib',
+        },
+        {
+          text: 'Tata Tertib Sekolah',
+          active: true,
+        },
+      ]
+    },
+  },
+  {
+    path: '/tatib/rekap-pelanggaran',
+    name: 'tatib-rekap-pelanggaran',
+    component: () => import('@/views/error/Blank.vue'),
+    meta: {
+      resource: 'Tatib_Rekap',
+      action: 'read',
+      pageTitle: 'Catatan Pelanggaran',
+      breadcrumb: [
+        {
+          text: 'Tatib',
+        },
+        {
+          text: 'Catatan Pelanggaran',
+          active: true,
+        },
+      ]
+    },
+  },
+  {
+    path: '/tatib/bukti-pelanggaran',
+    name: 'tatib-bukti-pelanggaran',
+    component: () => import('@/views/error/Blank.vue'),
+    meta: {
+      resource: 'Tatib_Bukti',
+      action: 'read',
+      pageTitle: 'Bukti Pelanggaran',
+      breadcrumb: [
+        {
+          text: 'Tatib',
+        },
+        {
+          text: 'Bukti Pelanggaran',
+          active: true,
+        },
+      ]
+    },
+  },
+  {
+    path: '/tatib/surat-panggilan-ortu',
+    name: 'tatib-surat-panggilan-ortu',
+    component: () => import('@/views/error/Blank.vue'),
+    meta: {
+      resource: 'Tatib_Ortu',
+      action: 'read',
+      pageTitle: 'Surat Panggilan Ortu',
+      breadcrumb: [
+        {
+          text: 'Tatib',
+        },
+        {
+          text: 'Surat Panggilan Ortu',
+          active: true,
+        },
+      ]
+    },
+  },
+  {
+    path: '/tatib/surat-pernyataan',
+    name: 'tatib-surat-pernyataan',
+    component: () => import('@/views/error/Blank.vue'),
+    meta: {
+      resource: 'Tatib_Pernyataan',
+      action: 'read',
+      pageTitle: 'Surat Pernyataan',
+      breadcrumb: [
+        {
+          text: 'Tatib',
+        },
+        {
+          text: 'Surat Pernyataan',
+          active: true,
+        },
+      ]
+    },
+  },
+  {
+    path: '/tatib/surat-peringatan',
+    name: 'tatib-surat-peringatan',
+    component: () => import('@/views/error/Blank.vue'),
+    meta: {
+      resource: 'Tatib_Peringatan',
+      action: 'read',
+      pageTitle: 'Surat Peringatan',
+      breadcrumb: [
+        {
+          text: 'Tatib',
+        },
+        {
+          text: 'Surat Peringatan',
+          active: true,
+        },
+      ]
+    },
+  },
+  {
+    path: '/tatib/surat-pemunduran-diri',
+    name: 'tatib-surat-pemunduran-diri',
+    component: () => import('@/views/error/Blank.vue'),
+    meta: {
+      resource: 'Tatib_Mundur',
+      action: 'read',
+      pageTitle: 'Surat Pemunduran Diri',
+      breadcrumb: [
+        {
+          text: 'Tatib',
+        },
+        {
+          text: 'Surat Pemunduran Diri',
+          active: true,
+        },
+      ]
+    },
+  },
+  {
+    path: 'whatsapp',
+    name: 'whatsapp',
+    component: () => import('@/views/error/Blank.vue'),
+    meta: {
+      resource: 'Whatsapp',
+      action: 'read',
+      pageTitle: 'Whatsapp',
+      breadcrumb: [
+        {
+          text: 'Whatsapp',
+          active: true,
+        },
+      ]
+    },
+  },
 ]
