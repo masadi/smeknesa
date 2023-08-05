@@ -21,4 +21,15 @@ class Jurusan_sp extends Model
 	public function rombongan_belajar(){
 		return $this->hasMany(Rombongan_belajar::class, 'jurusan_sp_id', 'jurusan_sp_id');
 	}
+	public function anggota_rombel()
+    {
+        return $this->hasManyThrough(
+            Anggota_rombel::class,
+            Rombongan_belajar::class,
+            'jurusan_sp_id', // Foreign key on the environments table...
+            'rombongan_belajar_id', // Foreign key on the deployments table...
+            'jurusan_sp_id', // Local key on the projects table...
+            'rombongan_belajar_id' // Local key on the environments table...
+        );
+    }
 }

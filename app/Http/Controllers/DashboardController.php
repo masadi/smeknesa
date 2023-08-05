@@ -134,6 +134,37 @@ class DashboardController extends Controller
         ];
         return response()->json($data);
     }
+    public function grafik(){
+        $data = Jurusan_sp::whereHas('rombongan_belajar', function($query){
+            $query->where('semester_id', semester_id());
+        })->withCount([
+            'anggota_rombel as pria' => function($query){
+                $query->where('anggota_rombel.semester_id', semester_id());
+                $query->whereHas('peserta_didik', function($query){
+                    $query->where('jenis_kelamin', 'L');
+                });
+            },
+            'anggota_rombel as wanita' => function($query){
+                $query->where('anggota_rombel.semester_id', semester_id());
+                $query->whereHas('peserta_didik', function($query){
+                    $query->where('jenis_kelamin', 'P');
+                });
+            },
+            'anggota_rombel as kelas_10' => function($query){
+                $query->where('rombongan_belajar.semester_id', semester_id());
+                $query->where('tingkat', 10);
+            },
+            'anggota_rombel as kelas_11' => function($query){
+                $query->where('rombongan_belajar.semester_id', semester_id());
+                $query->where('tingkat', 11);
+            },
+            'anggota_rombel as kelas_12' => function($query){
+                $query->where('rombongan_belajar.semester_id', semester_id());
+                $query->where('tingkat', 12);
+            },
+        ])->get();
+        return response()->json($data);
+    }
     public function pengembangan(){
         $data = [
             'file' => nl2br(File::get(base_path('pengembangan.txt')))

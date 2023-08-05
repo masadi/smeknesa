@@ -48,6 +48,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
   Route::group(['prefix' => 'dashboard'], function () {
     Route::post('/', [DashboardController::class, 'index']);
     Route::get('/aplikasi', [DashboardController::class, 'aplikasi']);
+    Route::get('/grafik', [DashboardController::class, 'grafik']);
     Route::get('/pengembangan', [DashboardController::class, 'pengembangan']);
     Route::get('/get-chart', [DashboardController::class, 'get_chart']);
     Route::get('/kirim-whatsapp', [DashboardController::class, 'kirim_whatsapp']);

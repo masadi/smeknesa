@@ -27,6 +27,7 @@ import DashboardUser from './DashboardUser.vue'
 
 export default {
   components: {
+    DashboardWaka,
     DashboardAdmin, 
     DashboardGuru,
     DashboardSiswa,

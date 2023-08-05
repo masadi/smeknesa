@@ -61,12 +61,15 @@
         </b-card>
       </b-col>
     </b-row>
+    <user-modal @reload="handleReload"></user-modal>
   </div>
 </template>
 
 <script>
 import { BRow, BCol, BCard, BCardHeader, BCardText, BCardBody, BSpinner, BTableSimple, BTr, BTd, BFormCheckbox, VBTooltip, BAvatar, } from 'bootstrap-vue'
 import Datatable from './Datatable.vue'
+import UserModal from './../components/modal/users/UserModal.vue'
+import eventBus from '@core/utils/eventBus'
 export default {
   components: {
     BRow, 
@@ -81,6 +84,7 @@ export default {
     BFormCheckbox,
     VBTooltip,
     BAvatar,
+    UserModal,
     Datatable
   },
   directives: {
@@ -219,13 +223,21 @@ export default {
         this.loadPostsData()
       }
     },
+    handleReload(){
+      this.loadPostsData()
+    },
     handleRole(val) {
       this.role_id = val
       this.loadPostsData()
     },
     handleDetil(val){
-      console.log('handleDetil');
-      console.log(val);
+      this.loading = true
+      this.$http.post('/auth/user/detil', {
+        user_id: val,
+      }).then(response => {
+        this.loading = false
+        eventBus.$emit('open-user-modal', response.data);
+      })
     },
     handleReset(val){
       console.log('handleReset');

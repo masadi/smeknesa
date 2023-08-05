@@ -52,13 +52,41 @@
         </b-card>
       </b-col>
     </b-row>
+    <b-row v-if="!isBusy">
+      <b-col cols="6">
+        <b-card no-body>
+          <b-card-header>
+            <h4 class="card-title">Gender Siswa</h4>
+            <b-card-text class="text-muted">
+              {{periode_aktif}}
+            </b-card-text>
+          </b-card-header>
+          <b-card-body>
+            <vue-apex-charts type="bar" height="400" :options="chartOptions" :series="gender_series" />
+          </b-card-body>
+        </b-card>
+      </b-col>
+      <b-col cols="6">
+        <b-card no-body>
+          <b-card-header>
+            <h4 class="card-title">Jumlah Siswa</h4>
+            <b-card-text class="text-muted">
+              {{periode_aktif}}
+            </b-card-text>
+          </b-card-header>
+          <b-card-body>
+            <vue-apex-charts type="bar" height="400" :options="chartOptions" :series="siswa_series" />
+          </b-card-body>
+        </b-card>
+      </b-col>
+    </b-row>
   </div>
 </template>
 
 <script>
 import vc from 'version_compare'
 import { BRow, BCol, BCard, BCardHeader, BCardText, BCardBody, BSpinner, BTableSimple, BTr, BTd, BFormCheckbox, VBTooltip, BAvatar, } from 'bootstrap-vue'
-
+import VueApexCharts from 'vue-apexcharts'
 export default {
   components: {
     BRow, 
@@ -72,7 +100,8 @@ export default {
     BTd,
     BFormCheckbox,
     VBTooltip,
-    BAvatar
+    BAvatar,
+    VueApexCharts
   },
   directives: {
     'b-tooltip': VBTooltip,
@@ -83,15 +112,19 @@ export default {
       isBusy: true,
       statistik: [],
       aplikasi: [],
-      rekapitulasi: [],
-      sekolah: null,
+      data_gender: [],
+      data_siswa: [],
       app: {},
+      gender_series: [],
+      siswa_series: [],
+      chartOptions: {},
     }
   },
   created() {
     this.periode_aktif = this.user.semester.nama
     this.loadStatistics()
     this.loadAplikasi()
+    this.loadGrafik()
   },
   methods: {
     loadStatistics(){
@@ -111,9 +144,83 @@ export default {
         this.aplikasi = getData.aplikasi
       })
     },
+    loadGrafik(){
+      this.$http.get('/dashboard/grafik').then(response => {
+        let getData = response.data
+        var categories = []
+        var pria = []
+        var wanita = []
+        var kelas_10 = []
+        var kelas_11 = []
+        var kelas_12 = []
+        getData.forEach(function(value, key) {
+          categories.push(value.alias)
+          pria.push(value.pria)
+          wanita.push(value.wanita)
+          kelas_10.push(value.kelas_10)
+          kelas_11.push(value.kelas_11)
+          kelas_12.push(value.kelas_12)
+        })
+        this.gender_series = [{
+          name: 'Laki-laki',
+          data: pria
+        }, 
+        {
+          name: 'Perempuan',
+          data: wanita
+        }]
+        this.chartOptions = {
+          chart: {
+            type: 'bar',
+            height: 350
+          },
+          plotOptions: {
+            bar: {
+              horizontal: false,
+              columnWidth: '55%',
+              endingShape: 'rounded'
+            },
+          },
+          dataLabels: {
+            enabled: false
+          },
+          stroke: {
+            show: true,
+            width: 2,
+            colors: ['transparent']
+          },
+          xaxis: {
+            categories: categories,
+          },
+          fill: {
+            opacity: 1
+          },
+          tooltip: {
+            y: {
+              formatter: function (val) {
+                return val + " Siswa"
+              }
+            }
+          }
+        }
+        this.siswa_series = [{
+          name: 'X',
+          data: kelas_10
+        }, 
+        {
+          name: 'XI',
+          data: kelas_11
+        },
+        {
+          name: 'XII',
+          data: kelas_12
+        }]
+      })
+    },
   },
 }
 </script>
 <style lang="scss">
 @import '~@resources/scss/vue/libs/vue-sweetalert.scss';
+@import '~@resources/scss/vue/libs/chart-apex.scss';
 </style>
