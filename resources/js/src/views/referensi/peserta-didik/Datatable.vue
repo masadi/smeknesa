@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-row v-if="status === 'aktif'">
+    <b-row v-if="keluar === 0">
       <b-col md="4" class="mb-2">
         <v-select id="tingkat" v-model="filter.tingkat" :reduce="nama => nama.id" label="nama" :options="data_tingkat" placeholder="== Filter Tingkat Kelas ==" :searchable="false" @input="changeTingkat">
           <template #no-options="{ search, searching, loading }">
@@ -72,7 +72,7 @@
       </b-col>
     </b-row>
     <b-modal ref="detil-modal" size="lg" :title="title" @ok="handleOk" ok-title="Perbaharui" cancel-title="Tutup">
-      <detil-pd :data="data" :loading_modal="loading_modal" :form="form" :pekerjaan="pekerjaan"></detil-pd>
+      <detil-pd :data="data" :errors="errors" :loading_modal="loading_modal" :form="form" :pekerjaan="pekerjaan"></detil-pd>
       <template #modal-footer="{ ok, cancel }">
         <b-overlay :show="loading_modal" rounded opacity="0.6" size="sm" spinner-variant="secondary">
           <b-button @click="cancel()">Tutup</b-button>
@@ -105,8 +105,8 @@ export default {
     vSelect,
   },
   props: {
-    status: {
-      type: String,
+    keluar: {
+      type: Number,
       required: true
     },
     items: {
@@ -150,16 +150,34 @@ export default {
       title: '',
       data: null,
       pekerjaan: [],
+      errors: {},
       form: {
+        data: 'pd',
         peserta_didik_id: '',
+        nama: '',
+        nis: '',
+        nisn: '',
+        nik: '',
+        jenis_kelamin: '',
+        agama_id: '',
         status: '',
         anak_ke: '',
+        alamat: '',
+        rt: '',
+        rw: '',
+        desa_kelurahan: '',
+        kecamatan: '',
+        kode_pos: '',
+        no_telp: '',
+        sekolah_asal: '',
         diterima_kelas: '',
+        diterima: '',
         email: '',
-        nama_wali: '',
-        alamat_wali: '',
-        telp_wali: '',
-        kerja_wali: '',
+        nama_ayah: '',
+        kerja_ayah: '',
+        nama_ibu: '',
+        kerja_ibu: '',
+        cita: '',
       },
       data_tingkat: [
         {
@@ -203,11 +221,16 @@ export default {
       this.$emit('loadingTable', true)
       this.$emit('loadingModal', true)
       this.form.peserta_didik_id = peserta_didik_id
-      this.$http.post('/peserta-didik/detil', this.form).then(response => {
+      this.$http.post('/referensi/detil-data', {
+        data: 'pd',
+        id: peserta_didik_id,
+      }).then(response => {
         this.$emit('loadingTable', false)
         this.$emit('loadingModal', false)
-        var getData = response.data
-        this.data = getData.data
+        this.data = response.data
+        this.form = this.data
+        this.form.data = 'pd'
+        /*this.data = getData.data
         this.pekerjaan = getData.pekerjaan
         this.form.status = this.data.status
         this.form.anak_ke = this.data.anak_ke
@@ -216,8 +239,32 @@ export default {
         this.form.nama_wali = this.data.nama_wali
         this.form.alamat_wali = this.data.alamat_wali
         this.form.telp_wali = this.data.telp_wali
-        this.form.kerja_wali = this.data.kerja_wali
-        this.title = 'Detil '+getData.data.nama
+        this.form.kerja_wali = this.data.kerja_wali*/
+        /*this.form.nama: '',
+        this.form.nis: '',
+        this.form.nisn: '',
+        this.form.nik: '',
+        this.form.jenis_kelamin: '',
+        this.form.agama_id: '',
+        this.form.status: '',
+        this.form.anak_ke: '',
+        this.form.alamat: '',
+        this.form.rt: '',
+        this.form.rw: '',
+        this.form.desa_kelurahan: '',
+        this.form.kecamatan: '',
+        this.form.kode_pos: '',
+        this.form.no_telp: '',
+        this.form.sekolah_asal: '',
+        this.form.diterima_kelas: '',
+        this.form.diterima: '',
+        this.form.email: '',
+        this.form.nama_ayah: '',
+        this.form.kerja_ayah: '',
+        this.form.nama_ibu: '',
+        this.form.kerja_ibu: '',
+        this.form.cita: '',*/
+        this.title = 'Detil '+this.data.nama
         this.$refs['detil-modal'].show()
       }).catch(error => {
         console.log(error);
@@ -247,20 +294,24 @@ export default {
     },
     handleSubmit() {
       this.$emit('loadingModal', true)
-      this.$http.post('/peserta-didik/update', this.form).then(response => {
+      this.$http.post('/referensi/update-data', this.form).then(response => {
         let getData = response.data
         this.$emit('loadingModal', false)
-        this.$swal({
-          icon: getData.icon,
-          title: getData.title,
-          text: getData.text,
-          customClass: {
-            confirmButton: 'btn btn-success',
-          },
-        }).then(result => {
-          this.$refs['detil-modal'].hide()
-          this.loadPerPage(this.meta.per_page)
-        })
+        if(getData.errors){
+          this.errors = getData.errors
+        } else {
+          this.$swal({
+            icon: getData.icon,
+            title: getData.title,
+            text: getData.text,
+            customClass: {
+              confirmButton: 'btn btn-success',
+            },
+          }).then(result => {
+            this.$refs['detil-modal'].hide()
+            this.loadPerPage(this.meta.per_page)
+          })
+        }
       })
     },
   },

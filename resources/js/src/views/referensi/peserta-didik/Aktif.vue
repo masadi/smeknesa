@@ -1,20 +1,24 @@
 <template>
   <b-card>
-    <datatable :status="status_pd" :loading="loading" :loading_modal="loading_modal" :isBusy="isBusy" :items="items" :fields="fields" :meta="meta" :filter="filter" :data_jurusan="data_jurusan" :data_rombel="data_rombel" @per_page="handlePerPage" @pagination="handlePagination" @search="handleSearch" @sort="handleSort" @tingkat="handleTingkat" @jurusan="handleJurusan" @rombel="handleRombel" @loadingTable="handleLoading" @loadingModal="handleLoadingModal"  />
+    <datatable :keluar="keluar" :loading="loading" :loading_modal="loading_modal" :isBusy="isBusy" :items="items" :fields="fields" :meta="meta" :filter="filter" :data_jurusan="data_jurusan" :data_rombel="data_rombel" @per_page="handlePerPage" @pagination="handlePagination" @search="handleSearch" @sort="handleSort" @tingkat="handleTingkat" @jurusan="handleJurusan" @rombel="handleRombel" @loadingTable="handleLoading" @loadingModal="handleLoadingModal"  />
+    <pd-modal @reload="handleReload"></pd-modal>
   </b-card>
 </template>
 
 <script>
 import { BCard } from 'bootstrap-vue'
 import Datatable from './Datatable.vue'
+import PdModal from './../../components/modal/referensi/peserta-didik/PdModal.vue'
+import eventBus from '@core/utils/eventBus'
 export default {
   components: {
     BCard,
+    PdModal,
     Datatable
   },
   data() {
     return {
-      status_pd: 'aktif',
+      keluar: 0,
       loading: false,
       loading_modal: false,
       isBusy: true,
@@ -83,15 +87,22 @@ export default {
     }
   },
   created() {
+    eventBus.$on('modal-pd-aktif', this.handleEvent);
     this.loadPostsData()
   },
   methods: {
+    handleEvent(){
+      eventBus.$emit('open-modal-pd-aktif');
+    },
+    handleReload(){
+      this.loadPostsData()
+    },
     loadPostsData() {
       this.isBusy = true
       let current_page = this.current_page//this.search == '' ? this.current_page : 1
-      this.$http.get('/peserta-didik', {
+      this.$http.get('/referensi/peserta-didik', {
         params: {
-          status: this.status_pd,
+          keluar: this.status_pd,
           user_id: this.user.user_id,
           sekolah_id: this.user.sekolah_id,
           semester_id: this.user.semester.semester_id,

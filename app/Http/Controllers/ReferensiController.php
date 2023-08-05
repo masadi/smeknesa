@@ -1085,6 +1085,10 @@ class ReferensiController extends Controller
         if(request()->data == 'pd'){
             return $this->update_pd();
         }
+        return response()->json([
+            'success' => FALSE,
+            'errors' => 'Query tidak ditemukan',
+        ]);
     }
     private function update_pd(){
         $validator = Validator::make(request()->all(), 
@@ -1136,7 +1140,8 @@ class ReferensiController extends Controller
                 'desa_id.required' => 'Desa/Kelurahan tidak boleh kosong',
                 'no_hp.required' => 'Nomor HP tidak boleh kosong',
                 'sekolah_asal.required' => 'Sekolah Asal tidak boleh kosong',
-                'diterima.required', 'date' => 'Tanggal Diterima tidak boleh kosong',
+                'diterima.required' => 'Tanggal Diterima tidak boleh kosong',
+                'diterima.date' => 'Tanggal Diterima tanggal tidak valid',
                 'diterima_kelas.required' => 'Diterima Dikelas tidak boleh kosong',
                 'nama_ayah.required' => 'Nama Ayah tidak boleh kosong',
                 'nama_ibu.required' => 'Nama Ibu tidak boleh kosong',

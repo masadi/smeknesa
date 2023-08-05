@@ -35,6 +35,7 @@ Route::group(['prefix' => 'auth'], function () {
   });
 });
 Route::group(['middleware' => 'auth:sanctum'], function () {
+  Route::post('/upload', [UploadController::class, 'index']);
   Route::group(['prefix' => 'dashboard'], function () {
     Route::post('/', [DashboardController::class, 'index']);
     Route::get('/aplikasi', [DashboardController::class, 'aplikasi']);

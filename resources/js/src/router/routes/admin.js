@@ -86,8 +86,7 @@ export default [
   {
     path: '/referensi/peserta-didik-aktif',
     name: 'referensi-peserta-didik-aktif',
-    component: () => import('@/views/error/Blank.vue'),
-    //component: () => import('@/views/referensi/peserta-didik/Aktif.vue'),
+    component: () => import('@/views/referensi/peserta-didik/Aktif.vue'),
     meta: {
       resource: 'Ref_Pd',
       action: 'read',
@@ -101,6 +100,13 @@ export default [
           active: true,
         },
       ],
+      tombol_add: {
+        action: 'modal-pd-aktif',
+        link: '',
+        variant: 'primary',
+        text: 'Tambah Data',
+        role: ['administrator'],
+      },
     },
   },
   {
