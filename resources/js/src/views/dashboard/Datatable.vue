@@ -4,7 +4,14 @@
       <b-col md="4" class="mb-2">
         <v-select v-model="meta.per_page" :options="[10, 25, 50, 100]" :searchable="false" :clearable="false" @input="loadPerPage" />
       </b-col>
-      <b-col md="4" offset-md="4">
+      <b-col md="4" class="mb-2">
+        <v-select id="role_id" v-model="meta.role_id" :reduce="display_name => display_name.name" label="display_name" :options="data_roles" placeholder="== Filter Role ==" @input="changeRole">
+          <template #no-options="{ search, searching, loading }">
+            Tidak ada data untuk ditampilkan
+          </template>
+        </v-select>
+      </b-col>
+      <b-col md="4">
         <b-form-input @input="search" placeholder="Cari data..."></b-form-input>
       </b-col>
     </b-row>
@@ -16,26 +23,23 @@
             <strong>Loading...</strong>
           </div>
         </template>
-        <template v-slot:cell(detil)="row">
-          <b-button variant="success" size="sm" @click="getDetil(row.item.pembelajaran_id)">Detil</b-button>
+        <template v-slot:cell(roles)="row">
+          {{row.item.roles.map(getFullName).join(', ')}}
         </template>
-        <template v-slot:cell(detil_p5)="row">
-          <b-button variant="success" size="sm" @click="getDetil(row.item.projek.pembelajaran_id)">Detil</b-button>
+        <template v-slot:cell(status_password)="row">
+          <template v-if="row.item.status_password === 'custom'">
+            <b-badge variant="danger">Custom</b-badge>
+          </template>
+          <template v-else>
+            {{row.item.status_password}}
+          </template>
         </template>
-        <template v-slot:cell(rombel_p5)="row">
-          {{row.item.nama}}
-        </template>
-        <template v-slot:cell(koordinator)="row">
-          {{row.item.projek.guru.nama_lengkap}}
-        </template>
-        <template v-slot:cell(tema_count)="row">
-          {{row.item.projek.tema_count}}
-        </template>
-        <template v-slot:cell(rencana_projek_count)="row">
-          {{row.item.projek.rencana_projek.length}}
-        </template>
-        <template v-slot:cell(aspek_projek_count)="row">
-          {{jumlahAspek(row.item.projek.rencana_projek)}}
+        <template v-slot:cell(actions)="row">
+          <b-dropdown id="dropdown-dropleft" dropleft size="sm" text="Aksi" variant="primary">
+            <b-dropdown-item href="javascript:" @click="aksi(row.item, 'detil')"><font-awesome-icon icon="fa-solid fa-eye" /> Detil</b-dropdown-item>
+            <b-dropdown-item href="javascript:" @click="aksi(row.item.user_id, 'reset')"><font-awesome-icon icon="fa-solid fa-unlock" /> Reset Password</b-dropdown-item>
+            <b-dropdown-item href="javascript:" @click="aksi(row.item.user_id, 'hapus')"><font-awesome-icon icon="fa-solid fa-trash" /> Hapus Data</b-dropdown-item>
+          </b-dropdown>
         </template>
       </b-table>
     </b-overlay>
@@ -52,7 +56,7 @@
 
 <script>
 import _ from 'lodash' //IMPORT LODASH, DIMANA AKAN DIGUNAKAN UNTUK MEMBUAT DELAY KETIKA KOLOM PENCARIAN DIISI
-import { BRow, BCol, BFormInput, BFormSelect, BTable, BSpinner, BPagination, BButton, BOverlay } from 'bootstrap-vue'
+import { BRow, BCol, BFormInput, BFormSelect, BTable, BSpinner, BPagination, BButton, BOverlay, BBadge, BDropdown, BDropdownItem } from 'bootstrap-vue'
 import vSelect from 'vue-select'
 export default {
   components: {
@@ -64,6 +68,9 @@ export default {
     BPagination,
     BButton,
     BOverlay,
+    BBadge,
+    BDropdown,
+    BDropdownItem,
     vSelect,
   },
   props: {
@@ -75,17 +82,24 @@ export default {
       type: Array,
       required: true
     },
+    data_roles: {
+      type: Array,
+      required: true
+    },
     meta: {
       required: true
     },
     isBusy: {
       type: Boolean,
       default: () => true,
+    },
+    loading: {
+      type: Boolean,
+      default: () => true,
     }
   },
   data() {
     return {
-      loading: false,
       sortBy: null,
       sortDesc: false,
     }
@@ -105,6 +119,9 @@ export default {
     }
   },
   methods: {
+    getFullName(item) {
+      return item.display_name
+    },
     getDetil(val){
       this.$emit('detil', val)
     },
@@ -114,15 +131,14 @@ export default {
     changePage(val) {
       this.$emit('pagination', val)
     },
+    changeRole(val){
+      this.$emit('role', this.meta.role_id)
+    },
     search: _.debounce(function (e) {
       this.$emit('search', e)
     }, 500),
-    jumlahAspek(array){
-      var Jumlah = 0;
-      array.forEach(function(value, key) {
-        Jumlah =+ value.aspek_budaya_kerja_count
-      })
-      return Jumlah
+    aksi(val, aksi){
+      this.$emit(aksi, val)
     }
   },
 }

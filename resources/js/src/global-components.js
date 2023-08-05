@@ -79,6 +79,7 @@ import {
     faClock,
     faUniversalAccess,
     faChartArea,
+    faUnlock,
 } from '@fortawesome/free-solid-svg-icons'
 library.add(
     faHouse, 
@@ -154,4 +155,5 @@ library.add(
     faClock,
     faUniversalAccess,
     faChartArea,
+    faUnlock,
 )

@@ -32,6 +32,15 @@ Route::group(['prefix' => 'auth'], function () {
   Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::get('logout', [AuthController::class, 'logout']);
     Route::get('user', [AuthController::class, 'user']);
+    Route::post('user', [AuthController::class, 'update_user']);
+    Route::post('user/generate', [AuthController::class, 'generate']);
+    Route::get('users/list', [AuthController::class, 'list']);
+    Route::post('user/delete', [AuthController::class, 'hapus']);
+    Route::post('user/detil', [AuthController::class, 'detil']);
+    Route::post('user/reset-password', [AuthController::class, 'reset_password']);
+    Route::post('user/foto', [AuthController::class, 'foto']);
+    Route::post('user/ganti-password', [AuthController::class, 'ganti_password']);
+    Route::post('user/update-role', [AuthController::class, 'update_role']);
   });
 });
 Route::group(['middleware' => 'auth:sanctum'], function () {

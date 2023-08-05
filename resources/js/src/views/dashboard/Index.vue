@@ -1,9 +1,12 @@
 <template>
   <div>
-    <template v-if="hasRole('administrator') || hasRole('tu')">
+    <template v-if="hasRole('wakasiswa') || hasRole('wakahumas')">
+      <dashboard-waka></dashboard-waka>
+    </template>
+    <template v-else-if="hasRole('administrator')">
       <dashboard-admin></dashboard-admin>
     </template>
-    <template v-else-if="hasRole('guru')">
+    <template v-else-if="hasRole('pengajar') || hasRole('walas')">
       <dashboard-guru></dashboard-guru>
     </template>
     <template v-else-if="hasRole('siswa')">
@@ -16,6 +19,7 @@
 </template>
 
 <script>
+import DashboardWaka from './DashboardWaka.vue'
 import DashboardAdmin from './DashboardAdmin.vue'
 import DashboardGuru from './DashboardGuru.vue'
 import DashboardSiswa from './DashboardSiswa.vue'

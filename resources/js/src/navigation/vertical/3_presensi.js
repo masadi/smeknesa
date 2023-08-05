@@ -40,7 +40,7 @@ export default [
         },
       ]
     },
-    {
+    /*{
       icon: 'user-shield',
       title: 'Hak Akses Pengguna',
       children: [
@@ -59,6 +59,6 @@ export default [
           action: 'read',
         },
       ]
-    },
+    },*/
   ]
   

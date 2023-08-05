@@ -51,29 +51,22 @@
           </b-card-body>
         </b-card>
       </b-col>
-      <template v-for="(rekap, index) in rekapitulasi">
-        <b-col cols="6" xl="2" md="4" sm="6">
-          <b-card no-body>
-            <b-card-body class="text-center">
-              <div :class="`avatar bg-light-${rekap.variant} p-50 mb-1`">
-                <div class="avatar-content">
-                  <font-awesome-icon :icon="`fa-solid fa-${rekap.icon}`" size="2xl" />
-                </div>
-              </div>
-              <h2 class="font-weight-bolder" v-b-tooltip.hover.html="rekap.html">{{rekap.jml}}</h2>
-              <p class="card-text">{{rekap.data}}</p>
-            </b-card-body>
-          </b-card>
-        </b-col>
-      </template>
+    </b-row>
+    <b-row v-if="!isBusy">
+      <b-col cols="12">
+        <b-card no-body>
+          <b-card-body>
+            <datatable :loading="loading" :isBusy="isBusy" :items="items" :fields="fields" :meta="meta" :role_id="role_id" :data_roles="data_roles" @per_page="handlePerPage" @pagination="handlePagination" @search="handleSearch" @sort="handleSort" @role="handleRole" @detil="handleDetil" @reset="handleReset" @hapus="handleHapus" />
+          </b-card-body>
+        </b-card>
+      </b-col>
     </b-row>
   </div>
 </template>
 
 <script>
-import vc from 'version_compare'
 import { BRow, BCol, BCard, BCardHeader, BCardText, BCardBody, BSpinner, BTableSimple, BTr, BTd, BFormCheckbox, VBTooltip, BAvatar, } from 'bootstrap-vue'
-
+import Datatable from './Datatable.vue'
 export default {
   components: {
     BRow, 
@@ -87,7 +80,8 @@ export default {
     BTd,
     BFormCheckbox,
     VBTooltip,
-    BAvatar
+    BAvatar,
+    Datatable
   },
   directives: {
     'b-tooltip': VBTooltip,
@@ -96,6 +90,57 @@ export default {
     return {
       periode_aktif: '',
       isBusy: true,
+      loading: false,
+      items: [],
+      fields: [
+        {
+          key: 'name',
+          label: 'Nama',
+          sortable: true,
+          thClass: 'text-center',
+        },
+        {
+          key: 'email',
+          label: 'Email',
+          sortable: true,
+          thClass: 'text-center',
+        },
+        {
+          key: 'roles',
+          label: 'Jenis Pengguna',
+          sortable: true,
+          thClass: 'text-center',
+        },
+        {
+          key: 'last_login_at',
+          label: 'Terakhir Login',
+          sortable: true,
+          thClass: 'text-center',
+          tdClass: 'text-center',
+        },
+        {
+          key: 'status_password',
+          label: 'Password',
+          sortable: false,
+          thClass: 'text-center',
+          tdClass: 'text-center',
+        },
+        {
+          key: 'actions',
+          label: 'Aksi',
+          sortable: false,
+          thClass: 'text-center',
+          tdClass: 'text-center'
+        },
+      ],
+      meta: {},
+      current_page: 1,
+      per_page: 10,
+      search: '',
+      sortBy: 'name',
+      sortByDesc: false,
+      role_id: '',
+      data_roles: [],
       statistik: [],
       aplikasi: [],
       rekapitulasi: [],
@@ -107,6 +152,7 @@ export default {
     this.periode_aktif = this.user.semester.nama
     this.loadStatistics()
     this.loadAplikasi()
+    this.loadPostsData()
   },
   methods: {
     loadStatistics(){
@@ -126,6 +172,69 @@ export default {
         this.aplikasi = getData.aplikasi
       })
     },
+    loadPostsData() {
+      this.loading = true
+      let current_page = this.current_page//this.search == '' ? this.current_page : 1
+      this.$http.get('/auth/users/list', {
+        params: {
+          role_id: this.role_id,
+          periode_aktif: this.user.semester.nama,
+          page: current_page,
+          per_page: this.per_page,
+          q: this.search,
+          sortby: this.sortBy,
+          sortbydesc: this.sortByDesc ? 'DESC' : 'ASC'
+        }
+      }).then(response => {
+        let getData = response.data.data
+        this.loading = false
+        this.items = getData.data
+        this.data_roles = response.data.roles
+        this.meta = {
+          role_id: this.role_id,
+          total: getData.total,
+          current_page: getData.current_page,
+          per_page: getData.per_page,
+          from: getData.from,
+          to: getData.to,
+        }
+      })
+    },
+    handlePerPage(val) {
+      this.per_page = val
+      this.loadPostsData()
+    },
+    handlePagination(val) {
+      this.current_page = val
+      this.loadPostsData()
+    },
+    handleSearch(val) {
+      this.search = val
+      this.loadPostsData()
+    },
+    handleSort(val) {
+      if (val.sortBy) {
+        this.sortBy = val.sortBy
+        this.sortByDesc = val.sortDesc
+        this.loadPostsData()
+      }
+    },
+    handleRole(val) {
+      this.role_id = val
+      this.loadPostsData()
+    },
+    handleDetil(val){
+      console.log('handleDetil');
+      console.log(val);
+    },
+    handleReset(val){
+      console.log('handleReset');
+      console.log(val);
+    },
+    handleHapus(val){
+      console.log('handleHapus');
+      console.log(val);
+    }
   },
 }
 </script>
