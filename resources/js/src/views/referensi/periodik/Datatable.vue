@@ -9,7 +9,7 @@
       </b-col>
     </b-row>
     <b-overlay :show="loading" rounded opacity="0.6" size="lg" spinner-variant="warning">
-      <b-table responsive bordered striped :items="items" :fields="fields" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" show-empty :busy="isBusy" style="overflow-x:clip;">
+      <b-table bordered striped :items="items" :fields="fields" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" show-empty :busy="isBusy" style="overflow-x:clip;">
         <template #table-busy>
           <div class="text-center text-danger my-2">
             <b-spinner class="align-middle"></b-spinner>
@@ -30,8 +30,8 @@
         </template>
         <template v-slot:cell(actions)="row">
           <b-dropdown id="dropdown-dropleft" dropleft text="Aksi" variant="success" size="sm">
-            <b-dropdown-item href="javascript:" @click="aksi(row.item.semester_id, 'edit')"><font-awesome-icon icon="fa-solid fa-pencil" /> Edit</b-dropdown-item>
-            <b-dropdown-item href="javascript:" @click="aksi(row.item.semester_id, 'delete')"><font-awesome-icon icon="fa-solid fa-trash" /> Hapus</b-dropdown-item>
+            <b-dropdown-item href="javascript:" @click="aksi(row.item.semester_id, 'edit')"><pencil-icon /> Edit</b-dropdown-item>
+            <b-dropdown-item href="javascript:" @click="aksi(row.item.semester_id, 'delete')"><trash-icon /> Hapus</b-dropdown-item>
           </b-dropdown>
         </template>
       </b-table>

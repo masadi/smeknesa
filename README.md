@@ -1,124 +1,64 @@
-<p align="center"><img src="http://app.erapor-smk.net/logo.png" width="600"></p>
+<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
-## Server Requirements
-[PHP >= 8.0.2](https://laravel.com/docs/9.x/upgrade#updating-dependencies)
+<p align="center">
+<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+</p>
 
-Ctype PHP Extension
+## About Laravel
 
-cURL PHP Extension
+Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-DOM PHP Extension
+- [Simple, fast routing engine](https://laravel.com/docs/routing).
+- [Powerful dependency injection container](https://laravel.com/docs/container).
+- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
+- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
+- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
+- [Robust background job processing](https://laravel.com/docs/queues).
+- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-Fileinfo PHP Extension
+Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-Filter PHP Extension
+## Learning Laravel
 
-Hash PHP Extension
+Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
-Mbstring PHP Extension
+If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-OpenSSL PHP Extension
+## Laravel Sponsors
 
-PCRE PHP Extension
+We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
 
-PDO PHP Extension
+### Premium Partners
 
-Session PHP Extension
+- **[Vehikl](https://vehikl.com/)**
+- **[Tighten Co.](https://tighten.co)**
+- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
+- **[64 Robots](https://64robots.com)**
+- **[Cubet Techno Labs](https://cubettech.com)**
+- **[Cyber-Duck](https://cyber-duck.co.uk)**
+- **[Many](https://www.many.co.uk)**
+- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
+- **[DevSquad](https://devsquad.com)**
+- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
+- **[OP.GG](https://op.gg)**
+- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
+- **[Lendio](https://lendio.com)**
 
-Tokenizer PHP Extension
+## Contributing
 
-XML PHP Extension
+Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
+## Code of Conduct
 
-## Cara Install (Untuk Pengguna Baru)
+In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-- Clone Repositori ini
-```bash
-git clone https://github.com/eraporsmk/erapor7.git dataweb
-cd dataweb
-```
+## Security Vulnerabilities
 
-## Membuat file .env
-```bash
-cp .env.example .env
-nano .env
-```
+If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
+## License
 
-- Koneksi Database
-```bash
-DB_HOST=127.0.0.1
-DB_PORT=5432
-DB_DATABASE=db_name
-DB_USERNAME=db_user
-DB_PASSWORD=db_pass
-```
-
-- Install Dependencies
-```bash
-composer install
-```
-
-
-## Generate App Key
-```bash
-php artisan key:generate
-```
-
-## Migration
-- Membuat struktur table
-```bash
-php artisan migrate
-```
-
-- Jalankan seeder
-```bash
-php artisan db:seed
-```
-## Untuk pengguna windows:
-- Panduan aplikasi & installer. silahkan download [disini](https://drive.google.com/file/d/1DgxFrw9ANGAE8jVvc30bsuY9j9Wl_McF/view?usp=sharing)
-
-## Cara Install (Untuk Pengguna Lama)
-
-- Clone Repositori ini
-```bash
-git clone https://github.com/eraporsmk/erapor-php8.git dataweb
-cd dataweb
-```
-
-## Copy file .env
-Copy file .env dari root folder aplikasi versi 5xx ke root folder aplikasi versi 6xx
-
-- Install Dependencies
-```bash
-composer install
-```
-
-## Update Versi Aplikasi
-```bash
-php artisan erapor:update
-```
-
-## Edit file .env untuk menampilkan foto profile
-```APP_URL=http://localhost:8154```
-
-Sesuaikan dengan alamat/domain yang dipakai
-
-Kemudian tambah kode dibawah ini agar laman register tidak tersedia
-
-```REGISTRATION=false```
-
-## Catatan khusus pengguna windows:
-- Konfigurasi koneksi database seperti dibawah ini
-```
-DB_CONNECTION=pgsql
-DB_HOST=127.0.0.1
-
-DB_PORT=58154
-DB_DATABASE=windows
-DB_USERNAME=windows
-DB_PASSWORD=windows
-```
-
-## Catatan khusus untuk pengguna lama (ALL OS):
-Untuk mengambil gambar/foto/logo yang telah di upload di aplikasi versi sebelumnya, silahkan copy dari aplikasi lama di folder storage/public, kemudian paste di aplikasi baru di folder storage/public
+The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

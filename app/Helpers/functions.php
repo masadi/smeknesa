@@ -11,6 +11,8 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Http;
+use Carbon\Carbon;
+
 function get_setting($key, $sekolah_id = NULL, $semester_id = NULL){
     $data = Setting::where(function($query) use ($key, $sekolah_id, $semester_id){
         $query->where('key', $key);

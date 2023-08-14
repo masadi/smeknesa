@@ -10,12 +10,9 @@
     <b-link
       v-bind="linkProps"
       class="d-flex align-items-center"
-      :class="{'text-danger' : item.variant}"
     >
+      <component :is="item.icon || 'circle-dot-filled-icon'" />
       <!--feather-icon :icon="item.icon || 'CircleIcon'" /-->
-      <!--font-awesome-icon :icon="`fa-${item.type} fa-${item.icon}`" size="2xl" /-->
-      <font-awesome-icon :icon="[item.type || 'fas', item.icon]" />
-      <!--component :is="`${item.icon}-icon`" /-->
       <span class="menu-title text-truncate">{{ t(item.title) }}</span>
       <b-badge
         v-if="item.tag"
@@ -35,7 +32,6 @@ import { BLink, BBadge } from 'bootstrap-vue'
 import { useUtils as useI18nUtils } from '@core/libs/i18n'
 import useVerticalNavMenuLink from './useVerticalNavMenuLink'
 import mixinVerticalNavMenuLink from './mixinVerticalNavMenuLink'
-
 export default {
   components: {
     BLink,

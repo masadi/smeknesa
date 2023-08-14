@@ -1,28 +1,5 @@
 <template>
   <div>
-    <b-row v-if="keluar === 0">
-      <b-col md="4" class="mb-2">
-        <v-select id="tingkat" v-model="filter.tingkat" :reduce="nama => nama.id" label="nama" :options="data_tingkat" placeholder="== Filter Tingkat Kelas ==" :searchable="false" @input="changeTingkat">
-          <template #no-options="{ search, searching, loading }">
-            Tidak ada data untuk ditampilkan
-          </template>
-        </v-select>
-      </b-col>
-      <b-col md="4">
-        <v-select id="tingkat" v-model="filter.jurusan_sp_id" :reduce="nama_jurusan_sp => nama_jurusan_sp.jurusan_sp_id" label="nama_jurusan_sp" :options="data_jurusan" placeholder="== Filter Jurusan ==" @input="changeJurusan">
-          <template #no-options="{ search, searching, loading }">
-            Tidak ada data untuk ditampilkan
-          </template>
-        </v-select>
-      </b-col>
-      <b-col md="4">
-        <v-select id="tingkat" v-model="filter.rombongan_belajar_id" :reduce="nama => nama.rombongan_belajar_id" label="nama" :options="data_rombel" placeholder="== Filter Rombel ==" @input="changeRombel">
-          <template #no-options="{ search, searching, loading }">
-            Tidak ada data untuk ditampilkan
-          </template>
-        </v-select>
-      </b-col>
-    </b-row>
     <b-row>
       <b-col md="4" class="mb-2">
         <v-select v-model="meta.per_page" :options="[10, 25, 50, 100]" @input="loadPerPage" :clearable="false" :searchable="false"></v-select>
@@ -32,34 +9,44 @@
       </b-col>
     </b-row>
     <b-overlay :show="loading" rounded opacity="0.6" size="lg" spinner-variant="warning">
-      <b-table responsive bordered striped :items="items" :fields="fields" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" show-empty :busy="isBusy">
+      <b-table bordered striped :items="items" :fields="fields" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" show-empty :busy="isBusy">
+        <template #empty="scope">
+          <p class="text-center">Tidak ada data untuk ditampilkan</p>
+        </template>
         <template #table-busy>
           <div class="text-center text-danger my-2">
             <b-spinner class="align-middle"></b-spinner>
             <strong>Loading...</strong>
           </div>
         </template>
+        <template v-slot:cell(nama)="row">
+          <b-media no-body>
+            <b-media-aside class="mr-75">
+              <b-avatar rounded size="42" :src="row.item.photo" />
+            </b-media-aside>
+            <b-media-body class="my-auto">
+              <h6 class="mb-0">
+                {{ row.item.nama }}
+              </h6>
+              <small>{{ (row.item.cita) ? row.item.cita : '-' }}</small>
+            </b-media-body>
+          </b-media>
+        </template>
         <template v-slot:cell(ttl)="row">
           {{row.item.tempat_lahir}}, {{row.item.tanggal_lahir_indo}}
         </template>
         <template v-slot:cell(agama)="row">
-          {{(row.item.agama) ? row.item.agama.nama : '-'}}
+          {{(row.item.agama_id) ? row.item.agama.nama : null}}
         </template>
-        <template v-slot:cell(anggota_rombel)="row">
-          {{(row.item.anggota_rombel && row.item.anggota_rombel.rombongan_belajar) ? row.item.anggota_rombel.rombongan_belajar.nama : '-'}}
+        <template v-slot:cell(kelas)="row">
+          {{(row.item.kelas) ? row.item.kelas.nama : null}}
         </template>
         <template v-slot:cell(actions)="row">
-          <b-button variant="success" size="sm" @click="getDetil(row.item.peserta_didik_id)">Detil</b-button>
-        </template>
-        <template v-slot:cell(user)="row">
-          <template v-if="row.item.user">
-            <template v-if="cekPass(row.item.user.password, row.item.user.default_password)">
-              {{row.item.user.default_password}}
-            </template>
-            <template v-else>
-              <b-badge variant="success">Custom</b-badge>
-            </template>
-          </template>
+          <b-dropdown id="dropdown-dropleft" dropleft text="Detil" variant="primary" size="sm">
+            <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'detil')"><eye-icon /> Detil</b-dropdown-item>
+            <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'edit')"><pencil-icon />Edit</b-dropdown-item>
+            <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'hapus')"><trash-icon />Hapus</b-dropdown-item>
+          </b-dropdown>
         </template>
       </b-table>
     </b-overlay>
@@ -71,26 +58,13 @@
         <b-pagination v-model="meta.current_page" :total-rows="meta.total" :per-page="meta.per_page" align="right" @change="changePage" aria-controls="dw-datatable"></b-pagination>
       </b-col>
     </b-row>
-    <b-modal ref="detil-modal" size="lg" :title="title" @ok="handleOk" ok-title="Perbaharui" cancel-title="Tutup">
-      <detil-pd :data="data" :errors="errors" :loading_modal="loading_modal" :form="form" :pekerjaan="pekerjaan"></detil-pd>
-      <template #modal-footer="{ ok, cancel }">
-        <b-overlay :show="loading_modal" rounded opacity="0.6" size="sm" spinner-variant="secondary">
-          <b-button @click="cancel()">Tutup</b-button>
-        </b-overlay>
-        <b-overlay :show="loading_modal" rounded opacity="0.6" size="sm" spinner-variant="primary">
-          <b-button variant="primary" @click="ok()">Perbaharui</b-button>
-        </b-overlay>
-      </template>
-    </b-modal>
   </div>
 </template>
 
 <script>
 import _ from 'lodash'
-import { BRow, BCol, BFormInput, BTable, BSpinner, BPagination, BButton, BOverlay } from 'bootstrap-vue'
-import DetilPd from './../modal/DetilPd.vue'
+import { BRow, BCol, BFormInput, BTable, BSpinner, BPagination, BDropdown, BDropdownItem, BOverlay, BMedia, BMediaAside, BAvatar, BMediaBody } from 'bootstrap-vue'
 import vSelect from 'vue-select'
-import bcrypt from 'bcryptjs';
 export default {
   components: {
     BRow,
@@ -99,16 +73,16 @@ export default {
     BTable,
     BSpinner,
     BPagination,
-    BButton,
+    BDropdown,
+    BDropdownItem,
     BOverlay,
-    DetilPd,
+    BMedia,
+    BMediaAside,
+    BAvatar,
+    BMediaBody,
     vSelect,
   },
   props: {
-    keluar: {
-      type: Number,
-      required: true
-    },
     items: {
       type: Array,
       required: true
@@ -124,79 +98,17 @@ export default {
       type: Boolean,
       default: () => true,
     },
-    loading: {
+    isAsesor: {
       type: Boolean,
       default: () => false,
-    },
-    loading_modal: {
-      type: Boolean,
-      default: () => false,
-    },
-    filter: {
-      type: Object,
-      required: true
-    },
-    data_jurusan: {
-      type: Array,
-    },
-    data_rombel: {
-      type: Array,
-    },
+    }
   },
   data() {
     return {
+      loading: false,
+      loading_modal: false,
       sortBy: null,
       sortDesc: false,
-      title: '',
-      data: null,
-      pekerjaan: [],
-      errors: {},
-      form: {
-        data: 'pd',
-        peserta_didik_id: '',
-        nama: '',
-        nis: '',
-        nisn: '',
-        nik: '',
-        jenis_kelamin: '',
-        agama_id: '',
-        status: '',
-        anak_ke: '',
-        alamat: '',
-        rt: '',
-        rw: '',
-        desa_kelurahan: '',
-        kecamatan: '',
-        kode_pos: '',
-        no_telp: '',
-        sekolah_asal: '',
-        diterima_kelas: '',
-        diterima: '',
-        email: '',
-        nama_ayah: '',
-        kerja_ayah: '',
-        nama_ibu: '',
-        kerja_ibu: '',
-        cita: '',
-      },
-      data_tingkat: [
-        {
-          id: 10,
-          nama: 'Kelas 10',
-        },
-        {
-          id: 11,
-          nama: 'Kelas 11',
-        },
-        {
-          id: 12,
-          nama: 'Kelas 12',
-        },
-        {
-          id: 13,
-          nama: 'Kelas 13',
-        },
-      ],
     }
   },
   watch: {
@@ -214,60 +126,10 @@ export default {
     }
   },
   methods: {
-    cekPass(password, default_password){
-      return bcrypt.compareSync(default_password, password)
-    },
-    getDetil(peserta_didik_id){
-      this.$emit('loadingTable', true)
-      this.$emit('loadingModal', true)
-      this.form.peserta_didik_id = peserta_didik_id
-      this.$http.post('/referensi/detil-data', {
-        data: 'pd',
-        id: peserta_didik_id,
-      }).then(response => {
-        this.$emit('loadingTable', false)
-        this.$emit('loadingModal', false)
-        this.data = response.data
-        this.form = this.data
-        this.form.data = 'pd'
-        /*this.data = getData.data
-        this.pekerjaan = getData.pekerjaan
-        this.form.status = this.data.status
-        this.form.anak_ke = this.data.anak_ke
-        this.form.diterima_kelas = this.data.diterima_kelas
-        this.form.email = this.data.email
-        this.form.nama_wali = this.data.nama_wali
-        this.form.alamat_wali = this.data.alamat_wali
-        this.form.telp_wali = this.data.telp_wali
-        this.form.kerja_wali = this.data.kerja_wali*/
-        /*this.form.nama: '',
-        this.form.nis: '',
-        this.form.nisn: '',
-        this.form.nik: '',
-        this.form.jenis_kelamin: '',
-        this.form.agama_id: '',
-        this.form.status: '',
-        this.form.anak_ke: '',
-        this.form.alamat: '',
-        this.form.rt: '',
-        this.form.rw: '',
-        this.form.desa_kelurahan: '',
-        this.form.kecamatan: '',
-        this.form.kode_pos: '',
-        this.form.no_telp: '',
-        this.form.sekolah_asal: '',
-        this.form.diterima_kelas: '',
-        this.form.diterima: '',
-        this.form.email: '',
-        this.form.nama_ayah: '',
-        this.form.kerja_ayah: '',
-        this.form.nama_ibu: '',
-        this.form.kerja_ibu: '',
-        this.form.cita: '',*/
-        this.title = 'Detil '+this.data.nama
-        this.$refs['detil-modal'].show()
-      }).catch(error => {
-        console.log(error);
+    aksi(item, aksi){
+      this.$emit('aksi', {
+        aksi: aksi,
+        item: item,
       })
     },
     loadPerPage(val) {
@@ -276,47 +138,9 @@ export default {
     changePage(val) {
       this.$emit('pagination', val)
     },
-    changeTingkat(val) {
-      this.$emit('tingkat', val)
-    },
-    changeJurusan(val) {
-      this.$emit('jurusan', val)
-    },
-    changeRombel(val) {
-      this.$emit('rombel', val)
-    },
     search: _.debounce(function (e) {
       this.$emit('search', e)
     }, 500),
-    handleOk(bvModalEvent) {
-      bvModalEvent.preventDefault()
-      this.handleSubmit()
-    },
-    handleSubmit() {
-      this.$emit('loadingModal', true)
-      this.$http.post('/referensi/update-data', this.form).then(response => {
-        let getData = response.data
-        this.$emit('loadingModal', false)
-        if(getData.errors){
-          this.errors = getData.errors
-        } else {
-          this.$swal({
-            icon: getData.icon,
-            title: getData.title,
-            text: getData.text,
-            customClass: {
-              confirmButton: 'btn btn-success',
-            },
-          }).then(result => {
-            this.$refs['detil-modal'].hide()
-            this.loadPerPage(this.meta.per_page)
-          })
-        }
-      })
-    },
   },
 }
 </script>
-<style lang="scss">
-@import '~@resources/scss/vue/libs/vue-sweetalert.scss';
-</style>

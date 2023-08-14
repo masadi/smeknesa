@@ -20,13 +20,13 @@
         name="navbar"
         :toggleVerticalMenuActive="toggleVerticalMenuActive"
       >
-        <!--app-navbar-horizontal-layout-brand /-->
+        <app-navbar-horizontal-layout-brand />
         <app-navbar-horizontal-layout :toggle-vertical-menu-active="toggleVerticalMenuActive" />
       </slot>
     </b-navbar>
     <!--/ NAVBAR -->
 
-    <div class="horizontal-menu-wrapper d-none">
+    <div class="horizontal-menu-wrapper">
       <div
         v-if="!isNavMenuHidden"
         class="header-navbar navbar-expand-sm navbar navbar-horizontal navbar-light navbar-shadow menu-border d-none d-xl-block"

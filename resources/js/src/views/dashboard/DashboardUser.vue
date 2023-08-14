@@ -56,7 +56,6 @@
 </template>
 
 <script>
-import vc from 'version_compare'
 import { BRow, BCol, BCard, BCardHeader, BCardText, BCardBody, BSpinner, BTableSimple, BTr, BTd, BFormCheckbox, VBTooltip, BAvatar, } from 'bootstrap-vue'
 
 export default {

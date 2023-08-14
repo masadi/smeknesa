@@ -26,7 +26,7 @@
               <b-col v-for="item in statistik" :key="item.title" cols="6" md="3">
                 <div class="d-flex">
                   <b-avatar :variant="item.color" size="4em" class="mr-1">
-                    <font-awesome-icon :icon="`fa-solid fa-${item.icon}`" size="2xl" />
+                    <component :is="item.icon" />
                   </b-avatar>
                   <div class="d-flex flex-column">
                     <h3>{{ item.stats }}</h3>
@@ -44,7 +44,7 @@
         <b-card no-body>
           <b-card-body class="text-center">
             <b-avatar :variant="item.color" size="4em" class="mb-1">
-              <font-awesome-icon :icon="`fa-solid fa-${item.icon}`" size="2xl" />
+              <component :is="item.icon" />
             </b-avatar>
             <h3>{{ item.stats }}</h3>
             <span class="text-body-2">{{ item.title }}</span>
@@ -71,7 +71,6 @@
 </template>
 
 <script>
-import vc from 'version_compare'
 import { BRow, BCol, BCard, BCardHeader, BCardText, BCardBody, BSpinner, BTableSimple, BTr, BTd, BFormCheckbox, VBTooltip, BAvatar, } from 'bootstrap-vue'
 
 export default {

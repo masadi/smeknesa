@@ -130,13 +130,13 @@ export default {
     const notifications = [
       {
         title: 'Congratulation Sam 🎉',
-        avatar: '/images/avatars/6-small.png',
+        avatar: '/img/avatars/6-small.png',
         subtitle: 'Won the monthly best seller badge',
         type: 'light-success',
       },
       {
         title: 'New message received',
-        avatar: '/images/avatars/9-small.png',
+        avatar: '/img/avatars/9-small.png',
         subtitle: 'You have 10 unread messages',
         type: 'light-info',
       },

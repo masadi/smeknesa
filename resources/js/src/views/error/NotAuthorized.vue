@@ -3,23 +3,23 @@
     <b-link class="brand-logo">
       <vuexy-logo />
       <h2 class="brand-text text-primary ml-1">
-        {{app.name}} Versi {{app.version}}
+        Vuexy
       </h2>
     </b-link>
 
     <div class="misc-inner p-2 p-sm-3">
       <div class="w-100 text-center">
         <h2 class="mb-1">
-          Akses Terbatas! 🔐
+          You are not authorized! 🔐
         </h2>
         <p class="mb-2">
-          Anda tidak diizinkan untuk mengakses laman ini.!!
+          You don’t have permission to access this page. Go Home!!
         </p>
         <b-button
           variant="primary"
           class="mb-1 btn-sm-block"
           :to="loginRoute()"
-        >Kembali ke Laman Utama</b-button>
+        >Back to Home</b-button>
         <b-img
           fluid
           :src="imgUrl"
@@ -35,7 +35,6 @@
 import { BLink, BImg, BButton } from 'bootstrap-vue'
 import VuexyLogo from '@core/layouts/components/Logo.vue'
 import store from '@/store/index'
-import { getHomeRouteForLoggedInUser } from '@/auth/utils'
 
 export default {
   components: {
@@ -46,15 +45,14 @@ export default {
   },
   data() {
     return {
-      downImg: '/images/pages/not-authorized.svg',
-      app: store.state.appConfig.app,
+      downImg: '/img/pages/not-authorized.svg',
     }
   },
   computed: {
     imgUrl() {
       if (store.state.appConfig.layout.skin === 'dark') {
         // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-        this.downImg = '/images/pages/not-authorized-dark.svg'
+        this.downImg = '/img/pages/not-authorized-dark.svg'
         return this.downImg
       }
       return this.downImg
@@ -63,7 +61,7 @@ export default {
   methods: {
     loginRoute() {
       const user = JSON.parse(localStorage.getItem('userData'))
-      return getHomeRouteForLoggedInUser(user ? user.role : null)
+      return '/'
     },
   },
 }

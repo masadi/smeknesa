@@ -33,7 +33,7 @@ Route::group(['prefix' => 'auth'], function () {
     Route::get('logout', [AuthController::class, 'logout']);
     Route::get('user', [AuthController::class, 'user']);
     Route::post('user', [AuthController::class, 'update_user']);
-    Route::post('user/generate', [AuthController::class, 'generate']);
+    Route::post('users/generate', [AuthController::class, 'generate']);
     Route::get('users/list', [AuthController::class, 'list']);
     Route::post('user/delete', [AuthController::class, 'hapus']);
     Route::post('user/detil', [AuthController::class, 'detil']);
@@ -68,6 +68,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
   });
   Route::group(['prefix' => 'referensi'], function () {
     Route::get('/sekolah', [ReferensiController::class, 'sekolah']);
+    Route::post('/sekolah', [ReferensiController::class, 'sekolah']);
     Route::get('/mata-pelajaran', [ReferensiController::class, 'mata_pelajaran']);
     Route::get('/jurusan', [ReferensiController::class, 'jurusan']);
     Route::get('/rombongan-belajar', [ReferensiController::class, 'rombongan_belajar']);
@@ -79,7 +80,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/peserta-didik', [ReferensiController::class, 'peserta_didik']);
     Route::get('/pd-keluar', [ReferensiController::class, 'pd_keluar']);
     Route::get('/guru-mapel', [ReferensiController::class, 'guru_mapel']);
-    Route::post('/sekolah', [ReferensiController::class, 'sekolah']);
     Route::get('/guru', [ReferensiController::class, 'data_guru']);
     Route::post('/get-data', [ReferensiController::class, 'get_data']);
     Route::post('/add-data', [ReferensiController::class, 'add_data']);

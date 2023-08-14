@@ -40,14 +40,17 @@ export const formatDate = (value, formatting = { month: 'short', day: 'numeric',
  * @param {Boolean} toTimeForCurrentDay Shall convert to time if day is today/current
  */
 export const formatDateToMonthShort = (value, toTimeForCurrentDay = true) => {
-  const date = new Date(value)
-  let formatting = { month: 'short', day: 'numeric' }
+  if(value){
+    const date = new Date(value)
+    let formatting = { month: 'short', day: 'numeric' }
 
-  if (toTimeForCurrentDay && isToday(date)) {
-    formatting = { hour: 'numeric', minute: 'numeric' }
+    if (toTimeForCurrentDay && isToday(date)) {
+      formatting = { hour: 'numeric', minute: 'numeric' }
+    }
+
+    return new Intl.DateTimeFormat('en-US', formatting).format(new Date(value))
   }
-
-  return new Intl.DateTimeFormat('en-US', formatting).format(new Date(value))
+  return '-'
 }
 
 // Strip all the tags from markup and return plain text

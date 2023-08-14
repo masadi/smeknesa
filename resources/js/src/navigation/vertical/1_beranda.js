@@ -1,7 +1,7 @@
 export default [
     {
-      icon: 'home',
-      route: 'beranda',
+      icon: 'home-icon',
+      route: 'dashboard',
       title: 'Beranda',
       resource: 'Web',
       action: 'read',

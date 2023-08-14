@@ -22,7 +22,7 @@
           <li class="nav-item mr-auto">
             <b-link
               class="navbar-brand"
-              :to="{name: 'beranda'}"
+              to="/"
             >
               <span class="brand-logo">
                 <b-img
@@ -30,7 +30,7 @@
                   alt="logo"
                 />
               </span>
-              <h2 class="brand-text" style="font-size:1.4rem">
+              <h2 class="brand-text">
                 {{ appName }}
               </h2>
             </b-link>

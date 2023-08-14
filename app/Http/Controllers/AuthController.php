@@ -79,6 +79,10 @@ class AuthController extends Controller
             $output['subject'] = $ability->subject;
             $abilities[] = $output;
         }*/
+        $user->accessToken = $token;
+        return response()->json([
+            'userData' => $user,
+        ]);
         return response()->json([
             'user' => $user,
             'userAbilities' => $user->ability,

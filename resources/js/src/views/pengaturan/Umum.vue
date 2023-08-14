@@ -156,7 +156,7 @@ export default {
       this.zona = ''
       this.kepala_sekolah = null
       this.kepala_sekolah = ''
-      this.$http.post('/setting', {
+      this.$http.get('/pengaturan/umum', {
         sekolah_id: this.user.sekolah_id,
         semester_id: this.user.semester.semester_id,
       }).then(response => {

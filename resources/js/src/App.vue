@@ -7,6 +7,7 @@
     <component :is="layout">
       <router-view />
     </component>
+
     <scroll-to-top v-if="enableScrollToTop" />
   </div>
 </template>
@@ -42,11 +43,7 @@ export default {
   // Currently, router.currentRoute is not reactive and doesn't trigger any change
   computed: {
     layout() {
-      if (this.$route.meta.layout === 'full') {
-        return 'layout-full'
-      } else if (this.$route.meta.layout === 'horizontal') {
-        return 'layout-horizontal'
-      }
+      if (this.$route.meta.layout === 'full') return 'layout-full'
       return `layout-${this.contentLayoutType}`
     },
     contentLayoutType() {
@@ -92,6 +89,7 @@ export default {
       timeout: 3000,
       transition: 'Vue-Toastification__fade',
     })
+
     // Set Window Width in store
     store.commit('app/UPDATE_WINDOW_WIDTH', window.innerWidth)
     const { width: windowWidth } = useWindowSize()

@@ -3,7 +3,6 @@
     <b-nav-item>
       <h2>{{sekolah}} | {{semester}}</h2>
     </b-nav-item>
-
   </b-navbar-nav>
 </template>
 
@@ -17,7 +16,6 @@ import { ref, watch } from '@vue/composition-api'
 import router from '@/router'
 import store from '@/store'
 import searchAndBookmarkData from '../search-and-bookmark-data'
-import { $themeConfig } from '@themeConfig'
 
 export default {
   components: {
@@ -75,8 +73,7 @@ export default {
         bookmarks.value[bookmarks.value.length - 1].isBookmarked = true
       }
     }
-    const { appName } = $themeConfig.app
-    
+
     return {
       bookmarks,
       perfectScrollbarSettings,
@@ -88,7 +85,6 @@ export default {
       searchQuery,
       resetsearchQuery,
       filteredData,
-      appName,
     }
   },
 }

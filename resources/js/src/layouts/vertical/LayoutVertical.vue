@@ -3,10 +3,10 @@
 
     <router-view />
 
-    <!--app-customizer
+    <app-customizer
       v-if="showCustomizer"
       slot="customizer"
-    /-->
+    />
 
   </layout-vertical>
 </template>
@@ -24,7 +24,7 @@ export default {
   },
   data() {
     return {
-      //showCustomizer: $themeConfig.layout.customizer,
+      showCustomizer: $themeConfig.layout.customizer,
       navMenuItems,
     }
   },

@@ -1,6 +1,7 @@
 // Theme Colors
 // Initially this will be blank. Later on when app is initialized we will assign bootstrap colors to this from CSS variables.
 export const $themeColors = {}
+
 // App Breakpoints
 // Initially this will be blank. Later on when app is initialized we will assign bootstrap breakpoints to this object from CSS variables.
 export const $themeBreakpoints = {}
@@ -9,13 +10,9 @@ export const $themeBreakpoints = {}
 export const $themeConfig = {
   app: {
     appName: 'AKADEMIK', // Will update name in navigation menu (Branding)
-    appVersion: app_version, // Will update name in navigation menu (Branding)
     // eslint-disable-next-line global-require
-    //appLogoKemdikbud: '/images/logo/logo-name.svg', // Will update logo in navigation menu (Branding)
-    //http://erapor6.test/images/logo-name.svg
-    appLogoImage: '/images/logo/logo.png', // Will update logo in navigation menu (Branding)
-    //appLogoKiri: '/images/logo/kiri.svg', // Will update logo in navigation menu (Branding)
-    //appLogoKanan: '/images/logo/kanan.png', // Will update logo in navigation menu (Branding)
+    appLogoImage: '/img/logo/logo.svg',
+    //require('@/assets/images/logo/logo.svg'), // Will update logo in navigation menu (Branding)
   },
   layout: {
     isRTL: false,
@@ -35,7 +32,7 @@ export const $themeConfig = {
     footer: {
       type: 'sticky', // static, sticky, hidden
     },
-    customizer: true,
+    customizer: false,
     enableScrollToTop: true,
   },
 }

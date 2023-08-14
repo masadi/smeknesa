@@ -86,4 +86,19 @@ class Guru extends Model
             'pembelajaran_id'
         );
 	}
+	public function provinsi(){
+		return $this->hasOne(Provinsi::class, 'code', 'provinsi_id');
+	}
+	public function kabupaten(){
+		return $this->hasOne(Kabupaten::class, 'code', 'kabupaten_id');
+	}
+	public function kecamatan(){
+		return $this->hasOne(Kecamatan::class, 'code', 'kecamatan_id');
+	}
+	public function desa(){
+		return $this->hasOne(Kelurahan::class, 'code', 'desa_id');
+	}
+	public function agama(){
+		return $this->hasOne(Agama::class, 'agama_id', 'agama_id');
+	}
 }

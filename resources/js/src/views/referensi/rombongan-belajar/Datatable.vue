@@ -9,7 +9,7 @@
       </b-col>
     </b-row>
     <b-overlay :show="loading" rounded opacity="0.6" size="lg" spinner-variant="warning">
-      <b-table responsive bordered striped :items="items" :fields="fields" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" show-empty :busy="isBusy">
+      <b-table bordered striped :items="items" :fields="fields" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" show-empty :busy="isBusy">
         <template #empty="scope">
           <p class="text-center">Tidak ada data untuk ditampilkan</p>
         </template>
@@ -20,19 +20,22 @@
           </div>
         </template>
         <template v-slot:cell(wali_kelas)="row">
-          {{row.item.wali_kelas.nama_lengkap}}
+          {{row.item.wali_kelas.nama}}
         </template>
         <template v-slot:cell(jurusan_sp)="row">
-          {{(row.item.jurusan_sp) ? row.item.jurusan_sp.nama_jurusan_sp : ''}}
+          {{row.item.jurusan_sp.alias}}
         </template>
-        <template v-slot:cell(kurikulum)="row">
-          {{(row.item.kurikulum) ? row.item.kurikulum.nama_kurikulum : ''}}
+        <template v-slot:cell(kurikulum_id)="row">
+          {{row.item.kurikulum}}
         </template>
-        <template v-slot:cell(anggota_rombel)="row">
-          <b-button variant="success" size="sm" @click="getAnggota(row.item.rombongan_belajar_id)">Anggota Rombel</b-button>
-        </template>
-        <template v-slot:cell(pembelajaran)="row">
-          <b-button variant="success" size="sm" @click="getPembelajaran(row.item.rombongan_belajar_id)">Pembelajaran</b-button>
+        <template v-slot:cell(actions)="row">
+          <b-dropdown id="dropdown-dropleft" dropleft text="Detil" variant="primary" size="sm">
+            <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'anggota')"><users-icon /> Anggota Rombel</b-dropdown-item>
+            <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'pembelajaran')"><checklist-icon /> Pembelajaran</b-dropdown-item>
+            <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'jadwal')"><clock-icon /> Jadwal</b-dropdown-item>
+            <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'edit')"><pencil-icon /> Edit</b-dropdown-item>
+            <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'hapus')"><trash-icon /> Hapus</b-dropdown-item>
+          </b-dropdown>
         </template>
       </b-table>
     </b-overlay>
@@ -49,7 +52,7 @@
 
 <script>
 import _ from 'lodash'
-import { BRow, BCol, BFormInput, BTable, BSpinner, BPagination, BButton, BOverlay } from 'bootstrap-vue'
+import { BRow, BCol, BFormInput, BTable, BSpinner, BPagination, BDropdown, BDropdownItem, BOverlay } from 'bootstrap-vue'
 import vSelect from 'vue-select'
 export default {
   components: {
@@ -59,7 +62,8 @@ export default {
     BTable,
     BSpinner,
     BPagination,
-    BButton,
+    BDropdown,
+    BDropdownItem,
     BOverlay,
     vSelect,
   },
@@ -79,13 +83,15 @@ export default {
       type: Boolean,
       default: () => true,
     },
-    loading: {
+    isAsesor: {
       type: Boolean,
       default: () => false,
     }
   },
   data() {
     return {
+      loading: false,
+      loading_modal: false,
       sortBy: null,
       sortDesc: false,
     }
@@ -105,11 +111,11 @@ export default {
     }
   },
   methods: {
-    getAnggota(rombongan_belajar_id){
-      this.$emit('getAnggota', rombongan_belajar_id)
-    },
-    getPembelajaran(rombongan_belajar_id){
-      this.$emit('getPembelajaran', rombongan_belajar_id)
+    aksi(item, aksi){
+      this.$emit('aksi', {
+        aksi: aksi,
+        item: item,
+      })
     },
     loadPerPage(val) {
       this.$emit('per_page', this.meta.per_page)

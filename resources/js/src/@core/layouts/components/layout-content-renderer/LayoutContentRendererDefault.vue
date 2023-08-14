@@ -2,7 +2,6 @@
   <div
     class="app-content content"
     :class="[{'show-overlay': $store.state.app.shallShowOverlay}, $route.meta.contentClass]"
-    style="padding-top: 110px;"
   >
     <div class="content-overlay" />
     <div class="header-navbar-shadow" />

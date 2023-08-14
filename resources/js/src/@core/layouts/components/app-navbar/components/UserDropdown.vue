@@ -1,26 +1,27 @@
 <template>
-  <div>
-    <b-nav-item-dropdown v-if="userData" right toggle-class="d-flex align-items-center dropdown-user-link"
-      class="dropdown-user">
-      <template #button-content>
-        <div class="d-sm-flex d-none user-nav">
-          <p class="user-name font-weight-bolder mb-0">
-            {{ userData.name || userData.username }}
-          </p>
-          <span class="user-status">{{ userData.role }}</span>
-        </div>
-        <template v-if="userData.profile_photo_path">
+  <b-nav-item-dropdown
+    right
+    toggle-class="d-flex align-items-center dropdown-user-link"
+    class="dropdown-user"
+  >
+    <template #button-content>
+      <div class="d-sm-flex d-none user-nav">
+        <p class="user-name font-weight-bolder mb-0">
+          {{ userData.name }}
+        </p>
+        <span class="user-status">{{ userData.role }}</span>
+      </div>
+      <template v-if="userData.profile_photo_path">
           <b-img v-bind="mainProps" rounded="circle" :src="`/storage/${userData.profile_photo_path}`"></b-img>
         </template>
-        <template v-else>
-          <b-avatar size="40" :src="userData.avatar" variant="light-primary" badge class="badge-minimal"
-            badge-variant="success">
-            <feather-icon v-if="!userData.name" icon="UserIcon" size="22" />
-          </b-avatar>
-        </template>
+      <template v-else>
+        <b-avatar size="40" :src="userData.avatar" variant="light-primary" badge class="badge-minimal" badge-variant="success">
+          <feather-icon v-if="!userData.name" icon="UserIcon" size="22"/>
+        </b-avatar>
       </template>
+    </template>
 
-      <b-dropdown-item :to="{ name: 'pengaturan-umum' }" link-class="d-flex align-items-center" v-if="hasRole('administrator')">
+    <b-dropdown-item :to="{ name: 'pengaturan-umum' }" link-class="d-flex align-items-center" v-if="hasRole('administrator')">
         <feather-icon size="16" icon="ToolIcon" class="mr-50" />
         <span>System Setting</span>
       </b-dropdown-item>
@@ -33,17 +34,14 @@
         <span>Logout</span>
       </b-dropdown-item>
     </b-nav-item-dropdown>
-    <b-nav v-if="!userData">
-      <b-nav-item :to="{ name: 'auth-login' }"><b-icon-shield-lock></b-icon-shield-lock> Login</b-nav-item>
-    </b-nav>
-  </div>
+    </b-dropdown-item></b-nav-item-dropdown>
 </template>
 
 <script>
 import {
-  BNavItemDropdown, BDropdownItem, BDropdownDivider, BAvatar, BNav, BNavItem, BIconShieldLock, BImg
+  BNavItemDropdown, BDropdownItem, BDropdownDivider, BAvatar, BImg
 } from 'bootstrap-vue'
-import eventBus from '@core/utils/eventBus';
+import eventBus from '@core/utils/eventBus'
 import { initialAbility } from '@/libs/acl/config'
 import useJwt from '@/auth/jwt/useJwt'
 import { avatarText } from '@core/utils/filter'
@@ -54,10 +52,7 @@ export default {
     BDropdownItem,
     BDropdownDivider,
     BAvatar,
-    BNav,
-    BNavItem,
-    BIconShieldLock,
-    BImg
+    BImg,
   },
   data() {
     return {

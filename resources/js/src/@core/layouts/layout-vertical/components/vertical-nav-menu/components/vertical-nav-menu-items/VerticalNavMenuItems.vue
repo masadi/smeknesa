@@ -3,7 +3,7 @@
     <component
       :is="resolveNavItemComponent(item)"
       v-for="item in items"
-      :key="item.header"
+      :key="item.header || item.aduh"
       :item="item"
     />
   </ul>

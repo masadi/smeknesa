@@ -23,6 +23,8 @@ use App\Models\Tahun_ajaran;
 use App\Models\Semester;
 use App\Models\Team;
 use App\Models\Agama;
+use App\Models\Pekerjaan;
+use App\Models\Cita;
 use App\Models\Pd_keluar;
 use App\Models\Jenis_keluar;
 use App\Models\Kenaikan_kelas;
@@ -106,7 +108,7 @@ class ReferensiController extends Controller
     public function peserta_didik(){
         if(request()->keluar){
             if(request()->keluar == 1){
-                $data = Peserta_didik::with(['keluar'])->whereHas('pd_keluar', function($query){
+                $data = Peserta_didik::with(['keluar', 'agama',])->whereHas('pd_keluar', function($query){
                     $query->where('semester_id', semester_id());
                 })->orderBy(request()->sortby, request()->sortbydesc)
                 ->when(request()->q, function($query) {
@@ -124,6 +126,7 @@ class ReferensiController extends Controller
                     'anggota_rombel' => function($query){
                         $query->where('semester_id', semester_id());
                     },
+                    'agama',
                 ])->whereHas('kelas', function($query){
                     $query->where('rombongan_belajar.semester_id', semester_id());
                     if($this->loggedUser()->hasRole('walas', periode_aktif())){
@@ -170,6 +173,7 @@ class ReferensiController extends Controller
                 'anggota_rombel' => function($query){
                     $query->where('semester_id', semester_id());
                 },
+                'agama'
             ])->whereHas('kelas', function($query){
                 $query->where('rombongan_belajar.semester_id', semester_id());
                 if($this->loggedUser()->hasRole('guru', periode_aktif())){
@@ -453,7 +457,12 @@ class ReferensiController extends Controller
             $get = Jadwal::where('pembelajaran_id', request()->id)->get();
         } elseif(request()->data == 'jam'){
             $get = Jam::find(request()->id);
+        } elseif(request()->data == 'mapel'){
+            $get = Mata_pelajaran::find(request()->id);
+        } elseif(request()->data == 'rombel'){
+            $get = Rombongan_belajar::find(request()->id);
         }
+        
         if($get){
             $delete = NULL;
             if(is_a($get, 'Illuminate\Database\Eloquent\Collection')) {
@@ -487,13 +496,42 @@ class ReferensiController extends Controller
     }
     public function detil_data(){
         if(request()->data == 'guru'){
-            $data = Guru::find(request()->id);
+            if(request()->edit){
+                $guru = Guru::find(request()->id);
+                $data = [
+                    'guru' => $guru,
+                    'provinsi' => Indonesia::allProvinces(),
+                    'kabupaten' => get_kabupaten($guru->provinsi_id),
+                    'kecamatan' => get_kecamatan($guru->kabupaten_id),
+                    'desa' => get_desa($guru->kecamatan_id),
+                    'agama' => Agama::get(),
+                ];
+            } else {
+                $data = Guru::with(['provinsi', 'kabupaten', 'kecamatan', 'desa', 'agama'])->find(request()->id);
+            }
         } elseif(request()->data == 'pd'){
-            $data = Peserta_didik::withTrashed()->with(['desa', 'kecamatan', 'kabupaten', 'provinsi'])->find(request()->id);
+            if(request()->edit){
+                $pd = Peserta_didik::find(request()->id);
+                $data = [
+                    'pd' => $pd,
+                    'provinsi' => Indonesia::allProvinces(),
+                    'kabupaten' => get_kabupaten($pd->provinsi_id),
+                    'kecamatan' => get_kecamatan($pd->kabupaten_id),
+                    'desa' => get_desa($pd->kecamatan_id),
+                    'agama' => Agama::get(),
+                    'pekerjaan' => Pekerjaan::get(),
+                    'cita' => Cita::get(),
+                ];
+            } else {
+                $data = Peserta_didik::withTrashed()->with(['desa', 'kecamatan', 'kabupaten', 'provinsi', 'agama', 'pekerjaan_ayah', 'pekerjaan_ibu'])->find(request()->id);
+            }
         } elseif(request()->data == 'semester'){
             $data = Semester::find(request()->id);
         } elseif(request()->data == 'jurusan'){
-            $data = Jurusan_sp::find(request()->id);
+            $data = [
+                'jurusan' => Jurusan_sp::find(request()->id),
+                'guru' => Guru::where('sekolah_id', request()->sekolah_id)->get(),
+            ];
         } elseif(request()->data == 'jadwal'){
             $jadwal = Jadwal::with(['jam', 'pembelajaran'])->find(request()->id);
             $rombel = Rombongan_belajar::find($jadwal->rombongan_belajar_id);
@@ -509,8 +547,18 @@ class ReferensiController extends Controller
                 'data_jam' => $jam,
                 'pembelajaran' => [Pembelajaran::find($jadwal->pembelajaran_id)],
             ];
+        } elseif(request()->data == 'mapel'){
+            $data = [
+                'mapel' => Mata_pelajaran::with(['mapel_tingkat.jurusan_sp'])->find(request()->id),
+                'jurusan' => Jurusan_sp::where('semester_id', semester_id())->orderBy('nama_jurusan_sp')->get(),
+            ];
+        } elseif(request()->data == 'rombel'){
+            $data = Rombongan_belajar::find(request()->id);
         } else {
-            $data = NULL;
+            $data = [
+                'success' => FALSE,
+                'errors' => 'Query tidak ditemukan',
+            ];
         }
         return response()->json($data);
     }
@@ -664,8 +712,35 @@ class ReferensiController extends Controller
         return response()->json($data);
     }
     public function sekolah(){
-        $sekolah = Sekolah::first();
+        $sekolah = Sekolah::find(request()->sekolah_id);
         if(request()->isMethod('post')){
+            request()->validate(
+                [
+                    'nama' => ['required'],
+                    'npsn' => ['required'],
+                    'alamat_jalan' => ['required'],
+                    'kode_pos' => ['required'],
+                    'provinsi_id' => ['required'],
+                    'kabupaten_id' => ['required'],
+                    'kecamatan_id' => ['required'],
+                    'desa_id' => ['required'],
+                    'email' => ['required', 'email'],
+                    'website' => ['required'],
+                ],
+                [
+                    'nama.required' => 'Nama Sekolah tidak boleh kosong!',
+                    'npsn.required' => 'NPSN tidak boleh kosong!',
+                    'alamat_jalan.required' => 'Alamat tidak boleh kosong!',
+                    'kode_pos.required' => 'Kodepos tidak boleh kosong!',
+                    'provinsi_id.required' => 'Provinsi tidak boleh kosong!',
+                    'kabupaten_id.required' => 'Kabupaten/Kota tidak boleh kosong!',
+                    'kecamatan_id.required' => 'Kecamatan tidak boleh kosong!',
+                    'desa_id.required' => 'Desa/Kelurahan tidak boleh kosong!',
+                    'email.required' => 'Email tidak boleh kosong!',
+                    'email.email' => 'Email tidak valid!',
+                    'website.required' => 'Website tidak boleh kosong!',
+                ],
+            );
             $sekolah->nama = request()->nama;
             $sekolah->npsn = request()->npsn;
             $sekolah->alamat_jalan = request()->alamat_jalan;
@@ -693,10 +768,9 @@ class ReferensiController extends Controller
             $data = [
                 'sekolah' => $sekolah,
                 'provinsi' => Indonesia::allProvinces(),
-                //Mst_wilayah::where('id_level_wilayah', 1)->get(),
-                'kabupaten' => get_kabupaten($sekolah->provinsi_id), //Mst_wilayah::where('id_level_wilayah', 2)->where('mst_kode_wilayah', $sekolah->provinsi_id)->get(),
-                'kecamatan' => get_kecamatan($sekolah->kabupaten_id), //Mst_wilayah::where('id_level_wilayah', 3)->where('mst_kode_wilayah', $sekolah->kabupaten_id)->get(),
-                'desa' => get_desa($sekolah->kecamatan_id), //Mst_wilayah::where('id_level_wilayah', 4)->where('mst_kode_wilayah', $sekolah->kecamatan_id)->get(),
+                'kabupaten' => get_kabupaten($sekolah->provinsi_id),
+                'kecamatan' => get_kecamatan($sekolah->kabupaten_id),
+                'desa' => get_desa($sekolah->kecamatan_id),
                 'isAdmin' => $this->loggedUser()->hasRole('administrator', periode_aktif())
             ];
         }
@@ -796,31 +870,7 @@ class ReferensiController extends Controller
         return response()->json(['status' => 'success', 'data' => $data, 'semester_id' => semester_id()]);
     }
     public function add_semester(){
-        /*request()->validate(
-            [
-                'tahun_ajaran_id' => ['required', 'unique:App\Models\Tahun_ajaran', 'digits:4', 'integer', 'min:2000', 'max:'.(date('Y')+1)],
-                'tanggal_mulai_ganjil' => ['required'],
-                'tanggal_selesai_ganjil' => ['required'],
-                'tanggal_cetak_ganjil' => ['required'],
-                'tanggal_mulai_genap' => ['required'],
-                'tanggal_selesai_genap' => ['required'],
-                'tanggal_cetak_genap' => ['required'],
-            ],
-            [
-                'tahun_ajaran_id.required' => 'Tahun Pelajaran tidak boleh kosong',
-                'tahun_ajaran_id.unique' => 'Tahun Pelajaran terdeteksi existing',
-                'tahun_ajaran_id.digits' => 'Tahun Pelajaran harus terdiri dari 4 digit',
-                'tahun_ajaran_id.integer' => 'Tahun Pelajaran harus berupa angka',
-                'tahun_ajaran_id.min' => 'Tahun Pelajaran minimal Tahun 2000',
-                'tahun_ajaran_id.max' => 'Tahun Pelajaran maksimal Tahun '.(date('Y')+1),
-                'tanggal_mulai_ganjil.required' => 'Tanggal Mulai Semester Ganjil tidak boleh kosong',
-                'tanggal_selesai_ganjil.required' => 'Tanggal Selesai Semester Ganjil tidak boleh kosong',
-                'tanggal_cetak_ganjil.required' => 'Tanggal Cetak Rapor Semester Ganjil tidak boleh kosong',
-                'tanggal_mulai_genap.required' => 'Tanggal Mulai Semester Genap tidak boleh kosong',
-                'tanggal_selesai_genap.required' => 'Tanggal Selesai Semester Genap tidak boleh kosong',
-                'tanggal_cetak_genap.required' => 'Tanggal Cetak Rapor Semester Genap tidak boleh kosong',
-            ],
-        );*/
+        /**/
         $validator = Validator::make(request()->all(), 
             [
                 'tahun_ajaran_id' => ['required', 'unique:App\Models\Tahun_ajaran', 'digits:4', 'integer', 'min:2000', 'max:'.(date('Y')+1)],
@@ -1085,10 +1135,113 @@ class ReferensiController extends Controller
         if(request()->data == 'pd'){
             return $this->update_pd();
         }
+        if(request()->data == 'jurusan'){
+            return $this->update_jurusan();
+        }
+        if(request()->data == 'rombel'){
+            return $this->update_rombel();
+        }
         return response()->json([
             'success' => FALSE,
             'errors' => 'Query tidak ditemukan',
         ]);
+    }
+    private function update_rombel(){
+        $validator = Validator::make(request()->all(), 
+            [
+                'nama' => ['required'],
+                'tingkat' => ['required'],
+                'kurikulum_id' => ['required'],
+                'jurusan_sp_id' => ['required'],
+                'guru_id' => ['required'],
+            ],
+            [
+                'nama.required' => 'Nama Kelas tidak boleh kosong',
+                'tingkat.required' => 'Tingkat Kelas tidak boleh kosong',
+                'kurikulum_id.required' => 'Kurikulum tidak boleh kosong',
+                'jurusan_sp_id.required' => 'Jurusan tidak boleh kosong',
+                'guru_id.required' => 'Ketua Jurusan tidak boleh kosong',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => FALSE,
+                'errors' => $validator->errors(),
+            ]);
+        }
+        $kur = Kurikulum::find(request()->kurikulum_id);
+        $data = Rombongan_belajar::find(request()->rombongan_belajar_id);
+        $data->guru_id = request()->guru_id;
+        $data->jurusan_sp_id = request()->jurusan_sp_id;
+        $data->kurikulum_id = request()->kurikulum_id;
+        $data->kurikulum = $kur->nama;
+        $data->nama = request()->nama;
+        $data->tingkat = request()->tingkat;
+        if($data->save()){
+            $data = [
+                'success' => TRUE,
+                'errors' => NULL,
+                'icon' => 'success',
+                'text' => 'Data Kelas berhasil diperbaharui',
+                'title' => 'Berhasil',
+            ];
+        } else {
+            $data = [
+                'success' => TRUE,
+                'errors' => NULL,
+                'icon' => 'error',
+                'text' => 'Data Kelas gagal diperbaharui. Silahkan coba beberapa saat lagi!',
+                'title' => 'Gagal',
+            ];
+        }
+        return response()->json($data);
+    }
+    private function update_jurusan(){
+        $validator = Validator::make(request()->all(), 
+            [
+                'jurusan_sp_id' => ['required'],
+                'nama_jurusan_sp' => ['required'],
+                'alias' => ['required', Rule::unique('jurusan_sp')->ignore(request()->jurusan_sp_id, 'jurusan_sp_id'),],
+                'guru_id' => ['required'],
+            ],
+            [
+                'jurusan_sp_id.required' => 'ID Jurusan tidak boleh kosong',
+                'nama_jurusan_sp.required' => 'Nama Jurusan tidak boleh kosong',
+                'alias.required' => 'Nama Singkatan tidak boleh kosong',
+                'alias.unique' => 'Nama Singkatan terdeteksi existing',
+                'guru_id.required' => 'Tempat Lahir tidak boleh kosong',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => FALSE,
+                'errors' => $validator->errors(),
+            ]);
+        }
+        $find = Jurusan_sp::find(request()->jurusan_sp_id);
+        $find->nama_jurusan_sp = request()->nama_jurusan_sp;
+        $find->alias = request()->alias;
+        $find->guru_id = request()->guru_id;
+        if($find->save()){
+            $data = [
+                'success' => TRUE,
+                'errors' => NULL,
+                'icon' => 'success',
+                'text' => 'Data Jurusan berhasil diperbaharui',
+                'title' => 'Berhasil',
+            ];
+        } else {
+            $data = [
+                'success' => TRUE,
+                'errors' => NULL,
+                'icon' => 'error',
+                'text' => 'Data Jurusan gagal diperbaharui. Silahkan coba beberapa saat lagi!',
+                'title' => 'Gagal',
+            ];
+        }
+        return response()->json($data);
     }
     private function update_pd(){
         $validator = Validator::make(request()->all(), 
@@ -1100,6 +1253,8 @@ class ReferensiController extends Controller
                 'tanggal_lahir' => 'required|date',
                 'agama_id' => ['required'],
                 'alamat_jalan' => ['required'],
+                'rt' => ['required'],
+                'rw' => ['required'],
                 'email' => [
                     'required',
                     'email',
@@ -1130,6 +1285,8 @@ class ReferensiController extends Controller
                 'tanggal_lahir.date' => 'Tanggal Lahir tidak valid',
                 'agama_id.required' => 'Agama tidak boleh kosong',
                 'alamat_jalan.required' => 'Alamat tidak boleh kosong',
+                'rt.required' => 'RT tidak boleh kosong',
+                'rw.required' => 'RW tidak boleh kosong',
                 'email.required' => 'Email tidak boleh kosong',
                 'email.email' => 'Email tidak valid',
                 'email.unique' => 'Email telah terdaftar',
@@ -1214,6 +1371,8 @@ class ReferensiController extends Controller
                 'tanggal_lahir' => 'required|date',
                 'agama_id' => ['required'],
                 'alamat_jalan' => ['required'],
+                'rt' => ['required'],
+                'rw' => ['required'],
                 'email' => [
                     'required',
                     'email',
@@ -1238,6 +1397,8 @@ class ReferensiController extends Controller
                 'tanggal_lahir.date' => 'Tanggal Lahir tidak valid',
                 'agama_id.required' => 'Agama tidak boleh kosong',
                 'alamat_jalan.required' => 'Alamat tidak boleh kosong',
+                'rt.required' => 'RT tidak boleh kosong',
+                'rw.required' => 'RW tidak boleh kosong',
                 'email.required' => 'Email tidak boleh kosong',
                 'email.email' => 'Email tidak valid',
                 'email.unique' => 'Email telah terdaftar',

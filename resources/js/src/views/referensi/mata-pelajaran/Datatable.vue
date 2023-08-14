@@ -9,12 +9,27 @@
       </b-col>
     </b-row>
     <b-overlay :show="loading" rounded opacity="0.6" size="lg" spinner-variant="warning">
-      <b-table responsive bordered striped :items="items" :fields="fields" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" show-empty :busy="isBusy">
+      <b-table bordered striped :items="items" :fields="fields" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" show-empty :busy="isBusy">
+        <template #empty="scope">
+          <p class="text-center">Tidak ada data untuk ditampilkan</p>
+        </template>
         <template #table-busy>
           <div class="text-center text-danger my-2">
             <b-spinner class="align-middle"></b-spinner>
             <strong>Loading...</strong>
           </div>
+        </template>
+        <template v-slot:cell(mapel_tingkat)="row">
+          {{getJurusan(row.item.mapel_tingkat)}}
+        </template>
+        <template v-slot:cell(tingkat)="row">
+          {{getTingkat(row.item.mapel_tingkat)}}
+        </template>
+        <template v-slot:cell(actions)="row">
+          <b-dropdown id="dropdown-dropleft" dropleft text="Detil" variant="primary" size="sm">
+            <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'edit')"><pencil-icon />Edit</b-dropdown-item>
+            <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'hapus')"><trash-icon />Hapus</b-dropdown-item>
+          </b-dropdown>
         </template>
       </b-table>
     </b-overlay>
@@ -30,8 +45,8 @@
 </template>
 
 <script>
-import _ from 'lodash' //IMPORT LODASH, DIMANA AKAN DIGUNAKAN UNTUK MEMBUAT DELAY KETIKA KOLOM PENCARIAN DIISI
-import { BRow, BCol, BFormInput, BTable, BSpinner, BPagination, BButton, BOverlay } from 'bootstrap-vue'
+import _ from 'lodash'
+import { BRow, BCol, BFormInput, BTable, BSpinner, BPagination, BDropdown, BDropdownItem, BOverlay } from 'bootstrap-vue'
 import vSelect from 'vue-select'
 export default {
   components: {
@@ -41,7 +56,8 @@ export default {
     BTable,
     BSpinner,
     BPagination,
-    BButton,
+    BDropdown,
+    BDropdownItem,
     BOverlay,
     vSelect,
   },
@@ -60,11 +76,16 @@ export default {
     isBusy: {
       type: Boolean,
       default: () => true,
+    },
+    isAsesor: {
+      type: Boolean,
+      default: () => false,
     }
   },
   data() {
     return {
       loading: false,
+      loading_modal: false,
       sortBy: null,
       sortDesc: false,
     }
@@ -84,6 +105,29 @@ export default {
     }
   },
   methods: {
+    uniqueChars(arr){
+      return [...new Set(arr)];
+    },
+    getJurusan(array){
+      var set_data_jurusan = [];
+      array.forEach(element => {
+        set_data_jurusan.push(element.jurusan_sp.alias)
+      });
+      return this.uniqueChars(set_data_jurusan).join(', ')
+    },
+    getTingkat(array){
+      var set_data_tingkat = [];
+      array.forEach(element => {
+        set_data_tingkat.push(element.tingkat)
+      });
+      return this.uniqueChars(set_data_tingkat).join(', ')
+    },
+    aksi(item, aksi){
+      this.$emit('aksi', {
+        aksi: aksi,
+        item: item,
+      })
+    },
     loadPerPage(val) {
       this.$emit('per_page', this.meta.per_page)
     },
@@ -96,3 +140,6 @@ export default {
   },
 }
 </script>
+<style lang="scss">
+@import '~@resources/scss/vue/libs/vue-sweetalert.scss';
+</style>

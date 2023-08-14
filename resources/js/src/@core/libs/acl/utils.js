@@ -9,7 +9,6 @@ import { getCurrentInstance } from '@vue/composition-api'
  */
 export const can = (action, subject) => {
   const vm = getCurrentInstance().proxy
-  
   return vm.$can ? vm.$can(action, subject) : true
 }
 
@@ -18,13 +17,7 @@ export const can = (action, subject) => {
  * Based on item's action and resource
  * @param {Object} item navigation object item
  */
-export const canViewVerticalNavMenuLink = item => {
-  if(item.action){
-    return can(item.action, item.resource)
-  } else {
-    return true
-  }
-}
+export const canViewVerticalNavMenuLink = item => can(item.action, item.resource)
 
 /**
  * Check if user can view item based on it's ability
@@ -56,28 +49,14 @@ export const canViewVerticalNavMenuHeader = item => can(item.action, item.resour
  * Based on item's action and resource
  * @param {Object} item navigation object item
  */
-export const canViewHorizontalNavMenuLink = item => {
-  //return can(item.action, item.resource)
-  if(item.action){
-    return can(item.action, item.resource)
-  } else {
-    return true
-  }
-}
+export const canViewHorizontalNavMenuLink = item => can(item.action, item.resource)
 
 /**
  * Check if user can view item based on it's ability
  * Based on item's action and resource
  * @param {Object} item navigation object item
  */
-export const canViewHorizontalNavMenuHeaderLink = item => {
-  //can(item.action, item.resource)
-  if(item.action){
-    return can(item.action, item.resource)
-  } else {
-    return true
-  }
-}
+export const canViewHorizontalNavMenuHeaderLink = item => can(item.action, item.resource)
 
 /**
  * Check if user can view item based on it's ability

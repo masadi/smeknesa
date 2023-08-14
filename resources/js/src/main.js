@@ -1,12 +1,12 @@
 import Vue from 'vue'
 import { ToastPlugin, ModalPlugin } from 'bootstrap-vue'
 import VueCompositionAPI from '@vue/composition-api'
-//import VueNumberFormat from '@vue-number-format'
+
 import i18n from '@/libs/i18n'
 import router from './router'
 import store from './store'
 import App from './App.vue'
-import VueTablerIcons from "vue-tabler-icons";
+
 // Global Components
 import './global-components'
 
@@ -18,7 +18,7 @@ import '@/libs/clipboard'
 import '@/libs/toastification'
 import '@/libs/sweet-alerts'
 import '@/libs/vue-select'
-import '@/libs/tour'
+//import '@/libs/tour'
 
 // Axios Mock Adapter
 //import '@/@fake-db/db'
@@ -26,9 +26,7 @@ import '@/libs/tour'
 // BSV Plugin Registration
 Vue.use(ToastPlugin)
 Vue.use(ModalPlugin)
-Vue.use(VueTablerIcons);
 
-//Vue.component('checklist-icon', IconChecklist)
 // Composition API
 Vue.use(VueCompositionAPI)
 
@@ -44,29 +42,30 @@ require('@resources/assets/scss/style.scss')
 
 Vue.config.productionTip = false
 Vue.mixin({
-    data: function () {
-        return {
-            /*get detilUser() {
-                return user;
-            },*/
-            user: JSON.parse(localStorage.getItem('userData')),
-            semester_id: JSON.parse(localStorage.getItem('semester_id')),
-        }
-    },
-    methods: {
-        loggedUser: function(){
-            return JSON.parse(localStorage.getItem('userData'));
-        },
-        hasRole: function (role) {
-            for (var i = 0; i < this.user.roles.length; i++) {
-                if (this.user.roles[i].name == role) {
-                    return true
-                }
-            }
-            return false
-        },
-    }
+  data: function () {
+      return {
+          /*get detilUser() {
+              return user;
+          },*/
+          user: JSON.parse(localStorage.getItem('userData')),
+          semester_id: JSON.parse(localStorage.getItem('semester_id')),
+      }
+  },
+  methods: {
+      loggedUser: function(){
+          return JSON.parse(localStorage.getItem('userData'));
+      },
+      hasRole: function (role) {
+          for (var i = 0; i < this.user.roles.length; i++) {
+              if (this.user.roles[i].name == role) {
+                  return true
+              }
+          }
+          return false
+      },
+  }
 })
+
 new Vue({
   router,
   store,

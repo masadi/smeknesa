@@ -4,17 +4,17 @@
     <b-link class="brand-logo">
       <vuexy-logo />
       <h2 class="brand-text text-primary ml-1">
-        {{app.name}} Versi {{app.version}}
+        Vuexy
       </h2>
     </b-link>
 
     <div class="misc-inner p-2 p-sm-3">
       <div class="w-100 text-center">
         <h2 class="mb-1">
-          Halaman tidak ditemukan 🕵🏻‍♀️
+          Page Not Found 🕵🏻‍♀️
         </h2>
         <p class="mb-2">
-          Oops! 😖 Alamat yang diminta tidak ditemukan di aplikasi ini.
+          Oops! 😖 The requested URL was not found on this server.
         </p>
 
         <b-button
@@ -22,7 +22,7 @@
           class="mb-2 btn-sm-block"
           :to="{path:'/'}"
         >
-          Kembali ke Beranda
+          Back to home
         </b-button>
 
         <!-- image -->
@@ -52,15 +52,14 @@ export default {
   },
   data() {
     return {
-      downImg: '/images/pages/error.svg',
-      app: store.state.appConfig.app,
+      downImg: '/img/pages/error.svg',
     }
   },
   computed: {
     imgUrl() {
       if (store.state.appConfig.layout.skin === 'dark') {
         // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-        this.downImg = '/images/pages/error-dark.svg'
+        this.downImg = '/img/pages/error-dark.svg'
         return this.downImg
       }
       return this.downImg

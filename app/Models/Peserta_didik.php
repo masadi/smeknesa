@@ -119,4 +119,13 @@ class Peserta_didik extends Model
 	{
 		return $this->belongsTo(User::class, 'peserta_didik_id', 'peserta_didik_id');
 	}
+	public function agama(){
+		return $this->hasOne(Agama::class, 'agama_id', 'agama_id');
+	}
+	public function pekerjaan_ayah(){
+		return $this->hasOne(Pekerjaan::class, 'pekerjaan_id', 'kerja_ayah');
+	}
+	public function pekerjaan_ibu(){
+		return $this->hasOne(Pekerjaan::class, 'pekerjaan_id', 'kerja_ibu');
+	}
 }

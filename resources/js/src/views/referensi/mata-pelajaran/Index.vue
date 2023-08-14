@@ -1,47 +1,94 @@
 <template>
-  <b-card>
-    <datatable :isBusy="isBusy" :items="items" :fields="fields" :meta="meta" @per_page="handlePerPage" @pagination="handlePagination" @search="handleSearch" @sort="handleSort" />
+  <b-card no-body>
+    <b-card-body>
+      <div v-if="isBusy" class="text-center text-danger my-2">
+        <b-spinner class="align-middle"></b-spinner>
+        <strong>Loading...</strong>
+      </div>
+      <div v-else>
+        <datatable :isBusy="isBusy" :items="items" :fields="fields" :meta="meta" @per_page="handlePerPage" @pagination="handlePagination" @search="handleSearch" @sort="handleSort" @aksi="handleAksi" />
+      </div>
+    </b-card-body>
+    <add-modal @reload="handleReload"></add-modal>
+    <edit-modal @reload="handleReload"></edit-modal>
   </b-card>
 </template>
 
 <script>
-import { BCard } from 'bootstrap-vue'
+import { BCard, BCardBody, BSpinner } from 'bootstrap-vue'
 import Datatable from './Datatable.vue' //IMPORT COMPONENT DATATABLENYA
+import AddModal from './../../components/modal/referensi/mata-pelajaran/AddModal.vue'
+import EditModal from './../../components/modal/referensi/mata-pelajaran/EditModal.vue'
+import eventBus from '@core/utils/eventBus'
 export default {
   components: {
     BCard,
-    Datatable
+    BCardBody,
+    BSpinner,
+    Datatable,
+    AddModal,
+    EditModal,
   },
   data() {
     return {
       isBusy: true,
       fields: [
         {
-          key: 'mata_pelajaran_id',
-          label: 'ID',
+          key: 'nama',
+          label: 'Nama',
           sortable: true,
           thClass: 'text-center',
         },
         {
-          key: 'nama',
-          label: 'Nama Mata Pelajaran',
+          key: 'mata_pelajaran_id',
+          label: 'kode',
           sortable: true,
           thClass: 'text-center',
+          tdClass: 'text-center'
+        },
+        {
+          key: 'mapel_tingkat',
+          label: 'Jurusan',
+          sortable: false,
+          thClass: 'text-center',
+          tdClass: 'text-center'
+        },
+        {
+          key: 'tingkat',
+          label: 'Tingkat Kelas',
+          sortable: false,
+          thClass: 'text-center',
+          tdClass: 'text-center'
+        },
+        
+        {
+          key: 'actions',
+          label: 'Aksi',
+          sortable: false,
+          thClass: 'text-center',
+          tdClass: 'text-center'
         },
       ],
       items: [],
       meta: {},
-      current_page: 1, 
-      per_page: 10,
+      current_page: 1, //DEFAULT PAGE YANG AKTIF ADA PAGE 1
+      per_page: 10, //DEFAULT LOAD PERPAGE ADALAH 10
       search: '',
-      sortBy: 'nama',
-      sortByDesc: false,
+      sortBy: 'nama', //DEFAULT SORTNYA ADALAH CREATED_AT
+      sortByDesc: false, //ASCEDING
     }
   },
   created() {
+    eventBus.$on('add-mapel', this.handleEvent);
     this.loadPostsData()
   },
   methods: {
+    handleEvent(){
+      eventBus.$emit('open-modal-add-mapel');
+    },
+    handleReload(){
+      this.loadPostsData()
+    },
     loadPostsData() {
       this.isBusy = true
       //let current_page = this.search == '' ? this.current_page : this.current_page != 1 ? 1 : this.current_page
@@ -71,6 +118,8 @@ export default {
           per_page: getData.per_page,
           from: getData.from,
           to: getData.to,
+          role_id: this.role_id,
+          roles: response.data.roles,
         }
       })
     },
@@ -97,6 +146,52 @@ export default {
         this.loadPostsData() //DAN LOAD DATA BARU BERDASARKAN SORT
       }
     },
+    handleAksi(val){
+      if(val.aksi === 'hapus'){
+        this.$swal({
+          title: 'Apakah Anda yakin?',
+          text: 'Tindakan ini tidak dapat dikembalikan!',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Yakin!',
+          customClass: {
+            confirmButton: 'btn btn-primary',
+            cancelButton: 'btn btn-outline-danger ml-1',
+          },
+          buttonsStyling: false,
+          allowOutsideClick: () => false,
+        }).then(result => {
+          if (result.value) {
+            this.loading_form = true
+            this.$http.post('/referensi/hapus-data', {
+              data: 'mapel',
+              id: val.item.mata_pelajaran_id,
+            }).then(response => {
+              this.loading_form = false
+              let getData = response.data
+              this.$swal({
+                icon: getData.icon,
+                title: getData.title,
+                text: getData.text,
+                customClass: {
+                  confirmButton: 'btn btn-success',
+                },
+              }).then(result => {
+                this.loadPostsData()
+              })
+            });
+          }
+        })
+      } else {
+        eventBus.$emit(`open-modal-${val.aksi}-mapel`, val.item);
+      }
+      console.log(val);
+      //console.log(val);
+      //eventBus.$emit('open-modal-detil-guru', val);
+    },
   },
 }
 </script>
+<style lang="scss">
+@import '~@resources/scss/vue/libs/vue-sweetalert.scss';
+</style>

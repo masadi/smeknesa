@@ -12,9 +12,8 @@
       class="d-flex align-items-center"
       @click="() => updateGroupOpen(!isOpen)"
     >
+      <component :is="item.icon || 'circle-dot-filled-icon'" />
       <!--feather-icon :icon="item.icon || 'CircleIcon'" /-->
-      <font-awesome-icon :icon="[item.type || 'fas', item.icon]" />
-      <!--component :is="`${item.icon}-icon`" /-->
       <span class="menu-title text-truncate">{{ t(item.title) }}</span>
       <b-badge
         v-if="item.tag"
@@ -33,7 +32,7 @@
       <component
         :is="resolveNavItemComponent(child)"
         v-for="child in item.children"
-        :key="child.header"
+        :key="child.header || child.title"
         ref="groupChild"
         :item="child"
       />

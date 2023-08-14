@@ -17,7 +17,7 @@
   <link rel="stylesheet" href="{{ asset(mix('css/core.css')) }}">
 
   <!-- Favicon -->
-  <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+  <link rel="shortcut icon" href="{{ asset('logo.png') }}">
 
   <!-- Font -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap"
@@ -31,7 +31,7 @@
   </noscript>
   <div id="loading-bg">
     <div class="loading-logo">
-      <img src="{{ asset('logo-small.png') }}" alt="Logo" />
+      <img src="{{ asset('logo.png') }}" alt="Logo" />
     </div>
     <div class="loading">
       <div class="effect-1 effects"></div>
@@ -43,10 +43,8 @@
   </div>
   <script>
     var app_url = '{{ url('/') }}';
-    var app_version = '{{ get_setting('app_version') }}';
     var app_name = '{{ config('app.name') }}';
-    var app_registration = '{{ config('app.registration') }}';
-  </script>    
+  </script>   
   <script src="{{ asset(mix('js/app.js')) }}"></script>
 
 </body>

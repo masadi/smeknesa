@@ -50,22 +50,22 @@ export default {
     const locales = [
       {
         locale: 'en',
-        img: '/images/flags/en.png',
+        img: '/img/flags/en.png',
         name: 'English',
       },
       {
         locale: 'fr',
-        img: '/images/flags/fr.png',
+        img: '/img/flags/fr.png',
         name: 'French',
       },
       {
         locale: 'de',
-        img: '/images/flags/de.png',
+        img: '/img/flags/de.png',
         name: 'German',
       },
       {
         locale: 'pt',
-        img: '/images/flags/pt.png',
+        img: '/img/flags/pt.png',
         name: 'Portuguese',
       },
     ]
