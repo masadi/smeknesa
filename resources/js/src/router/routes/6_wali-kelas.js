@@ -1,5 +1,24 @@
 export default [
   {
+    path: '/wali-kelas/absensi-siswa',
+    name: 'walas-absensi-siswa',
+    component: () => import('@/views/pages/Blank.vue'),
+    meta: {
+      resource: 'Presensi_Rekap_Pd',
+      action: 'read',
+      pageTitle: 'Absensi Siswa',
+      breadcrumb: [
+        {
+          text: 'Wali Kelas',
+        },
+        {
+          text: 'Absensi Siswa',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
     path: '/wali-kelas/kenaikan',
     name: 'walas-kenaikan',
     component: () => import('@/views/pages/Blank.vue'),

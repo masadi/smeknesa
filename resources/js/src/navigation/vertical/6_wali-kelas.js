@@ -5,6 +5,13 @@ export default [
     children: [
       {
         icon: 'hand-click-icon',
+        title: 'Absensi Siswa',
+        route: 'walas-absensi-siswa',
+        resource: 'Presensi_Rekap_Pd',
+        action: 'read',
+      },
+      {
+        icon: 'hand-click-icon',
         title: 'Kenaikan',
         route: 'walas-kenaikan',
         resource: 'Kenaikan',
