@@ -27,29 +27,9 @@ export default [
       {
         icon: 'hand-click-icon',
         title: 'Peserta Didik',
-        children: [
-          {
-            icon: 'hand-click-icon',
-            title: 'PD Aktif',
-            route: 'referensi-peserta-didik-aktif',
-            resource: 'Ref_Pd',
-            action: 'read',
-          },
-          {
-            icon: 'hand-click-icon',
-            title: 'PD Keluar',
-            route: 'referensi-peserta-didik-keluar',
-            resource: 'Ref_Pd_Keluar',
-            action: 'read',
-          },
-          {
-            icon: 'hand-click-icon',
-            title: 'Password PD',
-            route: 'referensi-password-pd',
-            resource: 'Password_pd',
-            action: 'read',
-          },
-        ],
+        route: 'referensi-peserta-didik',
+        resource: 'Ref_Pd',
+        action: 'read',
       },
       {
         icon: 'hand-click-icon',

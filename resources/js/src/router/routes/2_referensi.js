@@ -89,19 +89,19 @@ export default [
     },
   },
   {
-    path: '/referensi/peserta-didik-aktif',
-    name: 'referensi-peserta-didik-aktif',
+    path: '/referensi/peserta-didik',
+    name: 'referensi-peserta-didik',
     component: () => import('@/views/referensi/peserta-didik/Aktif.vue'),
     meta: {
       resource: 'Ref_Pd',
       action: 'read',
-      pageTitle: 'Data Peserta Didik Aktif',
+      pageTitle: 'Data Peserta Didik',
       breadcrumb: [
         {
           text: 'Referensi',
         },
         {
-          text: 'Peserta Didik Aktif',
+          text: 'Peserta Didik',
           active: true,
         },
       ],
@@ -111,25 +111,6 @@ export default [
         variant: 'primary',
         text: 'Tambah Data'
       },
-    },
-  },
-  {
-    path: '/referensi/peserta-didik-keluar',
-    name: 'referensi-peserta-didik-keluar',
-    component: () => import('@/views/referensi/peserta-didik/Keluar.vue'),
-    meta: {
-      resource: 'Ref_Pd',
-      action: 'read',
-      pageTitle: 'Data Peserta Didik Keluar',
-      breadcrumb: [
-        {
-          text: 'Referensi',
-        },
-        {
-          text: 'Peserta Didik Keluar',
-          active: true,
-        },
-      ],
     },
   },
   {
