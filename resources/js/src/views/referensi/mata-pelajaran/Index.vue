@@ -60,14 +60,15 @@ export default {
           thClass: 'text-center',
           tdClass: 'text-center'
         },
-        
+      ],
+      fields_admin: [
         {
           key: 'actions',
           label: 'Aksi',
           sortable: false,
           thClass: 'text-center',
           tdClass: 'text-center'
-        },
+        }
       ],
       items: [],
       meta: {},
@@ -79,6 +80,9 @@ export default {
     }
   },
   created() {
+    if(this.hasRole('administrator')){
+      Array.prototype.push.apply(this.fields, this.fields_admin);
+    }
     eventBus.$on('add-mapel', this.handleEvent);
     this.loadPostsData()
   },

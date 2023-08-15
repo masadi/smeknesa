@@ -178,7 +178,8 @@ export default [
         action: 'add-mapel',
         link: '',
         variant: 'primary',
-        text: 'Tambah Data'
+        text: 'Tambah Data',
+        role: ['administrator'],
       },
     },
   },
