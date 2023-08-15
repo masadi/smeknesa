@@ -97,22 +97,22 @@ class GenerateAkses extends Command
             [
                 'action' => 'read',
                 'subject' => 'Presensi_Guru',
-                'roles' => ['administrator', 'pengajar', 'piket', 'wakakur'],
+                'roles' => ['piket'],
             ],
             [
                 'action' => 'read',
                 'subject' => 'Presensi_Pd',
-                'roles' => ['administrator', 'pd', 'piket', 'wakakur', 'walas', 'kajur', 'wakasiswa', 'bk'],
+                'roles' => ['piket'],
             ],
             [
                 'action' => 'read',
                 'subject' => 'Presensi_Rekap_Guru',
-                'roles' => ['administrator', 'kepsek', 'pengajar', 'wakakur'],
+                'roles' => ['walas', 'wakakur', 'wakasiswa', 'bk'],
             ],
             [
                 'action' => 'read',
                 'subject' => 'Presensi_Rekap_Pd',
-                'roles' => ['administrator', 'pengajar', 'piket', 'wakakur', 'walas', 'kajur', 'wakasiswa', 'bk'],
+                'roles' => ['walas', 'wakakur', 'wakasiswa', 'bk'],
             ],
             [
                 'action' => 'read',
