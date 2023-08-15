@@ -84,6 +84,12 @@
                 </b-form-group>
               </b-col>
               <b-col cols="12">
+                <b-form-group label="Logo Sekolah" label-for="image" label-cols-md="3" :invalid-feedback="feedback.image" :state="state.image">
+                  <b-form-file id="image" accept=".jpg, .png" v-model="form.image" :state="state.logo" placeholder="Upload logo sekolah..." drop-placeholder="Drop file here..." @change="onFileChange"></b-form-file>
+                </b-form-group>
+                <b-img thumbnail fluid :src="preview_url" alt="Logo" v-if="preview_url"></b-img>
+              </b-col>
+              <b-col cols="12">
                 <b-form-group label-cols-md="3">
                   <b-button type="submit" variant="primary" class="float-right ml-1" :disabled="!isAdmin">Simpan</b-button>
                 </b-form-group>
@@ -97,7 +103,7 @@
 </template>
 
 <script>
-import { BRow, BCol, BCard, BCardBody, BOverlay, BForm, BFormGroup, BFormInput, BSpinner, BButton } from 'bootstrap-vue'
+import { BRow, BCol, BCard, BCardBody, BOverlay, BForm, BFormGroup, BFormInput, BFormFile, BSpinner, BButton, BImg } from 'bootstrap-vue'
 import vSelect from 'vue-select'
 export default {
   components: {
@@ -109,8 +115,10 @@ export default {
     BForm,
     BFormGroup, 
     BFormInput,
+    BFormFile,
     BSpinner,
     BButton,
+    BImg,
     vSelect,
   },
   data() {
@@ -123,6 +131,7 @@ export default {
       form: {},
       feedback: {},
       state: {},
+      preview_url: null,
       loading_provinsi_id: false,
       loading_kabupaten_id: false,
       loading_kecamatan_id: false,
@@ -146,6 +155,7 @@ export default {
         let getData = response.data
         this.isBusy = false
         this.form = getData.sekolah
+        this.preview_url = `/storage/${getData.sekolah.logo}`
         this.data_provinsi = getData.provinsi
         this.data_kabupaten = getData.kabupaten
         this.data_kecamatan = getData.kecamatan
@@ -154,18 +164,53 @@ export default {
       })
     },
     changeProvinsi(val){
-      //
+      this.loading_kabupaten_id = true
+      this.$http.post('/referensi/wilayah', {
+        provinsi_id: val,
+      }).then(response => {
+        this.loading_kabupaten_id = false
+        this.data_kabupaten = response.data
+      });
     },
     changeKabupaten(val){
-      //
+      this.loading_kecamatan_id = true
+      this.$http.post('/referensi/wilayah', {
+        kabupaten_id: val,
+      }).then(response => {
+        this.loading_kecamatan_id = false
+        this.data_kecamatan = response.data
+      });
     },
     changeKecamatan(val){
-      // 
+      this.loading_desa_id = true
+      this.$http.post('/referensi/wilayah', {
+        kecamatan_id: val,
+      }).then(response => {
+        this.loading_desa_id = false
+        this.data_desa = response.data
+      });
+    },
+    onFileChange(e) {
+      this.form.image = e.target.files[0];
+      this.preview_url = URL.createObjectURL(this.form.image)
     },
     onSubmit(event) {
       event.preventDefault()
       this.loading = true
-      this.$http.post('/referensi/sekolah', this.form).then(response => {
+      const data = new FormData();
+      data.append('sekolah_id', this.form.sekolah_id)
+      data.append('nama', this.form.nama)
+      data.append('npsn', this.form.npsn)
+      data.append('alamat_jalan', this.form.alamat_jalan)
+      data.append('kode_pos', this.form.kode_pos)
+      data.append('provinsi_id', this.form.provinsi_id)
+      data.append('kabupaten_id', this.form.kabupaten_id)
+      data.append('kecamatan_id', this.form.kecamatan_id)
+      data.append('desa_id', this.form.desa_id)
+      data.append('email', this.form.email)
+      data.append('website', this.form.website)
+      data.append('logo', this.form.image);
+      this.$http.post('/referensi/sekolah', data).then(response => {
         this.loading = false
         let getData = response.data
         if(getData.errors){

@@ -751,6 +751,10 @@ class ReferensiController extends Controller
             $sekolah->desa_id = request()->desa_id;
             $sekolah->email = request()->email;
             $sekolah->website = request()->website;
+            if(request()->logo){
+                $logo = request()->logo->store('public/images');
+                $sekolah->logo = 'images/'.basename($logo);
+            }
             if($sekolah->save()){
                 $data = [
                     'icon' => 'success',
