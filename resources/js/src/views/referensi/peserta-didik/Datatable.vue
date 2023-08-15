@@ -42,11 +42,16 @@
           {{(row.item.kelas) ? row.item.kelas.nama : null}}
         </template>
         <template v-slot:cell(actions)="row">
-          <b-dropdown id="dropdown-dropleft" dropleft text="Detil" variant="primary" size="sm">
-            <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'detil')"><eye-icon /> Detil</b-dropdown-item>
-            <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'edit')"><pencil-icon />Edit</b-dropdown-item>
-            <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'hapus')"><trash-icon />Hapus</b-dropdown-item>
-          </b-dropdown>
+          <template v-if="hasRole('administrator')">
+            <b-dropdown id="dropdown-dropleft" dropleft text="Detil" variant="primary" size="sm">
+              <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'detil')"><eye-icon /> Detil</b-dropdown-item>
+              <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'edit')"><pencil-icon />Edit</b-dropdown-item>
+              <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'hapus')"><trash-icon />Hapus</b-dropdown-item>
+            </b-dropdown>
+          </template>
+          <template v-else>
+            <b-button variant="primary" size="sm" @click="aksi(row.item, 'detil')">Detil</b-button>
+          </template>
         </template>
       </b-table>
     </b-overlay>
@@ -63,7 +68,7 @@
 
 <script>
 import _ from 'lodash'
-import { BRow, BCol, BFormInput, BTable, BSpinner, BPagination, BDropdown, BDropdownItem, BOverlay, BMedia, BMediaAside, BAvatar, BMediaBody } from 'bootstrap-vue'
+import { BRow, BCol, BFormInput, BTable, BSpinner, BPagination, BDropdown, BDropdownItem, BOverlay, BMedia, BMediaAside, BAvatar, BMediaBody, BButton } from 'bootstrap-vue'
 import vSelect from 'vue-select'
 export default {
   components: {
@@ -80,6 +85,7 @@ export default {
     BMediaAside,
     BAvatar,
     BMediaBody,
+    BButton,
     vSelect,
   },
   props: {
