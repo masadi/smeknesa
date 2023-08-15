@@ -84,7 +84,8 @@ export default [
         action: 'add-guru',
         link: '',
         variant: 'primary',
-        text: 'Tambah Data'
+        text: 'Tambah Data',
+        role: ['administrator'],
       },
     },
   },
@@ -109,7 +110,8 @@ export default [
         action: 'add-pd',
         link: '',
         variant: 'primary',
-        text: 'Tambah Data'
+        text: 'Tambah Data',
+        role: ['administrator'],
       },
     },
   },
@@ -153,7 +155,8 @@ export default [
         action: 'add-jurusan',
         link: '',
         variant: 'primary',
-        text: 'Tambah Data'
+        text: 'Tambah Data',
+        role: ['administrator'],
       },
     },
   },
@@ -204,7 +207,8 @@ export default [
         action: 'add-rombel',
         link: '',
         variant: 'primary',
-        text: 'Tambah Data'
+        text: 'Tambah Data',
+        role: ['administrator'],
       },
     },
   },
