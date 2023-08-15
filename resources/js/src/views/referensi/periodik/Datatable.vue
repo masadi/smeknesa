@@ -44,10 +44,6 @@
         <b-pagination v-model="meta.current_page" :total-rows="meta.total" :per-page="meta.per_page" align="right" @change="changePage" aria-controls="dw-datatable"></b-pagination>
       </b-col>
     </b-row>
-    <div>
-      Sorting By: <b>{{ sortBy }}</b>, Sort Direction:
-      <b>{{ sortDesc ? 'Descending' : 'Ascending' }}</b>
-    </div>
   </div>
 </template>
 

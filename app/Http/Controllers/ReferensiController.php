@@ -1145,10 +1145,63 @@ class ReferensiController extends Controller
         if(request()->data == 'rombel'){
             return $this->update_rombel();
         }
+        if(request()->data == 'mapel'){
+            return $this->updateMapel();
+        }
         return response()->json([
             'success' => FALSE,
             'errors' => 'Query tidak ditemukan',
         ]);
+    }
+    private function updateMapel(){
+        $validator = Validator::make(request()->all(), 
+            [
+                'nama' => ['required'],
+                'tingkat' => ['required'],
+                'jurusan_sp_id' => ['required'],
+            ],
+            [
+                'nama.required' => 'Nama Mata Pelajaran tidak boleh kosong',
+                'tingkat.required' => 'Tingkat Kelas tidak boleh kosong',
+                'jurusan_sp_id.required' => 'Jurusan tidak boleh kosong',
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => FALSE,
+                'errors' => $validator->errors(),
+            ]);
+        }
+        $data = Mata_pelajaran::find(request()->mata_pelajaran_id);
+        $data->nama = request()->nama;
+        $data->tingkat = array_filter(array_values(request()->tingkat));
+        if($data->save()){
+            foreach(array_filter(array_values(request()->tingkat)) as $tingkat){
+                foreach(array_filter(array_values(request()->jurusan_sp_id)) as $jurusan_sp_id){
+                    Mapel_tingkat::updateOrCreate([
+                        'mata_pelajaran_id' => request()->mata_pelajaran_id,
+                        'tingkat' => $tingkat,
+                        'jurusan_sp_id' => $jurusan_sp_id
+                    ]);
+                }
+            }
+            $data = [
+                'success' => TRUE,
+                'errors' => NULL,
+                'icon' => 'success',
+                'text' => 'Data Mata Pelajaran berhasil diperbaharui',
+                'title' => 'Berhasil',
+            ];
+        } else {
+            $data = [
+                'success' => TRUE,
+                'errors' => NULL,
+                'icon' => 'error',
+                'text' => 'Data Pelajaran gagal diperbaharui. Silahkan coba beberapa saat lagi!',
+                'title' => 'Gagal',
+            ];
+        }
+        return response()->json($data);
     }
     private function update_rombel(){
         $validator = Validator::make(request()->all(), 
