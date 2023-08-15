@@ -87,12 +87,12 @@
                 <b-form-group label="Logo Sekolah" label-for="image" label-cols-md="3" :invalid-feedback="feedback.image" :state="state.image">
                   <b-form-file id="image" accept=".jpg, .png" v-model="form.image" :state="state.logo" placeholder="Upload logo sekolah..." drop-placeholder="Drop file here..." @change="onFileChange"></b-form-file>
                 </b-form-group>
-                <b-img thumbnail fluid :src="preview_url" alt="Logo" v-if="preview_url"></b-img>
               </b-col>
-              <b-col cols="12">
-                <b-form-group label-cols-md="3">
-                  <b-button type="submit" variant="primary" class="float-right ml-1" :disabled="!isAdmin">Simpan</b-button>
-                </b-form-group>
+              <b-col cols="7" offset="3" v-if="preview_url">
+                <b-img thumbnail fluid :src="preview_url" alt="Logo"></b-img>
+              </b-col>
+              <b-col cols="7" offset="3" class="mt-1">
+                <b-button type="submit" variant="primary" :disabled="!isAdmin">Simpan</b-button>
               </b-col>
             </b-row>
           </b-form>
