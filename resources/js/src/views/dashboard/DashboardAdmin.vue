@@ -26,7 +26,6 @@
               <b-col v-for="item in statistik" :key="item.title" cols="6" md="3">
                 <div class="d-flex">
                   <b-avatar :variant="item.color" size="4em" class="mr-1">
-                    <!--font-awesome-icon :icon="`fa-solid fa-${item.icon}`" size="2xl" /-->
                     <component :is="item.icon" />
                   </b-avatar>
                   <div class="d-flex flex-column">
@@ -45,7 +44,6 @@
         <b-card no-body>
           <b-card-body class="text-center">
             <b-avatar :variant="item.color" size="4em" class="mb-1">
-              <!--font-awesome-icon :icon="`fa-solid fa-${item.icon}`" size="2xl" /-->
               <component :is="item.icon" />
             </b-avatar>
             <h3>{{ item.stats }}</h3>

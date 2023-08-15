@@ -25,11 +25,12 @@
           </v-select>
         </b-col>
         <b-col md="6">
-          <v-select v-model="meta.tanggal" :options="meta.data_tanggal" placeholder="== Filter Tanggal ==" @input="changeTanggal">
+          <!--v-select v-model="meta.tanggal" :options="meta.data_tanggal" placeholder="== Filter Tanggal ==" @input="changeTanggal">
             <template #no-options="{ search, searching, loading }">
               Tidak ada data untuk ditampilkan
             </template>
-          </v-select>
+          </v-select-->
+          <b-form-datepicker v-model="meta.tanggal" show-decade-nav button-variant="outline-secondary" left locale="id" aria-controls="tanggal" @context="onContext" placeholder="== Filter Tanggal ==" @input="changeTanggal" />
         </b-col>
         <b-col md="6" class="mb-2">
           <v-select v-model="meta.per_page" :options="[10, 25, 50, 100]" @input="loadPerPage" :clearable="false" :searchable="false"></v-select>
@@ -92,7 +93,7 @@
 
 <script>
 import _ from 'lodash'
-import { BRow, BCol, BFormInput, BTable, BSpinner, BPagination, BOverlay, BTr, BTh, BButton} from 'bootstrap-vue'
+import { BRow, BCol, BFormInput, BTable, BSpinner, BPagination, BOverlay, BTr, BTh, BButton, BFormDatepicker } from 'bootstrap-vue'
 import vSelect from 'vue-select'
 export default {
   components: {
@@ -106,6 +107,7 @@ export default {
     BTr,
     BTh,
     BButton,
+    BFormDatepicker,
     vSelect,
   },
   props: {
@@ -172,6 +174,9 @@ export default {
     },
     changeTanggal(val){
       this.$emit('tanggal', val)
+    },
+    onContext(ctx) {
+      this.formatted = ctx.selectedFormatted
     },
   },
 }

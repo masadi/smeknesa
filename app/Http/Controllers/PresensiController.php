@@ -178,7 +178,8 @@ class PresensiController extends Controller
     public function get_hari(){
         $tanggal = Carbon::now();
         $data = [
-            'tanggal' => $tanggal->translatedFormat('l, j F Y'),
+            'tanggal' => $tanggal->format('Y-m-d'),
+            'tanggal_str' => $tanggal->translatedFormat('l, j F Y'),
             'jumlah_jam' => ($tanggal->dayOfWeek == Carbon::FRIDAY) ? 6 : 11
         ];
         return response()->json($data);
@@ -198,7 +199,7 @@ class PresensiController extends Controller
                 [
                     'anggota_rombel_id' => $anggota_rombel_id,
                     'guru_id' => $guru_id,
-                    'tanggal' => Carbon::now()->format('Y-m-d'),
+                    'tanggal' => request()->tanggal,
                     'jam' => $jam,
                 ],
                 [
@@ -396,32 +397,6 @@ class PresensiController extends Controller
         return response()->json($data);
     }
     public function pd(){
-        /*$data = Peserta_didik::whereHas('anggota_rombel', $this->kondisiAbsen())->withCount([
-            'presensi as H' => function($query){
-                $query->where('absen', 'H');
-            },
-            'presensi as A' => function($query){
-                $query->where('absen', 'A');
-            },
-            'presensi as S' => function($query){
-                $query->where('absen', 'S');
-            },
-            'presensi as I' => function($query){
-                $query->where('absen', 'I');
-            },
-            'presensi as D' => function($query){
-                $query->where('absen', 'D');
-            },
-        ])->withWhereHas('kelas', function($query){
-            $query->where('rombongan_belajar.semester_id', semester_id());
-            if(loggedUser()->hasRole('walas', request()->periode_aktif)){
-                $query->where('guru_id', request()->guru_id);
-            }
-        })->orderBy(request()->sortby, request()->sortbydesc)
-        ->when(request()->q, function($query) {
-            $query->where($this->kondisiAbsen());
-            $query->where('nama', 'ilike', '%'.request()->q.'%');
-        })->paginate(request()->per_page);*/
         $data = Rombongan_belajar::where('semester_id', semester_id())->orderBy('tingkat')->orderBy('nama')->withCount([
             'anggota_rombel',
             'anggota_rombel as hadir' => function($query){

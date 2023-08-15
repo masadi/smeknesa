@@ -24,45 +24,48 @@
             </b-form-group>
           </b-col>
           <b-col cols="12">
-            <b-form-group label="Hari, Tanggal" label-for="hari" label-cols-md="3">
-              <b-form-input id="hari" v-model="hari" disabled></b-form-input>
+            <b-form-group label="Hari, Tanggal" label-for="tanggal" label-cols-md="3">
+              <b-form-datepicker id="tanggal" v-model="form.tanggal" show-decade-nav button-variant="outline-secondary" left locale="id" aria-controls="tanggal" @input="changeTanggal" @context="onContext" placeholder="== Pilih Tanggal ==" />
+              <!--b-form-input id="hari" v-model="hari" disabled></b-form-input-->
             </b-form-group>  
           </b-col>
         </b-row>
-        <BTableSimple bordered>
-          <BThead>
-            <BTr>
-              <BTh rowspan="2" style="vertical-align:middle;">Nama Lengkap</BTh>
-              <BTh rowspan="2" style="vertical-align:middle;" class="text-center">NISN</BTh>
-              <BTh :colspan="jumlah_jam" class="text-center">Absensi Jam Ke</BTh>
-            </BTr>
-            <BTr>
-              <template v-for="jam_ke in jumlah_jam">
-                <BTh class="text-center">{{jam_ke}}</BTh>
+        <b-overlay :show="loading_table" opacity="0.6" size="md" spinner-variant="danger">
+          <BTableSimple bordered>
+            <BThead>
+              <BTr>
+                <BTh rowspan="2" style="vertical-align:middle;">Nama Lengkap</BTh>
+                <BTh rowspan="2" style="vertical-align:middle;" class="text-center">NISN</BTh>
+                <BTh :colspan="jumlah_jam" class="text-center">Absensi Jam Ke</BTh>
+              </BTr>
+              <BTr>
+                <template v-for="jam_ke in jumlah_jam">
+                  <BTh class="text-center">{{jam_ke}}</BTh>
+                </template>
+              </BTr>
+            </BThead>
+            <BTbody>
+              <template v-if="data_pd.length">
+                <template v-for="pd in data_pd">
+                  <BTr>
+                    <BTd>{{pd.nama}}</BTd>
+                    <BTd class="text-center">{{pd.nisn}}</BTd>
+                    <template v-for="jam_ke in jumlah_jam">
+                      <BTd>
+                        <b-form-select v-model="absensi[pd.anggota_rombel.anggota_rombel_id+'#'+jam_ke]" :options="['H', 'A', 'S', 'I', 'D']"></b-form-select>
+                      </BTd>
+                    </template>
+                  </BTr>
+                </template>
               </template>
-            </BTr>
-          </BThead>
-          <BTbody>
-            <template v-if="data_pd.length">
-              <template v-for="pd in data_pd">
+              <template v-else>
                 <BTr>
-                  <BTd>{{pd.nama}}</BTd>
-                  <BTd class="text-center">{{pd.nisn}}</BTd>
-                  <template v-for="jam_ke in jumlah_jam">
-                    <BTd>
-                      <b-form-select v-model="absensi[pd.anggota_rombel.anggota_rombel_id+'#'+jam_ke]" :options="['H', 'A', 'S', 'I', 'D']"></b-form-select>
-                    </BTd>
-                  </template>
+                  <BTd :colspan="jumlah_jam + 2" class="text-center">Tidak ada data untuk ditampilkan</BTd>
                 </BTr>
               </template>
-            </template>
-            <template v-else>
-              <BTr>
-                <BTd :colspan="jumlah_jam + 2" class="text-center">Tidak ada data untuk ditampilkan</BTd>
-              </BTr>
-            </template>
-          </BTbody>
-        </BTableSimple>
+            </BTbody>
+          </BTableSimple>
+        </b-overlay>
       </b-form>
     </b-overlay>
     <template #modal-footer="{ ok, cancel }">
@@ -77,7 +80,7 @@
 </template>
 
 <script>
-import { BOverlay, BForm, BTableSimple, BThead, BTh, BTbody, BTr, BTd, BButton, BFormSelect } from 'bootstrap-vue'
+import { BOverlay, BRow, BCol, BForm, BTableSimple, BThead, BTh, BTbody, BTr, BTd, BButton, BFormSelect, BFormDatepicker, BFormGroup } from 'bootstrap-vue'
 import eventBus from '@core/utils/eventBus'
 import vSelect from 'vue-select'
 export default {
@@ -92,6 +95,10 @@ export default {
     BTd,
     BButton,
     BFormSelect,
+    BRow, 
+    BCol,
+    BFormDatepicker,
+    BFormGroup,
     vSelect,
   },
   data() {
@@ -99,9 +106,11 @@ export default {
       addModalShow: false,
       loading_form: false,
       loading_select: false,
+      loading_table: false,
       form: {
         tingkat: '',
         rombongan_belajar_id: '',
+        tanggal: '',
       },
       absensi: {},
       hari: '',
@@ -135,7 +144,7 @@ export default {
     handleEvent(){
       this.$http.get('/presensi/get_hari').then(response => {
         let getData = response.data
-        this.hari = getData.tanggal
+        this.form.tanggal = getData.tanggal
         this.jumlah_jam = getData.jumlah_jam
         this.addModalShow = true
         //this.getGuru()
@@ -150,6 +159,19 @@ export default {
     },
     changeRombel(val){
       this.$http.post('/referensi/get-siswa', this.form).then(response => {
+        this.data_pd = response.data
+        var _this = this
+        this.data_pd.forEach(item => {
+          for (var i = 1; i < (_this.jumlah_jam + 1); i++) {
+            _this.absensi[item.anggota_rombel.anggota_rombel_id+'#'+i] = (_this.getAbsen(item.presensi, i)[0]) ? _this.getAbsen(item.presensi, i)[0].absen : 'H'
+          }
+        });
+      })
+    },
+    changeTanggal(val){
+      this.loading_table = true
+      this.$http.post('/referensi/get-siswa', this.form).then(response => {
+        this.loading_table = false
         this.data_pd = response.data
         var _this = this
         this.data_pd.forEach(item => {
@@ -180,7 +202,8 @@ export default {
       this.loading_form = true
       this.$http.post('/presensi/simpan', {
         aksi: 'pd',
-        absensi: this.absensi
+        absensi: this.absensi,
+        tanggal: this.form.tanggal,
       }).then(response => {
         this.loading_form = false
         let getData = response.data
@@ -198,6 +221,9 @@ export default {
       }).catch(error => {
         console.log(error);
       })
+    },
+    onContext(ctx) {
+      this.formatted = ctx.selectedFormatted
     },
   },
 }

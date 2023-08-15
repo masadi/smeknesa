@@ -705,7 +705,7 @@ class ReferensiController extends Controller
             $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
         })->with([
             'presensi' => function($query){
-                $query->whereDate('tanggal', Carbon::today());
+                $query->whereDate('tanggal', request()->tanggal);
                 $query->orderBy('jam');
             },
         ])->orderBy('nama')->get();
