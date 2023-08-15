@@ -11,15 +11,6 @@ export default [
     },
   },
   {
-    path: '/logout',
-    name: 'logout',
-    component: () => import('@/views/pages/Logout.vue'),
-    meta: {
-      resource: 'Web',
-      action: 'read',
-    }
-  },
-  {
     path: '/error-404',
     name: 'error-404',
     component: () => import('@/views/error/Error404.vue'),
@@ -39,6 +30,17 @@ export default [
       resource: 'Web',
       action: 'read',
       pageTitle: 'Akses Terbatas! 🔐',
+    },
+  },
+  {
+    path: '/profile',
+    name: 'profile',
+    component: () => import('@/views/profile/Index.vue'),
+    //component: () => import('@/views/pengaturan/Pengguna.vue'),
+    meta: {
+      resource: 'Web',
+      action: 'read',
+      pageTitle: 'Profil Pengguna',
     },
   },
 ]

@@ -383,9 +383,10 @@ class AuthController extends Controller
         $request->validate([
             'foto' => 'required|mimes:jpg,jpeg,png',
         ]);
-        $upload_path = public_path('upload');
-        $file_name = $request->foto->getClientOriginalName();
-        $generated_new_name = time() . '.' . $request->foto->getClientOriginalExtension();
+        $foto = $request->foto->store('public/images');
+        $generated_new_name = basename($foto);
+        //$file_name = $request->foto->getClientOriginalName();
+        //$generated_new_name = time() . '.' . $request->foto->getClientOriginalExtension();
         $user = User::with(['guru', 'pd'])->find(request()->user_id);
         $user->photo = $generated_new_name;
         $user->save();
@@ -397,11 +398,13 @@ class AuthController extends Controller
             $user->pd->photo = $generated_new_name;
             $user->pd->save();
         }
-        $request->foto->move($upload_path, $generated_new_name);
+        //$request->foto->move($upload_path, $generated_new_name);
+        
         $data = [
             'icon' => 'success',
-            'text' => 'Password Pengguna berhasil direset',
+            'text' => 'Foto Profil berhasil diperbaharui',
             'title' => 'Berhasil',
+            'foto' => $generated_new_name,
         ];
         return response()->json($data); 
     }

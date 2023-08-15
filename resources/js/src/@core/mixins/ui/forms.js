@@ -3,11 +3,15 @@ export const togglePasswordVisibility = {
   data() {
     return {
       passwordFieldType: 'password',
+      confirmationPasswordFieldType: 'password'
     }
   },
   methods: {
     togglePasswordVisibility() {
       this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password'
+    },
+    toggleConfirmationPasswordVisibility(){
+      this.confirmationPasswordFieldType = this.confirmationPasswordFieldType === 'password' ? 'text' : 'password'
     },
   },
 }

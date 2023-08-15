@@ -19,12 +19,12 @@
             <strong>Loading...</strong>
           </div>
         </template>
-        <template v-slot:cell(ttl)="row">
-          {{row.item.tempat_lahir}}, {{row.item.tanggal_lahir_indo}}
+        <template v-slot:cell(no)="row">
+          {{row.index + meta.from}}
         </template>
         <template v-slot:cell(actions)="row">
           <!--b-button variant="warning" size="sm" @click="detil(row.item)">Detil</b-button-->
-          <b-dropdown id="dropdown-dropleft" dropleft text="Detil" variant="primary" size="sm">
+          <b-dropdown id="dropdown-dropleft" dropleft text="Aksi" variant="primary" size="sm">
             <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'detil')"><eye-icon /> Detil</b-dropdown-item>
             <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'edit')"><pencil-icon />Edit</b-dropdown-item>
             <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'hapus')"><trash-icon />Hapus</b-dropdown-item>

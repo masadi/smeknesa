@@ -38,21 +38,28 @@ export default {
       isBusy: true,
       fields: [
         {
+          key: 'no',
+          label: 'NO',
+          sortable: false,
+          thClass: 'text-center',
+          tdClass: 'text-center'
+        },
+        {
           key: 'nama',
-          label: 'Nama',
+          label: 'Nama Lengkap',
           sortable: true,
           thClass: 'text-center',
         },
         {
           key: 'jenis_kelamin',
-          label: 'L/P',
+          label: 'JK',
           sortable: true,
           thClass: 'text-center',
           tdClass: 'text-center'
         },
         {
-          key: 'ttl',
-          label: 'Tempat, Tanggal Lahir',
+          key: 'no_hp',
+          label: 'No Handphone',
           sortable: false,
           thClass: 'text-center',
         },

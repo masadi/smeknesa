@@ -11,8 +11,8 @@
         </p>
         <span class="user-status">{{ userData.role }}</span>
       </div>
-      <template v-if="userData.profile_photo_path">
-          <b-img v-bind="mainProps" rounded="circle" :src="`/storage/${userData.profile_photo_path}`"></b-img>
+      <template v-if="userData.photo">
+          <b-img v-bind="mainProps" rounded="circle" :src="`/storage/images/${userData.photo}`"></b-img>
         </template>
       <template v-else>
         <b-avatar size="40" :src="userData.avatar" variant="light-primary" badge class="badge-minimal" badge-variant="success">
@@ -63,7 +63,7 @@ export default {
   },
   created() {
     eventBus.$on('foto', (val) => {
-      this.userData.profile_photo_path = val
+      this.userData.photo = val
       localStorage.setItem('userData', JSON.stringify(this.userData))
     })
   },
