@@ -3,14 +3,9 @@
     <BTableSimple v-if="detil">
       <BTr>
         <BTd colspan="2">
-          <template v-if="detil.photo">
-            <b-img rounded v-bind="mainProps" :src="`/storage/${detil.photo}`" :alt="detil.nama"></b-img>
-          </template>
-          <template v-else>
-            <b-avatar size="8rem" rounded :src="user.avatar" variant="light-primary">
-              <feather-icon v-if="!user.name" icon="UserIcon" size="22"/>
-            </b-avatar>
-          </template>
+          <b-avatar size="8rem" rounded :src="`/storage/images/${detil.photo}`" variant="light-primary">
+            <feather-icon v-if="!detil.photo" icon="UserIcon" size="22"/>
+          </b-avatar>
           <div class="mt-1"><b-badge variant="primary">Cita-cita: {{detil.cita}}</b-badge></div>
         </BTd>
       </BTr>

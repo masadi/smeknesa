@@ -1397,6 +1397,10 @@ class ReferensiController extends Controller
         $find->kerja_ayah = request()->kerja_ayah;
         $find->kerja_ibu = request()->kerja_ibu;
         $find->cita = request()->cita;
+        if(request()->photo){
+            $photo = request()->photo->store('public/images');
+            $find->photo = basename($photo);
+        }
         if($find->save()){
             $data = [
                 'success' => TRUE,

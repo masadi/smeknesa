@@ -85,7 +85,7 @@
               </b-col>
               <b-col cols="12">
                 <b-form-group label="Logo Sekolah" label-for="image" label-cols-md="3" :invalid-feedback="feedback.image" :state="state.image">
-                  <b-form-file id="image" accept=".jpg, .png" v-model="form.image" :state="state.logo" placeholder="Upload logo sekolah..." drop-placeholder="Drop file here..." @change="onFileChange"></b-form-file>
+                  <b-form-file id="image" accept=".jpg, .png" v-model="form.image" :state="state.image" placeholder="Upload logo sekolah..." drop-placeholder="Drop file here..." @change="onFileChange"></b-form-file>
                 </b-form-group>
               </b-col>
               <b-col cols="7" offset="3" v-if="preview_url">

@@ -1,5 +1,5 @@
 <template>
-  <b-modal v-model="editModalShow" title="Edit Data Peserta Didik" size="xl" @show="resetForm" @hidden="hideModal" @ok="handleOk">
+  <b-modal v-model="editModalShow" title="Edit Data Peserta Didik" size="xl" @hidden="hideModal" @ok="handleOk">
     <b-overlay :show="loading_form" rounded opacity="0.6" size="lg" spinner-variant="danger">
       <b-form ref="form" @submit.stop.prevent="handleSubmit">
         <b-row>
@@ -76,7 +76,7 @@
             </b-form-group>
           </b-col>
           <b-col cols="12">
-            <b-form-group label="Kabupaten/Kota" label-for="provinsi_id" label-cols-md="3" :invalid-feedback="feedback.kabupaten_id" :state="state.kabupaten_id">
+            <b-form-group label="Kabupaten/Kota" label-for="kabupaten_id" label-cols-md="3" :invalid-feedback="feedback.kabupaten_id" :state="state.kabupaten_id">
               <b-overlay :show="loading_kabupaten_id" opacity="0.6" size="md" spinner-variant="secondary">
                 <v-select id="kabupaten_id" v-model="form.kabupaten_id" :reduce="name => name.code" label="name" :options="data_kabupaten" placeholder="== Pilih Kabupaten/Kota ==" @input="changeKabupaten" :state="state.kabupaten_id">
                   <template #no-options="{ search, searching, loading }">
@@ -170,6 +170,14 @@
               </v-select>
             </b-form-group>
           </b-col>
+          <b-col cols="12">
+            <b-form-group label="Foto Siswa" label-for="image" label-cols-md="3" :invalid-feedback="feedback.image" :state="state.image">
+              <b-form-file id="image" accept=".jpg, .png" v-model="form.image" :state="state.image" placeholder="Upload Foto Siswa..." drop-placeholder="Drop file here..." @change="onFileChange"></b-form-file>
+            </b-form-group>
+          </b-col>
+          <b-col cols="7" offset="3" v-if="preview_url">
+            <b-img rounded v-bind="mainProps" :src="preview_url" alt="Foto Siswa"></b-img>
+          </b-col>
         </b-row>
       </b-form>
     </b-overlay>
@@ -185,7 +193,7 @@
 </template>
 
 <script>
-import { BOverlay, BForm, BFormInput, BInputGroup, BRow, BCol, BFormGroup, BButton, BFormDatepicker } from 'bootstrap-vue'
+import { BOverlay, BForm, BFormInput, BInputGroup, BRow, BCol, BFormGroup, BFormFile, BButton, BFormDatepicker, BImg } from 'bootstrap-vue'
 import eventBus from '@core/utils/eventBus'
 import vSelect from 'vue-select'
 export default {
@@ -197,8 +205,10 @@ export default {
     BRow,
     BCol,
     BFormGroup,
+    BFormFile,
     BButton,
     BFormDatepicker,
+    BImg,
     vSelect,
   },
   data() {
@@ -219,6 +229,8 @@ export default {
       data_agama: [],
       data_cita: [],
       data_pekerjaan: [],
+      mainProps: {width: 125, height: 125 },
+      preview_url: null,
     }
   },
   created() {
@@ -260,8 +272,10 @@ export default {
       this.resetForm()
     },
     resetForm(){
-      this.feedback.semester_id = ''
-      this.state.tanggal_cetak = null
+      this.form = {}
+      this.feedback = {}
+      this.state = {}
+      this.preview_url = null
     },
     changeProvinsi(val){
       this.loading_kabupaten_id = true
@@ -290,13 +304,46 @@ export default {
         this.data_desa = response.data
       });
     },
+    onFileChange(e) {
+      this.form.image = e.target.files[0];
+      this.preview_url = URL.createObjectURL(this.form.image)
+    },
     handleOk(bvModalEvent){
       bvModalEvent.preventDefault()
       this.handleSubmit()
     },
     handleSubmit(){
       this.loading_form = true
-      this.$http.post('/referensi/update-data', this.form).then(response => {
+      const data = new FormData();
+      data.append('data', this.form.data);
+      data.append('peserta_didik_id', this.form.peserta_didik_id)
+      data.append('nama', this.form.nama);
+      data.append('nik', this.form.nik);
+      data.append('no_induk', this.form.no_induk);
+      data.append('nisn', this.form.nisn);
+      data.append('jenis_kelamin', this.form.jenis_kelamin);
+      data.append('tempat_lahir', this.form.tempat_lahir);
+      data.append('tanggal_lahir', this.form.tanggal_lahir);
+      data.append('agama_id', this.form.agama_id);
+      data.append('alamat_jalan', this.form.alamat_jalan);
+      data.append('rt', this.form.rt);
+      data.append('rw', this.form.rw);
+      data.append('provinsi_id', this.form.provinsi_id);
+      data.append('kabupaten_id', this.form.kabupaten_id);
+      data.append('kecamatan_id', this.form.kecamatan_id);
+      data.append('desa_id', this.form.desa_id);
+      data.append('cita', this.form.cita);
+      data.append('no_hp', this.form.no_hp);
+      data.append('sekolah_asal', this.form.sekolah_asal);
+      data.append('diterima', this.form.diterima);
+      data.append('diterima_kelas', this.form.diterima_kelas);
+      data.append('email', this.form.email);
+      data.append('nama_ayah', this.form.nama_ayah);
+      data.append('nama_ibu', this.form.nama_ibu);
+      data.append('kerja_ayah', this.form.kerja_ayah);
+      data.append('kerja_ibu', this.form.kerja_ibu);
+      data.append('photo', this.form.image);
+      this.$http.post('/referensi/update-data', data).then(response => {
         this.loading_form = false
         let getData = response.data
         if(getData.errors){

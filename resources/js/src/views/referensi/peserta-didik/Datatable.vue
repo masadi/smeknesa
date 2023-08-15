@@ -22,7 +22,7 @@
         <template v-slot:cell(nama)="row">
           <b-media no-body>
             <b-media-aside class="mr-75">
-              <b-avatar rounded size="42" :src="row.item.photo" />
+              <b-avatar rounded size="42" :src="`/storage/images/${row.item.photo}`" />
             </b-media-aside>
             <b-media-body class="my-auto">
               <h6 class="mb-0">
