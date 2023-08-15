@@ -2,7 +2,7 @@ export default [
   {
     path: '/presensi/guru',
     name: 'presensi-guru',
-    component: () => import('@/views/pages/Blank.vue'),
+    component: () => import('@/views/presensi/Guru.vue'),
     meta: {
       resource: 'Presensi_Guru',
       action: 'read',
@@ -16,12 +16,19 @@ export default [
           active: true,
         },
       ],
+      tombol_add: {
+        action: 'add-presensi-guru',
+        link: '',
+        variant: 'primary',
+        text: 'Tambah Data',
+        role: ['piket', 'administrator'],
+      },
     },
   },
   {
-    path: '/presensi/guru',
+    path: '/presensi/siswa',
     name: 'presensi-siswa',
-    component: () => import('@/views/pages/Blank.vue'),
+    component: () => import('@/views/presensi/Pd.vue'),
     meta: {
       resource: 'Presensi_Pd',
       action: 'read',
@@ -35,6 +42,13 @@ export default [
           active: true,
         },
       ],
+      tombol_add: {
+        action: 'add-presensi-pd',
+        link: '',
+        variant: 'primary',
+        text: 'Tambah Data',
+        role: ['piket', 'administrator'],
+      },
     },
   },
   {

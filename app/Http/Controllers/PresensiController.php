@@ -95,7 +95,7 @@ class PresensiController extends Controller
                 $query->whereHas('jadwal', function ($query) {
                     $query->where('jadwal.semester_id', semester_id());
                 });
-                if(!loggedUser()->hasRole('piket', periode_aktif()) || !loggedUser()->hasRole('wakakur', periode_aktif())){
+                if(!loggedUser()->hasRole(['administrator', 'piket', 'wakakur'], periode_aktif())){
                     $query->where('guru_id', loggedUser()->guru_id);
                 }
             }
@@ -186,7 +186,7 @@ class PresensiController extends Controller
     public function simpan(){
         foreach(request()->absensi as $request => $absen){
             $collection = Str::of($request)->explode('#');
-            $peserta_didik_id = NULL;
+            $anggota_rombel_id = NULL;
             $guru_id = NULL;
             if(request()->aksi == 'pd'){
                 $anggota_rombel_id = $collection[0];
@@ -493,5 +493,32 @@ class PresensiController extends Controller
             $query->select('nama', 'guru_id');
         }])->paginate(request()->per_page);
         return response()->json(['status' => 'success', 'data' => $data, 'data_bulan' => $this->bulan(), 'bulan' => (request()->bulan) ?? date('m'), 'data_tanggal' => $this->get_tanggal(), 'tanggal' => request()->tanggal]);
+    }
+    public function detil(){
+        $data = Peserta_didik::whereHas('anggota_rombel', function($query){
+            $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
+        })->withCount([
+            'presensi as H' => function($query){
+                $query->where('absen', 'H');
+                $query->whereMonth('tanggal', request()->bulan);
+            },
+            'presensi as A' => function($query){
+                $query->where('absen', 'A');
+                $query->whereMonth('tanggal', request()->bulan);
+            },
+            'presensi as S' => function($query){
+                $query->where('absen', 'S');
+                $query->whereMonth('tanggal', request()->bulan);
+            },
+            'presensi as I' => function($query){
+                $query->where('absen', 'I');
+                $query->whereMonth('tanggal', request()->bulan);
+            },
+            'presensi as D' => function($query){
+                $query->where('absen', 'D');
+                $query->whereMonth('tanggal', request()->bulan);
+            },
+        ])->orderBy('nama')->get();
+        return response()->json($data);
     }
 }

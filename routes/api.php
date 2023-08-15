@@ -147,6 +147,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/get-rekap', [PresensiController::class, 'get_rekap']);
     Route::get('/get_hari', [PresensiController::class, 'get_hari']);
     Route::post('/simpan', [PresensiController::class, 'simpan']);
+    Route::post('/detil', [PresensiController::class, 'detil']);
   });
   Route::group(['prefix' => 'editor'], function () {
     Route::post('/edit-data', [EditorController::class, 'index']);
