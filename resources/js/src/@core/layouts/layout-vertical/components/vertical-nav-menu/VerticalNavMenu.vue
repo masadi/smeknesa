@@ -132,7 +132,6 @@ export default {
     }
 
     const collapseTogglerIconFeather = computed(() => (collapseTogglerIcon.value === 'unpinned' ? 'CircleIcon' : 'DiscIcon'))
-
     // App Name
     const { appName, appLogoImage } = $themeConfig.app
 
