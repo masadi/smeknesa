@@ -6,7 +6,7 @@
       <b-link class="brand-logo">
         <vuexy-logo />
         <h2 class="brand-text text-primary ml-1">
-          Vuexy
+          {{appName}}
         </h2>
       </b-link>
       <!-- /Brand logo-->
@@ -23,10 +23,10 @@
       <b-col lg="4" class="d-flex align-items-center auth-bg px-2 p-lg-5">
         <b-col sm="8" md="6" lg="12" class="px-xl-2 mx-auto">
           <b-card-title class="mb-1 font-weight-bold" title-tag="h2">
-            Welcome to Vuexy! 👋
+            Welcome to {{appName}}
           </b-card-title>
           <b-card-text class="mb-2">
-            Please sign-in to your account and start the adventure
+            Silahkan Login dengan Akun Anda!
           </b-card-text>
           <!-- form -->
           <validation-observer ref="loginForm" #default="{invalid}">
@@ -34,7 +34,7 @@
               <!-- email -->
               <b-form-group label="Email" label-for="login-email">
                 <validation-provider #default="{ errors }" name="Email" vid="email" rules="required|email">
-                  <b-form-input id="login-email" v-model="userEmail" :state="errors.length > 0 ? false:null" name="login-email" placeholder="email@valid.com" />
+                  <b-form-input id="login-email" v-model="userEmail" :state="errors.length > 0 ? false:null" name="login-email" placeholder="Email Valid" />
                   <small class="text-danger">{{ errors[0] }}</small>
                 </validation-provider>
               </b-form-group>
@@ -154,6 +154,9 @@ export default {
       }
       return this.sideImg
     },
+    appName(){
+      return app_name;
+    }
   },
   methods: {
     login() {
