@@ -42,28 +42,36 @@ require('@resources/assets/scss/style.scss')
 
 Vue.config.productionTip = false
 Vue.mixin({
-  data: function () {
-      return {
-          /*get detilUser() {
-              return user;
-          },*/
-          user: JSON.parse(localStorage.getItem('userData')),
-          semester_id: JSON.parse(localStorage.getItem('semester_id')),
-      }
-  },
-  methods: {
-      loggedUser: function(){
-          return JSON.parse(localStorage.getItem('userData'));
-      },
-      hasRole: function (role) {
-          for (var i = 0; i < this.user.roles.length; i++) {
-              if (this.user.roles[i].name == role) {
-                  return true
-              }
-          }
-          return false
-      },
-  }
+    data: function () {
+        return {
+            /*get detilUser() {
+                return user;
+            },*/
+            user: JSON.parse(localStorage.getItem('userData')),
+            semester_id: JSON.parse(localStorage.getItem('semester_id')),
+        }
+    },
+    methods: {
+        loggedUser: function(){
+            return JSON.parse(localStorage.getItem('userData'));
+        },
+        hasRole: function (role) {
+            for (var i = 0; i < this.user.roles.length; i++) {
+                if(Array.isArray(role)){
+                    for (var j = 0; j < role.length; j++) {
+                        if (this.user.roles[i].name == role[j]) {
+                          return true
+                        }
+                    }
+                } else {
+                    if (this.user.roles[i].name == role) {
+                        return true
+                    }
+                }
+            }
+            return false
+        },
+    }
 })
 
 new Vue({

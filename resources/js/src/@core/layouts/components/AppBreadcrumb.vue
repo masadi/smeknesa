@@ -84,14 +84,7 @@ export default {
   methods: {
     adaRole(roles){
       if(roles){
-        for (var j = 0; j < roles.length; j++) {
-          for (var i = 0; i < this.user.roles.length; i++) {
-            if (this.user.roles[i].name == roles[j]) {
-              return true
-            }
-          }
-        }
-        return false
+        return this.hasRole(roles)
       } else {
         return true
       }
