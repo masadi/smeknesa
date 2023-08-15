@@ -1,6 +1,19 @@
 <template>
   <b-modal v-model="detilModalShow" title="Detil Peserta Didik" size="lg" ok-only ok-variant="secondary" ok-text="Tutup">
-    <BTableSimple v-if="detil"> 
+    <BTableSimple v-if="detil">
+      <BTr>
+        <BTd colspan="2">
+          <template v-if="detil.photo">
+            <b-img rounded v-bind="mainProps" :src="`/storage/${detil.photo}`" :alt="detil.nama"></b-img>
+          </template>
+          <template v-else>
+            <b-avatar size="8rem" rounded :src="user.avatar" variant="light-primary">
+              <feather-icon v-if="!user.name" icon="UserIcon" size="22"/>
+            </b-avatar>
+          </template>
+          <div class="mt-1"><b-badge variant="primary">Cita-cita: {{detil.cita}}</b-badge></div>
+        </BTd>
+      </BTr>
       <BTr>
         <BTd>Nama</BTd>
         <BTd>: {{detil.nama}}</BTd>
@@ -50,10 +63,6 @@
         <BTd>: {{(detil.provinsi_id) ? detil.provinsi.name : null}}</BTd>
       </BTr>
       <BTr>
-        <BTd>Cita-cita</BTd>
-        <BTd>: {{detil.cita}}</BTd>
-      </BTr>
-      <BTr>
         <BTd>Nomor HP</BTd>
         <BTd>: {{detil.no_hp}}</BTd>
       </BTr>
@@ -94,16 +103,17 @@
 </template>
 
 <script>
-import { BTableSimple, BTr, BTd } from 'bootstrap-vue'
+import { BTableSimple, BTr, BTd, BAvatar, BBadge } from 'bootstrap-vue'
 import eventBus from '@core/utils/eventBus'
 export default {
   components: {
-    BTableSimple, BTr, BTd
+    BTableSimple, BTr, BTd, BAvatar, BBadge
   },
   data() {
     return {
       detilModalShow: false,
       detil: null,
+      mainProps: {width: 125, height: 125 },
     }
   },
   created() {

@@ -9,7 +9,7 @@
               <b-img rounded v-bind="mainProps" :src="`/storage/images/${user.photo}`"></b-img>
             </template>
             <template v-else>
-              <b-avatar size="40" :src="user.avatar" variant="light-primary" badge class="badge-minimal" badge-variant="success">
+              <b-avatar size="8rem" rounded :src="user.avatar" variant="light-primary">
                 <feather-icon v-if="!user.name" icon="UserIcon" size="22"/>
               </b-avatar>
             </template>

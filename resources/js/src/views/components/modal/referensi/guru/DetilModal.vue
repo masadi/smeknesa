@@ -1,9 +1,16 @@
 <template>
   <b-modal v-model="detilModalShow" title="Detil Guru" size="lg" ok-only ok-variant="secondary" ok-text="Tutup">
     <BTableSimple v-if="detil"> 
-      <BTr v-if="detil.photo">
-        <BTd colspan="2" class="text-center">
-          <b-img thumbnail fluid :src="`/storage/${detil.photo}`" :alt="detil.nama"></b-img>
+      <BTr>
+        <BTd colspan="2">
+          <template v-if="detil.photo">
+            <b-img rounded v-bind="mainProps" :src="`/storage/${detil.photo}`" :alt="detil.nama"></b-img>
+          </template>
+          <template v-else>
+            <b-avatar size="8rem" rounded :src="user.avatar" variant="light-primary">
+              <feather-icon v-if="!user.name" icon="UserIcon" size="22"/>
+            </b-avatar>
+          </template>
         </BTd>
       </BTr>
       <BTr>
@@ -67,16 +74,17 @@
 </template>
 
 <script>
-import { BTableSimple, BTr, BTd, BImg } from 'bootstrap-vue'
+import { BTableSimple, BTr, BTd, BImg, BAvatar } from 'bootstrap-vue'
 import eventBus from '@core/utils/eventBus'
 export default {
   components: {
-    BTableSimple, BTr, BTd, BImg
+    BTableSimple, BTr, BTd, BImg, BAvatar
   },
   data() {
     return {
       detilModalShow: false,
       detil: null,
+      mainProps: {width: 125, height: 125 },
     }
   },
   created() {
