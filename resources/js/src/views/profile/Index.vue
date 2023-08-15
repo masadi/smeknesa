@@ -63,6 +63,12 @@
           <jadwal-guru v-if="hasRole('guru')"></jadwal-guru>
           <jadwal-siswa v-if="hasRole('pd')"></jadwal-siswa>
         </b-tab>
+        <b-tab v-if="hasRole('guru')">
+          <template #title>
+            <calendar-event-icon size="18" /> ABSENSI
+          </template>
+          <rekap-absensi />
+        </b-tab>
         <b-tab v-if="hasRole('pd')">
           <template #title>
             <bell-icon size="18" /> Pelanggaran
@@ -93,6 +99,7 @@ import BiodataGuru from './BiodataGuru.vue'
 import Security from './Security.vue'
 import JadwalGuru from './JadwalGuru.vue'
 import JadwalSiswa from './JadwalSiswa.vue'
+import RekapAbsensi from './RekapAbsensi.vue'
 export default {
   components: {
     BRow,
@@ -116,6 +123,7 @@ export default {
     Security,
     JadwalGuru,
     JadwalSiswa,
+    RekapAbsensi
   },
   data() {
     return {
