@@ -7,7 +7,7 @@ import { isUserLoggedIn, getUserData } from '@/auth/utils'
 import dashboard from './routes/dashboard'
 import referensi from './routes/2_referensi'
 import presensi from './routes/3_presensi'
-import jadwal_mengajar from './routes/4_jadwal-mengajar'
+//import jadwal_mengajar from './routes/4_jadwal-mengajar'
 import penilaian from './routes/5_penilaian'
 import wali_kelas from './routes/6_wali-kelas'
 import monitoring from './routes/7_monitoring'
@@ -35,7 +35,7 @@ const router = new VueRouter({
     ...dashboard,
     ...referensi,
     ...presensi,
-    ...jadwal_mengajar,
+    //...jadwal_mengajar,
     ...penilaian,
     ...wali_kelas,
     ...monitoring,
