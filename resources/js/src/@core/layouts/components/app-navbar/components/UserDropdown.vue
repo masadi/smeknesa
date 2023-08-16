@@ -1,16 +1,12 @@
 <template>
-  <b-nav-item-dropdown
-    right
-    toggle-class="d-flex align-items-center dropdown-user-link"
-    class="dropdown-user"
-  >
+  <b-nav-item-dropdown right toggle-class="d-flex align-items-center dropdown-user-link" class="dropdown-user">
     <template #button-content>
-      <div class="d-sm-flex d-none user-nav">
+      <!--div class="d-sm-flex d-none user-nav">
         <p class="user-name font-weight-bolder mb-0">
           {{ userData.name }}
         </p>
         <span class="user-status">{{ userData.role }}</span>
-      </div>
+      </div-->
       <template v-if="userData.photo">
           <b-img v-bind="mainProps" rounded="circle" :src="`/storage/images/${userData.photo}`"></b-img>
         </template>
@@ -20,7 +16,20 @@
         </b-avatar>
       </template>
     </template>
-
+    <b-dropdown-text link-class="d-flex align-items-center">
+      <b-media no-body>
+        <b-media-aside vertical-align="center" class="mr-75">
+          <b-avatar rounded size="40" :src="`/storage/images/${userData.photo}`" />
+        </b-media-aside>
+        <b-media-body class="my-auto">
+          <h6 class="mb-0">
+            {{ userData.name }}
+          </h6>
+          <small>{{ userData.role }}</small>
+        </b-media-body>
+      </b-media>
+    </b-dropdown-text>
+    <b-dropdown-divider />
     <b-dropdown-item :to="{ name: 'pengaturan-umum' }" link-class="d-flex align-items-center" v-if="hasRole('administrator')">
         <feather-icon size="16" icon="ToolIcon" class="mr-50" />
         <span>System Setting</span>
@@ -39,7 +48,7 @@
 
 <script>
 import {
-  BNavItemDropdown, BDropdownItem, BDropdownDivider, BAvatar, BImg
+  BNavItemDropdown, BDropdownItem, BDropdownText, BDropdownDivider, BAvatar, BImg, BMedia, BMediaAside, BMediaBody
 } from 'bootstrap-vue'
 import eventBus from '@core/utils/eventBus'
 import { initialAbility } from '@/libs/acl/config'
@@ -50,9 +59,13 @@ export default {
   components: {
     BNavItemDropdown,
     BDropdownItem,
+    BDropdownText,
     BDropdownDivider,
     BAvatar,
     BImg,
+    BMedia,
+    BMediaAside,
+    BMediaBody,
   },
   data() {
     return {
