@@ -356,85 +356,83 @@ class NilaiController extends Controller
     }
     public function chart(){
         $sekolah = Sekolah::withCount([
-            'all_nilai' => function($query){
-                $query->whereHas('pembelajaran', function($query){
-                    $query->where('semester_id', semester_id());
-                    $query->where('guru_id', loggedUser()->guru_id);
-                    /*if(request()->tingkat){
-                        $query->whereHas('rombongan_belajar', function($query){
-                            $query->where('tingkat', request()->tingkat);
-                        });
-                    }
-                    if(request()->rombongan_belajar_id){
-                        $query->whereHas('rombongan_belajar', function($query){
-                            $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
-                        });
-                    }
-                    if(request()->pembelajaran_id){
-                        $query->where('pembelajaran_id', request()->pembelajaran_id);
-                    }
-                    $query->whereHas('rombongan_belajar', function($query){
+            'peserta_didik' => function($query){
+                $query->whereHas('kelas', function($query){
+                    $query->whereHas('pembelajaran', function($query){
                         $query->where('semester_id', semester_id());
-                    });*/
+                        $query->where('guru_id', loggedUser()->guru_id);
+                    });
                 });
             },
-            'all_nilai as tuntas' => function($query){
-                $query->where('angka', '<', 75);
-                $query->whereHas('pembelajaran', function($query){
-                    $query->where('semester_id', semester_id());
-                    $query->where('guru_id', loggedUser()->guru_id);
-                    /*if(request()->tingkat){
-                        $query->whereHas('rombongan_belajar', function($query){
-                            $query->where('tingkat', request()->tingkat);
-                        });
-                    }
-                    if(request()->rombongan_belajar_id){
-                        $query->whereHas('rombongan_belajar', function($query){
-                            $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
-                        });
-                    }
-                    if(request()->pembelajaran_id){
-                        $query->where('pembelajaran_id', request()->pembelajaran_id);
-                    }
-                    $query->whereHas('rombongan_belajar', function($query){
+            'peserta_didik as pd_0' => function($query){
+                $query->whereHas('kelas', function($query){
+                    $query->whereHas('pembelajaran', function($query){
                         $query->where('semester_id', semester_id());
-                    });*/
+                        $query->where('guru_id', loggedUser()->guru_id);
+                    });
+                });
+                $query->whereHas('nilai', function($query){
+                    $query->where('angka', '<', 70);
+                    $query->whereHas('pembelajaran', function($query){
+                        $query->where('semester_id', semester_id());
+                        $query->where('guru_id', loggedUser()->guru_id);
+                    });
                 });
             },
-            'all_nilai as tidak_tuntas' => function($query){
-                $query->where('angka', '>=', 75);
-                $query->whereHas('pembelajaran', function($query){
-                    $query->where('semester_id', semester_id());
-                    $query->where('guru_id', loggedUser()->guru_id);
-                    /*if(request()->tingkat){
-                        $query->whereHas('rombongan_belajar', function($query){
-                            $query->where('tingkat', request()->tingkat);
-                        });
-                    }
-                    if(request()->rombongan_belajar_id){
-                        $query->whereHas('rombongan_belajar', function($query){
-                            $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
-                        });
-                    }
-                    if(request()->pembelajaran_id){
-                        $query->where('pembelajaran_id', request()->pembelajaran_id);
-                    }
-                    $query->whereHas('rombongan_belajar', function($query){
+            'peserta_didik as pd_70' => function($query){
+                $query->whereHas('kelas', function($query){
+                    $query->whereHas('pembelajaran', function($query){
                         $query->where('semester_id', semester_id());
-                    });*/
+                        $query->where('guru_id', loggedUser()->guru_id);
+                    });
+                });
+                $query->whereHas('nilai', function($query){
+                    $query->whereBetween('angka', [69, 80]);
+                    $query->whereHas('pembelajaran', function($query){
+                        $query->where('semester_id', semester_id());
+                        $query->where('guru_id', loggedUser()->guru_id);
+                    });
+                });
+            },
+            'peserta_didik as pd_80' => function($query){
+                $query->whereHas('kelas', function($query){
+                    $query->whereHas('pembelajaran', function($query){
+                        $query->where('semester_id', semester_id());
+                        $query->where('guru_id', loggedUser()->guru_id);
+                    });
+                });
+                $query->whereHas('nilai', function($query){
+                    $query->whereBetween('angka', [79, 90]);
+                    $query->whereHas('pembelajaran', function($query){
+                        $query->where('semester_id', semester_id());
+                        $query->where('guru_id', loggedUser()->guru_id);
+                    });
+                });
+            },
+            'peserta_didik as pd_90' => function($query){
+                $query->whereHas('kelas', function($query){
+                    $query->whereHas('pembelajaran', function($query){
+                        $query->where('semester_id', semester_id());
+                        $query->where('guru_id', loggedUser()->guru_id);
+                    });
+                });
+                $query->whereHas('nilai', function($query){
+                    $query->where('angka', '>', 89);
+                    $query->whereHas('pembelajaran', function($query){
+                        $query->where('semester_id', semester_id());
+                        $query->where('guru_id', loggedUser()->guru_id);
+                    });
                 });
             },
         ])->first();
         $data = [
             'series' => [
-                $sekolah->tuntas,
-                $sekolah->tidak_tuntas,
+                $sekolah->pd_0,
+                $sekolah->pd_70,
+                $sekolah->pd_80,
+                $sekolah->pd_90,
             ],
-            //'series' => [
-            //    ($sekolah->tuntas) ? persen($sekolah->tuntas, $sekolah->all_nilai_count) : 0,
-            //    ($sekolah->tidak_tuntas) ? persen($sekolah->tidak_tuntas, $sekolah->all_nilai_count) : 0,
-            //],
-            'sekolah' => $sekolah,
+            'labels' => ['>=0', '>=70', '>=80', '>=90'],
         ];
         return response()->json($data);
     }

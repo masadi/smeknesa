@@ -60,7 +60,29 @@ class DashboardController extends Controller
             $data = [
                 'statistics' => [
                     [
-                        'title' => 'Peserta Didik',
+                        'title' => 'Siswa (L)',
+                        'stats' => rupiah(Peserta_didik::where('jenis_kelamin', 'L')->whereHas('kelas', function($query){
+                            $query->where('rombongan_belajar.semester_id', semester_id());
+                            $query->whereHas('pembelajaran', function($query){
+                                $query->where('guru_id', $this->loggedUser()->guru_id);
+                            });
+                        })->count()),
+                        'icon' => 'man-icon',
+                        'color' => 'info',
+                    ],
+                    [
+                        'title' => 'Siswa (P)',
+                        'stats' => rupiah(Peserta_didik::where('jenis_kelamin', 'P')->whereHas('kelas', function($query){
+                            $query->where('rombongan_belajar.semester_id', semester_id());
+                            $query->whereHas('pembelajaran', function($query){
+                                $query->where('guru_id', $this->loggedUser()->guru_id);
+                            });
+                        })->count()),
+                        'icon' => 'woman-icon',
+                        'color' => 'primary',
+                    ],
+                    [
+                        'title' => 'Total Siswa',
                         'stats' => rupiah(Peserta_didik::whereHas('kelas', function($query){
                             $query->where('rombongan_belajar.semester_id', semester_id());
                             $query->whereHas('pembelajaran', function($query){
@@ -68,39 +90,23 @@ class DashboardController extends Controller
                             });
                         })->count()),
                         'icon' => 'users-icon',
-                        'color' => 'info',
-                    ],
-                    [
-                        'title' => 'Kelas',
-                        'stats' => rupiah(Rombongan_belajar::where(function($query){
-                            $query->where('semester_id', semester_id());
-                            $query->whereHas('pembelajaran', function($query){
-                                $query->where('guru_id', $this->loggedUser()->guru_id);
-                            });
-                        })->count()),
-                        'icon' => 'building-icon',
-                        'color' => 'primary',
-                    ],
-                    [
-                        'title' => 'Mata Pelajaran',
-                        'stats' => rupiah(Pembelajaran::whereHas('rombongan_belajar', function($query){
-                            $query->where('semester_id', semester_id());
-                            $query->whereHas('pembelajaran', function($query){
-                                $query->where('guru_id', $this->loggedUser()->guru_id);
-                            });
-                        })->count()),
-                        'icon' => 'list-check-icon',
                         'color' => 'danger',
                     ],
                     [
-                        'title' => 'Jam',
-                        'stats' => rupiah(Jam::whereHas('jadwal', function($query){
+                        'title' => 'Nilai Rendah',
+                        'stats' => rupiah(Peserta_didik::whereHas('kelas', function($query){
+                            $query->where('rombongan_belajar.semester_id', semester_id());
                             $query->whereHas('pembelajaran', function($query){
-                                $query->where('semester_id', semester_id());
                                 $query->where('guru_id', $this->loggedUser()->guru_id);
                             });
-                        })->sum('jam')),
-                        'icon' => 'clock-icon',
+                        })->whereHas('nilai', function($query){
+                            $query->where('angka', '<', 70);
+                            $query->whereHas('pembelajaran', function($query){
+                                $query->where('semester_id', semester_id());
+                                $query->where('guru_id', loggedUser()->guru_id);
+                            });
+                        })->count()),
+                        'icon' => 'checklist-icon',
                         'color' => 'success',
                     ],
                 ],

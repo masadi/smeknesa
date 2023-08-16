@@ -67,12 +67,21 @@
         </b-col>
       </template>
     </b-row>
+    <b-row class="match-height">
+      <b-col cols="12" lg="6">
+        <grafik-absensi />
+      </b-col>
+      <b-col cols="12" lg="6">
+        <grafik-nilai />
+      </b-col>
+    </b-row>
   </div>
 </template>
 
 <script>
 import { BRow, BCol, BCard, BCardHeader, BCardText, BCardBody, BSpinner, BTableSimple, BTr, BTd, BFormCheckbox, VBTooltip, BAvatar, } from 'bootstrap-vue'
-
+import GrafikAbsensi from './charts/GrafikAbsensi.vue'
+import GrafikNilai from './charts/GrafikNilai.vue'
 export default {
   components: {
     BRow, 
@@ -87,6 +96,8 @@ export default {
     BFormCheckbox,
     VBTooltip,
     BAvatar,
+    GrafikAbsensi,
+    GrafikNilai,
   },
   directives: {
     'b-tooltip': VBTooltip,

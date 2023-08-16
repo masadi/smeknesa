@@ -394,6 +394,8 @@ class PresensiController extends Controller
               'statsColor' => 'success',
             ],
         ];
+        $data['series'] = [$sekolah->Alpha, $sekolah->Izin, $sekolah->Dispen, $sekolah->Sakit];
+        $data['labels'] = ['Alpha', 'Izin', 'Dispen', 'Sakit'];
         return response()->json($data);
     }
     public function pd(){

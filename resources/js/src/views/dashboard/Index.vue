@@ -1,12 +1,12 @@
 <template>
   <div>
-    <template v-if="hasRole('wakasiswa') || hasRole('wakahumas')">
+    <template v-if="hasRole(['wakasiswa', 'wakahumas'])">
       <dashboard-waka></dashboard-waka>
     </template>
     <template v-else-if="hasRole('administrator')">
       <dashboard-admin></dashboard-admin>
     </template>
-    <template v-else-if="hasRole('pengajar') || hasRole('walas')">
+    <template v-else-if="hasRole(['pengajar', 'walas'])">
       <dashboard-guru></dashboard-guru>
     </template>
     <template v-else-if="hasRole('siswa')">
