@@ -52,7 +52,7 @@ export default [
   {
     path: '/penilaian/input-deskripsi',
     name: 'penilaian-input-deskripsi',
-    component: () => import('@/views/pages/Blank.vue'),
+    component: () => import('@/views/penilaian/InputDeskripsi.vue'),
     meta: {
       pageTitle: 'Input Deskripsi',
       resource: 'Penilaian',

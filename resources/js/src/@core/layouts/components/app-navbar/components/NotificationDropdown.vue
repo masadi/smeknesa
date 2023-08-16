@@ -59,17 +59,19 @@ export default {
     }
   },
   created() {
-    this.$http.post('/dashboard/notifikasi', {
-      guru_id: this.user.guru_id,
-      periode_aktif: this.user.semester.nama,
-      peserta_didik_id: this.user.peserta_didik_id,
-      semester_id: this.user.semester.semester_id,
-      tanggal_mulai: this.user.semester.tanggal_mulai,
-      tanggal_selesai: this.user.semester.tanggal_selesai,
-    }).then(response => {
-      let getData = response.data
-      this.notifications = getData.notifications
-    });
+    if(this.user){
+      this.$http.post('/dashboard/notifikasi', {
+        guru_id: this.user.guru_id,
+        periode_aktif: this.user.semester.nama,
+        peserta_didik_id: this.user.peserta_didik_id,
+        semester_id: this.user.semester.semester_id,
+        tanggal_mulai: this.user.semester.tanggal_mulai,
+        tanggal_selesai: this.user.semester.tanggal_selesai,
+      }).then(response => {
+        let getData = response.data
+        this.notifications = getData.notifications
+      });
+    }
   },
 }
 </script>

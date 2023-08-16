@@ -1,25 +1,5 @@
 export default [
   {
-    path: '/pengaturan-umum',
-    name: 'pengaturan-umum',
-    component: () => import('@/views/pages/Blank.vue'),
-    //component: () => import('@/views/pengaturan/Umum.vue'),
-    meta: {
-      resource: 'Web',
-      action: 'read',
-      pageTitle: 'Pengaturan Umum',
-      breadcrumb: [
-        {
-          text: 'Pengaturan',
-        },
-        {
-          text: 'Pengaturan Umum',
-          active: true,
-        },
-      ],
-    },
-  },
-  {
     path: '/referensi/periodik',
     name: 'referensi-periodik',
     component: () => import('@/views/referensi/periodik/Index.vue'),

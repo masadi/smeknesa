@@ -33,17 +33,7 @@ class PengaturanController extends Controller
     }
     public function umum(){
         $semester = Semester::find(request()->semester_id);
-        foreach(request()->all() as $key => $value){
-            Setting::updateOrCreate(
-                ['key' => $key],
-                ['value' => request()->{$key}]
-            );
-        }
-        Setting::updateOrCreate(
-            ['key' => 'periode_aktif'],
-            ['value' => $semester->nama]
-        );
-        /*Setting::where('key', 'app_name')->update(['value' => request()->app_name]);
+        Setting::where('key', 'app_name')->update(['value' => request()->app_name]);
         Setting::where('key', 'app_version')->update(['value' => request()->app_version]);
         Setting::where('key', 'semester_id')->update(['value' => request()->semester_id]);
         Setting::where('key', 'periode_aktif')->update(['value' => $semester->nama]);
@@ -53,8 +43,11 @@ class PengaturanController extends Controller
         );
         Setting::updateOrCreate(
             ['key' => 'tanggal_penilaian'],
-            ['value' => request()->tanggal_penilaian]
-        );*/
+            [
+                'semester_id' => request()->semester_id,
+                'value' => request()->tanggal_penilaian,
+            ]
+        );
         $data = [
             'icon' => 'success',
             'text' => 'Pengaturan umum berhasil disimpan',

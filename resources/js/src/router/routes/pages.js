@@ -36,11 +36,20 @@ export default [
     path: '/profile',
     name: 'profile',
     component: () => import('@/views/profile/Index.vue'),
-    //component: () => import('@/views/pengaturan/Pengguna.vue'),
     meta: {
       resource: 'Web',
       action: 'read',
       pageTitle: 'Profil Pengguna',
+    },
+  },
+  {
+    path: '/pengaturan-umum',
+    name: 'pengaturan-umum',
+    component: () => import('@/views/pages/Pengaturan.vue'),
+    meta: {
+      resource: 'Web',
+      action: 'read',
+      pageTitle: 'System Setting',
     },
   },
 ]

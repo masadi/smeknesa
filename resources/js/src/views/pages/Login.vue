@@ -65,10 +65,11 @@
                 </b-form-checkbox>
               </b-form-group>
 
-              <!-- submit buttons -->
-              <b-button type="submit" variant="primary" block :disabled="invalid">
-                Sign in
-              </b-button>
+              <b-overlay :show="loading" rounded opacity="0.6" spinner-variant="warning" spinner-small class="d-inline-block">
+                <b-button type="submit" variant="primary" block :disabled="invalid">
+                  Sign in
+                </b-button>
+              </b-overlay>
             </b-form>
           </validation-observer>
         </b-col>
@@ -98,6 +99,7 @@ import {
   BButton,
   BAlert,
   VBTooltip,
+  BOverlay,
 } from 'bootstrap-vue'
 import useJwt from '@/auth/jwt/useJwt'
 import { required, email } from '@validations'
@@ -128,10 +130,12 @@ export default {
     VuexyLogo,
     ValidationProvider,
     ValidationObserver,
+    BOverlay,
   },
   mixins: [togglePasswordVisibility],
   data() {
     return {
+      loading: false,
       status: '',
       password: '',
       userEmail: '',
@@ -160,12 +164,14 @@ export default {
   },
   methods: {
     login() {
+      this.loading = true
       this.$refs.loginForm.validate().then(success => {
         if (success) {
           this.$http.post('/auth/login', {
             email: this.userEmail,
             password: this.password,
           }).then(response => {
+            this.loading = false
             const { userData } = response.data
             if(userData){
               //useJwt.setToken(response.data.accessToken)
