@@ -111,7 +111,7 @@ export default [
         link: '',
         variant: 'primary',
         text: 'Tambah Data',
-        role: ['administrator'],
+        role: ['administrator', 'wakasiswa'],
       },
     },
   },

@@ -52,7 +52,7 @@
                     <BTd class="text-center">{{pd.nisn}}</BTd>
                     <template v-for="jam_ke in jumlah_jam">
                       <BTd>
-                        <b-form-select v-model="absensi[pd.anggota_rombel.anggota_rombel_id+'#'+jam_ke]" :options="['H', 'A', 'S', 'I', 'D']"></b-form-select>
+                        <b-form-select v-model="absensi[pd.anggota_rombel.anggota_rombel_id+'#'+jam_ke]" :options="['A', 'S', 'I', 'D']"></b-form-select>
                       </BTd>
                     </template>
                   </BTr>
@@ -163,7 +163,7 @@ export default {
         var _this = this
         this.data_pd.forEach(item => {
           for (var i = 1; i < (_this.jumlah_jam + 1); i++) {
-            _this.absensi[item.anggota_rombel.anggota_rombel_id+'#'+i] = (_this.getAbsen(item.presensi, i)[0]) ? _this.getAbsen(item.presensi, i)[0].absen : 'H'
+            _this.absensi[item.anggota_rombel.anggota_rombel_id+'#'+i] = (_this.getAbsen(item.presensi, i)[0]) ? _this.getAbsen(item.presensi, i)[0].absen : ''
           }
         });
       })
@@ -176,7 +176,7 @@ export default {
         var _this = this
         this.data_pd.forEach(item => {
           for (var i = 1; i < (_this.jumlah_jam + 1); i++) {
-            _this.absensi[item.anggota_rombel.anggota_rombel_id+'#'+i] = (_this.getAbsen(item.presensi, i)[0]) ? _this.getAbsen(item.presensi, i)[0].absen : 'H'
+            _this.absensi[item.anggota_rombel.anggota_rombel_id+'#'+i] = (_this.getAbsen(item.presensi, i)[0]) ? _this.getAbsen(item.presensi, i)[0].absen : ''
           }
         });
       })

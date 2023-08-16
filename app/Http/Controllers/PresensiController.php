@@ -203,7 +203,7 @@ class PresensiController extends Controller
                     'jam' => $jam,
                 ],
                 [
-                    'absen' => $absen,
+                    'absen' => ($absen) ?? 'H',
                     'user_id' => loggedUser()->user_id,
                 ]
             );

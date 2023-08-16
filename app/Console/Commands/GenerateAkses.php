@@ -72,7 +72,7 @@ class GenerateAkses extends Command
             [
                 'action' => 'read',
                 'subject' => 'Ref_Pd',
-                'roles' => ['administrator', 'kepsek', 'pengajar', 'wakakur', 'walas', 'kajur', 'wakasiswa', 'bk'],
+                'roles' => ['administrator', 'wakakur', 'walas', 'kajur', 'wakasiswa'],
             ],
             [
                 'action' => 'read',
