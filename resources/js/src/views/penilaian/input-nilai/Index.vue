@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { BCard, BCardBody, BSpinner, BAlert } from 'bootstrap-vue'
 import Datatable from './Datatable.vue' //IMPORT COMPONENT DATATABLENYA
 import AddModal from './../../components/modal/penilaian/input-nilai/AddModal.vue'
