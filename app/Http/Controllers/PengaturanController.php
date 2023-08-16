@@ -13,7 +13,7 @@ use Validator;
 class PengaturanController extends Controller
 {
     public function index(){
-        $tanggal_penilaian = get_setting('tanggal_penilaian');
+        $tanggal_penilaian = get_setting('tanggal_penilaian', semester_id());
         $data = [
             'app_name' => get_setting('app_name'),
             'app_version' => get_setting('app_version'),

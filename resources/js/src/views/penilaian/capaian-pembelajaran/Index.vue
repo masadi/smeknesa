@@ -17,8 +17,8 @@
 <script>
 import { BCard, BCardBody, BSpinner } from 'bootstrap-vue'
 import Datatable from './Datatable.vue' //IMPORT COMPONENT DATATABLENYA
-import AddModal from './../components/modal/penilaian/capaian-pembelajaran/AddModal.vue'
-import DetilModal from './../components/modal/penilaian/capaian-pembelajaran/DetilModal.vue'
+import AddModal from './../../components/modal/penilaian/capaian-pembelajaran/AddModal.vue'
+import DetilModal from './../../components/modal/penilaian/capaian-pembelajaran/DetilModal.vue'
 import eventBus from '@core/utils/eventBus'
 export default {
   components: {

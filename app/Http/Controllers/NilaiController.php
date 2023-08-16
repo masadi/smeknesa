@@ -166,10 +166,10 @@ class NilaiController extends Controller
         ];
         return response()->json($data);*/
         $set_nilai = [];
-        foreach(request()->nilai as $key => $nilai){
+        foreach(request()->angka as $key => $nilai){
             $collection = Str::of($key)->explode('#');
-            $tp_id =$collection[0];
-            $anggota_rombel_id = $collection[1];
+            $tp_id = $collection->first();
+            $anggota_rombel_id = $collection->last();
             $set_nilai[$anggota_rombel_id][$tp_id] = $nilai;
         }
         $asesmen = [];
@@ -308,6 +308,7 @@ class NilaiController extends Controller
                     $query->where('pembelajaran_id', request()->pembelajaran_id);
                 });
                 $query->where('guru_id', loggedUser()->guru_id);
+                $query->has('tp');
             })->get(),
             'jenis' => Jenis_penilaian::get(),
         ];
@@ -315,7 +316,7 @@ class NilaiController extends Controller
     }
     public function get_tp(){
         $data = Tujuan_pembelajaran::where('cp_id', request()->cp_id)->orderBy('created_at')->get();
-        return response()->json($data);
+        return response()->json(['data_tp' => $data]);
     }
     public function get_siswa(){
         /*$data = Peserta_didik::where(function($query){

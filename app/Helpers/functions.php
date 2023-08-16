@@ -13,14 +13,14 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
 
-function get_setting($key, $sekolah_id = NULL, $semester_id = NULL){
-    $data = Setting::where(function($query) use ($key, $sekolah_id, $semester_id){
+function get_setting($key, $semester_id = NULL, $sekolah_id = NULL){
+    $data = Setting::where(function($query) use ($key, $semester_id, $sekolah_id){
         $query->where('key', $key);
-        if($sekolah_id){
-            $query->where('sekolah_id', $sekolah_id);
-        }
         if($semester_id){
             $query->where('semester_id', $semester_id);
+        }
+        if($sekolah_id){
+            $query->where('sekolah_id', $sekolah_id);
         }
     })->first();
     return ($data) ? $data->value : NULL;

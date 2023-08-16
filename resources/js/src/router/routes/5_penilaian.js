@@ -2,7 +2,7 @@ export default [
   {
     path: '/penilaian/cp-tp',
     name: 'penilaian-cp-tp',
-    component: () => import('@/views/penilaian/CapaianPembelajaran.vue'),
+    component: () => import('@/views/penilaian/capaian-pembelajaran/Index.vue'),
     meta: {
       resource: 'Web',
       action: 'read',
@@ -27,7 +27,7 @@ export default [
   {
     path: '/penilaian/penilaian',
     name: 'penilaian-penilaian',
-    component: () => import('@/views/pages/Blank.vue'),
+    component: () => import('@/views/penilaian/input-nilai/Index.vue'),
     meta: {
       pageTitle: 'Input Nilai',
       resource: 'Penilaian',
@@ -41,6 +41,12 @@ export default [
           active: true,
         },
       ],
+      tombol_add: {
+        action: 'input-nilai',
+        link: '',
+        variant: 'primary',
+        text: 'Tambah Data'
+      },
     },
   },
   {
