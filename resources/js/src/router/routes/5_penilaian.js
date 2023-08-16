@@ -2,7 +2,7 @@ export default [
   {
     path: '/penilaian/cp-tp',
     name: 'penilaian-cp-tp',
-    component: () => import('@/views/pages/Blank.vue'),
+    component: () => import('@/views/penilaian/CapaianPembelajaran.vue'),
     meta: {
       resource: 'Web',
       action: 'read',
@@ -16,6 +16,12 @@ export default [
           active: true,
         },
       ],
+      tombol_add: {
+        action: 'add-cp',
+        link: '',
+        variant: 'primary',
+        text: 'Tambah Data'
+      },
     },
   },
   {

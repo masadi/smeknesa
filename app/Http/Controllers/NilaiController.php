@@ -70,36 +70,30 @@ class NilaiController extends Controller
         ->when(request()->q, function($query) {
             $query->where('deskripsi', 'ilike', '%'.request()->q.'%');
             $query->where($this->kondisiCp());
-            $query->orWhereHas('mata_pelajaran', function($query){
-                $query->where('nama', 'ilike', '%'.request()->q.'%');
+            $query->orWhereHas('pembelajaran', function($query){
+                $query->where('nama_mata_pelajaran', 'ilike', '%'.request()->q.'%');
             });
             $query->where($this->kondisiCp());
         })
         ->when(request()->tingkat, function($query) {
-            $query->whereHas('mata_pelajaran', function($query){
-                $query->whereHas('pembelajaran', function($query){
-                    $query->whereHas('rombongan_belajar', function($query){
-                        $query->where('tingkat', request()->tingkat);
-                    });
+            $query->whereHas('pembelajaran', function($query){
+                $query->whereHas('rombongan_belajar', function($query){
+                    $query->where('tingkat', request()->tingkat);
                 });
             });
             $query->where($this->kondisiCp());
         })
         ->when(request()->jurusan_sp_id, function($query) {
-            $query->whereHas('mata_pelajaran', function($query){
-                $query->whereHas('pembelajaran', function($query){
-                    $query->whereHas('rombongan_belajar', function($query){
-                        $query->where('jurusan_sp_id', request()->jurusan_sp_id);
-                    });
+            $query->whereHas('pembelajaran', function($query){
+                $query->whereHas('rombongan_belajar', function($query){
+                    $query->where('jurusan_sp_id', request()->jurusan_sp_id);
                 });
             });
             $query->where($this->kondisiCp());
         })
         ->when(request()->rombongan_belajar_id, function($query) {
-            $query->whereHas('mata_pelajaran', function($query){
-                $query->whereHas('pembelajaran', function($query){
-                    $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
-                });
+            $query->whereHas('pembelajaran', function($query){
+                $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
             });
             $query->where($this->kondisiCp());
         })
