@@ -58,8 +58,12 @@
           <b-card-header>
             <b-card-title>Data Pengguna</b-card-title>
             <div>
-              <b-button variant="primary" size="sm" @click="generatePengguna">Generate Pengguna</b-button>
-              <b-button variant="success" size="sm" @click="aksesGuru">Akses Guru</b-button>
+              <b-overlay :show="loading" rounded opacity="0.6" spinner-variant="warning" spinner-small class="d-inline-block">
+                <b-button variant="primary" size="sm" @click="generatePengguna">Generate Pengguna</b-button>
+              </b-overlay>
+              <b-overlay :show="loading" rounded opacity="0.6" spinner-variant="warning" spinner-small class="d-inline-block">
+                <b-button variant="success" size="sm" @click="aksesGuru">Akses Guru</b-button>
+              </b-overlay>
             </div>
           </b-card-header>
           <b-card-body>
@@ -73,7 +77,7 @@
 </template>
 
 <script>
-import { BRow, BCol, BCard, BCardHeader, BCardText, BCardBody, BCardTitle, BSpinner, BTableSimple, BTr, BTd, BFormCheckbox, VBTooltip, BAvatar, BButton} from 'bootstrap-vue'
+import { BRow, BCol, BCard, BCardHeader, BCardText, BCardBody, BCardTitle, BSpinner, BTableSimple, BTr, BTd, BFormCheckbox, VBTooltip, BAvatar, BButton, BOverlay} from 'bootstrap-vue'
 import Datatable from './Datatable.vue'
 import UserModal from './../components/modal/users/UserModal.vue'
 import eventBus from '@core/utils/eventBus'
@@ -93,6 +97,7 @@ export default {
     VBTooltip,
     BAvatar,
     BButton,
+    BOverlay,
     UserModal,
     BCardTitle,
     Datatable
@@ -188,9 +193,10 @@ export default {
           cancelButton: 'btn btn-secondary ml-1',
         },
         buttonsStyling: false,
-        allowOutsideClick: () => !this.$swal.isLoading(),
+        allowOutsideClick: false,
       }).then(result => {
         eventBus.$emit('loading', true);
+        this.loading = true
         var aksi;
         if(result.isConfirmed){
           aksi = 'ptk'
@@ -212,8 +218,9 @@ export default {
               customClass: {
                 confirmButton: 'btn btn-success',
               },
+              allowOutsideClick: false,
             }).then(result => {
-              //eventBus.$emit('my-event');
+              this.loading = false
               eventBus.$emit('loading', false);
               this.loadPostsData()
             })
@@ -222,7 +229,9 @@ export default {
       })
     },
     aksesGuru(){
+      this.loading = true
       this.$http.get('/pengaturan/guru-mapel').then(response => {
+        this.loading = false
         let getData = response.data
         this.$swal({
           icon: getData.icon,
@@ -231,6 +240,7 @@ export default {
           customClass: {
             confirmButton: 'btn btn-success',
           },
+          allowOutsideClick: false,
         }).then(result => {
           //eventBus.$emit('my-event');
           eventBus.$emit('loading', false);
@@ -321,10 +331,28 @@ export default {
     handleReset(val){
       console.log('handleReset');
       console.log(val);
+      this.$swal({
+        icon: 'error',
+        title: 'Error',
+        text: 'Sedang dalam pengembangan!',
+        customClass: {
+          confirmButton: 'btn btn-success',
+        },
+        allowOutsideClick: false,
+      })
     },
     handleHapus(val){
       console.log('handleHapus');
       console.log(val);
+      this.$swal({
+        icon: 'error',
+        title: 'Error',
+        text: 'Sedang dalam pengembangan!',
+        customClass: {
+          confirmButton: 'btn btn-success',
+        },
+        allowOutsideClick: false,
+      })
     }
   },
 }

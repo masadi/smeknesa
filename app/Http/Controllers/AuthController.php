@@ -13,6 +13,8 @@ use App\Models\Role;
 use App\Models\Team;
 use App\Models\Semester;
 use App\Models\Jadwal;
+use App\Models\Rombongan_belajar;
+use App\Models\Pembelajaran;
 use Validator;
 
 class AuthController extends Controller
@@ -102,7 +104,7 @@ class AuthController extends Controller
             $profile = Peserta_didik::find($request->user()->peserta_didik_id);
         }
         $jadwal = [];
-        if($request->user()->hasRole('guru', periode_aktif()) || $request->user()->hasRole('pd', periode_aktif())){
+        if($request->user()->hasRole(['guru', 'pd'], periode_aktif())){
             $jadwal = Jadwal::with([
                 'pembelajaran' => function($query){
                     $query->where('semester_id', semester_id());
@@ -212,7 +214,9 @@ class AuthController extends Controller
     public function generate(){
         /*
         $adminRole = Role::where('name', 'administrator')->first();
+        $guruRole = Role::where('name', 'guru')->first();
         $kepsekRole = Role::where('name', 'kepsek')->first();
+        $pengajarRole = Role::where('name', 'pengajar')->first();
         $kajurRole = Role::where('name', 'kajur')->first();
         $wakakurRole = Role::where('name', 'wakakur')->first();
         $wakahumasRole = Role::where('name', 'wakahumas')->first();
@@ -220,11 +224,11 @@ class AuthController extends Controller
         $bkRole = Role::where('name', 'bk')->first();
         $walasRole = Role::where('name', 'walas')->first();
         $piketRole = Role::where('name', 'piket')->first();
-        */
-        $guruRole = Role::where('name', 'guru')->first();
         $pdRole = Role::where('name', 'pd')->first();
+        */
+        $all_role = ['administrator', 'guru', 'kepsek', 'pengajar', 'pd', 'piket', 'wakakur', 'walas', 'kajur', 'wakahumas', 'wakasiswa', 'bk'];
         if(request()->jenis == 'ptk'){
-            Guru::doesntHave('pengguna')->orderBy('guru_id')->chunk(200, function ($data) use ($guruRole){
+            Guru::orderBy('guru_id')->chunk(200, function ($data) use ($all_role){
                 foreach ($data as $d) {
                     $new_password = strtolower(Str::random(8));
                     $user = User::where('guru_id', $d->guru_id)->first();
@@ -243,8 +247,15 @@ class AuthController extends Controller
                         $user->name = $d->nama_lengkap;
                         $user->save();
                     }
-                    if(!$user->hasRole($guruRole, request()->periode_aktif)){
-                        $user->attachRole($guruRole, request()->periode_aktif);
+                    $user->detachRoles($all_role, request()->periode_aktif);
+                    $user->attachRole('guru', request()->periode_aktif);
+                    $find = Rombongan_belajar::where('guru_id', $d->guru_id)->where('semester_id', request()->semester_id)->first();
+                    if($find){
+                        $user->attachRole('walas', request()->periode_aktif);
+                    }
+                    $find = Pembelajaran::where('guru_id', $d->guru_id)->where('semester_id', request()->semester_id)->first();
+                    if($find){
+                        $user->attachRole('pengajar', request()->periode_aktif);
                     }
                 }
             });
@@ -256,7 +267,7 @@ class AuthController extends Controller
         } else {
             Peserta_didik::doesntHave('pengguna')->whereHas('anggota_rombel', function($query){
                 $query->where('semester_id', semester_id());
-            })->orderBy('peserta_didik_id')->chunk(200, function ($data) use ($pdRole){
+            })->orderBy('peserta_didik_id')->chunk(200, function ($data){
                 foreach ($data as $d) {
                     $new_password = strtolower(Str::random(8));
                     $user = User::where('peserta_didik_id', $d->peserta_didik_id)->first();
@@ -275,8 +286,8 @@ class AuthController extends Controller
                         $user->name = $d->nama_lengkap;
                         $user->save();
                     }
-                    if(!$user->hasRole($pdRole, request()->periode_aktif)){
-                        $user->attachRole($pdRole, request()->periode_aktif);
+                    if(!$user->hasRole('pd', request()->periode_aktif)){
+                        $user->attachRole('pd', request()->periode_aktif);
                     }
                 }
             });
