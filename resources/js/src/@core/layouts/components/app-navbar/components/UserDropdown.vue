@@ -1,25 +1,16 @@
 <template>
   <b-nav-item-dropdown right toggle-class="d-flex align-items-center dropdown-user-link" class="dropdown-user">
     <template #button-content>
-      <!--div class="d-sm-flex d-none user-nav">
-        <p class="user-name font-weight-bolder mb-0">
-          {{ userData.name }}
-        </p>
-        <span class="user-status">{{ userData.role }}</span>
-      </div-->
-      <template v-if="userData.photo">
-          <b-img v-bind="mainProps" rounded="circle" :src="`/storage/images/${userData.photo}`"></b-img>
-        </template>
-      <template v-else>
-        <b-avatar size="40" :src="userData.avatar" variant="light-primary" badge class="badge-minimal" badge-variant="success">
-          <feather-icon v-if="!userData.name" icon="UserIcon" size="22"/>
-        </b-avatar>
-      </template>
+      <b-avatar size="40" :src="userData.photo ? `/storage/images/${userData.photo}` : null" variant="light-primary" badge class="badge-minimal" badge-variant="success">
+        <feather-icon v-if="!userData.photo" icon="UserIcon" size="22"/>
+      </b-avatar>
     </template>
     <b-dropdown-text link-class="d-flex align-items-center">
       <b-media no-body>
         <b-media-aside vertical-align="center" class="mr-75">
-          <b-avatar rounded size="40" :src="`/storage/images/${userData.photo}`" />
+          <b-avatar size="40" :src="userData.photo ? `/storage/images/${userData.photo}` : null" variant="light-primary" badge class="badge-minimal" badge-variant="success">
+            <feather-icon v-if="!userData.photo" icon="UserIcon" size="22"/>
+          </b-avatar>
         </b-media-aside>
         <b-media-body class="my-auto">
           <h6 class="mb-0">
@@ -48,7 +39,7 @@
 
 <script>
 import {
-  BNavItemDropdown, BDropdownItem, BDropdownText, BDropdownDivider, BAvatar, BImg, BMedia, BMediaAside, BMediaBody
+  BNavItemDropdown, BDropdownItem, BDropdownText, BDropdownDivider, BAvatar, BMedia, BMediaAside, BMediaBody
 } from 'bootstrap-vue'
 import eventBus from '@core/utils/eventBus'
 import { initialAbility } from '@/libs/acl/config'
@@ -62,7 +53,6 @@ export default {
     BDropdownText,
     BDropdownDivider,
     BAvatar,
-    BImg,
     BMedia,
     BMediaAside,
     BMediaBody,
