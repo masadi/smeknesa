@@ -71,7 +71,7 @@ export default [
   {
     path: '/penilaian/rekap',
     name: 'penilaian-rekap',
-    component: () => import('@/views/pages/Blank.vue'),
+    component: () => import('@/views/penilaian/RekapNilai.vue'),
     meta: {
       pageTitle: 'Rekap Nilai',
       resource: 'Rekap_Nilai',

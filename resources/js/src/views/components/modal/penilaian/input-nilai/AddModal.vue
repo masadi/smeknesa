@@ -50,7 +50,7 @@
               <b-col cols="12" v-show="form.jenis_id === 2">
                 <b-form-group label="Capaian Pembelajaran" label-for="cp_id" label-cols-md="3" :invalid-feedback="feedback.cp_id" :state="state.cp_id">
                   <b-overlay :show="loading_cp" rounded opacity="0.6" spinner-small spinner-variant="danger">
-                    <v-select id="cp_id" v-model="form.cp_id" :reduce="deskripsi => deskripsi.cp_id" label="deskripsi" :options="data_cp" placeholder="== Pilih Mata Pelajaran ==" :state="state.cp_id" @input="changeCp">
+                    <v-select id="cp_id" v-model="form.cp_id" :reduce="deskripsi => deskripsi.cp_id" label="deskripsi" :options="data_cp" placeholder="== Pilih Capaian Pembelajaran ==" :state="state.cp_id" @input="changeCp">
                       <template #no-options="{ search, searching, loading }">
                         Tidak ada data untuk ditampilkan
                       </template>
