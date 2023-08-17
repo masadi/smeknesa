@@ -864,7 +864,7 @@ class ReferensiController extends Controller
     public function anggota_rombel(){
         $data = Peserta_didik::whereHas('anggota_rombel', function($query){
             $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
-        })->orderBy('nama')->get();
+        })->with(['agama'])->orderBy('nama')->get();
         return response()->json($data);
     }
     public function get_semester(){
@@ -1527,7 +1527,7 @@ class ReferensiController extends Controller
             $query->whereDoesntHave('pd_keluar', function($query){
                 $query->where('semester_id', semester_id());
             });
-        })->orderBy('nama')->get();
+        })->with(['agama'])->orderBy('nama')->get();
         return response()->json($data);
     }
     public function set_anggota(){

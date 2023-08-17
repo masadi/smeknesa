@@ -15,6 +15,7 @@ use App\Models\Team;
 use App\Models\Jam;
 use App\Models\Whatsapp;
 use App\Models\Anggota_rombel;
+use App\Models\Notifikasi;
 use Carbon\Carbon;
 use File;
 
@@ -325,6 +326,14 @@ class DashboardController extends Controller
         abort(403, 'Akses tidak sah!');
     }
     public function notifikasi(){
+        $this->setNotifikasi();
+        $data = Notifikasi::where(function($query){
+            $query->where('user_id', loggedUser()->user_id);
+            $query->where('terbaca', FALSE);
+        })->get();
+        return response()->json(['notifications' => $data]);
+    }
+    private function setNotifikasi(){
         $data = [];
         if($this->loggedUser()->hasRole('walas', request()->periode_aktif)){
             $remedial = Anggota_rombel::whereHas('nilai_satuan', function($query){
@@ -334,6 +343,13 @@ class DashboardController extends Controller
                 $query->where('guru_id', request()->guru_id);
                 $query->where('semester_id', request()->semester_id);
             })->count();
+            if($remedial){
+                $data = [
+                    'title' => $remedial.' Siswa memiki nilai dibawah SKM',
+                    'subtitle' => 'Lihat Detail',
+                    'route' => '/penilaian/remedial',//'penilaian-remedial'
+                ];
+            }
             $absen = Anggota_rombel::whereHas('rombongan_belajar', function($query){
                 $query->where('guru_id', request()->guru_id);
                 $query->where('semester_id', request()->semester_id);
@@ -346,25 +362,30 @@ class DashboardController extends Controller
                 $query->where('absen', 'A');
                 $query->whereBetween('tanggal', [request()->tanggal_mulai, request()->tanggal_selesai]);
             }])->get();
-            if($remedial){
-                $data = [
-                    'title' => $remedial.' Siswa memiki nilai dibawah SKM',
-                    'subtitle' => 'Lihat Detail',
-                    'route' => 'penilaian-remedial'
-                ];
-            }
             if($absen->count()){
                 $output = [];
                 foreach($absen as $a){
                     $output[] = [
                         'title' => $a->peserta_didik->nama,
                         'subtitle' => ' Tidak masuk sebanyak '.$a->alpa.' jam pelajaran tanpa keterangan, lihat detail',
-                        'route' => 'presensi-rekap-pd'
+                        'route' => '/wali-kelas/absensi-siswa',//'presensi-rekap-pd'
                     ];
                 }
-                $data = array_merge([$data], $output);
+                $data = array_filter(array_merge([$data], $output));
             }
         }
-        return response()->json(['notifications' => $data]);
+        foreach($data as $notif){
+            Notifikasi::updateOrCreate([
+                'title' => $notif['title'],
+                'subtitle' => $notif['subtitle'],
+                'route' => $notif['route'],
+                'user_id' => loggedUser()->user_id,
+            ]);
+        }
+    }
+    public function read_notif(){
+        $data = Notifikasi::find(request()->id);
+        $data->terbaca = TRUE;
+        $data->save();
     }
 }

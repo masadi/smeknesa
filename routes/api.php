@@ -56,6 +56,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/get-mapel', [DashboardController::class, 'get_mapel']);
     Route::post('/get-nilai', [DashboardController::class, 'get_nilai']);
     Route::post('/notifikasi', [DashboardController::class, 'notifikasi']);
+    Route::post('/read-notif', [DashboardController::class, 'read_notif']);
   });
   Route::group(['prefix' => 'pengaturan'], function () {
     Route::get('/umum', [PengaturanController::class, 'index']);

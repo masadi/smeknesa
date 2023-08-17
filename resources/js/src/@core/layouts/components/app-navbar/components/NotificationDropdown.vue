@@ -1,5 +1,5 @@
 <template>
-  <b-nav-item-dropdown class="dropdown-notification mr-25" menu-class="dropdown-menu-media" right>
+  <b-nav-item-dropdown ref="dropdown" class="dropdown-notification mr-25" menu-class="dropdown-menu-media" right>
     <template #button-content>
       <feather-icon :badge="notifications.length" badge-classes="bg-danger" class="text-body" icon="BellIcon" size="21" />
     </template>
@@ -18,7 +18,7 @@
 
     <!-- Notifications -->
     <vue-perfect-scrollbar :settings="perfectScrollbarSettings" class="scrollable-container media-list scroll-area" tagname="li">
-      <b-link v-for="notification in notifications" :key="notification.subtitle" :to="{name: notification.route}">
+      <b-link v-for="notification in notifications" :key="notification.subtitle" @click="readNotif(notification.id, notification.route)">
         <b-media>
           <p class="media-heading">
             <span class="font-weight-bolder">
@@ -59,19 +59,35 @@ export default {
     }
   },
   created() {
-    if(this.user){
-      this.$http.post('/dashboard/notifikasi', {
-        guru_id: this.user.guru_id,
-        periode_aktif: this.user.semester.nama,
-        peserta_didik_id: this.user.peserta_didik_id,
-        semester_id: this.user.semester.semester_id,
-        tanggal_mulai: this.user.semester.tanggal_mulai,
-        tanggal_selesai: this.user.semester.tanggal_selesai,
+    this.getNotif()
+  },
+  methods: {
+    getNotif(){
+      if(this.user){
+        this.$http.post('/dashboard/notifikasi', {
+          guru_id: this.user.guru_id,
+          periode_aktif: this.user.semester.nama,
+          peserta_didik_id: this.user.peserta_didik_id,
+          semester_id: this.user.semester.semester_id,
+          tanggal_mulai: this.user.semester.tanggal_mulai,
+          tanggal_selesai: this.user.semester.tanggal_selesai,
+        }).then(response => {
+          let getData = response.data
+          this.notifications = getData.notifications
+        });
+      }
+    },
+    readNotif(id, next){
+      this.$refs.dropdown.hide(true)
+      this.$http.post('/dashboard/read-notif', {
+        id: id,
       }).then(response => {
-        let getData = response.data
-        this.notifications = getData.notifications
+        if(this.$route.path !== next)
+          this.$router.push(next)
+        this.getNotif()
       });
     }
-  },
+  }
+  //:to="{name: }"
 }
 </script>

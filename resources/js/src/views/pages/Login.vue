@@ -139,7 +139,7 @@ export default {
       status: '',
       password: '',
       userEmail: '',
-      sideImg: '/img/pages/login-v2.svg',
+      sideImg: '/img/pages/login-Integrated-system.webp',
 
       // validation rules
       required,
@@ -153,7 +153,7 @@ export default {
     imgUrl() {
       if (store.state.appConfig.layout.skin === 'dark') {
         // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-        this.sideImg = '/img/pages/login-v2-dark.svg'
+        this.sideImg = '/img/pages/login-Integrated-system.webp'
         return this.sideImg
       }
       return this.sideImg
