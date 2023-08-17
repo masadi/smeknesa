@@ -2,20 +2,26 @@ export default [
   {
     path: '/wali-kelas/absensi-siswa',
     name: 'walas-absensi-siswa',
-    component: () => import('@/views/pages/Blank.vue'),
+    component: () => import('@/views/wali-kelas/absensi-siswa/Index.vue'),
     meta: {
-      resource: 'Presensi_Rekap_Pd',
+      resource: 'Wali',
       action: 'read',
-      pageTitle: 'Absensi Siswa',
+      pageTitle: 'Rekapitulasi Absensi Siswa',
       breadcrumb: [
         {
           text: 'Wali Kelas',
         },
         {
-          text: 'Absensi Siswa',
+          text: 'Rekapitulasi Absensi Siswa',
           active: true,
         },
       ],
+      tombol_add: {
+        action: 'download-rekap',
+        link: '',
+        variant: 'primary',
+        text: 'Download Rekap'
+      },
     },
   },
   {
@@ -23,7 +29,7 @@ export default [
     name: 'walas-kenaikan',
     component: () => import('@/views/pages/Blank.vue'),
     meta: {
-      resource: 'Kenaikan',
+      resource: 'Wali',
       action: 'read',
       pageTitle: 'Kenaikan Kelas',
       breadcrumb: [
@@ -43,7 +49,7 @@ export default [
     component: () => import('@/views/pages/Blank.vue'),
     meta: {
       pageTitle: 'Cetak Rapor',
-      resource: 'Kenaikan',
+      resource: 'Wali',
       action: 'read',
       breadcrumb: [
         {
@@ -62,7 +68,7 @@ export default [
     component: () => import('@/views/pages/Blank.vue'),
     meta: {
       pageTitle: 'Remedial',
-      resource: 'Kenaikan',
+      resource: 'Wali',
       action: 'read',
       breadcrumb: [
         {

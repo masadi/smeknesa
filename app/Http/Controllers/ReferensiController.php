@@ -623,19 +623,21 @@ class ReferensiController extends Controller
                 }
             }
             if(request()->aksi){
-                if(request()->aksi == 'naik'){
-                    $query->whereHas('semester', function($query){
-                        $query->where('semester', 2);
-                        $query->where('tahun_ajaran_id', (tahun_ajaran_id() - 1));
-                        $query->where('tingkat', '<>', 12);
-                    });
-                } else {
-                    $query->whereHas('semester', function($query){
-                        $query->where('semester', 1);
-                        $query->where('tahun_ajaran_id', tahun_ajaran_id());
-                    });
+                if(request()->aksi != 'pd'){
+                    if(request()->aksi == 'naik'){
+                        $query->whereHas('semester', function($query){
+                            $query->where('semester', 2);
+                            $query->where('tahun_ajaran_id', (tahun_ajaran_id() - 1));
+                            $query->where('tingkat', '<>', 12);
+                        });
+                    } else {
+                        $query->whereHas('semester', function($query){
+                            $query->where('semester', 1);
+                            $query->where('tahun_ajaran_id', tahun_ajaran_id());
+                        });
+                    }
+                    $query->doesntHave('rombel_trigger');
                 }
-                $query->doesntHave('rombel_trigger');
             } else {
                 $query->where('semester_id', semester_id());
             }

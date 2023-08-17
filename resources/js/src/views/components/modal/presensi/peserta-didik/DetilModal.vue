@@ -5,7 +5,7 @@
         <BTr>
           <BTh class="text-center">No</BTh>
           <BTh class="text-center">Nama Siswa</BTh>
-          <template v-for="absen in ['H', 'A', 'S', 'I', 'D']">
+          <template v-for="absen in ['A', 'S', 'I', 'D']">
             <BTh class="text-center">{{absen}}</BTh>
           </template>
         </BTr>
@@ -15,7 +15,6 @@
           <BTr>
             <BTd class="text-center">{{index + 1}}</BTd>
             <BTd>{{pd.nama}}</BTd>
-            <BTd class="text-center">{{pd.H}}</BTd>
             <BTd class="text-center">{{pd.A}}</BTd>
             <BTd class="text-center">{{pd.S}}</BTd>
             <BTd class="text-center">{{pd.I}}</BTd>

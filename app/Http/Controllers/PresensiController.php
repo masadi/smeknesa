@@ -22,7 +22,7 @@ class PresensiController extends Controller
         } else {
             $data = $this->absensi_guru();
         }
-        return response()->json(['status' => 'success', 'data' => $data, 'semester_id' => semester_id(), 'data_bulan' => $this->bulan(), 'bulan' => (request()->bulan) ?? date('m')]);
+        return response()->json(['status' => 'success', 'data' => $data, 'semester_id' => semester_id(), 'data_bulan' => $this->bulan(), 'bulan' => ($this->get_bulan()) ?? date('m')]);
     }
     public function rekap(){
         if(request()->data == 'pd'){
@@ -30,7 +30,7 @@ class PresensiController extends Controller
         } else {
             $data = $this->rekap_guru();
         }
-        return response()->json(['status' => 'success', 'data' => $data, 'tahun' => date('Y'), 'bulan' => (request()->bulan) ?? date('m'), 'semester_id' => semester_id(), 'data_bulan' => $this->bulan()]);
+        return response()->json(['status' => 'success', 'data' => $data, 'tahun' => date('Y'), 'bulan' => ($this->get_bulan()) ?? date('m'), 'semester_id' => semester_id(), 'data_bulan' => $this->bulan()]);
     }
     private function bulan(){
         $period = now()->startOfMonth()->subMonths(11)->monthsUntil(now());
@@ -47,8 +47,8 @@ class PresensiController extends Controller
         return $sorted->values()->all();
     }
     private function get_tanggal(){
-        if(request()->bulan){
-            $month = date('Y').'-'.request()->bulan;
+        if($this->get_bulan()){
+            $month = date('Y').'-'.$this->get_bulan();
             $startDate = Carbon::parse($month)->startOfMonth();
             $endDate = Carbon::parse($month)->endOfMonth();
         } else {
@@ -66,8 +66,8 @@ class PresensiController extends Controller
     private function kondisiAbsen(){
         return function($query){
             $query->whereHas('presensi', function ($query) {
-                if(request()->bulan){
-                    $query->whereMonth('tanggal', request()->bulan);
+                if($this->get_bulan()){
+                    $query->whereMonth('tanggal', $this->get_bulan());
                 } else {
                     $query->whereMonth('tanggal', Carbon::today()->format('m'));
                 }
@@ -90,6 +90,9 @@ class PresensiController extends Controller
                 }
                 $query->whereHas('rombongan_belajar', function($query){
                     $query->where('semester_id', semester_id());
+                    if(loggedUser()->hasRole('walas', request()->periode_aktif)){
+                        $query->where('guru_id', request()->guru_id);
+                    }
                 });
             } else {
                 $query->whereHas('jadwal', function ($query) {
@@ -102,21 +105,76 @@ class PresensiController extends Controller
         };
     }
     private function absensi_pd(){
+        $date = date('Y').'-'.$this->get_bulan().'-'.date('d');
+        $firstOfMonth = Carbon::create($date)->firstOfMonth()->format('Y-m-d');
+        $endOfMonth = Carbon::create($date)->endOfMonth()->format('Y-m-d');
+        $period = CarbonPeriod::between($firstOfMonth, $endOfMonth)->addFilter(function ($date) {
+            return $date->isSunday() || $date->isSaturday();
+        });
+        $hari_libur = [];
+        foreach ($period as $date) {
+            $hari_libur[] = $date->format('Y-m-d');
+        }
         return Peserta_didik::whereHas('anggota_rombel', $this->kondisiAbsen())->withCount([
-            'presensi as H' => function($query){
+            'presensi as H' => function($query) use ($hari_libur){
                 $query->where('absen', 'H');
+                $query->whereNotIn('tanggal', $hari_libur);
+                if($this->get_bulan()){
+                    $query->whereMonth('tanggal', $this->get_bulan());
+                } else {
+                    $query->whereMonth('tanggal', Carbon::today()->format('m'));
+                }
+                if(request()->tanggal){
+                    $query->whereDate('tanggal', request()->tanggal);
+                }
             },
-            'presensi as A' => function($query){
+            'presensi as A' => function($query) use ($hari_libur){
                 $query->where('absen', 'A');
+                $query->whereNotIn('tanggal', $hari_libur);
+                if($this->get_bulan()){
+                    $query->whereMonth('tanggal', $this->get_bulan());
+                } else {
+                    $query->whereMonth('tanggal', Carbon::today()->format('m'));
+                }
+                if(request()->tanggal){
+                    $query->whereDate('tanggal', request()->tanggal);
+                }
             },
-            'presensi as S' => function($query){
+            'presensi as S' => function($query) use ($hari_libur){
                 $query->where('absen', 'S');
+                $query->whereNotIn('tanggal', $hari_libur);
+                if($this->get_bulan()){
+                    $query->whereMonth('tanggal', $this->get_bulan());
+                } else {
+                    $query->whereMonth('tanggal', Carbon::today()->format('m'));
+                }
+                if(request()->tanggal){
+                    $query->whereDate('tanggal', request()->tanggal);
+                }
             },
-            'presensi as I' => function($query){
+            'presensi as I' => function($query) use ($hari_libur){
                 $query->where('absen', 'I');
+                $query->whereNotIn('tanggal', $hari_libur);
+                if($this->get_bulan()){
+                    $query->whereMonth('tanggal', $this->get_bulan());
+                } else {
+                    $query->whereMonth('tanggal', Carbon::today()->format('m'));
+                }
+                if(request()->tanggal){
+                    $query->whereDate('tanggal', request()->tanggal);
+                }
             },
-            'presensi as D' => function($query){
+            'presensi as D' => function($query) use ($hari_libur){
                 $query->where('absen', 'D');
+                $query->whereNotIn('tanggal', $hari_libur);
+                if($this->get_bulan()){
+                    $query->whereMonth('tanggal', $this->get_bulan());
+                } else {
+                    $query->whereMonth('tanggal', Carbon::today()->format('m'));
+                }
+                if(request()->tanggal){
+                    $query->whereDate('tanggal', request()->tanggal);
+                }
             },
         ])->withWhereHas('kelas', function($query){
             $query->where('rombongan_belajar.semester_id', semester_id());
@@ -185,28 +243,47 @@ class PresensiController extends Controller
         return response()->json($data);
     }
     public function simpan(){
-        foreach(request()->absensi as $request => $absen){
-            $collection = Str::of($request)->explode('#');
-            $anggota_rombel_id = NULL;
-            $guru_id = NULL;
-            if(request()->aksi == 'pd'){
-                $anggota_rombel_id = $collection[0];
-            } else {
-                $guru_id = $collection[0];
+        if(request()->aksi == 'pd'){
+            foreach(request()->anggota_rombel_id as $key => $anggota_rombel_id){
+                foreach(request()->jam[$key] as $jam){
+                    Presensi::updateOrCreate(
+                        [
+                            'anggota_rombel_id' => $anggota_rombel_id,
+                            'guru_id' => NULL,
+                            'tanggal' => request()->tanggal,
+                            'jam' => $jam,
+                        ],
+                        [
+                            'absen' => request()->absensi[$key],
+                            'user_id' => loggedUser()->user_id,
+                        ]
+                    );
+                }
             }
-            $jam = $collection[1];
-            Presensi::updateOrCreate(
-                [
-                    'anggota_rombel_id' => $anggota_rombel_id,
-                    'guru_id' => $guru_id,
-                    'tanggal' => request()->tanggal,
-                    'jam' => $jam,
-                ],
-                [
-                    'absen' => ($absen) ?? 'H',
-                    'user_id' => loggedUser()->user_id,
-                ]
-            );
+        } else {
+            foreach(request()->absensi as $request => $absen){
+                $collection = Str::of($request)->explode('#');
+                $anggota_rombel_id = NULL;
+                $guru_id = NULL;
+                if(request()->aksi == 'pd'){
+                    $anggota_rombel_id = $collection[0];
+                } else {
+                    $guru_id = $collection[0];
+                }
+                $jam = $collection[1];
+                Presensi::updateOrCreate(
+                    [
+                        'anggota_rombel_id' => $anggota_rombel_id,
+                        'guru_id' => $guru_id,
+                        'tanggal' => request()->tanggal,
+                        'jam' => $jam,
+                    ],
+                    [
+                        'absen' => ($absen) ?? 'H',
+                        'user_id' => loggedUser()->user_id,
+                    ]
+                );
+            }
         }
         $aksi = (request()->aksi == 'pd') ? 'Siswa' : 'Guru';
         $data = [
@@ -239,7 +316,7 @@ class PresensiController extends Controller
             },
             'presensi' => function($query){
                 $query->where('absen', '<>', 'H');
-                $query->whereMonth('tanggal', request()->bulan);
+                $query->whereMonth('tanggal', $this->get_bulan());
             },
         ])->orderBy(request()->sortby, request()->sortbydesc)
         ->when(request()->q, function($query) {
@@ -263,7 +340,7 @@ class PresensiController extends Controller
             },
         ])->with(['presensi' => function($query){
             $query->where('absen', '<>', 'H');
-            $query->whereMonth('tanggal', request()->bulan);
+            $query->whereMonth('tanggal', $this->get_bulan());
         }])->orderBy(request()->sortby, request()->sortbydesc)
         ->when(request()->q, function($query) {
             $query->where($this->kondisiAbsen());
@@ -283,7 +360,7 @@ class PresensiController extends Controller
                 $query->where('semester_id', semester_id());
             })->orderBy('nama_jurusan_sp')->get(),
             'data_bulan' => $data_bulan,
-            'bulan' => (request()->bulan) ?? date('m'),
+            'bulan' => ($this->get_bulan()) ?? date('m'),
         ];
         return response()->json($data);
     }
@@ -310,8 +387,8 @@ class PresensiController extends Controller
                     });
                 });
             }
-            if(request()->bulan){
-                $query->whereMonth('tanggal', request()->bulan);
+            if($this->get_bulan()){
+                $query->whereMonth('tanggal', $this->get_bulan());
             }
             if($absen){
                 $query->where('absen', $absen);
@@ -359,7 +436,7 @@ class PresensiController extends Controller
             },
         ])->first();
         $data['data_bulan'] = $data_bulan;
-        $data['bulan'] = (request()->bulan) ?? '';
+        $data['bulan'] = ($this->get_bulan()) ?? '';
         $data['presensi'] = [
             [
               'avatarColor' => 'error',
@@ -404,8 +481,8 @@ class PresensiController extends Controller
             'anggota_rombel as hadir' => function($query){
                 $query->whereHas('presensi', function ($query) {
                     $query->where('absen', 'H');
-                    if(request()->bulan){
-                        $query->whereMonth('tanggal', request()->bulan);
+                    if($this->get_bulan()){
+                        $query->whereMonth('tanggal', $this->get_bulan());
                     } else {
                         $query->whereMonth('tanggal', Carbon::today()->format('m'));
                     }
@@ -417,8 +494,8 @@ class PresensiController extends Controller
             'anggota_rombel as alpa' => function($query){
                 $query->whereHas('presensi', function ($query) {
                     $query->where('absen', 'A');
-                    if(request()->bulan){
-                        $query->whereMonth('tanggal', request()->bulan);
+                    if($this->get_bulan()){
+                        $query->whereMonth('tanggal', $this->get_bulan());
                     } else {
                         $query->whereMonth('tanggal', Carbon::today()->format('m'));
                     }
@@ -430,8 +507,8 @@ class PresensiController extends Controller
             'anggota_rombel as sakit' => function($query){
                 $query->whereHas('presensi', function ($query) {
                     $query->where('absen', 'S');
-                    if(request()->bulan){
-                        $query->whereMonth('tanggal', request()->bulan);
+                    if($this->get_bulan()){
+                        $query->whereMonth('tanggal', $this->get_bulan());
                     } else {
                         $query->whereMonth('tanggal', Carbon::today()->format('m'));
                     }
@@ -443,8 +520,8 @@ class PresensiController extends Controller
             'anggota_rombel as izin' => function($query){
                 $query->whereHas('presensi', function ($query) {
                     $query->where('absen', 'I');
-                    if(request()->bulan){
-                        $query->whereMonth('tanggal', request()->bulan);
+                    if($this->get_bulan()){
+                        $query->whereMonth('tanggal', $this->get_bulan());
                     } else {
                         $query->whereMonth('tanggal', Carbon::today()->format('m'));
                     }
@@ -456,8 +533,8 @@ class PresensiController extends Controller
             'anggota_rombel as dd' => function($query){
                 $query->whereHas('presensi', function ($query) {
                     $query->where('absen', 'D');
-                    if(request()->bulan){
-                        $query->whereMonth('tanggal', request()->bulan);
+                    if($this->get_bulan()){
+                        $query->whereMonth('tanggal', $this->get_bulan());
                     } else {
                         $query->whereMonth('tanggal', Carbon::today()->format('m'));
                     }
@@ -469,33 +546,76 @@ class PresensiController extends Controller
         ])->with(['wali_kelas' => function($query){
             $query->select('nama', 'guru_id');
         }])->paginate(request()->per_page);
-        return response()->json(['status' => 'success', 'data' => $data, 'data_bulan' => $this->bulan(), 'bulan' => (request()->bulan) ?? date('m'), 'data_tanggal' => $this->get_tanggal(), 'tanggal' => request()->tanggal]);
+        return response()->json(['status' => 'success', 'data' => $data, 'data_bulan' => $this->bulan(), 'bulan' => ($this->get_bulan()) ?? date('m'), 'data_tanggal' => $this->get_tanggal(), 'tanggal' => request()->tanggal]);
     }
     public function detil(){
-        $data = Peserta_didik::whereHas('anggota_rombel', function($query){
-            $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
-        })->withCount([
-            'presensi as H' => function($query){
-                $query->where('absen', 'H');
-                $query->whereMonth('tanggal', request()->bulan);
-            },
-            'presensi as A' => function($query){
-                $query->where('absen', 'A');
-                $query->whereMonth('tanggal', request()->bulan);
-            },
-            'presensi as S' => function($query){
-                $query->where('absen', 'S');
-                $query->whereMonth('tanggal', request()->bulan);
-            },
-            'presensi as I' => function($query){
-                $query->where('absen', 'I');
-                $query->whereMonth('tanggal', request()->bulan);
-            },
-            'presensi as D' => function($query){
-                $query->where('absen', 'D');
-                $query->whereMonth('tanggal', request()->bulan);
-            },
-        ])->orderBy('nama')->get();
+        if(request()->peserta_didik_id){
+            $tanggal = Carbon::now();
+            if(request()->tanggal){
+                $tanggal = Carbon::createFromTimeStamp(request()->tanggal);
+            }
+            /*$start =  Carbon::createFromFormat('Y-m-d', $tanggal->format('Y-m-d'))->firstOfMonth()->format('Y-m-d');
+            $end = Carbon::createFromFormat('Y-m-d', $tanggal->format('Y-m-d'))->endOfMonth()->format('Y-m-d');
+            $period = CarbonPeriod::create($start, $end);
+            $data_tanggal = [];
+            foreach ($period as $date) {
+                $data_tanggal[] = [
+                    'date' => $date->format('Y-m-d'),
+                    'str' => $date->translatedFormat('l, j F Y'),
+                ];
+            }*/
+            $date = date('Y').'-'.$this->get_bulan().'-'.date('d');
+            $firstOfMonth = Carbon::create($date)->firstOfMonth()->format('Y-m-d');
+            $endOfMonth = Carbon::create($date)->endOfMonth()->format('Y-m-d');
+            $period = CarbonPeriod::between($firstOfMonth, $endOfMonth)->addFilter(function ($date) {
+                return $date->isMonday() || $date->isTuesday() || $date->isWednesday() || $date->isThursday() || $date->isFriday();
+            });
+            $data_tanggal = [];
+            foreach ($period as $date) {
+                $data_tanggal[] = [
+                    'date' => $date->format('Y-m-d'),
+                    'str' => $date->translatedFormat('l, j F Y'),
+                ];
+            }
+            $data = [
+                'pd' => Peserta_didik::with(['presensi' => function($query){
+                    $query->where('semester_id', semester_id());
+                    $query->orderBy('tanggal');
+                    $query->whereMonth('tanggal', Str::padLeft($this->get_bulan(), 2, 0));
+                }])->find(request()->peserta_didik_id),
+                'data_bulan' => $this->bulan(),
+                'data_tanggal' => $data_tanggal,
+                'data_jam' => ($tanggal->dayOfWeek == Carbon::FRIDAY) ? 6 : 11,
+            ];
+        } else {
+            $data = Peserta_didik::whereHas('anggota_rombel', function($query){
+                $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
+            })->withCount([
+                'presensi as H' => function($query){
+                    $query->where('absen', 'H');
+                    $query->whereMonth('tanggal', $this->get_bulan());
+                },
+                'presensi as A' => function($query){
+                    $query->where('absen', 'A');
+                    $query->whereMonth('tanggal', $this->get_bulan());
+                },
+                'presensi as S' => function($query){
+                    $query->where('absen', 'S');
+                    $query->whereMonth('tanggal', $this->get_bulan());
+                },
+                'presensi as I' => function($query){
+                    $query->where('absen', 'I');
+                    $query->whereMonth('tanggal', $this->get_bulan());
+                },
+                'presensi as D' => function($query){
+                    $query->where('absen', 'D');
+                    $query->whereMonth('tanggal', $this->get_bulan());
+                },
+            ])->orderBy('nama')->get();
+        }
         return response()->json($data);
+    }
+    private function get_bulan(){
+        return Str::padLeft(request()->bulan, 2, 0);
     }
 }

@@ -9,7 +9,6 @@
         <datatable :isBusy="isBusy" :items="items" :fields="fields" :meta="meta" @per_page="handlePerPage" @pagination="handlePagination" @search="handleSearch" @sort="handleSort" @bulan="handleBulan" @tanggal="handleTanggal" @aksi="handleAksi"/>
       </div>
     </b-card-body>
-    <add-modal @reload="handleReload"></add-modal>
     <detil-modal></detil-modal>
   </b-card>
 </template>
@@ -17,8 +16,7 @@
 <script>
 import { BCard, BCardBody, BSpinner } from 'bootstrap-vue'
 import Datatable from './Datatable.vue' //IMPORT COMPONENT DATATABLENYA
-import AddModal from './../components/modal/presensi/peserta-didik/AddModal.vue'
-import DetilModal from './../components/modal/presensi/peserta-didik/DetilModal.vue'
+import DetilModal from '@/views/components/modal/presensi/peserta-didik/DetilWalas.vue'
 import eventBus from '@core/utils/eventBus'
 export default {
   components: {
@@ -26,7 +24,6 @@ export default {
     BCardBody,
     BSpinner,
     Datatable,
-    AddModal,
     DetilModal,
   },
   data() {
@@ -35,46 +32,40 @@ export default {
       fields: [
         {
           key: 'nama',
-          label: 'Kelas',
-          sortable: false,
+          label: 'Nama Lengkap',
+          sortable: true,
           thClass: 'text-center',
         },
         {
-          key: 'anggota_rombel_count',
-          label: 'Jumlah Siswa',
-          sortable: false,
+          key: 'nisn',
+          label: 'NISN',
+          sortable: true,
           thClass: 'text-center',
           tdClass: 'text-center',
         },
         {
-          key: 'wali_kelas',
-          label: 'Wali Kelas',
-          sortable: false,
-          thClass: 'text-center',
-        },
-        {
-          key: 'alpa',
+          key: 'A',
           label: 'a',
           sortable: false,
           thClass: 'text-center',
           tdClass: 'text-center',
         },
         {
-          key: 'sakit',
+          key: 'S',
           label: 's',
           sortable: false,
           thClass: 'text-center',
           tdClass: 'text-center',
         },
         {
-          key: 'izin',
+          key: 'I',
           label: 'i',
           sortable: false,
           thClass: 'text-center',
           tdClass: 'text-center',
         },
         {
-          key: 'dd',
+          key: 'D',
           label: 'd',
           sortable: false,
           thClass: 'text-center',
@@ -102,7 +93,7 @@ export default {
     }
   },
   created() {
-    eventBus.$on('add-presensi-pd', this.handleEvent);
+    eventBus.$on('download-rekap', this.handleEvent);
     this.bulan = this.getBulan()
     this.loadPostsData()
   },
@@ -112,7 +103,24 @@ export default {
       return d.getMonth() + 1
     },
     handleEvent(){
-      eventBus.$emit('open-modal-presensi-pd');
+      eventBus.$emit('loading', true);
+      setTimeout(() => {
+        this.alert()
+      }, 2000);
+      //eventBus.$emit('open-modal-presensi-pd');
+    },
+    alert(){
+      this.$swal({
+        icon: 'error',
+        title: 'ERROR',
+        text: 'Sedang dalam pengembangan!',
+        customClass: {
+          confirmButton: 'btn btn-success',
+        },
+        allowOutsideClick: false,
+      }).then(result => {
+        eventBus.$emit('loading', false);
+      })
     },
     handleReload(){
       this.loadPostsData()
@@ -122,7 +130,7 @@ export default {
       //let current_page = this.search == '' ? this.current_page : this.current_page != 1 ? 1 : this.current_page
       let current_page = this.current_page//this.search == '' ? this.current_page : 1
       //https://smeknesa.com/api/presensi?q=&per_page=10&page=1&sortby=nama&sortbydesc=ASC&status=false&bulan=06&data=guru&guru_id=&peserta_didik_id=&semester_id=20231&periode_aktif=2023%2F2024+Ganjil&tanggal_mulai=2023-06-01&tanggal_selesai=2023-12-31
-      this.$http.get('/presensi/pd', {
+      this.$http.get('/presensi', {
         params: {
           guru_id: this.user.guru_id,
           peserta_didik_id: this.user.peserta_didik_id,
@@ -195,18 +203,16 @@ export default {
       this.loadPostsData() //DAN LOAD DATA BARU BERDASARKAN SORT
     },
     handleAksi(val){
-      console.log(val);
-      var _this = this
-      const bulan_str = this.data_bulan.filter((item) => {
-        return item.angka === _this.bulan
-      })
+      console.log(this.getBulan());
       eventBus.$emit('open-modal-detil-presensi-pd', {
-        rombongan_belajar_id: val.item.rombongan_belajar_id,
-        kelas: val.item.nama,
-        bulan: this.bulan,
-        bulan_str: bulan_str[0]?.huruf
+        peserta_didik_id: val.item.peserta_didik_id,
+        nama: val.item.nama,
+        bulan: this.getBulan(),
       });
     },
   },
 }
 </script>
+<style lang="scss">
+@import '~@resources/scss/vue/libs/vue-sweetalert.scss';
+</style>

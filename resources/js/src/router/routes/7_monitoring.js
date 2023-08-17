@@ -2,7 +2,7 @@ export default [
   {
     path: '/monitoring/asesment-diagnosis',
     name: 'monitoring-asesment-diagnosis',
-    component: () => import('@/views/pages/Blank.vue'),
+    component: () => import('@/views/monitoring/Diagnosis.vue'),
     meta: {
       pageTitle: 'Asesmen Diagnosis',
       resource: 'Penilaian',
@@ -21,7 +21,7 @@ export default [
   {
     path: '/monitoring/asesment-formatif',
     name: 'monitoring-asesment-formatif',
-    component: () => import('@/views/pages/Blank.vue'),
+    component: () => import('@/views/monitoring/Formatif.vue'),
     meta: {
       pageTitle: 'Asesmen Formatif',
       resource: 'Penilaian',
@@ -40,7 +40,7 @@ export default [
   {
     path: '/monitoring/asesment-sumatif',
     name: 'monitoring-asesment-sumatif',
-    component: () => import('@/views/pages/Blank.vue'),
+    component: () => import('@/views/monitoring/Sumatif.vue'),
     meta: {
       pageTitle: 'Asesmen Sumatif',
       resource: 'Penilaian',

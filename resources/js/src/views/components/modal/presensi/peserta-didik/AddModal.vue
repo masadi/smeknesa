@@ -4,6 +4,11 @@
       <b-form ref="form" @submit.stop.prevent="handleSubmit">
         <b-row>
           <b-col cols="12">
+            <b-form-group label="Hari, Tanggal" label-for="tanggal" label-cols-md="3">
+              <b-form-datepicker id="tanggal" v-model="form.tanggal" show-decade-nav button-variant="outline-secondary" left locale="id" aria-controls="tanggal"  @context="onContext" placeholder="== Pilih Tanggal ==" />
+            </b-form-group>  
+          </b-col>
+          <b-col cols="12">
             <b-form-group label="Tingkat Kelas" label-for="tingkat" label-cols-md="3">
               <v-select id="tingkat" v-model="form.tingkat" :reduce="nama => nama.id" label="nama" :options="data_tingkat" placeholder="== Pilih Tingkat Kelas ==" @input="changeTingkat">
                 <template #no-options="{ search, searching, loading }">
@@ -23,14 +28,42 @@
               </b-overlay>
             </b-form-group>
           </b-col>
-          <b-col cols="12">
-            <b-form-group label="Hari, Tanggal" label-for="tanggal" label-cols-md="3">
-              <b-form-datepicker id="tanggal" v-model="form.tanggal" show-decade-nav button-variant="outline-secondary" left locale="id" aria-controls="tanggal" @input="changeTanggal" @context="onContext" placeholder="== Pilih Tanggal ==" />
-              <!--b-form-input id="hari" v-model="hari" disabled></b-form-input-->
-            </b-form-group>  
-          </b-col>
+          <template v-for="bolos in siswa_bolos">
+            <b-col cols="12">
+              <b-form-group label="Nama Siswa" label-for="anggota_rombel_id" label-cols-md="3">
+                <b-input-group>
+                  <b-overlay :show="loading_anggota" opacity="0.6" size="md" spinner-variant="secondary">
+                    <v-select id="anggota_rombel_id" v-model="form.anggota_rombel_id[bolos]" :reduce="nama => nama.anggota_rombel.anggota_rombel_id" label="nama" :options="data_pd" placeholder="== Pilih Siswa ==" style="width:300px" class="mr-1">
+                      <template #no-options="{ search, searching, loading }">
+                        Tidak ada data untuk ditampilkan
+                      </template>
+                    </v-select>
+                  </b-overlay>
+                  <b-overlay :show="loading_anggota" opacity="0.6" size="md" spinner-variant="secondary">
+                    <v-select id="jam" v-model="form.jam[bolos]" :options="data_jam" placeholder="== Pilih Jam ==" style="width:300px" class="mr-1" multiple>
+                      <template #no-options="{ search, searching, loading }">
+                        Tidak ada data untuk ditampilkan
+                      </template>
+                    </v-select>
+                  </b-overlay>
+                  <b-overlay :show="loading_anggota" opacity="0.6" size="md" spinner-variant="secondary">
+                    <v-select id="jam" v-model="form.absensi[bolos]" :options="['A', 'I', 'S', 'D']" placeholder="== Pilih Opsi ==" style="width:100px" class="mr-1">
+                      <template #no-options="{ search, searching, loading }">
+                        Tidak ada data untuk ditampilkan
+                      </template>
+                    </v-select>
+                  </b-overlay>
+                  <b-overlay :show="loading_anggota" opacity="0.6" size="md" spinner-variant="secondary">
+                    <b-input-group-append>
+                      <b-button variant="success" @click="addSelect()"><plus-icon size="12" /></b-button>
+                    </b-input-group-append>
+                  </b-overlay>
+                </b-input-group>
+              </b-form-group>
+            </b-col>
+          </template>
         </b-row>
-        <b-overlay :show="loading_table" opacity="0.6" size="md" spinner-variant="danger">
+        <!--b-overlay :show="loading_table" opacity="0.6" size="md" spinner-variant="danger">
           <BTableSimple bordered>
             <BThead>
               <BTr>
@@ -65,7 +98,7 @@
               </template>
             </BTbody>
           </BTableSimple>
-        </b-overlay>
+        </b-overlay-->
       </b-form>
     </b-overlay>
     <template #modal-footer="{ ok, cancel }">
@@ -80,7 +113,7 @@
 </template>
 
 <script>
-import { BOverlay, BRow, BCol, BForm, BTableSimple, BThead, BTh, BTbody, BTr, BTd, BButton, BFormSelect, BFormDatepicker, BFormGroup } from 'bootstrap-vue'
+import { BOverlay, BRow, BCol, BForm, BTableSimple, BThead, BTh, BTbody, BTr, BTd, BButton, BFormSelect, BFormDatepicker, BFormGroup, BInputGroup, BInputGroupAppend } from 'bootstrap-vue'
 import eventBus from '@core/utils/eventBus'
 import vSelect from 'vue-select'
 export default {
@@ -99,6 +132,8 @@ export default {
     BCol,
     BFormDatepicker,
     BFormGroup,
+    BInputGroup,
+    BInputGroupAppend,
     vSelect,
   },
   data() {
@@ -108,9 +143,13 @@ export default {
       loading_select: false,
       loading_table: false,
       form: {
+        aksi: 'pd',
         tingkat: '',
         rombongan_belajar_id: '',
         tanggal: '',
+        anggota_rombel_id: {},
+        jam: {},
+        absensi: {},
       },
       absensi: {},
       hari: '',
@@ -135,6 +174,9 @@ export default {
         }
       ],
       data_rombel: [],
+      siswa_bolos: 1,
+      loading_anggota: false,
+      data_jam: [],
     }
   },
   created() {
@@ -146,9 +188,15 @@ export default {
         let getData = response.data
         this.form.tanggal = getData.tanggal
         this.jumlah_jam = getData.jumlah_jam
+        for (let i = 1; i < this.jumlah_jam; i++) {
+          this.data_jam.push(i)
+        } 
         this.addModalShow = true
         //this.getGuru()
       })
+    },
+    addSelect(){
+      this.siswa_bolos = this.siswa_bolos + 1
     },
     changeTingkat(val){
       this.loading_select = true
@@ -158,20 +206,9 @@ export default {
       })
     },
     changeRombel(val){
+      this.loading_anggota = true
       this.$http.post('/referensi/get-siswa', this.form).then(response => {
-        this.data_pd = response.data
-        var _this = this
-        this.data_pd.forEach(item => {
-          for (var i = 1; i < (_this.jumlah_jam + 1); i++) {
-            _this.absensi[item.anggota_rombel.anggota_rombel_id+'#'+i] = (_this.getAbsen(item.presensi, i)[0]) ? _this.getAbsen(item.presensi, i)[0].absen : ''
-          }
-        });
-      })
-    },
-    changeTanggal(val){
-      this.loading_table = true
-      this.$http.post('/referensi/get-siswa', this.form).then(response => {
-        this.loading_table = false
+        this.loading_anggota = false
         this.data_pd = response.data
         var _this = this
         this.data_pd.forEach(item => {
@@ -192,7 +229,13 @@ export default {
       this.resetForm()
     },
     resetForm(){
-      //
+      this.form.tingkat = ''
+      this.form.rombongan_belajar_id = ''
+      this.form.tanggal = ''
+      this.form.anggota_rombel_id = {}
+      this.form.jam = {}
+      this.siswa_bolos = 1
+      this.data_jam = []
     },
     handleOk(bvModalEvent){
       bvModalEvent.preventDefault()
@@ -202,8 +245,11 @@ export default {
       this.loading_form = true
       this.$http.post('/presensi/simpan', {
         aksi: 'pd',
-        absensi: this.absensi,
         tanggal: this.form.tanggal,
+        absensi: this.form.absensi,
+        anggota_rombel_id: this.form.anggota_rombel_id,
+        jam: this.form.jam,
+        //form: this.form,
       }).then(response => {
         this.loading_form = false
         let getData = response.data

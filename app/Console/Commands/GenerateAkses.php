@@ -239,6 +239,11 @@ class GenerateAkses extends Command
                 'subject' => 'Hak_Akses',
                 'roles' => ['administrator'],
             ],
+            [
+                'action' => 'read',
+                'subject' => 'Wali',
+                'roles' => ['walas'],
+            ]
         ];
         Permission::truncate();
         foreach($abilities as $ab){

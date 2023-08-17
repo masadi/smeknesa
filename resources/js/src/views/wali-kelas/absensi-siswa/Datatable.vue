@@ -57,40 +57,37 @@
             <strong>Loading...</strong>
           </div>
         </template>
-        <template v-slot:cell(alpa)="row">
-          <template v-if="row.item.alpa > 0">
-            <b-badge :variant="getBadge('A')">{{row.item.alpa}}</b-badge>
+        <template v-slot:cell(A)="row">
+          <template v-if="row.item.A > 0">
+            <b-badge :variant="getBadge('A')">{{row.item.A}}</b-badge>
           </template>
           <template v-else>
-            {{row.item.alpa}}
+            {{row.item.A}}
           </template>
         </template>
-        <template v-slot:cell(sakit)="row">
-          <template v-if="row.item.sakit > 0">
-            <b-badge :variant="getBadge('S')">{{row.item.sakit}}</b-badge>
+        <template v-slot:cell(S)="row">
+          <template v-if="row.item.S > 0">
+            <b-badge :variant="getBadge('S')">{{row.item.S}}</b-badge>
           </template>
           <template v-else>
-            {{row.item.sakit}}
+            {{row.item.S}}
           </template>
         </template>
-        <template v-slot:cell(izin)="row">
-          <template v-if="row.item.izin > 0">
-            <b-badge :variant="getBadge('I')">{{row.item.izin}}</b-badge>
+        <template v-slot:cell(I)="row">
+          <template v-if="row.item.I > 0">
+            <b-badge :variant="getBadge('I')">{{row.item.I}}</b-badge>
           </template>
           <template v-else>
-            {{row.item.izin}}
+            {{row.item.I}}
           </template>
         </template>
-        <template v-slot:cell(dd)="row">
-          <template v-if="row.item.dd > 0">
-            <b-badge :variant="getBadge('D')">{{row.item.dd}}</b-badge>
+        <template v-slot:cell(D)="row">
+          <template v-if="row.item.D > 0">
+            <b-badge :variant="getBadge('D')">{{row.item.D}}</b-badge>
           </template>
           <template v-else>
-            {{row.item.dd}}
+            {{row.item.D}}
           </template>
-        </template>
-        <template v-slot:cell(wali_kelas)="row">
-          {{row.item.wali_kelas.nama}}
         </template>
         <template v-slot:cell(actions)="row">
           <b-button size="sm" variant="primary" @click="aksi(row.item, 'detil')">Detil</b-button>
