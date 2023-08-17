@@ -235,6 +235,9 @@ class PresensiController extends Controller
     }
     public function get_hari(){
         $tanggal = Carbon::now();
+        if(request()->tanggal){
+            $tanggal = Carbon::createFromDate(request()->tanggal);
+        }
         $data = [
             'tanggal' => $tanggal->format('Y-m-d'),
             'tanggal_str' => $tanggal->translatedFormat('l, j F Y'),
@@ -552,7 +555,7 @@ class PresensiController extends Controller
         if(request()->peserta_didik_id){
             $tanggal = Carbon::now();
             if(request()->tanggal){
-                $tanggal = Carbon::createFromTimeStamp(request()->tanggal);
+                $tanggal = Carbon::createFromDate(request()->tanggal);
             }
             /*$start =  Carbon::createFromFormat('Y-m-d', $tanggal->format('Y-m-d'))->firstOfMonth()->format('Y-m-d');
             $end = Carbon::createFromFormat('Y-m-d', $tanggal->format('Y-m-d'))->endOfMonth()->format('Y-m-d');
@@ -616,6 +619,9 @@ class PresensiController extends Controller
         return response()->json($data);
     }
     private function get_bulan(){
-        return Str::padLeft(request()->bulan, 2, 0);
+        if(request()->bulan){
+            return Str::padLeft(request()->bulan, 2, 0);
+        }
+        return date('m');
     }
 }

@@ -113,7 +113,7 @@ export default {
       this.$swal({
         icon: 'error',
         title: 'ERROR',
-        text: 'Sedang dalam pengembangan!',
+        text: 'MENUNGGU FORMAT REKAP!',
         customClass: {
           confirmButton: 'btn btn-success',
         },

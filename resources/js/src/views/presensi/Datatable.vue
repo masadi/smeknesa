@@ -6,7 +6,7 @@
           <v-select v-model="meta.per_page" :options="[10, 25, 50, 100]" @input="loadPerPage" :clearable="false" :searchable="false"></v-select>
         </b-col>
         <b-col md="4">
-          <v-select v-model="meta.bulan" :reduce="huruf => huruf.angka" label="huruf" :options="meta.data_bulan" placeholder="== Filter Bulan ==" @input="changeBulan">
+          <v-select v-model="meta.bulan" :reduce="huruf => huruf.angka" label="huruf" :options="meta.data_bulan" placeholder="== Filter Bulan ==" @input="changeBulan" :clearable="false" :searchable="false">
             <template #no-options="{ search, searching, loading }">
               Tidak ada data untuk ditampilkan
             </template>
@@ -18,7 +18,7 @@
       </template>
       <template v-else>
         <b-col md="6" class="mb-2">
-          <v-select v-model="meta.bulan" :reduce="huruf => huruf.angka" label="huruf" :options="meta.data_bulan" placeholder="== Filter Bulan ==" @input="changeBulan">
+          <v-select v-model="meta.bulan" :reduce="huruf => huruf.angka" label="huruf" :options="meta.data_bulan" placeholder="== Filter Bulan ==" @input="changeBulan" :clearable="false" :searchable="false">
             <template #no-options="{ search, searching, loading }">
               Tidak ada data untuk ditampilkan
             </template>

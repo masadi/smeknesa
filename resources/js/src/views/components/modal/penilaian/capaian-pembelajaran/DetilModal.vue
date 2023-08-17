@@ -1,7 +1,7 @@
 <template>
   <b-modal size="lg" v-model="detilModalShow" title="Detil Data CP & TP" ok-only ok-title="Tutup" ok-variant="secondary" scrollable>
     <b-table-simple v-if="detil">
-      <b-tr>
+      <b-tr variant="success">
         <b-td>Capaian Pembelajaran</b-td>
         <b-td>{{detil.deskripsi}}</b-td>
       </b-tr>
@@ -9,7 +9,7 @@
         <b-td class="text-center" colspan="2">Tujuan Pembelajaran</b-td>
       </b-tr>
       <template v-for="tp in detil.tp">
-        <b-tr>
+        <b-tr variant="warning">
           <b-td colspan="2">{{tp.deskripsi}}</b-td>
         </b-tr>
       </template>

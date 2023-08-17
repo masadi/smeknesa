@@ -24,7 +24,7 @@
     </b-col>
     <template v-if="$route.meta.tombol_add && !hide_button">
       <template v-if="adaRole($route.meta.tombol_add.role)">
-        <b-col class="content-header-right text-md-right d-md-block d-none mb-1" md="3" cols="12">
+        <b-col class="content-header-right text-md-right mb-1" md="3" cols="12">
           <template v-if="$route.meta.tombol_add.action">
             <b-button v-ripple.400="'rgba(255, 255, 255, 0.15)'" :variant="$route.meta.tombol_add.variant" @click="action($route.meta.tombol_add.action)" :disabled="loading">
               <b-spinner small type="grow" v-show="loading"></b-spinner>

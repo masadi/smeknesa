@@ -15,10 +15,38 @@
           <BTr>
             <BTd class="text-center">{{index + 1}}</BTd>
             <BTd>{{pd.nama}}</BTd>
-            <BTd class="text-center">{{pd.A}}</BTd>
-            <BTd class="text-center">{{pd.S}}</BTd>
-            <BTd class="text-center">{{pd.I}}</BTd>
-            <BTd class="text-center">{{pd.D}}</BTd>
+            <BTd class="text-center">
+              <template v-if="pd.A > 0">
+                <b-badge :variant="getBadge('A')">{{pd.A}}</b-badge>
+              </template>
+              <template v-else>
+                {{pd.A}}
+              </template>
+            </BTd>
+            <BTd class="text-center">
+              <template v-if="pd.S > 0">
+                <b-badge :variant="getBadge('S')">{{pd.S}}</b-badge>
+              </template>
+              <template v-else>
+                {{pd.S}}
+              </template>
+            </BTd>
+            <BTd class="text-center">
+              <template v-if="pd.I > 0">
+                <b-badge :variant="getBadge('I')">{{pd.I}}</b-badge>
+              </template>
+              <template v-else>
+                {{pd.I}}
+              </template>
+            </BTd>
+            <BTd class="text-center">
+              <template v-if="pd.D > 0">
+                <b-badge :variant="getBadge('D')">{{pd.D}}</b-badge>
+              </template>
+              <template v-else>
+                {{pd.D}}
+              </template>
+            </BTd>
           </BTr>
         </template>
       </BTbody>
@@ -27,7 +55,7 @@
 </template>
 
 <script>
-import { BTableSimple, BThead, BTh, BTbody, BTr, BTd } from 'bootstrap-vue'
+import { BTableSimple, BThead, BTh, BTbody, BTr, BTd, BBadge } from 'bootstrap-vue'
 import eventBus from '@core/utils/eventBus'
 export default {
   components: {
@@ -37,6 +65,7 @@ export default {
     BTbody,
     BTr,
     BTd,
+    BBadge,
   },
   data() {
     return {
@@ -65,6 +94,16 @@ export default {
     hideModal(){
       this.detilModalShow = false
     },
+    getBadge(huruf){
+      var data = {
+        H: 'light',
+        A: 'danger',
+        D: 'warning',
+        I: 'info',
+        S: 'success',
+      }
+      return data[huruf]
+    }
   },
 }
 </script>

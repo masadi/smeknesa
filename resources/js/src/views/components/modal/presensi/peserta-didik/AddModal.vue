@@ -5,7 +5,7 @@
         <b-row>
           <b-col cols="12">
             <b-form-group label="Hari, Tanggal" label-for="tanggal" label-cols-md="3">
-              <b-form-datepicker id="tanggal" v-model="form.tanggal" show-decade-nav button-variant="outline-secondary" left locale="id" aria-controls="tanggal"  @context="onContext" placeholder="== Pilih Tanggal ==" />
+              <b-form-datepicker id="tanggal" v-model="form.tanggal" show-decade-nav button-variant="outline-secondary" left locale="id" aria-controls="tanggal"  @context="onContext" @input="changeHari" placeholder="== Pilih Tanggal ==" />
             </b-form-group>  
           </b-col>
           <b-col cols="12">
@@ -39,12 +39,17 @@
                       </template>
                     </v-select>
                   </b-overlay>
-                  <b-overlay :show="loading_anggota" opacity="0.6" size="md" spinner-variant="secondary">
-                    <v-select id="jam" v-model="form.jam[bolos]" :options="data_jam" placeholder="== Pilih Jam ==" style="width:300px" class="mr-1" multiple>
+                  <b-overlay :show="loading_anggota || loading_jam" opacity="0.6" size="md" spinner-variant="secondary">
+                    <!--v-select id="jam" v-model="form.jam[bolos]" :options="data_jam" placeholder="== Pilih Jam ==" style="width:300px" class="mr-1" multiple>
                       <template #no-options="{ search, searching, loading }">
                         Tidak ada data untuk ditampilkan
                       </template>
-                    </v-select>
+                    </v-select-->
+                    <b-dropdown id="dropdown-form" text="Pilih Jam" ref="dropdown" class="mr-1">
+                      <b-dropdown-form>
+                        <b-form-checkbox-group v-model="form.jam[bolos]" :options="data_jam" name="jam" stacked></b-form-checkbox-group>
+                      </b-dropdown-form>
+                    </b-dropdown>
                   </b-overlay>
                   <b-overlay :show="loading_anggota" opacity="0.6" size="md" spinner-variant="secondary">
                     <v-select id="jam" v-model="form.absensi[bolos]" :options="['A', 'I', 'S', 'D']" placeholder="== Pilih Opsi ==" style="width:100px" class="mr-1">
@@ -113,7 +118,7 @@
 </template>
 
 <script>
-import { BOverlay, BRow, BCol, BForm, BTableSimple, BThead, BTh, BTbody, BTr, BTd, BButton, BFormSelect, BFormDatepicker, BFormGroup, BInputGroup, BInputGroupAppend } from 'bootstrap-vue'
+import { BOverlay, BRow, BCol, BForm, BTableSimple, BThead, BTh, BTbody, BTr, BTd, BButton, BFormSelect, BFormDatepicker, BFormGroup, BInputGroup, BInputGroupAppend, BDropdown, BDropdownForm, BFormCheckboxGroup } from 'bootstrap-vue'
 import eventBus from '@core/utils/eventBus'
 import vSelect from 'vue-select'
 export default {
@@ -134,6 +139,9 @@ export default {
     BFormGroup,
     BInputGroup,
     BInputGroupAppend,
+    BDropdown,
+    BDropdownForm,
+    BFormCheckboxGroup,
     vSelect,
   },
   data() {
@@ -142,6 +150,7 @@ export default {
       loading_form: false,
       loading_select: false,
       loading_table: false,
+      loading_jam: false,
       form: {
         aksi: 'pd',
         tingkat: '',
@@ -184,10 +193,10 @@ export default {
   },
   methods: {
     handleEvent(){
-      this.$http.get('/presensi/get_hari').then(response => {
+      this.$http.get('/presensi/get-hari').then(response => {
         let getData = response.data
         this.form.tanggal = getData.tanggal
-        this.jumlah_jam = getData.jumlah_jam
+        this.jumlah_jam = getData.jumlah_jam + 1
         for (let i = 1; i < this.jumlah_jam; i++) {
           this.data_jam.push(i)
         } 
@@ -197,6 +206,18 @@ export default {
     },
     addSelect(){
       this.siswa_bolos = this.siswa_bolos + 1
+    },
+    changeHari(){
+      this.loading_jam = true
+      this.data_jam = []
+      this.$http.post('/presensi/get-hari', this.form).then(response => {
+        this.loading_jam = false
+        let getData = response.data
+        this.jumlah_jam = getData.jumlah_jam + 1
+        for (let i = 1; i < this.jumlah_jam; i++) {
+          this.data_jam.push(i)
+        } 
+      })
     },
     changeTingkat(val){
       this.loading_select = true

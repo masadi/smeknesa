@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-row>
+    <!--b-row>
       <b-col md="4" class="mb-2">
         <v-select v-model="meta.tingkat" :reduce="nama => nama.id" label="nama" :options="data_tingkat" @input="changeTingkat" placeholder="== Filter Tingkat Kelas ==" :searchable="false"></v-select>
       </b-col>
@@ -10,7 +10,7 @@
       <b-col md="4">
         <v-select v-model="meta.rombongan_belajar_id" :reduce="nama => nama.rombongan_belajar_id" label="nama" :options="data_rombel" @input="changeRombel" placeholder="== Pilih Kelas =="></v-select>
       </b-col>
-    </b-row>
+    </b-row-->
     <b-row>
       <b-col md="4" class="mb-2">
         <v-select v-model="meta.per_page" :options="[10, 25, 50, 100]" @input="loadPerPage" :clearable="false" :searchable="false"></v-select>

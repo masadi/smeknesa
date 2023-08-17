@@ -28,6 +28,7 @@ export default {
         chart: {
           type: 'pie',
         },
+        colors:['#ea5455', '#ff9f43', '#28c76f', '#00cfe8'],
         labels: [],
         legend: {
           position: 'bottom',

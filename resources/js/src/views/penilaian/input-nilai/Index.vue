@@ -6,7 +6,7 @@
         <strong>Loading...</strong>
       </div>
       <div v-else>
-        <alert :variant="`warning`" :title="`Informasi Batas Waktu Penilaian`" :body="`<p>Penilaian dibuka sampai tanggal ${tanggal_deadline}</p>`" v-if="deadline"></alert>
+        <alert :variant="`success`" :title="`Informasi Batas Waktu Penilaian`" :body="`<p>Penilaian dibuka sampai tanggal ${tanggal_deadline}</p>`" v-if="deadline"></alert>
         <alert :variant="`danger`" :title="`Informasi Batas Waktu Penilaian`" :body="`<p>Waktu entri nilai sudah habis</p>`" v-else></alert>
         <datatable :isBusy="isBusy" :loading="loading" :items="items" :fields="fields" :meta="meta" :data_jurusan="data_jurusan" :data_rombel="data_rombel" @per_page="handlePerPage" @pagination="handlePagination" @search="handleSearch" @sort="handleSort" @aksi="handleAksi" @tingkat="handleTingkat" @jurusan="handleJurusan" @kelas="handleKelas" />
       </div>

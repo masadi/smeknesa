@@ -13,6 +13,7 @@ import wali_kelas from './routes/6_wali-kelas'
 import monitoring from './routes/7_monitoring'
 import magang from './routes/8_magang'
 import tatib from './routes/9_tatib'
+import wakakur from './routes/10_wakakur'
 import bottom from './routes/99_bottom'
 import pages from './routes/pages'
 /*
@@ -41,6 +42,7 @@ const router = new VueRouter({
     ...monitoring,
     ...magang,
     ...tatib,
+    ...wakakur,
     ...bottom,
     ...pages,
     /*...apps,

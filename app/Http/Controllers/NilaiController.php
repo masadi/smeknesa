@@ -421,12 +421,7 @@ class NilaiController extends Controller
             },
         ])->first();
         $data = [
-            'series' => [
-                $sekolah->pd_0,
-                $sekolah->pd_70,
-                $sekolah->pd_80,
-                $sekolah->pd_90,
-            ],
+            'series' => [$sekolah->pd_0, $sekolah->pd_70, $sekolah->pd_80, $sekolah->pd_90],
             'labels' => ['>=0', '>=70', '>=80', '>=90'],
         ];
         return response()->json($data);

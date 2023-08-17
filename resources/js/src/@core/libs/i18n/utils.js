@@ -8,8 +8,9 @@ import { getCurrentInstance } from '@vue/composition-api'
  * @param {String} key i18n key to use for translation
  */
 export const t = key => {
-  const vm = getCurrentInstance().proxy
-  return vm.$t ? vm.$t(key) : key
+  return key
+  //const vm = getCurrentInstance().proxy
+  //return vm.$t ? vm.$t(key) : key
 }
 
 export const _ = null

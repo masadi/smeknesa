@@ -13,14 +13,14 @@
             </b-form-group> 
           </b-col>
           <b-col cols="12">
-            <b-form-group label="Capaian Pembelajaran" label-for="desk_cp" label-cols-md="3" :invalid-feedback="feedback.desk_cp" :state="state.desk_cp">
-              <b-form-textarea id="desk_cp" v-model="form.desk_cp" :state="state.desk_cp" placeholder="Deskripsi Capaian Pembelajaran" rows="3" max-rows="8"></b-form-textarea>
+            <b-form-group label="Capaian Pembelajaran" label-for="desk_cp" label-cols-md="3" class="form-success" :invalid-feedback="feedback.desk_cp" :state="state.desk_cp">
+              <b-form-textarea id="desk_cp"  class="form-success" v-model="form.desk_cp" :state="state.desk_cp" placeholder="Deskripsi Capaian Pembelajaran" rows="3" max-rows="8"></b-form-textarea>
             </b-form-group>  
           </b-col>
           <template v-for="tp in 5">
             <b-col cols="12">
-              <b-form-group :label="`Tujuan Pembelajaran (${tp})`" :label-for="`desk-tp-${tp}`" label-cols-md="3" :invalid-feedback="feedback.desk_tp[tp]" :state="state.desk_tp[tp]">
-                <b-form-textarea :id="`desk-tp-${tp}`" v-model="form.desk_tp[tp]" :state="state.desk_tp[tp]" :placeholder="`Deskripsi Tujuan Pembelajaran (${tp})`" rows="3" max-rows="8"></b-form-textarea>
+              <b-form-group :label="`Tujuan Pembelajaran (${tp})`" :label-for="`desk-tp-${tp}`" label-cols-md="3" class="form-warning" :invalid-feedback="feedback.desk_tp[tp]" :state="state.desk_tp[tp]">
+                <b-form-textarea :id="`desk-tp-${tp}`" class="form-warning" v-model="form.desk_tp[tp]" :state="state.desk_tp[tp]" :placeholder="`Deskripsi Tujuan Pembelajaran (${tp})`" rows="3" max-rows="8"></b-form-textarea>
               </b-form-group>  
             </b-col>
           </template>

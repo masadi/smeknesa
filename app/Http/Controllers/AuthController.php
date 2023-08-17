@@ -212,21 +212,7 @@ class AuthController extends Controller
         return response()->json($data);
     }
     public function generate(){
-        /*
-        $adminRole = Role::where('name', 'administrator')->first();
-        $guruRole = Role::where('name', 'guru')->first();
-        $kepsekRole = Role::where('name', 'kepsek')->first();
-        $pengajarRole = Role::where('name', 'pengajar')->first();
-        $kajurRole = Role::where('name', 'kajur')->first();
-        $wakakurRole = Role::where('name', 'wakakur')->first();
-        $wakahumasRole = Role::where('name', 'wakahumas')->first();
-        $wakasiswaRole = Role::where('name', 'wakasiswa')->first();
-        $bkRole = Role::where('name', 'bk')->first();
-        $walasRole = Role::where('name', 'walas')->first();
-        $piketRole = Role::where('name', 'piket')->first();
-        $pdRole = Role::where('name', 'pd')->first();
-        */
-        $all_role = ['administrator', 'guru', 'kepsek', 'pengajar', 'pd', 'piket', 'wakakur', 'walas', 'kajur', 'wakahumas', 'wakasiswa', 'bk'];
+        $all_role = ['guru', 'pengajar', 'pd', 'walas'];
         if(request()->jenis == 'ptk'){
             Guru::orderBy('guru_id')->chunk(200, function ($data) use ($all_role){
                 foreach ($data as $d) {
