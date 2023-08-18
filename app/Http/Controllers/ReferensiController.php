@@ -1698,4 +1698,17 @@ class ReferensiController extends Controller
         ];
         return response()->json($data);
     }
+    public function prepare_data(){
+        $rombel = Rombongan_belajar::where(function($query){
+            $query->where('guru_id', request()->guru_id);
+            $query->where('semester_id', request()->semester_id);
+        })->first();
+        $data = [
+            'semester_id' => request()->semester_id,
+            'rombongan_belajar_id' => ($rombel) ? $rombel->rombongan_belajar_id : NULL,
+            'bulan' => Str::padLeft(request()->bulan, 2, 0),
+            'request' => request()->all(),
+        ];
+        return response()->json($data);
+    }
 }

@@ -104,10 +104,52 @@ export default {
     },
     handleEvent(){
       eventBus.$emit('loading', true);
+      this.$http.post('/referensi/prepare-data', {
+        guru_id: this.user.guru_id,
+        semester_id: this.user.semester.semester_id,
+        periode_aktif: this.user.semester.nama,
+        tanggal_mulai: this.user.semester.tanggal_mulai,
+        tanggal_selesai: this.user.semester.tanggal_selesai,
+        bulan: this.getBulan(),
+      }).then(response => {
+        let getData = response.data
+        eventBus.$emit('loading', false);
+        this.$swal({
+          icon: 'question',
+          title: 'Pilih Jenis Rekap',
+          input: 'select',
+          inputOptions: {
+            1: 'Per Bulan',
+            2: 'Per Semester',
+          },
+          customClass: {
+            confirmButton: 'btn btn-success mr-1',
+          },
+          showCancelButton: true,
+          cancelButtonText: 'Batal',
+          confirmButtonText: 'Download',
+          allowOutsideClick: false,
+          inputValidator: (value) => {
+            return new Promise((resolve) => {
+              if (value) {
+                resolve()
+              } else {
+                resolve('Jenis Rekap tidak kosong!')
+              }
+            })
+          },
+        }).then(result => {
+          //eventBus.$emit('loading', false);
+          window.open(`/export/rekap-absensi-siswa/${getData.semester_id}/${getData.rombongan_belajar_id}/${getData.bulan}/${result.value}`, '_blank'); 
+          console.log(getData);
+          console.log(result.value);
+        })
+      });
+      /*
       setTimeout(() => {
         this.alert()
       }, 2000);
-      //eventBus.$emit('open-modal-presensi-pd');
+      */
     },
     alert(){
       this.$swal({
@@ -215,4 +257,5 @@ export default {
 </script>
 <style lang="scss">
 @import '~@resources/scss/vue/libs/vue-sweetalert.scss';
+.swal2-select {width: 100% !important;}
 </style>

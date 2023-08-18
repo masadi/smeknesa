@@ -603,3 +603,23 @@ function hp($nohp) {
     }
     return $hp;
 }
+function getAbsen($presensi, $tanggal, $absen){
+    $filtered = $presensi->filter(function ($value, $key) use ($tanggal, $absen){
+        $date = Carbon::createFromDate($value->tanggal);
+        return $date->format('j') === $tanggal && $value->absen === $absen;
+    });
+    return $filtered->count();
+}
+function getAbsenBulan($presensi, $bulan, $absen){
+    $filtered = $presensi->filter(function ($value, $key) use ($bulan, $absen){
+        $date = Carbon::createFromDate($value->tanggal);
+        return $date->format('m') === $bulan && $value->absen === $absen;
+    });
+    return $filtered->count();
+}
+function jmlAbsen($presensi, $absen){
+    $filtered = $presensi->filter(function ($value, $key) use ($absen){
+        return $value->absen === $absen;
+    });
+    return $filtered->count();
+}
