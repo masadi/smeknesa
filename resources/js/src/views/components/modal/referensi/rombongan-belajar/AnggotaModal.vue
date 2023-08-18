@@ -9,8 +9,6 @@
                 <b-th class="text-center">NO</b-th>
                 <b-th class="text-center">NAMA</b-th>
                 <b-th class="text-center">NISN</b-th>
-                <b-th class="text-center">TEMPAT, TANGGAL LAHIR</b-th>
-                <b-th class="text-center">AGAMA</b-th>
                 <b-th class="text-center">AKSI</b-th>
               </b-tr>
             </b-thead>
@@ -20,8 +18,6 @@
                   <b-td class="text-center">{{index + 1}}</b-td>
                   <b-td>{{anggota.nama}}</b-td>
                   <b-td class="text-center">{{anggota.nisn}}</b-td>
-                  <b-td class="text-center">{{anggota.tempat_lahir}}, {{anggota.tanggal_lahir_indo}}</b-td>
-                  <b-td class="text-center">{{(anggota.agama_id) ? anggota.agama.nama : '-'}}</b-td>
                   <b-td class="text-center">
                     <b-button size="sm" variant="danger" @click="keluarkan(anggota.peserta_didik_id)">Keluarkan</b-button>
                   </b-td>
@@ -39,8 +35,6 @@
                 <b-th class="text-center">NO</b-th>
                 <b-th class="text-center">NAMA</b-th>
                 <b-th class="text-center">NISN</b-th>
-                <b-th class="text-center">TEMPAT, TANGGAL LAHIR</b-th>
-                <b-th class="text-center">AGAMA</b-th>
                 <b-th class="text-center">AKSI</b-th>
               </b-tr>
             </b-thead>
@@ -50,8 +44,6 @@
                   <b-td class="text-center">{{index + 1}}</b-td>
                   <b-td>{{non_anggota.nama}}</b-td>
                   <b-td class="text-center">{{non_anggota.nisn}}</b-td>
-                  <b-td class="text-center">{{non_anggota.tempat_lahir}}, {{non_anggota.tanggal_lahir_indo}}</b-td>
-                  <b-td class="text-center">{{(non_anggota.agama_id) ? non_anggota.agama.nama : '-'}}</b-td>
                   <b-td class="text-center">
                     <b-button size="sm" variant="success" @click="masukkan(non_anggota.peserta_didik_id)">Masukkan</b-button>
                   </b-td>
