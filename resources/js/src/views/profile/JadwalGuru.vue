@@ -10,12 +10,19 @@
         </b-tr>
       </b-thead>
       <b-tbody>
-        <template v-for="jadwal in data_jadwal">
+        <template v-if="data_jadwal.length">
+          <template v-for="jadwal in data_jadwal">
+            <b-tr>
+              <b-td>{{jadwal.hari}}</b-td>
+              <b-td class="text-center">{{getJam(jadwal.jam)}}</b-td>
+              <b-td>{{jadwal.pembelajaran.nama_mata_pelajaran}}</b-td>
+              <b-td class="text-center">{{jadwal.pembelajaran.nama_rombel}}</b-td>
+            </b-tr>
+          </template>
+        </template>
+        <template v-else>
           <b-tr>
-            <b-td>{{jadwal.hari}}</b-td>
-            <b-td class="text-center">{{getJam(jadwal.jam)}}</b-td>
-            <b-td>{{jadwal.pembelajaran.nama_mata_pelajaran}}</b-td>
-            <b-td class="text-center">{{jadwal.pembelajaran.nama_rombel}}</b-td>
+            <b-td class="text-center" colspan="4">Tidak ada data untuk ditampilkan</b-td>
           </b-tr>
         </template>
       </b-tbody>
@@ -35,13 +42,11 @@ export default {
     BTr,
     BTd,
   },
-  data() {
-    return {
-      data_jadwal: [],
-    }
-  },
-  created() {
-    this.loadPostsData()
+  props: {
+    data_jadwal: {
+      type: Array,
+      required: true
+    },
   },
   methods: {
     uniqueChars(arr){
@@ -53,16 +58,6 @@ export default {
         set_jam.push(element.jam)
       });
       return this.uniqueChars(set_jam).join(', ')
-    },
-    loadPostsData(){
-      this.$http.get('/auth/user', {
-        params: {
-          semester_id: this.user.semester.semester_id
-        }
-      }).then(response => {
-        let getData = response.data
-        this.data_jadwal = getData.jadwal
-      });
     },
   },
 }

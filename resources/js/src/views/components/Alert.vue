@@ -3,7 +3,7 @@
     <h4 class="alert-heading" v-if="title">
       {{title}}
     </h4>
-    <div class="alert-body">
+    <div class="alert-body" v-bind:class="bodyClass">
       <span v-html="body"></span>
     </div>
   </b-alert>
@@ -25,6 +25,10 @@ export default {
     },
     body: {
       required: true
+    },
+    bodyClass: {
+      required: false,
+      default: () => '',
     },
   },
 }

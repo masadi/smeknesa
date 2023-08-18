@@ -37,4 +37,14 @@ class Jadwal extends Model
     {
         return $this->hasMany(Jam::class, 'jadwal_id', 'jadwal_id');
     }
+    public function presensi_jadwal(){
+        return $this->hasManyThrough(
+            Presensi::class,
+            Presensi_jadwal::class,
+            'jadwal_id',
+            'presensi_id',
+            'jadwal_id',
+            'presensi_id'
+        );
+    }
 }

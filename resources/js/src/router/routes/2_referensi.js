@@ -192,4 +192,30 @@ export default [
       },
     },
   },
+  {
+    path: '/referensi/jadwal-pembelajaran',
+    name: 'jadwal-pembelajaran',
+    component: () => import('@/views/referensi/jadwal-pembelajaran/Index.vue'),
+    meta: {
+      resource: 'Jadwal',
+      action: 'read',
+      pageTitle: 'Jadwal Pembelajaran',
+      breadcrumb: [
+        {
+          text: 'Referensi',
+        },
+        {
+          text: 'Jadwal Pembelajaran',
+          active: true,
+        },
+      ],
+      tombol_add: {
+        action: 'add-jadwal',
+        link: '',
+        variant: 'primary',
+        text: 'Tambah Data',
+        role: ['administrator'],
+      },
+    },
+  },
 ]

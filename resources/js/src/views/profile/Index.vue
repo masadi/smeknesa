@@ -60,14 +60,14 @@
           <template #title>
             <bell-icon size="18" /> JADWAL
           </template>
-          <jadwal-guru v-if="hasRole('guru')"></jadwal-guru>
+          <jadwal-guru v-if="hasRole('guru')" :data_jadwal="data_jadwal"></jadwal-guru>
           <jadwal-siswa v-if="hasRole('pd')"></jadwal-siswa>
         </b-tab>
         <b-tab v-if="hasRole('guru')">
           <template #title>
             <calendar-event-icon size="18" /> ABSENSI
           </template>
-          <rekap-absensi />
+          <rekap-absensi :presensi="presensi" />
         </b-tab>
         <b-tab v-if="hasRole('pd')">
           <template #title>
@@ -131,11 +131,25 @@ export default {
       loading: false,
       mainProps: {width: 125, height: 125 },
       foto: null,
+      data_jadwal: [],
+      presensi: [],
     }
   },
-  
-  ///
+  created() {
+    this.getUser()
+  },
   methods: {
+    getUser(){
+      this.$http.get('/auth/user', {
+        params: {
+          semester_id: this.user.semester.semester_id
+        }
+      }).then(response => {
+        let getData = response.data
+        this.data_jadwal = getData.jadwal
+        eventBus.$emit('data_jadwal', this.data_jadwal);
+      });
+    },
     onFileChange(e) {
       this.loading = true
       this.foto = e.target.files[0];

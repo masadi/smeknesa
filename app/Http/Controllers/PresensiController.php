@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Presensi;
+use App\Models\Presensi_jadwal;
 use App\Models\Peserta_didik;
 use App\Models\Anggota_rombel;
 use App\Models\Guru;
@@ -95,12 +96,12 @@ class PresensiController extends Controller
                     }
                 });
             } else {
-                $query->whereHas('jadwal', function ($query) {
+                /*$query->whereHas('jadwal', function ($query) {
                     $query->where('jadwal.semester_id', semester_id());
                 });
                 if(!loggedUser()->hasRole(['administrator', 'piket', 'wakakur'], periode_aktif())){
                     $query->where('guru_id', loggedUser()->guru_id);
-                }
+                }*/
             }
         };
     }
@@ -212,20 +213,23 @@ class PresensiController extends Controller
     }
     private function absensi_guru(){
         return Guru::where($this->kondisiAbsen())->withCount([
-            'presensi as H' => function($query){
-                $query->where('absen', 'H');
-            },
-            'presensi as A' => function($query){
+            'presensi as alpa' => function($query){
                 $query->where('absen', 'A');
+                $query->whereHas('presensi_jadwal', function($query){
+                    $query->where('semester_id', request()->semester_id);
+                });
             },
-            'presensi as S' => function($query){
+            'presensi as sakit' => function($query){
                 $query->where('absen', 'S');
+                $query->whereHas('presensi_jadwal', function($query){
+                    $query->where('semester_id', request()->semester_id);
+                });
             },
-            'presensi as I' => function($query){
+            'presensi as izin' => function($query){
                 $query->where('absen', 'I');
-            },
-            'presensi as D' => function($query){
-                $query->where('absen', 'D');
+                $query->whereHas('presensi_jadwal', function($query){
+                    $query->where('semester_id', request()->semester_id);
+                });
             },
         ])->orderBy(request()->sortby, request()->sortbydesc)
         ->when(request()->q, function($query) {
@@ -264,28 +268,27 @@ class PresensiController extends Controller
                 }
             }
         } else {
-            foreach(request()->absensi as $request => $absen){
-                $collection = Str::of($request)->explode('#');
-                $anggota_rombel_id = NULL;
-                $guru_id = NULL;
-                if(request()->aksi == 'pd'){
-                    $anggota_rombel_id = $collection[0];
-                } else {
-                    $guru_id = $collection[0];
+            foreach(request()->guru_id as $key => $guru_id){
+                foreach(request()->jam[$key] as $jam){
+                    $presensi = Presensi::updateOrCreate(
+                        [
+                            'anggota_rombel_id' => NULL,
+                            'guru_id' => $guru_id,
+                            'tanggal' => request()->tanggal,
+                            'jam' => $jam,
+                        ],
+                        [
+                            'absen' => request()->absensi[$key],
+                            'user_id' => loggedUser()->user_id,
+                        ]
+                    );
+                    foreach(request()->jadwal_id as $jadwal_id){
+                        Presensi_jadwal::updateOrCreate([
+                            'presensi_id' => $presensi->presensi_id,
+                            'jadwal_id' => $jadwal_id,
+                        ]);
+                    }
                 }
-                $jam = $collection[1];
-                Presensi::updateOrCreate(
-                    [
-                        'anggota_rombel_id' => $anggota_rombel_id,
-                        'guru_id' => $guru_id,
-                        'tanggal' => request()->tanggal,
-                        'jam' => $jam,
-                    ],
-                    [
-                        'absen' => ($absen) ?? 'H',
-                        'user_id' => loggedUser()->user_id,
-                    ]
-                );
             }
         }
         $aksi = (request()->aksi == 'pd') ? 'Siswa' : 'Guru';

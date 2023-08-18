@@ -111,7 +111,31 @@ class AuthController extends Controller
                 },
                 'guru',
                 'kelas',
-                'jam'
+                'jam',
+                /*'presensi_jadwal',
+                'jam' => function($query){
+                    $query->withCount([
+                        'presensi_jam as alpha' => function($query){
+                            $query->where('absen', 'A');
+                        },
+                        'presensi_jam as sakit' => function($query){
+                            $query->where('absen', 'S');
+                        },
+                        'presensi_jam as izin' => function($query){
+                            $query->where('absen', 'I');
+                        },
+                    ]);
+                },*/
+            ])->withCount([
+                'presensi_jadwal as alpha' => function($query){
+                    $query->where('absen', 'A');
+                },
+                'presensi_jadwal as sakit' => function($query){
+                    $query->where('absen', 'S');
+                },
+                'presensi_jadwal as izin' => function($query){
+                    $query->where('absen', 'I');
+                },
             ])->where(function($query) use ($request){
                 $query->whereHas('pembelajaran', function($query) use ($request){
                     $query->where('semester_id', semester_id());
@@ -214,6 +238,7 @@ class AuthController extends Controller
     public function generate(){
         $all_role = ['guru', 'pengajar', 'pd', 'walas'];
         if(request()->jenis == 'ptk'){
+            User::whereRoleIs('guru')->whereDoesntHave('guru')->delete();
             Guru::orderBy('guru_id')->chunk(200, function ($data) use ($all_role){
                 foreach ($data as $d) {
                     $new_password = strtolower(Str::random(8));
@@ -251,6 +276,7 @@ class AuthController extends Controller
                 'title' => 'Berhasil',
             ];
         } else {
+            User::whereRoleIs('pd')->whereDoesntHave('pd')->delete();
             Peserta_didik::doesntHave('pengguna')->whereHas('anggota_rombel', function($query){
                 $query->where('semester_id', semester_id());
             })->orderBy('peserta_didik_id')->chunk(200, function ($data){

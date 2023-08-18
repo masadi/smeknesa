@@ -52,6 +52,13 @@ export default [
         resource: 'Ref_Kelas',
         action: 'read',
       },
+      /*{
+        icon: 'hand-click-icon',
+        title: 'Jadwal Pembelajaran',
+        route: 'jadwal-pembelajaran',
+        resource: 'Jadwal',
+        action: 'read',
+      },*/
     ],
   },
 ]

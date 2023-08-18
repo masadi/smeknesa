@@ -19,4 +19,15 @@ class Presensi extends Model
 	{
 		return $this->hasOne(Anggota_rombel::class, 'anggota_rombel_id', 'anggota_rombel_id');
 	}
+	public function presensi_jadwal()
+	{
+		return $this->hasOneThrough(
+            Jadwal::class,
+            Presensi_jadwal::class,
+            'presensi_id', // Foreign key on the cars table...
+            'jadwal_id', // Foreign key on the owners table...
+            'presensi_id', // Local key on the mechanics table...
+            'jadwal_id' // Local key on the cars table...
+        );
+	}
 }

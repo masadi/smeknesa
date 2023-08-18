@@ -329,16 +329,22 @@ export default {
       })
     },
     handleReset(val){
-      console.log('handleReset');
-      console.log(val);
-      this.$swal({
-        icon: 'error',
-        title: 'Error',
-        text: 'Sedang dalam pengembangan!',
-        customClass: {
-          confirmButton: 'btn btn-success',
-        },
-        allowOutsideClick: false,
+      this.loading = true
+      this.$http.post('/auth/user/reset-password', {
+        user_id: val,
+      }).then(response => {
+        let getData = response.data
+        this.$swal({
+          icon: getData.icon,
+          title: getData.title,
+          text: getData.text,
+          customClass: {
+            confirmButton: 'btn btn-success',
+          },
+          allowOutsideClick: false,
+        }).then(result => {
+          this.loadPostsData()
+        })
       })
     },
     handleHapus(val){

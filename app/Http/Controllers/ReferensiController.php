@@ -497,7 +497,7 @@ class ReferensiController extends Controller
     public function detil_data(){
         if(request()->data == 'guru'){
             if(request()->edit){
-                $guru = Guru::find(request()->id);
+                $guru = Guru::with('presensi')->find(request()->id);
                 $data = [
                     'guru' => $guru,
                     'provinsi' => Indonesia::allProvinces(),
@@ -577,16 +577,38 @@ class ReferensiController extends Controller
                 $query->where('nama', 'ilike', '%'.request()->q.'%');
             })->paginate(request()->per_page);
         } else {
-            $data = Guru::orderBy('nama')->where(function($query) {
-                if(request()->aksi == 'absen'){
-                    $query->whereHas('jadwal', function($query){
-                        $query->where('hari', Carbon::now()->translatedFormat('l'));
-                    });
-                }
-            })->with(['presensi' => function($query){
-                $query->whereDate('tanggal', Carbon::today());
-                $query->orderBy('jam');
-            }])->get();
+            $tanggal = Carbon::now();
+            if(request()->tanggal){
+                $tanggal = Carbon::createFromDate(request()->tanggal);
+            }
+            /*
+            
+            $data = [
+                'tanggal' => $tanggal->format('Y-m-d'),
+                'tanggal_str' => $tanggal->translatedFormat('l, j F Y'),
+                'jumlah_jam' => ($tanggal->dayOfWeek == Carbon::FRIDAY) ? 6 : 11
+            ];
+            */
+            $data = [
+                'guru' => Guru::orderBy('nama')->where(function($query) use ($tanggal) {
+                        if(request()->aksi == 'absen'){
+                            $query->whereHas('jadwal', function($query) use ($tanggal){
+                                $query->where('hari', $tanggal->translatedFormat('l'));
+                            });
+                        }
+                    })->with([
+                        'presensi' => function($query) use ($tanggal){
+                            $query->whereDate('tanggal', $tanggal);
+                            $query->orderBy('jam');
+                        },
+                        'jadwal' => function($query) use ($tanggal){
+                            $query->where('hari', $tanggal->translatedFormat('l'));
+                            $query->with(['jam']);
+                        }
+                    ])->get(),
+                'tanggal' => $tanggal->format('Y-m-d'),
+                'tanggal_str' => $tanggal->translatedFormat('l, j F Y'),
+            ];
         }
         return response()->json(['status' => 'success', 'data' => $data, 'semester_id' => semester_id()]);
     }

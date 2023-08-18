@@ -131,7 +131,6 @@
 
 <script>
 import { BOverlay, BForm, BFormInput, BInputGroup, BRow, BCol, BFormGroup, BButton, BFormDatepicker } from 'bootstrap-vue'
-import eventBus from '@core/utils/eventBus'
 import vSelect from 'vue-select'
 export default {
   components: {
@@ -166,11 +165,6 @@ export default {
   },
   created() {
     this.loadPostsData()
-    /*this.form.edit = true
-    this.form.user_id = this.user.user_id
-    this.form.sekolah_id = this.user.sekolah_id
-    this.form.semester_id = this.user.semester.semester_id
-    this.form.periode_aktif = this.user.semester.nama*/
   },
   methods: {
     loadPostsData(){
