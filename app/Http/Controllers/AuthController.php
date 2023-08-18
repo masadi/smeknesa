@@ -112,20 +112,6 @@ class AuthController extends Controller
                 'guru',
                 'kelas',
                 'jam',
-                /*'presensi_jadwal',
-                'jam' => function($query){
-                    $query->withCount([
-                        'presensi_jam as alpha' => function($query){
-                            $query->where('absen', 'A');
-                        },
-                        'presensi_jam as sakit' => function($query){
-                            $query->where('absen', 'S');
-                        },
-                        'presensi_jam as izin' => function($query){
-                            $query->where('absen', 'I');
-                        },
-                    ]);
-                },*/
             ])->withCount([
                 'presensi_jadwal as alpha' => function($query){
                     $query->where('absen', 'A');
