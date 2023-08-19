@@ -19,15 +19,15 @@ axiosIns.interceptors.request.use(function (config) {
 axiosIns.interceptors.response.use(
   response => response,
   error => {
-    if (error.response.status === 401) {
+    if (error.response && 419 === error.response.status) {
+      window.location.reload()
+    } else if (error.response && 401 === error.response.status) {
       localStorage.removeItem('userData')
       localStorage.removeItem('accessToken')
       localStorage.removeItem('userAbilities')
       this.$router.push('/login')
-    }
-    else {
+    } else {
       return error.response
-      //return Promise.reject(error)
     }
 });
 Vue.prototype.$http = axiosIns

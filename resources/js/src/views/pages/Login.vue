@@ -105,7 +105,7 @@ import useJwt from '@/auth/jwt/useJwt'
 import { required, email } from '@validations'
 import { togglePasswordVisibility } from '@core/mixins/ui/forms'
 import store from '@/store/index'
-
+import { getHomeRouteForLoggedInUser } from '@/auth/utils'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 
 export default {
@@ -185,7 +185,7 @@ export default {
               // ? Because we are showing eCommerce app's cart items count in navbar
               
               // ? This is just for demo purpose. Don't think CASL is role based in this case, we used role in if condition just for ease
-              this.$router.replace('/').then(() => {
+              this.$router.replace(getHomeRouteForLoggedInUser(userData.roles)).then(() => {
                 this.$toast({
                   component: ToastificationContent,
                   position: 'top-right',

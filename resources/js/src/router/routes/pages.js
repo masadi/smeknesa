@@ -43,6 +43,26 @@ export default [
     },
   },
   {
+    path: '/profil-peserta-didik',
+    name: 'profil-peserta-didik',
+    component: () => import('@/views/pages/profile/Profile.vue'),
+    meta: {
+      layout: 'full',
+      resource: 'Profile_Pd',
+      action: 'read',
+      pageTitle: 'Profile',
+      breadcrumb: [
+        {
+          text: 'Pages',
+        },
+        {
+          text: 'Profile',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
     path: '/pengaturan-umum',
     name: 'pengaturan-umum',
     component: () => import('@/views/pages/Pengaturan.vue'),

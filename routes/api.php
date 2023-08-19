@@ -25,6 +25,7 @@ use App\Http\Controllers\WhatsappController;
 */
 Route::get('sekolah', [DashboardController::class, 'hitung_sekolah']);
 Route::get('no-access', [DashboardController::class, 'no_access'])->name('login');
+Route::get('profile/data', [AuthController::class, 'profile_pd']);
 Route::group(['prefix' => 'auth'], function () {
   Route::get('/semester', [AuthController::class, 'semester']);
   Route::post('login', [AuthController::class, 'login']);

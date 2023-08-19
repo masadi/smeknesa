@@ -37,12 +37,12 @@ class GenerateAkses extends Command
             [
                 'action' => 'read',
                 'subject' => 'Beranda',
-                'roles' => ['administrator', 'guru', 'kepsek', 'pengajar', 'pd', 'piket', 'wakakur', 'walas', 'kajur', 'wakahumas', 'wakasiswa', 'bk'],
+                'roles' => ['administrator', 'guru', 'kepsek', 'pengajar', 'piket', 'wakakur', 'walas', 'kajur', 'wakahumas', 'wakasiswa', 'bk'],
             ],
             [
                 'action' => 'read',
                 'subject' => 'Profile',
-                'roles' => ['administrator', 'guru', 'kepsek', 'pengajar', 'pd', 'piket', 'wakakur', 'walas', 'kajur', 'wakahumas', 'wakasiswa', 'bk'],
+                'roles' => ['administrator', 'guru', 'kepsek', 'pengajar', 'piket', 'wakakur', 'walas', 'kajur', 'wakahumas', 'wakasiswa', 'bk'],
             ],
             [
                 'action' => 'read',
@@ -137,12 +137,12 @@ class GenerateAkses extends Command
             [
                 'action' => 'read',
                 'subject' => 'Rekap_Nilai',
-                'roles' => ['pengajar', 'pd', 'wakakur', 'walas', 'kajur'],
+                'roles' => ['pengajar', 'wakakur', 'walas', 'kajur'],
             ],
             [
                 'action' => 'read',
                 'subject' => 'Modul',
-                'roles' => ['pengajar', 'pd', 'wakakur'],
+                'roles' => ['pengajar', 'wakakur'],
             ],
             [
                 'action' => 'read',
@@ -152,7 +152,7 @@ class GenerateAkses extends Command
             [
                 'action' => 'read',
                 'subject' => 'Kelulusan',
-                'roles' => ['kepsek', 'pd', 'wakakur', 'kajur', 'bk'],
+                'roles' => ['kepsek', 'wakakur', 'kajur', 'bk'],
             ],
             [
                 'action' => 'read',
@@ -172,7 +172,7 @@ class GenerateAkses extends Command
             [
                 'action' => 'read',
                 'subject' => 'Magang_Absensi',
-                'roles' => ['administrator', 'pd', 'walas', 'kajur', 'wakahumas'],
+                'roles' => ['administrator', 'walas', 'kajur', 'wakahumas'],
             ],
             [
                 'action' => 'read',
@@ -182,17 +182,17 @@ class GenerateAkses extends Command
             [
                 'action' => 'read',
                 'subject' => 'Magang_Nilai',
-                'roles' => ['administrator', 'pd', 'wakakur', 'walas', 'kajur', 'wakahumas'],
+                'roles' => ['administrator', 'wakakur', 'walas', 'kajur', 'wakahumas'],
             ],
             [
                 'action' => 'read',
                 'subject' => 'Magang_Sertifikat',
-                'roles' => ['administrator', 'pd', 'walas', 'kajur', 'wakahumas'],
+                'roles' => ['administrator', 'walas', 'kajur', 'wakahumas'],
             ],
             [
                 'action' => 'read',
                 'subject' => 'Tatib_Sekolah',
-                'roles' => ['administrator', 'pd', 'wakasiswa', 'bk'],
+                'roles' => ['administrator', 'wakasiswa', 'bk'],
             ],
             [
                 'action' => 'read',
@@ -243,6 +243,11 @@ class GenerateAkses extends Command
                 'action' => 'read',
                 'subject' => 'Wali',
                 'roles' => ['walas'],
+            ],
+            [
+                'action' => 'read',
+                'subject' => 'Profile_Pd',
+                'roles' => ['pd'],
             ]
         ];
         Permission::truncate();

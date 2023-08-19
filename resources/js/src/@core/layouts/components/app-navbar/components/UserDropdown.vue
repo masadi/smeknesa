@@ -25,7 +25,7 @@
         <feather-icon size="16" icon="ToolIcon" class="mr-50" />
         <span>System Setting</span>
       </b-dropdown-item>
-      <b-dropdown-item :to="{ name: 'profile' }" link-class="d-flex align-items-center">
+      <b-dropdown-item :to="{ name: 'profile' }" link-class="d-flex align-items-center" v-if="!hasRole('pd')">
         <feather-icon size="16" icon="UserIcon" class="mr-50" />
         <span>Profile</span>
       </b-dropdown-item>
