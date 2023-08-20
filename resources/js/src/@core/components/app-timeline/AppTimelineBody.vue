@@ -2,16 +2,10 @@
   <li v-bind="$attrs" class="timeline-item" :class="[`timeline-variant-${variant}`, fillBorder ? `timeline-item-fill-border-${variant}` : null]" v-on="$listeners">
     <div v-if="!icon" class="timeline-item-point" />
     <div v-else class="timeline-item-icon d-flex align-items-center justify-content-center rounded-circle">
-      <feather-icon :icon="icon" />
+      <!--feather-icon :icon="icon" /-->
+      <font-awesome-icon :icon="icon" />
     </div>
-
-    <slot>
-      <div class="d-flex flex-sm-row flex-column flex-wrap justify-content-between mb-1 mb-sm-0">
-        <h6 v-text="title" />
-        <small class="timeline-item-time text-nowrap text-muted" v-text="time" />
-      </div>
-      <p class="mb-0" v-html="subtitle" />
-    </slot>
+    <slot />
   </li>
 </template>
 

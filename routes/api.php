@@ -13,6 +13,7 @@ use App\Http\Controllers\EditorController;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\WhatsappController;
+use App\Http\Controllers\SiswaController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -164,5 +165,10 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/detil', [WhatsappController::class, 'detil']);
     Route::post('/hapus', [WhatsappController::class, 'hapus']);
     Route::post('/kirim-pesan', [WhatsappController::class, 'kirim_pesan']);
+  });
+  Route::group(['prefix' => 'siswa'], function () {
+    Route::post('/', [SiswaController::class, 'index']);
+    Route::post('/teman', [SiswaController::class, 'teman']);
+    Route::post('/guru', [SiswaController::class, 'guru']);
   });
 });

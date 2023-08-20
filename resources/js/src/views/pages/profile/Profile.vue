@@ -1,38 +1,44 @@
 <template>
-  <b-container v-if="Object.keys(profileData).length" id="user-profile" class="mt-2">
-    <profile-header :header-data="detil_data" @reload="getDetilData" :profile-active="profileActive" :modul-active="modulActive" :quiz-active="quizActive" :feedback-active="feedbackActive"  />
-    <section id="profile-info">
-      <b-row>
-        <b-col md="4" cols="12" order="2" order-lg="1">
-          <profile-about @detil="handleDetil" @update="handleUpdate" :detil_data="detil_data" />
-        </b-col>
-        <b-col lg="8" cols="12" order="1" order-lg="2">
-          <b-row>
-            <b-col cols="12">
-              <profile-timeline :posts="profileData.post" v-if="profileActive"/>
-              <tab-modul v-if="modulActive"/>
-              <tab-quiz v-if="quizActive"/>
-              <tab-feedback v-if="feedbackActive"/>
-            </b-col>
-            <template v-if="profileActive">
-              <b-col md="6" cols="12">
-                <profile-teman :suggestions="profileData.suggestions" />
+  <b-container>
+    <div v-if="Object.keys(profileData).length" id="user-profile" class="mt-2">
+      <profile-header :header-data="detil_data" @reload="getDetilData" :profile-active="profileActive" :modul-active="modulActive" :quiz-active="quizActive" :feedback-active="feedbackActive"  />
+      <section id="profile-info">
+        <b-row>
+          <b-col md="4" cols="12" order="2" order-lg="1">
+            <profile-about @detil="handleDetil" @update="handleUpdate" :detil_data="detil_data" />
+          </b-col>
+          <b-col lg="8" cols="12" order="1" order-lg="2">
+            <b-row>
+              <b-col cols="12">
+                <profile-timeline :posts="profileData.post" v-if="profileActive"/>
+                <tab-modul v-if="modulActive"/>
+                <tab-quiz v-if="quizActive"/>
+                <tab-feedback v-if="feedbackActive"/>
               </b-col>
-              <b-col md="6" cols="12">
-                <profile-guru :suggestions="profileData.suggestions" />
-              </b-col>
-            </template>
-          </b-row>
-        </b-col>
-      </b-row>
-    </section>
-    <profile-edit :detil_data="profileData" @reload="getDetilData"></profile-edit>
-    <profile-detil :detil_data="detil_data"></profile-detil>
+              <template v-if="profileActive">
+                <b-col md="6" cols="12">
+                  <profile-teman :suggestions="profileData.suggestions" :loading_teman="loading_teman" :list_teman="list_teman" />
+                </b-col>
+                <b-col md="6" cols="12">
+                  <profile-guru :suggestions="profileData.suggestions" :loading_guru="loading_guru" :list_guru="list_guru" />
+                </b-col>
+              </template>
+            </b-row>
+          </b-col>
+        </b-row>
+      </section>
+      <profile-edit :detil_data="profileData" @reload="getDetilData"></profile-edit>
+      <profile-detil :detil_data="detil_data"></profile-detil>
+    </div>
+    <div class="text-center text-danger my-2" v-else>
+      <b-spinner class="align-middle"></b-spinner>
+      <strong>Loading...</strong>
+    </div>
   </b-container>
 </template>
 
 <script>
-import { BContainer, BRow, BCol } from 'bootstrap-vue'
+import { BContainer, BRow, BCol, BSpinner } from 'bootstrap-vue'
 
 import ProfileHeader from './ProfileHeader.vue'
 import ProfileAbout from './ProfileAbout.vue'
@@ -51,7 +57,8 @@ export default {
     BContainer,
     BRow,
     BCol,
-
+    BSpinner,
+    
     ProfileHeader,
     ProfileAbout,
     ProfileTimeline,
@@ -65,6 +72,8 @@ export default {
   },
   data() {
     return {
+      loading_teman: false,
+      loading_guru: false,
       showDetil: false,
       showUpdate: false,
       editModal: false,
@@ -74,6 +83,8 @@ export default {
       modulActive: false,
       quizActive: false,
       feedbackActive: false,
+      list_teman: [],
+      list_guru: [],
     }
   },
   created() {
@@ -82,6 +93,8 @@ export default {
     eventBus.$on('open-tab-quiz', this.tabQuiz);
     eventBus.$on('open-tab-feedback', this.tabFeedback);
     this.getDetilData()
+    this.getTeman()
+    this.getGuru()
   },
   methods: {
     getDetilData(){
@@ -92,6 +105,26 @@ export default {
       }).then(res => {
         this.detil_data = res.data.detil
         this.profileData = res.data
+      })
+    },
+    getTeman(){
+      this.loading_teman = true
+      this.$http.post('/siswa/teman', {
+        peserta_didik_id: this.user.peserta_didik_id,
+        semester_id: this.user.semester.semester_id,
+      }).then(res => {
+        this.loading_teman = false
+        this.list_teman = res.data.list
+      })
+    },
+    getGuru(){
+      this.loading_guru = true
+      this.$http.post('/siswa/guru', {
+        peserta_didik_id: this.user.peserta_didik_id,
+        semester_id: this.user.semester.semester_id,
+      }).then(res => {
+        this.loading_guru = false
+        this.list_guru = res.data
       })
     },
     tabProfile(){

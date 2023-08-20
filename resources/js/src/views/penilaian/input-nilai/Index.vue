@@ -46,6 +46,13 @@ export default {
           thClass: 'text-center',
         },
         {
+          key: 'rombongan_belajar',
+          label: 'Kelas',
+          sortable: false,
+          thClass: 'text-center',
+          tdClass: 'text-center',
+        },
+        {
           key: 'cp_count',
           label: 'Jumlah CP',
           sortable: false,
