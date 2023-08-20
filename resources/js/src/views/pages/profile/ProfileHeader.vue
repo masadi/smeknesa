@@ -1,6 +1,5 @@
 <template>
   <b-card class="profile-header mb-2" img-src="/img/profile/user-uploads/timeline.jpg" img-top alt="cover photo" body-class="p-0" v-if="headerData">
-    <!-- profile picture -->
     <div class="position-relative">
       <div class="profile-img-container d-flex align-items-center">
         <div class="profile-img" v-b-hover="handleHover">
@@ -9,12 +8,10 @@
               <feather-icon v-if="isHovered" icon="EditIcon" size="20"/>
             </b-badge>
           </div>
-          <!--b-img :src="headerData.avatar" rounded fluid alt="profile photo" /-->
           <b-avatar rounded size="115" :src="headerData.photo ? `/storage/images/${headerData.photo}` : null" variant="light-primary">
             <feather-icon v-if="!headerData.photo" icon="UserIcon" size="100" />
           </b-avatar>
         </div>
-        <!-- profile title -->
         <div class="profile-title ml-3">
           <h2 class="text-white">
             {{ headerData.nama }}
@@ -23,57 +20,43 @@
             Cita-cita: {{ (headerData.cita) ? headerData.cita : '-' }}
           </p>
         </div>
-        <!--/ profile title -->
       </div>
     </div>
-    <!--/ profile picture -->
-
-    <!-- profile navbar -->
     <div class="profile-header-nav">
       <b-navbar toggleable="md" type="light">
-        <!-- toggle button -->
         <b-navbar-toggle class="ml-auto" target="nav-text-collapse">
           <feather-icon icon="AlignJustifyIcon" size="21" />
         </b-navbar-toggle>
-        <!--/ toggle button -->
-
-        <!-- collapse -->
         <b-collapse id="nav-text-collapse" is-nav>
           <b-tabs pills class="profile-tabs mt-1 mt-md-0" nav-class="mb-0">
             <template #tabs-start>
-              <b-nav-item role="presentation" active class="font-weight-bold" @click="tabFeed">
+              <b-nav-item role="presentation" :active="profileActive" class="font-weight-bold" @click="tabProfile">
                 <span class="d-none d-md-block">Profile</span>
                 <feather-icon icon="UserCheckIcon" class="d-block d-md-none" />
               </b-nav-item>
-              <b-nav-item role="presentation" class="font-weight-bold"  @click="tabAbout">
-                <span class="d-none d-md-block">Team</span>
+              <b-nav-item role="presentation" :active="modulActive" class="font-weight-bold"  @click="tabModul">
+                <span class="d-none d-md-block">Modul</span>
                 <feather-icon icon="InfoIcon" class="d-block d-md-none" />
               </b-nav-item>
-              <b-nav-item role="presentation" class="font-weight-bold"  @click="tabPhotos">
-                <span class="d-none d-md-block">Projects</span>
+              <b-nav-item role="presentation" :active="quizActive" class="font-weight-bold"  @click="tabQuiz">
+                <span class="d-none d-md-block">Quiz</span>
                 <feather-icon icon="ImageIcon" class="d-block d-md-none" />
               </b-nav-item>
-              <b-nav-item role="presentation" class="font-weight-bold"  @click="tabFriends">
-                <span class="d-none d-md-block">Friends</span>
+              <b-nav-item role="presentation" :active="feedbackActive"class="font-weight-bold"  @click="tabFeedback">
+                <span class="d-none d-md-block">FeedBack</span>
                 <feather-icon icon="UsersIcon" class="d-block d-md-none" />
               </b-nav-item>
             </template>
-
-            <!-- edit buttons -->
             <template #tabs-end>
               <b-button variant="danger" class="ml-auto" @click="logout">
                 <feather-icon icon="LogOutIcon" class="d-block d-md-none" />
                 <span class="font-weight-bold d-none d-md-block">Logout</span>
               </b-button>
             </template>
-            <!-- edit buttons -->
           </b-tabs>
-
         </b-collapse>
-        <!--/ collapse -->
       </b-navbar>
     </div>
-    <!--/ profile navbar -->
     <b-modal v-model="show" centered hide-footer hide-header>
       <div class="my-1">
         <b-overlay :show="loading" opacity="0.6" size="md" spinner-variant="secondary">
@@ -117,6 +100,22 @@ export default {
       type: Object,
       default: () => {},
     },
+    profileActive: {
+      type: Boolean,
+      default: true,
+    },
+    modulActive: {
+      type: Boolean,
+      default: false,
+    },
+    quizActive: {
+      type: Boolean,
+      default: false,
+    },
+    feedbackActive: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -127,17 +126,17 @@ export default {
     }
   },
   methods: {
-    tabFeed(){
-      eventBus.$emit('open-tab-feed');
+    tabProfile(){
+      eventBus.$emit('open-tab-profile');
     },
-    tabAbout(){
-      eventBus.$emit('open-tab-about');
+    tabModul(){
+      eventBus.$emit('open-tab-modul');
     },
-    tabPhotos(){
-      eventBus.$emit('open-tab-photos');
+    tabQuiz(){
+      eventBus.$emit('open-tab-quiz');
     },
-    tabFriends(){
-      eventBus.$emit('open-tab-friend');
+    tabFeedback(){
+      eventBus.$emit('open-tab-feedback');
     },
     handleHover(hovered) {
       console.log(hovered);

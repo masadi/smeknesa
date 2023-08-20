@@ -1,69 +1,67 @@
 <template>
-  <div v-if="Object.keys(profileData).length" id="user-profile">
-    <profile-header :header-data="detil_data" @reload="getDetilData"  />
-    <!-- profile info  -->
+  <b-container v-if="Object.keys(profileData).length" id="user-profile" class="mt-2">
+    <profile-header :header-data="detil_data" @reload="getDetilData" :profile-active="profileActive" :modul-active="modulActive" :quiz-active="quizActive" :feedback-active="feedbackActive"  />
     <section id="profile-info">
       <b-row>
-        <!-- about suggested page and twitter feed -->
         <b-col md="4" cols="12" order="2" order-lg="1">
           <profile-about @detil="handleDetil" @update="handleUpdate" :detil_data="detil_data" />
-          <profile-twitter-feed :twitter-feed="profileData.twitterFeeds" />
         </b-col>
-        <!--b-col lg="3" cols="12" order="2" order-lg="1">
-          <profile-suggested-pages :pages-data="profileData.suggestedPages" />
-          
-        </b-col-->
-        <!--/ about suggested page and twitter feed -->
-
-        <!-- post -->
         <b-col lg="8" cols="12" order="1" order-lg="2">
           <b-row>
             <b-col cols="12">
-              <profile-post :posts="profileData.post" />
+              <profile-timeline :posts="profileData.post" v-if="profileActive"/>
+              <tab-modul v-if="modulActive"/>
+              <tab-quiz v-if="quizActive"/>
+              <tab-feedback v-if="feedbackActive"/>
             </b-col>
-            <b-col md="6" cols="12">
-              <profile-suggestion :suggestions="profileData.suggestions" />
-            </b-col>
-            <b-col md="6" cols="12">
-              <profile-polls :polls-data="profileData.polls" />
-            </b-col>
+            <template v-if="profileActive">
+              <b-col md="6" cols="12">
+                <profile-teman :suggestions="profileData.suggestions" />
+              </b-col>
+              <b-col md="6" cols="12">
+                <profile-guru :suggestions="profileData.suggestions" />
+              </b-col>
+            </template>
           </b-row>
         </b-col>
-        <!-- post -->
       </b-row>
     </section>
-    <!--/ profile info  -->
     <profile-edit :detil_data="profileData" @reload="getDetilData"></profile-edit>
     <profile-detil :detil_data="detil_data"></profile-detil>
-  </div>
+  </b-container>
 </template>
 
 <script>
-import { BRow, BCol } from 'bootstrap-vue'
+import { BContainer, BRow, BCol } from 'bootstrap-vue'
 
 import ProfileHeader from './ProfileHeader.vue'
 import ProfileAbout from './ProfileAbout.vue'
-import ProfileTwitterFeed from './ProfileTwitterFeed.vue'
-import ProfilePost from './ProfilePost.vue'
-import ProfileSuggestion from './ProfileSuggestion.vue'
-import ProfilePolls from './ProfilePolls.vue'
+import ProfileTimeline from './ProfileTimeline.vue'
+import ProfileTeman from './ProfileTeman.vue'
+import ProfileGuru from './ProfileGuru.vue'
 import ProfileEdit from './ProfileEdit.vue'
 import ProfileDetil from './ProfileDetil.vue'
+import TabFeedback from './TabFeedback.vue'
+import TabModul from './TabModul.vue'
+import TabQuiz from './TabQuiz.vue'
 import eventBus from '@core/utils/eventBus'
 /* eslint-disable global-require */
 export default {
   components: {
+    BContainer,
     BRow,
     BCol,
 
     ProfileHeader,
     ProfileAbout,
-    ProfileTwitterFeed,
-    ProfilePost,
-    ProfileSuggestion,
-    ProfilePolls,
+    ProfileTimeline,
+    ProfileTeman,
+    ProfileGuru,
     ProfileEdit,
     ProfileDetil,
+    TabFeedback,
+    TabModul,
+    TabQuiz,
   },
   data() {
     return {
@@ -72,13 +70,17 @@ export default {
       editModal: false,
       profileData: {},
       detil_data: null,
+      profileActive: true,
+      modulActive: false,
+      quizActive: false,
+      feedbackActive: false,
     }
   },
   created() {
-    eventBus.$on('open-tab-feed', this.tabFeed);
-    eventBus.$on('open-tab-about', this.tabAbout);
-    eventBus.$on('open-tab-photos', this.tabPhotos);
-    eventBus.$on('open-tab-friend', this.tabFriends);
+    eventBus.$on('open-tab-profile', this.tabProfile);
+    eventBus.$on('open-tab-modul', this.tabModul);
+    eventBus.$on('open-tab-quiz', this.tabQuiz);
+    eventBus.$on('open-tab-feedback', this.tabFeedback);
     this.getDetilData()
   },
   methods: {
@@ -92,17 +94,33 @@ export default {
         this.profileData = res.data
       })
     },
-    tabFeed(){
-      console.log('tabFeed');
+    tabProfile(){
+      console.log('tabProfile');
+      this.profileActive = true
+      this.modulActive = false
+      this.quizActive = false
+      this.feedbackActive = false
     },
-    tabAbout(){
-      console.log('tabAbout');
+    tabModul(){
+      console.log('tabModul');
+      this.profileActive = false
+      this.modulActive = true
+      this.quizActive = false
+      this.feedbackActive = false
     },
-    tabPhotos(){
-      console.log('tabPhotos');
+    tabQuiz(){
+      console.log('tabQuiz');
+      this.profileActive = false
+      this.modulActive = false
+      this.quizActive = true
+      this.feedbackActive = false
     },
-    tabFriends(){
-      console.log('tabFriends');
+    tabFeedback(){
+      console.log('tabFeedback');
+      this.profileActive = false
+      this.modulActive = false
+      this.quizActive = false
+      this.feedbackActive = true
     },
     handleDetil(){
       eventBus.$emit('open-detil-modal');
