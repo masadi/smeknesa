@@ -1339,7 +1339,7 @@ class ReferensiController extends Controller
                 'email' => [
                     'required',
                     'email',
-                    Rule::unique('peserta_didik')->ignore(request()->peserta_didik_id, 'peserta_didik_id'),
+                    Rule::unique('users')->ignore(request()->peserta_didik_id, 'peserta_didik_id'),
                 ],
                 'jenis_kelamin' => ['required'],
                 'provinsi_id' => ['required'],
@@ -1426,11 +1426,16 @@ class ReferensiController extends Controller
             $find->photo = basename($photo);
         }
         if($find->save()){
+            $user = User::find(request()->user_id);
+            $user->name = request()->nama;
+            $user->email = request()->email;
+            $user->whatsapp = request()->no_hp;
+            $user->save();
             $data = [
                 'success' => TRUE,
                 'errors' => NULL,
                 'icon' => 'success',
-                'text' => 'Data Peserta Didik berhasil diperbaharui',
+                'text' => 'Data Peserta Didik berhasil diperbaharui!',
                 'title' => 'Berhasil',
             ];
         } else {

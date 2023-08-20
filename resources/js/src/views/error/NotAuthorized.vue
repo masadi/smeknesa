@@ -13,18 +13,10 @@
           You are not authorized! 🔐
         </h2>
         <p class="mb-2">
-          You don’t have permission to access this page. Go Home!!
+          You don't have permission to access this page. Go Home!!
         </p>
-        <b-button
-          variant="primary"
-          class="mb-1 btn-sm-block"
-          :to="loginRoute()"
-        >Back to Home</b-button>
-        <b-img
-          fluid
-          :src="imgUrl"
-          alt="Not authorized page"
-        />
+        <b-button variant="primary" class="mb-1 btn-sm-block" :to="loginRoute()">Back to Home</b-button>
+        <b-img fluid :src="imgUrl" alt="Not authorized page" />
       </div>
     </div>
   </div>
@@ -35,6 +27,7 @@
 import { BLink, BImg, BButton } from 'bootstrap-vue'
 import VuexyLogo from '@core/layouts/components/Logo.vue'
 import store from '@/store/index'
+import { getHomeRouteForLoggedInUser } from '@/auth/utils'
 
 export default {
   components: {
@@ -61,7 +54,7 @@ export default {
   methods: {
     loginRoute() {
       const user = JSON.parse(localStorage.getItem('userData'))
-      return '/'
+      return getHomeRouteForLoggedInUser(user.roles)
     },
   },
 }

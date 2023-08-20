@@ -24,7 +24,7 @@ import DashboardAdmin from './DashboardAdmin.vue'
 import DashboardGuru from './DashboardGuru.vue'
 import DashboardSiswa from './DashboardSiswa.vue'
 import DashboardUser from './DashboardUser.vue'
-
+import { getHomeRouteForLoggedInUser } from '@/auth/utils'
 export default {
   components: {
     DashboardWaka,
@@ -32,6 +32,11 @@ export default {
     DashboardGuru,
     DashboardSiswa,
     DashboardUser,
+  },
+  created() {
+    if(this.hasRole('pd')){
+      this.$router.replace(getHomeRouteForLoggedInUser(this.user.roles))
+    }
   },
 }
 </script>

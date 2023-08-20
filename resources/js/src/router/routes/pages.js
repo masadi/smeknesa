@@ -50,16 +50,7 @@ export default [
       layout: 'full',
       resource: 'Profile_Pd',
       action: 'read',
-      pageTitle: 'Profile',
-      breadcrumb: [
-        {
-          text: 'Pages',
-        },
-        {
-          text: 'Profile',
-          active: true,
-        },
-      ],
+      pageTitle: 'Profil Siswa',
     },
   },
   {
