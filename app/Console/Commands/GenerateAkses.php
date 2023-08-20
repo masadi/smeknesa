@@ -248,7 +248,12 @@ class GenerateAkses extends Command
                 'action' => 'read',
                 'subject' => 'Profile_Pd',
                 'roles' => ['pd'],
-            ]
+            ],
+            [
+                'action' => 'read',
+                'subject' => 'Rekapitulasi',
+                'roles' => ['wakakur', 'wakasiswa'],
+            ],
         ];
         Permission::truncate();
         foreach($abilities as $ab){

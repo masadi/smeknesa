@@ -6,7 +6,7 @@
         <strong>Loading...</strong>
       </div>
       <div v-else>
-        <datatable :isBusy="isBusy" :items="items" :fields="fields" :meta="meta" @per_page="handlePerPage" @pagination="handlePagination" @search="handleSearch" @sort="handleSort" @bulan="handleBulan" @tanggal="handleTanggal" @aksi="handleAksi"/>
+        <datatable :isBusy="isBusy" :items="items" :fields="fields" :meta="meta" @per_page="handlePerPage" @pagination="handlePagination" @search="handleSearch" @sort="handleSort" @bulan="handleBulan" @tanggal="handleTanggal" @aksi="handleAksi" @rombel="handleRombel" />
       </div>
     </b-card-body>
     <detil-modal></detil-modal>
@@ -90,11 +90,17 @@ export default {
       bulan: '',
       data_tanggal: [],
       tanggal: '',
+      waka: false,
+      rombongan_belajar_id: null,
+      data_rombel: [],
     }
   },
   created() {
     eventBus.$on('download-rekap', this.handleEvent);
     this.bulan = this.getBulan()
+    if(this.hasRole(['wakakur', 'wakasiswa'])){
+      this.waka = true
+    }
     this.loadPostsData()
   },
   methods: {
@@ -169,9 +175,7 @@ export default {
     },
     loadPostsData() {
       this.isBusy = true
-      //let current_page = this.search == '' ? this.current_page : this.current_page != 1 ? 1 : this.current_page
       let current_page = this.current_page//this.search == '' ? this.current_page : 1
-      //https://smeknesa.com/api/presensi?q=&per_page=10&page=1&sortby=nama&sortbydesc=ASC&status=false&bulan=06&data=guru&guru_id=&peserta_didik_id=&semester_id=20231&periode_aktif=2023%2F2024+Ganjil&tanggal_mulai=2023-06-01&tanggal_selesai=2023-12-31
       this.$http.get('/presensi', {
         params: {
           guru_id: this.user.guru_id,
@@ -188,17 +192,17 @@ export default {
           bulan: this.bulan,
           tanggal: this.tanggal,
           data: 'pd',
+          waka: this.waka,
+          rombongan_belajar_id: this.rombongan_belajar_id,
         }
       }).then(response => {
-        //this.items = response.data.all_pd
         let getData = response.data.data
         this.data_bulan = response.data.data_bulan
         this.bulan = response.data.bulan
         this.data_tanggal = response.data.data_tanggal
         this.tanggal = response.data.tanggal
         this.isBusy = false
-        this.items = getData.data//MAKA ASSIGN DATA POSTINGAN KE DALAM VARIABLE ITEMS
-        //DAN ASSIGN INFORMASI LAINNYA KE DALAM VARIABLE META
+        this.items = getData.data
         this.meta = {
           isData: 'pd',
           total: getData.total,
@@ -210,6 +214,9 @@ export default {
           data_bulan: this.data_bulan,
           data_tanggal: this.data_tanggal,
           tanggal: this.tanggal,
+          waka: this.waka,
+          rombongan_belajar_id: this.rombongan_belajar_id,
+          data_rombel: this.data_rombel,
         }
       })
     },
@@ -238,11 +245,11 @@ export default {
     },
     handleBulan(val){
       this.bulan = val
-      this.loadPostsData() //DAN LOAD DATA BARU BERDASARKAN SORT
+      this.loadPostsData()
     },
     handleTanggal(val){
       this.tanggal = val
-      this.loadPostsData() //DAN LOAD DATA BARU BERDASARKAN SORT
+      this.loadPostsData()
     },
     handleAksi(val){
       console.log(this.getBulan());
@@ -252,6 +259,11 @@ export default {
         bulan: this.getBulan(),
       });
     },
+    handleRombel(val){
+      this.rombongan_belajar_id = val.rombongan_belajar_id
+      this.data_rombel = val.data_rombel
+      this.loadPostsData()
+    }
   },
 }
 </script>

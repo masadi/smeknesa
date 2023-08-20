@@ -660,9 +660,11 @@ class ReferensiController extends Controller
                     }
                     $query->doesntHave('rombel_trigger');
                 }
-            } else {
-                $query->where('semester_id', semester_id());
             }
+            if(request()->nama){
+                $query->where('nama', 'ilike', '%'.request()->nama.'%');
+            }
+            $query->where('semester_id', semester_id());
         })->select('rombongan_belajar_id', 'nama', 'semester_id')->orderBy('nama')->get();
         return response()->json($data);
     }

@@ -89,12 +89,14 @@ class PresensiController extends Controller
                         $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
                     }
                 }
-                $query->whereHas('rombongan_belajar', function($query){
-                    $query->where('semester_id', semester_id());
+                if(!loggedUser()->hasRole(['wakakur', 'wakasiswa'], request()->periode_aktif)){
                     if(loggedUser()->hasRole('walas', request()->periode_aktif)){
-                        $query->where('guru_id', request()->guru_id);
+                        $query->whereHas('rombongan_belajar', function($query){
+                            $query->where('semester_id', semester_id());
+                                $query->where('guru_id', request()->guru_id);
+                        });
                     }
-                });
+                }
             } else {
                 /*$query->whereHas('jadwal', function ($query) {
                     $query->where('jadwal.semester_id', semester_id());
@@ -179,7 +181,7 @@ class PresensiController extends Controller
             },
         ])->withWhereHas('kelas', function($query){
             $query->where('rombongan_belajar.semester_id', semester_id());
-            if(loggedUser()->hasRole('walas', request()->periode_aktif)){
+            if(loggedUser()->hasRole('walas', request()->periode_aktif) && !loggedUser()->hasRole(['wakakur', 'wakasiswa'], request()->periode_aktif)){
                 $query->where('guru_id', request()->guru_id);
             }
         })->orderBy(request()->sortby, request()->sortbydesc)

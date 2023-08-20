@@ -26,5 +26,18 @@ export default [
       },
     ]
   },
+  {
+    icon: 'list-icon',
+    title: 'Rekapitulasi',
+    children: [
+      {
+        icon: 'hand-click-icon',
+        title: 'Absensi Siswa',
+        route: 'rekapitulasi-absensi-siswa',
+        resource: 'Rekapitulasi',
+        action: 'read',
+      },
+    ]
+  },
 ]
   

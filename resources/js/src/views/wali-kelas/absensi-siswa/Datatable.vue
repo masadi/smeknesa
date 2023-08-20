@@ -17,20 +17,27 @@
         </b-col>
       </template>
       <template v-else>
-        <b-col md="6" class="mb-2">
+        <b-col :md="cols" class="mb-2">
           <v-select v-model="meta.bulan" :reduce="huruf => huruf.angka" label="huruf" :options="meta.data_bulan" placeholder="== Filter Bulan ==" @input="changeBulan">
             <template #no-options="{ search, searching, loading }">
               Tidak ada data untuk ditampilkan
             </template>
           </v-select>
         </b-col>
-        <b-col md="6">
-          <!--v-select v-model="meta.tanggal" :options="meta.data_tanggal" placeholder="== Filter Tanggal ==" @input="changeTanggal">
-            <template #no-options="{ search, searching, loading }">
-              Tidak ada data untuk ditampilkan
-            </template>
-          </v-select-->
+        <b-col :md="cols">
           <b-form-datepicker v-model="meta.tanggal" show-decade-nav button-variant="outline-secondary" left locale="id" aria-controls="tanggal" @context="onContext" placeholder="== Filter Tanggal ==" @input="changeTanggal" />
+        </b-col>
+        <b-col :md="cols" v-if="cols === 3">
+          <v-select v-model="meta.rombongan_belajar_id" :reduce="nama => nama.rombongan_belajar_id" label="nama" :options="meta.data_rombel" placeholder="== Filter Kelas ==" @search="fetchOptions" @option:selected="handleSelected" @input="handleInput">
+            <template #no-options="{ search, searching, loading }">
+              Ketik nama kelas
+            </template>
+          </v-select>
+        </b-col>
+        <b-col :md="cols" v-if="cols === 3">
+          <b-overlay :show="loading_tombol" rounded opacity="0.6" size="lg" spinner-variant="warning">
+            <b-button block variant="primary" @click="downloadRekap" :disabled="!meta.rombongan_belajar_id">Download Rekap</b-button>
+          </b-overlay>
         </b-col>
         <b-col md="6" class="mb-2">
           <v-select v-model="meta.per_page" :options="[10, 25, 50, 100]" @input="loadPerPage" :clearable="false" :searchable="false"></v-select>
@@ -152,6 +159,8 @@ export default {
       loading_modal: false,
       sortBy: null,
       sortDesc: false,
+      cols: 6,
+      loading_tombol: false,
     }
   },
   watch: {
@@ -167,6 +176,17 @@ export default {
         sortDesc: this.sortDesc
       })
     }
+  },
+  created(){
+    console.log(this.meta);
+    if(this.meta.waka){
+      this.cols = 3
+    }
+    /*
+    <template v-else-if="meta.waka">
+        filter
+      </template>
+    */
   },
   methods: {
     aksi(item, aksi){
@@ -202,7 +222,73 @@ export default {
         S: 'success',
       }
       return data[huruf]
-    }
+    },
+    downloadRekap(){
+      this.loading_tombol = true
+      this.$swal({
+        icon: 'question',
+        title: 'Pilih Jenis Rekap',
+        input: 'select',
+        inputOptions: {
+          1: 'Per Bulan',
+          2: 'Per Semester',
+        },
+        customClass: {
+          confirmButton: 'btn btn-success mr-1',
+        },
+        showCancelButton: true,
+        cancelButtonText: 'Batal',
+        confirmButtonText: 'Download',
+        allowOutsideClick: false,
+        inputValidator: (value) => {
+          return new Promise((resolve) => {
+            if (value) {
+              resolve()
+            } else {
+              resolve('Jenis Rekap tidak kosong!')
+            }
+          })
+        },
+      }).then(result => {
+        this.loading_tombol = false
+        window.open(`/export/rekap-absensi-siswa/${this.user.semester.semester_id}/${this.meta.rombongan_belajar_id}/${this.meta.bulan}/${result.value}`, '_blank'); 
+        //console.log(getData);
+        console.log(result.value);
+      })
+    },
+    /*
+    search: _.debounce(function (e) {
+      this.$emit('search', e)
+    }, 500),
+    */
+    fetchOptions: _.debounce(function (search, loading){
+      if(search){
+        this.$http.post('/referensi/get-rombel', {
+          nama: search,
+        }).then(response => {
+          this.meta.data_rombel = response.data
+          console.log(response.data);
+        });
+      }
+    }, 500),
+    handleSelected(val){
+      this.$emit('rombel', {
+        rombongan_belajar_id: val.rombongan_belajar_id,
+        data_rombel: this.meta.data_rombel,
+      })
+    },
+    handleInput(val){
+      if(!val){
+        this.$emit('rombel', {
+          rombongan_belajar_id: '',
+          data_rombel: [],
+        })
+      }
+    },
   },
 }
 </script>
+<style lang="scss">
+@import '~@resources/scss/vue/libs/vue-sweetalert.scss';
+.swal2-select {width: 100% !important;}
+</style>

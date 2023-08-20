@@ -24,7 +24,7 @@ export default {
   computed: {
     sekolah(){
       return 'SMKN 1 SAMPANG'
-      return (this.user) ? this.user.sekolah.nama : ''
+      //return (this.user) ? this.user.sekolah.nama : ''
     },
     semester(){
       return (this.user) ? this.user.semester.nama : '-'

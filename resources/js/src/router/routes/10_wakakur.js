@@ -1,37 +1,37 @@
 export default [
   {
-    path: '/rekap-absensi-siswa',
-    name: 'rekap-absensi-siswa',
-    component: () => import('@/views/pages/Blank.vue'),
+    path: '/rekapitulasi/absensi-siswa',
+    name: 'rekapitulasi-absensi-siswa',
+    component: () => import('@/views/wali-kelas/absensi-siswa/Index.vue'),
     meta: {
-      resource: 'Remedial',
+      resource: 'Rekapitulasi',
       action: 'read',
-      pageTitle: 'Rekap Absensi Siswa',
+      pageTitle: 'Absensi Siswa',
       breadcrumb: [
         {
-          text: 'Kurikulum',
+          text: 'Rekapitulasi',
         },
         {
-          text: 'Rekap Absensi Siswa',
+          text: 'Absensi Siswa',
           active: true,
         },
       ],
     },
   },
   {
-    path: '/rekap-absensi-guru',
-    name: 'rekap-absensi-guru',
+    path: '/rekapitulasi/absensi-guru',
+    name: 'rekapitulasi-absensi-guru',
     component: () => import('@/views/pages/Blank.vue'),
     meta: {
-      resource: 'Remedial',
+      resource: 'Rekapitulasi',
       action: 'read',
       pageTitle: 'Rekap Absensi Guru',
       breadcrumb: [
         {
-          text: 'Kurikulum',
+          text: 'Rekapitulasi',
         },
         {
-          text: 'Rekap Absensi Guru',
+          text: 'Absensi Guru',
           active: true,
         },
       ],
