@@ -109,6 +109,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/proses-kelulusan', [ReferensiController::class, 'proses_kelulusan']);
     Route::post('/proses-kenaikan', [ReferensiController::class, 'proses_kenaikan']);
     Route::post('/prepare-data', [ReferensiController::class, 'prepare_data']);
+    Route::post('/simpan-data', [ReferensiController::class, 'simpan_data']);
   });
   Route::group(['prefix' => 'jadwal'], function () {
     Route::get('/', [JadwalController::class, 'index']);

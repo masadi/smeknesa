@@ -27,7 +27,7 @@ export default [
   {
     path: '/wali-kelas/kenaikan',
     name: 'walas-kenaikan',
-    component: () => import('@/views/pages/Blank.vue'),
+    component: () => import('@/views/wali-kelas/kenaikan-kelas/Index.vue'),
     meta: {
       resource: 'Wali',
       action: 'read',

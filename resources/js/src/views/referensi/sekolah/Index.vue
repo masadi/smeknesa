@@ -242,6 +242,7 @@ export default {
             customClass: {
               confirmButton: 'btn btn-success',
             },
+            allowOutsideClick: false,
           }).then(result => {
             this.loadPostsData()
           })

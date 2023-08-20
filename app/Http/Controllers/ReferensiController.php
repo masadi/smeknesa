@@ -645,7 +645,7 @@ class ReferensiController extends Controller
                 }
             }
             if(request()->aksi){
-                if(request()->aksi != 'pd'){
+                /*if(request()->aksi != 'pd'){
                     if(request()->aksi == 'naik'){
                         $query->whereHas('semester', function($query){
                             $query->where('semester', 2);
@@ -659,6 +659,11 @@ class ReferensiController extends Controller
                         });
                     }
                     $query->doesntHave('rombel_trigger');
+                }*/
+                if(request()->aksi == 'kenaikan'){
+                    $rombel = Rombongan_belajar::find(request()->id);
+                    $query->where('tingkat', ($rombel->tingkat + 1));
+                    $query->where('jurusan_sp_id', $rombel->jurusan_sp_id);
                 }
             }
             if(request()->nama){
@@ -721,20 +726,32 @@ class ReferensiController extends Controller
         return response()->json($data);
     }
     public function get_siswa(){
-        /*$data = Peserta_didik::where(function($query){
-            $query->whereHas('anggota_rombel', function($query){
+        $data = [];
+        if(request()->data){
+            if(request()->data == 'kenaikan'){
+                $data = [
+                    'pd' => Peserta_didik::withWhereHas('kelas', function ($query) {
+                        $query->where('guru_id', request()->guru_id);
+                        $query->where('rombongan_belajar.semester_id', request()->semester_id);
+                    })->withWhereHas('anggota_rombel', function ($query) {
+                        $query->whereHas('rombongan_belajar', function($query){
+                            $query->where('guru_id', request()->guru_id);
+                            $query->where('semester_id', request()->semester_id);
+                        });
+                    })->with(['kenaikan_kelas'])->orderBy('nama')->get(),
+                    'semester' => Semester::find(request()->semester_id),
+                ];        
+            }
+        } else {
+            $data = Peserta_didik::withWhereHas('anggota_rombel', function ($query) {
                 $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
-            });
-        })->select('peserta_didik_id', 'nama', 'nisn', 'tanggal_lahir')->with(['anggota_rombel' => function($query){
-        }])->get();*/
-        $data = Peserta_didik::withWhereHas('anggota_rombel', function ($query) {
-            $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
-        })->with([
-            'presensi' => function($query){
-                $query->whereDate('tanggal', request()->tanggal);
-                $query->orderBy('jam');
-            },
-        ])->orderBy('nama')->get();
+            })->with([
+                'presensi' => function($query){
+                    $query->whereDate('tanggal', request()->tanggal);
+                    $query->orderBy('jam');
+                },
+            ])->orderBy('nama')->get();
+        }
         return response()->json($data);
     }
     public function sekolah(){
@@ -1631,40 +1648,6 @@ class ReferensiController extends Controller
         }
         return response()->json($data);
     }
-    public function proses_kenaikan(){
-        $insert = 0;
-        foreach(request()->status as $anggota_rombel_id => $status){
-            if($status){
-                $naik = Kenaikan_kelas::updateOrCreate(
-                    [
-                        'sekolah_id' => sekolah_id(),
-                        'anggota_rombel_id' => $anggota_rombel_id,
-                    ],
-                    [
-                        'nama_kelas' => request()->kelas[$anggota_rombel_id],
-                        'status' => $status,
-                    ]
-                );
-                if($naik){
-                    $insert++;
-                }
-            }
-        }
-        if($insert){
-            $data = [
-                'icon' => 'success',
-                'text' => 'Proses Kenaikan Kelas berhasil disimpan',
-                'title' => 'Berhasil',
-            ];
-        } else {
-            $data = [
-                'icon' => 'error',
-                'text' => 'Proses Kenaikan Kelas Bersama gagal disimpan. Silahkan coba beberapa saat lagi!',
-                'title' => 'Gagal',
-            ];
-        }
-        return response()->json($data);
-    }
     private function jenis_keluar($nama){
         return Jenis_keluar::where('nama', $nama)->first();
     }
@@ -1717,5 +1700,44 @@ class ReferensiController extends Controller
             'request' => request()->all(),
         ];
         return response()->json($data);
+    }
+    public function simpan_data(){
+        $data = [
+            'icon' => 'error',
+            'text' => 'Query simpan tidak ditemukan!',
+            'title' => 'Gagal',
+        ];
+        if(request()->data == 'kenaikan'){
+            $insert = 0;
+            foreach(request()->status_kenaikan as $anggota_rombel_id => $status){
+                $naik = Kenaikan_kelas::updateOrCreate(
+                    [
+                        'sekolah_id' => sekolah_id(),
+                        'anggota_rombel_id' => $anggota_rombel_id,
+                    ],
+                    [
+                        'nama_kelas' => request()->nama_kelas[$anggota_rombel_id],
+                        'status' => $status,
+                    ]
+                );
+                if($naik){
+                    $insert++;
+                }
+            }
+            if($insert){
+                $data = [
+                    'icon' => 'success',
+                    'text' => 'Proses Kenaikan Kelas berhasil disimpan',
+                    'title' => 'Berhasil',
+                ];
+            } else {
+                $data = [
+                    'icon' => 'error',
+                    'text' => 'Proses Kenaikan Kelas Bersama gagal disimpan. Silahkan coba beberapa saat lagi!',
+                    'title' => 'Gagal',
+                ];
+            }
+        }
+        return response()->json($data);        
     }
 }
