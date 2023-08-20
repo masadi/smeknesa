@@ -27,7 +27,7 @@ export default [
   {
     path: '/wali-kelas/kenaikan',
     name: 'walas-kenaikan',
-    component: () => import('@/views/wali-kelas/kenaikan-kelas/Index.vue'),
+    component: () => import('@/views/wali-kelas/KenaikanKelas.vue'),
     meta: {
       resource: 'Wali',
       action: 'read',
@@ -46,7 +46,7 @@ export default [
   {
     path: '/wali-kelas/cetak-rapor',
     name: 'walas-cetak-rapor',
-    component: () => import('@/views/pages/Blank.vue'),
+    component: () => import('@/views/wali-kelas/CetakRapor.vue'),
     meta: {
       pageTitle: 'Cetak Rapor',
       resource: 'Wali',
