@@ -377,12 +377,14 @@ class DashboardController extends Controller
             }
         }
         foreach($data as $notif){
-            Notifikasi::updateOrCreate([
-                'title' => $notif['title'],
-                'subtitle' => $notif['subtitle'],
-                'route' => $notif['route'],
-                'user_id' => loggedUser()->user_id,
-            ]);
+            if($notif){
+                Notifikasi::updateOrCreate([
+                    'title' => $notif['title'],
+                    'subtitle' => $notif['subtitle'],
+                    'route' => $notif['route'],
+                    'user_id' => loggedUser()->user_id,
+                ]);
+            }
         }
     }
     public function read_notif(){

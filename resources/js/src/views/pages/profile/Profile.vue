@@ -1,5 +1,5 @@
 <template>
-  <b-container>
+  <b-container fluid="sm">
     <div v-if="Object.keys(profileData).length" id="user-profile" class="mt-2">
       <profile-header :header-data="detil_data" @reload="getDetilData" :profile-active="profileActive" :modul-active="modulActive" :quiz-active="quizActive" :feedback-active="feedbackActive"  />
       <section id="profile-info">
