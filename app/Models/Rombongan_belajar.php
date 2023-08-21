@@ -33,6 +33,18 @@ class Rombongan_belajar extends Model
 	{
 		return $this->hasMany(Pembelajaran::class, 'rombongan_belajar_id', 'rombongan_belajar_id');
 	}
+	public function jadwal()
+	{
+		return $this->hasManyThrough(
+            Jadwal::class,
+            Pembelajaran::class,
+            'rombongan_belajar_id', // Foreign key on the environments table...
+            'pembelajaran_id', // Foreign key on the deployments table...
+            'rombongan_belajar_id', // Local key on the projects table...
+            'pembelajaran_id' // Local key on the environments table...
+        );
+		return $this->hasMany(Pembelajaran::class, 'rombongan_belajar_id', 'rombongan_belajar_id');
+	}
 	
 	public function anggota_rombel()
 	{

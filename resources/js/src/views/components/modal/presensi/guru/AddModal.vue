@@ -8,6 +8,17 @@
               <b-form-datepicker id="tanggal" v-model="form.tanggal" show-decade-nav button-variant="outline-secondary" left locale="id" aria-controls="tanggal"  @context="onContext" @input="changeHari" placeholder="== Pilih Tanggal ==" />
             </b-form-group>  
           </b-col>
+          <b-col cols="12">
+            <b-form-group label="Kelas" label-for="rombongan_belajar_id" label-cols-md="3">
+              <b-overlay :show="loading_rombel" opacity="0.6" size="md" spinner-variant="secondary">
+                <v-select id="rombongan_belajar_id" v-model="form.rombongan_belajar_id" :reduce="nama => nama.rombongan_belajar_id" label="nama" :options="data_rombel" placeholder="== Pilih Kelas ==" @input="changeRombel">
+                  <template #no-options="{ search, searching, loading }">
+                    Tidak ada kelas yang memiliki jadwal mengajar pada hari {{hari}}
+                  </template>
+                </v-select>
+              </b-overlay>
+            </b-form-group>  
+          </b-col>
           <template v-for="bolos in data_bolos">
             <b-col cols="12">
               <b-form-group label="Nama Guru" label-for="guru_id" label-cols-md="3">
@@ -87,6 +98,7 @@ export default {
     return {
       addModalShow: false,
       loading_form: false,
+      loading_rombel: false,
       loading: false,
       form: {
         aksi: 'pd',
@@ -100,6 +112,7 @@ export default {
       },
       hari: '',
       jumlah_jam: 0,
+      data_rombel: [],
       data_guru: [],
       data_bolos: 1,
       data_jam: [],
@@ -110,23 +123,31 @@ export default {
   },
   methods: {
     handleEvent(){
-      //this.getHari()
-      this.getGuru()
+      this.getRombel()
     },
-    getHari(){
+    getRombel(){
+      this.data_rombel = []
+      this.data_guru = []
       this.data_jam = []
+      this.form.rombongan_belajar_id = ''
+      this.form.guru_id = {}
       this.form.jam = {}
       this.form.absensi = {}
-      this.$http.get('/presensi/get-hari').then(response => {
+      this.loading_rombel = true
+      eventBus.$emit('loading', true)
+      this.$http.get('/presensi/get-rombel', {
+        params: {
+          aksi: 'absen',
+          tanggal: this.form.tanggal,
+        }
+      }).then(response => {
+        eventBus.$emit('loading', false)
+        this.loading_rombel = false
         let getData = response.data
+        this.data_rombel = getData.rombel
         this.form.tanggal = getData.tanggal
         this.hari = getData.tanggal_str
-        this.jumlah_jam = getData.jumlah_jam + 1
-        for (let i = 1; i < this.jumlah_jam; i++) {
-          //this.data_jam.push(i)
-        } 
         this.addModalShow = true
-        //this.getGuru()
       })
     },
     getGuru(){
@@ -134,34 +155,27 @@ export default {
       this.data_jam = []
       this.data_guru = []
       eventBus.$emit('loading', true)
-      this.$http.get('/referensi/get-guru', {
+      this.$http.get('/presensi/get-guru', {
         params: {
-          aksi: 'absen',
           tanggal: this.form.tanggal,
+          rombongan_belajar_id: this.form.rombongan_belajar_id,
         }
       }).then(response => {
         eventBus.$emit('loading', false)
         this.loading = false
         let getData = response.data
-        this.data_guru = getData.data.guru
-        this.form.tanggal = getData.data.tanggal
-        this.hari = getData.data.tanggal_str
-        this.addModalShow = true
+        this.data_guru = getData
+        //this.addModalShow = true
       })
     },
     addSelect(){
       this.data_bolos = this.data_bolos + 1
     },
     changeHari(){
-      this.getGuru(this.form.tanggal)
-      /*this.$http.post('/presensi/get-hari', this.form).then(response => {
-        this.loading = false
-        let getData = response.data
-        this.jumlah_jam = getData.jumlah_jam + 1
-        for (let i = 1; i < this.jumlah_jam; i++) {
-          //this.data_jam.push(i)
-        } 
-      })*/
+      this.getRombel()
+    },
+    changeRombel(){
+      this.getGuru()
     },
     changeGuru(val){
       var _this = this
@@ -193,13 +207,14 @@ export default {
       this.resetForm()
     },
     resetForm(){
-      this.form.tingkat = ''
-      this.form.rombongan_belajar_id = ''
       this.form.tanggal = ''
+      this.data_rombel = []
+      this.data_guru = []
+      this.data_jam = []
+      this.form.rombongan_belajar_id = ''
       this.form.guru_id = {}
       this.form.jam = {}
-      this.data_bolos = 1
-      this.data_jam = []
+      this.form.absensi = {}
     },
     handleOk(bvModalEvent){
       bvModalEvent.preventDefault()

@@ -629,4 +629,41 @@ class PresensiController extends Controller
         }
         return date('m');
     }
+    public function get_rombel(){
+        $tanggal = Carbon::now();
+        if(request()->tanggal){
+            $tanggal = Carbon::createFromDate(request()->tanggal);
+        }
+        $data = [
+            'rombel' => Rombongan_belajar::where(function($query) use ($tanggal){
+                $query->whereHas('jadwal', function($query) use ($tanggal){
+                    $query->where('hari', $tanggal->translatedFormat('l'));
+                });
+            })->orderBy('nama')->get(),
+            'tanggal' => $tanggal->format('Y-m-d'),
+            'tanggal_str' => $tanggal->translatedFormat('l, j F Y'),
+        ];
+        return response()->json($data);
+    }
+    public function get_guru(){
+        $tanggal = Carbon::createFromDate(request()->tanggal);
+        $data = Guru::orderBy('nama')->where(function($query) use ($tanggal) {
+            $query->whereHas('jadwal', function($query) use ($tanggal){
+                $query->where('hari', $tanggal->translatedFormat('l'));
+            });
+            $query->whereHas('pembelajaran', function($query){
+                $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
+            });
+        })->with([
+            'presensi' => function($query) use ($tanggal){
+                $query->whereDate('tanggal', $tanggal);
+                $query->orderBy('jam');
+            },
+            'jadwal' => function($query) use ($tanggal){
+                $query->where('hari', $tanggal->translatedFormat('l'));
+                $query->with(['jam']);
+            }
+        ])->get();
+        return response()->json($data);
+    }
 }
