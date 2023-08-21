@@ -22,8 +22,10 @@ Route::group(['prefix' => 'cetak'], function () {
     Route::get('/rapor-semester/{anggota_rombel_id}/{sekolah_id}/{semester_id}', [CetakController::class, 'rapor_semester'])->name('rapor-semester');
     Route::get('/rapor-p5/{anggota_rombel_id}/{semester_id}', [CetakController::class, 'rapor_p5'])->name('rapor-p5');
     Route::get('/rapor-pelengkap/{anggota_rombel_id}/{rombongan_belajar_id?}', [CetakController::class, 'rapor_pelengkap'])->name('rapor-pelengkap');
+    Route::get('/rekap-remedial/{peserta_didik_id}', [CetakController::class, 'rekap_remedial']);
 });
 Route::group(['prefix' => 'export'], function () {
     Route::get('/rekap-absensi-siswa/{semester_id}/{rombongan_belajar_id}/{bulan}/{jenis}', [ExportController::class, 'rekap_absensi_siswa']);
+    Route::get('/rekap-remedial/{semester_id}', [ExportController::class, 'rekap_remedial']);
 });
 Route::get('/{any}', [ApplicationController::class, 'index'])->where('any', '.*');

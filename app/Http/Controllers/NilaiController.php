@@ -20,7 +20,7 @@ class NilaiController extends Controller
     public function index(){
         $data = Pembelajaran::withCount([
             'cp' => function($query){
-                $query->where('guru_id', loggedUser()->guru_id);
+                //$query->where('guru_id', loggedUser()->guru_id);
                 $query->has('nilai_tp');
             },
             'anggota_rombel' => function($query){
@@ -191,6 +191,7 @@ class NilaiController extends Controller
                                 'penilaian_id' => NULL,
                                 'pembelajaran_id' => request()->pembelajaran_id,
                                 'jenis_penilaian_id' => request()->jenis_id,
+                                'peserta_didik_id' => request()->peserta_didik_id[$anggota_rombel_id],
                             ],
                             [
                                 'angka' => $nilai
@@ -204,6 +205,7 @@ class NilaiController extends Controller
                                 'penilaian_id' => $asesmen[$tp_id]->penilaian_id,
                                 'pembelajaran_id' => request()->pembelajaran_id,
                                 'jenis_penilaian_id' => request()->jenis_id,
+                                'peserta_didik_id' => request()->peserta_didik_id[$anggota_rombel_id],
                             ],
                             [
                                 'angka' => $nilai
@@ -306,8 +308,9 @@ class NilaiController extends Controller
             'cp' => Capaian_pembelajaran::where(function($query){
                 $query->whereHas('pembelajaran', function($query){
                     $query->where('pembelajaran_id', request()->pembelajaran_id);
+                    $query->where('guru_id', loggedUser()->guru_id);
                 });
-                $query->where('guru_id', loggedUser()->guru_id);
+                //$query->where('guru_id', loggedUser()->guru_id);
                 $query->has('tp');
             })->get(),
             'jenis' => Jenis_penilaian::get(),

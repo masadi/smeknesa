@@ -250,6 +250,18 @@ class Pembelajaran extends Model
 	{
 		return $this->hasMany(Capaian_pembelajaran::class, 'mata_pelajaran_id', 'mata_pelajaran_id');
 	}
+	public function tp()
+	{
+		return $this->hasManyThrough(
+            Tujuan_pembelajaran::class,
+			Capaian_pembelajaran::class,
+			'mata_pelajaran_id',
+			'cp_id',
+			'mata_pelajaran_id',
+			'cp_id'
+        );
+		return $this->hasMany(Capaian_pembelajaran::class, 'mata_pelajaran_id', 'mata_pelajaran_id');
+	}
 	public function jadwal()
 	{
 		return $this->belongsTo(Jadwal::class, 'pembelajaran_id', 'pembelajaran_id');

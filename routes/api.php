@@ -14,6 +14,7 @@ use App\Http\Controllers\UploadController;
 use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\WhatsappController;
 use App\Http\Controllers\SiswaController;
+use App\Http\Controllers\RekapController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -170,5 +171,9 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/', [SiswaController::class, 'index']);
     Route::post('/teman', [SiswaController::class, 'teman']);
     Route::post('/guru', [SiswaController::class, 'guru']);
+  });
+  Route::group(['prefix' => 'rekapitulasi'], function () {
+    Route::get('/remedial', [RekapController::class, 'remedial']);
+    Route::get('/remed', [RekapController::class, 'remed']);
   });
 });

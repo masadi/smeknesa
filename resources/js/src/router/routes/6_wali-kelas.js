@@ -63,9 +63,9 @@ export default [
     },
   },
   {
-    path: '/wali-kelas/-remedial',
+    path: '/wali-kelas/remedial',
     name: 'walas-remedial',
-    component: () => import('@/views/pages/Blank.vue'),
+    component: () => import('@/views/wali-kelas/remedial/Index.vue'),
     meta: {
       pageTitle: 'Remedial',
       resource: 'Wali',

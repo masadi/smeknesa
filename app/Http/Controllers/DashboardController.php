@@ -347,7 +347,7 @@ class DashboardController extends Controller
                 $data = [
                     'title' => $remedial.' Siswa memiki nilai dibawah SKM',
                     'subtitle' => 'Lihat Detail',
-                    'route' => '/penilaian/remedial',//'penilaian-remedial'
+                    'route' => '/wali-kelas/remedial',//'penilaian-remedial'
                 ];
             }
             $absen = Anggota_rombel::whereHas('rombongan_belajar', function($query){
@@ -372,6 +372,8 @@ class DashboardController extends Controller
                     ];
                 }
                 $data = array_filter(array_merge([$data], $output));
+            } else {
+                $data = [$data];
             }
         }
         foreach($data as $notif){

@@ -7,7 +7,7 @@ import wali_kelas from './6_wali-kelas'
 import monitoring from './7_monitoring'
 import magang from './8_magang'
 import tatib from './9_tatib'
-import wakakur from './10_wakakur'
+import rekapitulasi from './10_rekapitulasi'
 import bottom from './99_bottom'
 
 export default [
@@ -18,7 +18,7 @@ export default [
     ...penilaian,
     ...wali_kelas,
     ...monitoring,
-    ...wakakur,
+    ...rekapitulasi,
     ...magang,
     ...tatib,
     ...bottom
