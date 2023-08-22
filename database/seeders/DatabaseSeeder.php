@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         User::whereNotNull('email')->delete();
+        /*'administrator', 'guru', 'kepsek', 'pengajar', 'pd', 'piket', 'wakakur', 'walas', 'kajur', 'wakahumas', 'wakasiswa', 'bk'*/
         $roles = [
             [
                 'name' => 'administrator',
@@ -37,21 +38,51 @@ class DatabaseSeeder extends Seeder
                 'create' => true,
             ],
             [
+                'name' => 'guru',
+                'display_name' => 'Guru',
+                'description' => 'Guru',
+                'create' => false,
+            ],
+            [
                 'name' => 'kepsek',
                 'display_name' => 'Kepala Sekolah',
                 'description' => 'Kepala Sekolah',
                 'create' => false,
             ],
             [
-                'name' => 'kajur',
-                'display_name' => 'Ketua Jurusan',
-                'description' => 'Ketua Jurusan',
+                'name' => 'pengajar',
+                'display_name' => 'Guru Mata Pelajaran',
+                'description' => 'Guru Mata Pelajaran',
+                'create' => false,
+            ],
+            [
+                'name' => 'pd',
+                'display_name' => 'Peserta Didik',
+                'description' => 'Peserta Didik',
+                'create' => false,
+            ],
+            [
+                'name' => 'piket',
+                'display_name' => 'Guru Piket',
+                'description' => 'Guru Piket',
                 'create' => false,
             ],
             [
                 'name' => 'wakakur',
                 'display_name' => 'Waka Kurikulum',
                 'description' => 'Waka Kurikulum',
+                'create' => false,
+            ],
+            [
+                'name' => 'walas',
+                'display_name' => 'Wali Kelas',
+                'description' => 'Wali Kelas',
+                'create' => false,
+            ],
+            [
+                'name' => 'kajur',
+                'display_name' => 'Ketua Jurusan',
+                'description' => 'Ketua Jurusan',
                 'create' => false,
             ],
             [
@@ -72,36 +103,6 @@ class DatabaseSeeder extends Seeder
                 'description' => 'Guru BP/BK',
                 'create' => false,
             ],
-            [
-                'name' => 'walas',
-                'display_name' => 'Wali Kelas',
-                'description' => 'Wali Kelas',
-                'create' => false,
-            ],
-            [
-                'name' => 'guru',
-                'display_name' => 'Guru',
-                'description' => 'Guru',
-                'create' => false,
-            ],
-            [
-                'name' => 'pengajar',
-                'display_name' => 'Guru Mata Pelajaran',
-                'description' => 'Guru Mata Pelajaran',
-                'create' => false,
-            ],
-            [
-                'name' => 'piket',
-                'display_name' => 'Guru Piket',
-                'description' => 'Guru Piket',
-                'create' => false,
-            ],
-            [
-                'name' => 'pd',
-                'display_name' => 'Peserta Didik',
-                'description' => 'Peserta Didik',
-                'create' => false,
-            ]
         ];
         $tahun_ajaran = [
             [
@@ -467,7 +468,11 @@ class DatabaseSeeder extends Seeder
             ]);
             foreach($ab['roles'] as $role){
                 $r = Role::where('name', $role)->first();
-                $r->attachPermission($permission);
+                if($r){
+                    $r->attachPermission($permission);
+                } else {
+                    echo $role.' tidak ada';
+                }
             }
         }
         //20528658
