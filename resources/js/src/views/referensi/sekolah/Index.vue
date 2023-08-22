@@ -203,7 +203,7 @@ export default {
       data.append('npsn', (this.form.npsn) ? this.form.npsn : '')
       data.append('alamat_jalan', (this.form.alamat_jalan) ? this.form.alamat_jalan : '')
       data.append('kode_pos', (this.form.kode_pos) ? this.form.kode_pos : '')
-      data.append('provinsi_id', (this.form.provinsi_id) ? this.form.provinsi_id : '')
+      data.append('provinsi_id', this.form.provinsi_id)
       data.append('kabupaten_id', (this.form.kabupaten_id) ? this.form.kabupaten_id : '')
       data.append('kecamatan_id', (this.form.kecamatan_id) ? this.form.kecamatan_id : '')
       data.append('desa_id', (this.form.desa_id) ? this.form.desa_id : '')

@@ -19,7 +19,7 @@ class TrimStrings extends Middleware
                 return $value;
             }
         }
-
+        $value = ($value == 'null') ? '' : $value;
         return parent::transform($key, $value);
     }
     protected $except = [
