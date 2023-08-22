@@ -198,18 +198,18 @@ export default {
       event.preventDefault()
       this.loading = true
       const data = new FormData();
-      data.append('sekolah_id', this.form.sekolah_id)
-      data.append('nama', this.form.nama)
-      data.append('npsn', this.form.npsn)
-      data.append('alamat_jalan', this.form.alamat_jalan)
-      data.append('kode_pos', this.form.kode_pos)
-      data.append('provinsi_id', this.form.provinsi_id)
-      data.append('kabupaten_id', this.form.kabupaten_id)
-      data.append('kecamatan_id', this.form.kecamatan_id)
-      data.append('desa_id', this.form.desa_id)
-      data.append('email', this.form.email)
-      data.append('website', this.form.website)
-      data.append('logo', this.form.image);
+      data.append('sekolah_id', (this.form.sekolah_id) ? this.form.sekolah_id : '')
+      data.append('nama', (this.form.nama) ? this.form.nama : '')
+      data.append('npsn', (this.form.npsn) ? this.form.npsn : '')
+      data.append('alamat_jalan', (this.form.alamat_jalan) ? this.form.alamat_jalan : '')
+      data.append('kode_pos', (this.form.kode_pos) ? this.form.kode_pos : '')
+      data.append('provinsi_id', (this.form.provinsi_id) ? this.form.provinsi_id : '')
+      data.append('kabupaten_id', (this.form.kabupaten_id) ? this.form.kabupaten_id : '')
+      data.append('kecamatan_id', (this.form.kecamatan_id) ? this.form.kecamatan_id : '')
+      data.append('desa_id', (this.form.desa_id) ? this.form.desa_id : '')
+      data.append('email', (this.form.email) ? this.form.email : '')
+      data.append('website', (this.form.website) ? this.form.website : '')
+      data.append('logo', (this.form.image) ? this.form.image : '');
       this.$http.post('/referensi/sekolah', data).then(response => {
         this.loading = false
         let getData = response.data
