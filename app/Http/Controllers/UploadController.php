@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use App\Models\Guru;
 use App\Models\Peserta_didik;
 use Rap2hpoutre\FastExcel\FastExcel;
@@ -37,11 +38,14 @@ class UploadController extends Controller
         } else {
             $text = ' Data Peserta Didik';
         }
-        $upload_path = public_path('upload');
+        /*$upload_path = public_path('upload');
         $file_name = request()->file->getClientOriginalName();
         $generated_new_name = time() . '.' . request()->file->getClientOriginalExtension();
         request()->file->move($upload_path, $generated_new_name);
-        $filepath = public_path('upload/'.$generated_new_name);
+        $filepath = public_path('upload/'.$generated_new_name);*/
+        $upload_path = request()->file->store('public/excel');
+        $string = Str::of($upload_path)->basename();
+        $filepath = public_path('storage/excel/'.$string);
         $error = NULL;
         $inserted = 0;
         $aborted = 0;
@@ -78,8 +82,8 @@ class UploadController extends Controller
             }
         });
         File::delete($filepath);
-        $inserted_text = $inserted . ' berhasil disimpan';
-        $aborted_text = $aborted . ' gagal disimpan';
+        $inserted_text = $inserted . $text. ' berhasil disimpan';
+        $aborted_text = $aborted . $text. ' gagal disimpan';
         if($error){
             $data = [
                 'icon' => 'error',
