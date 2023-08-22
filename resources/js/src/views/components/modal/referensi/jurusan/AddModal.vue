@@ -85,7 +85,7 @@ export default {
     handleEvent(){
       this.$http.get('/referensi/get-guru').then(response => {
         let getData = response.data
-        this.data_guru = getData.data
+        this.data_guru = getData.data.guru
         this.addModalShow = true
       })
     },
