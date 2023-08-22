@@ -79,18 +79,24 @@ export default {
       loading_form: false,
       form: {
         nama: '',
-        jurusan_sp_id: [],
-        tingkat: [],
+        tingkat: '',
+        guru_id: '',
+        jurusan_sp_id: '',
+        kurikulum_id: '',
       },
       feedback: {
         nama: '',
-        jurusan_sp_id: '',
         tingkat: '',
+        guru_id: '',
+        jurusan_sp_id: '',
+        kurikulum_id: '',
       },
       state: {
         nama: null,
-        jurusan_sp_id: null,
         tingkat: null,
+        guru_id: null,
+        jurusan_sp_id: null,
+        kurikulum_id: null,
       },
       data_tingkat: [
         {
@@ -131,7 +137,7 @@ export default {
     },
     getGuru(){
       this.$http.get('/referensi/get-guru').then(response => {
-        this.data_guru = response.data.data
+        this.data_guru = response.data.data.guru
       })
     },
     getJurusan(){
