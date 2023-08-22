@@ -281,7 +281,7 @@ class DatabaseSeeder extends Seeder
             [
                 'action' => 'read',
                 'subject' => 'Ref_Pd_Keluar',
-                'roles' => ['administrator', 'wakasiswa', 'bk', 'tu'],
+                'roles' => ['administrator', 'wakasiswa', 'bk'],
             ],
             [
                 'action' => 'read',
@@ -492,8 +492,8 @@ class DatabaseSeeder extends Seeder
                     'kode_pos' => $e->kode_pos,
                     'lintang' => $e->lintang,
                     'bujur' => $e->bujur,
-                    'no_telp' => $e->no_telp,
-                    'no_fax' => $e->no_fax,
+                    'no_telp' => $e->nomor_telepon,
+                    'no_fax' => $e->nomor_fax,
                     'email' => $e->email,
                     'website' => $e->website,
                     'bentuk_pendidikan_id' => $e->bentuk_pendidikan_id,
