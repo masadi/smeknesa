@@ -4,7 +4,7 @@
       <b-col md="4">
         <v-select v-model="meta.per_page" :options="[10, 25, 50, 100]" :searchable="false" :clearable="false" @input="loadPerPage" />
       </b-col>
-      <b-col md="4">
+      <b-col md="4" class="mb-2">
         <v-select id="role_id" v-model="meta.role_id" :reduce="display_name => display_name.name" label="display_name" :options="data_roles" placeholder="== Filter Role ==" @input="changeRole">
           <template #no-options="{ search, searching, loading }">
             Tidak ada data untuk ditampilkan

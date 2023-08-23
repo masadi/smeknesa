@@ -4,7 +4,7 @@
       <b-col md="4" class="mb-2">
         <b-form-select v-model="meta.per_page" :options="[10, 25, 50, 100]" @change="loadPerPage"></b-form-select>
       </b-col>
-      <b-col md="4" offset-md="4">
+      <b-col md="4" offset-md="4" class="mb-2">
         <b-form-input @input="search" placeholder="Cari data..."></b-form-input>
       </b-col>
     </b-row>

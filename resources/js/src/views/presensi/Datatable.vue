@@ -5,7 +5,7 @@
         <b-col md="4" class="mb-2">
           <v-select v-model="meta.per_page" :options="[10, 25, 50, 100]" @input="loadPerPage" :clearable="false" :searchable="false"></v-select>
         </b-col>
-        <b-col md="4">
+        <b-col md="4" class="mb-2">
           <v-select v-model="meta.bulan" :reduce="huruf => huruf.angka" label="huruf" :options="meta.data_bulan" placeholder="== Filter Bulan ==" @input="changeBulan" :clearable="false" :searchable="false">
             <template #no-options="{ search, searching, loading }">
               Tidak ada data untuk ditampilkan
@@ -24,18 +24,13 @@
             </template>
           </v-select>
         </b-col>
-        <b-col md="6">
-          <!--v-select v-model="meta.tanggal" :options="meta.data_tanggal" placeholder="== Filter Tanggal ==" @input="changeTanggal">
-            <template #no-options="{ search, searching, loading }">
-              Tidak ada data untuk ditampilkan
-            </template>
-          </v-select-->
+        <b-col md="6" class="mb-2">
           <b-form-datepicker v-model="meta.tanggal" show-decade-nav button-variant="outline-secondary" left locale="id" aria-controls="tanggal" @context="onContext" placeholder="== Filter Tanggal ==" @input="changeTanggal" />
         </b-col>
         <b-col md="6" class="mb-2">
           <v-select v-model="meta.per_page" :options="[10, 25, 50, 100]" @input="loadPerPage" :clearable="false" :searchable="false"></v-select>
         </b-col>
-        <b-col md="6">
+        <b-col md="6" class="mb-2">
           <b-form-input @input="search" placeholder="Cari data..."></b-form-input>
         </b-col>
       </template>

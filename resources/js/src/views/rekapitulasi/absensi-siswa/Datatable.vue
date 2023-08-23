@@ -8,17 +8,17 @@
           </template>
         </v-select>
       </b-col>
-      <b-col md="3">
+      <b-col md="3" class="mb-2">
         <b-form-datepicker v-model="meta.tanggal" show-decade-nav button-variant="outline-secondary" left locale="id" aria-controls="tanggal" @context="onContext" placeholder="== Filter Tanggal ==" @input="changeTanggal" />
       </b-col>
-      <b-col md="3">
+      <b-col md="3" class="mb-2">
         <v-select v-model="meta.rombongan_belajar_id" :reduce="nama => nama.rombongan_belajar_id" label="nama" :options="meta.data_rombel" placeholder="== Filter Kelas ==" @search="fetchOptions" @option:selected="handleSelected" @input="handleInput">
           <template #no-options="{ search, searching, loading }">
             Ketik nama kelas
           </template>
         </v-select>
       </b-col>
-      <b-col md="3">
+      <b-col md="3" class="mb-2">
         <b-overlay :show="loading_tombol" rounded opacity="0.6" size="lg" spinner-variant="warning">
           <b-button block variant="primary" @click="downloadRekap" :disabled="!meta.rombongan_belajar_id">Download Rekap</b-button>
         </b-overlay>
@@ -26,7 +26,7 @@
       <b-col md="6" class="mb-2">
         <v-select v-model="meta.per_page" :options="[10, 25, 50, 100]" @input="loadPerPage" :clearable="false" :searchable="false"></v-select>
       </b-col>
-      <b-col md="6">
+      <b-col md="6" class="mb-2">
         <b-form-input @input="search" placeholder="Cari data..."></b-form-input>
       </b-col>
     </b-row>
