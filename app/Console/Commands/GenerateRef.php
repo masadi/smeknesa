@@ -50,14 +50,18 @@ class GenerateRef extends Command
         ],
         [
           'id' => 5,
-          'nama' => 'Belum Tahu',
+          'nama' => 'Lainnya',
         ],
       ];
       foreach($ref_cita as $cita){
-        Cita::firstOrCreate([
+        Cita::updateOrCreate(
+          [
           'cita_id' => $cita['id'],
-          'nama' => $cita['nama'],
-      ]);
+          ],
+          [
+            'nama' => $cita['nama'],
+          ]
+        );
       }
         $pekerjaan = [
             [

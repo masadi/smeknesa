@@ -1,187 +1,196 @@
 <template>
-  <b-modal title="Edit Biodata" v-model="editModal" no-close-on-backdrop hide-header-close size="lg" @hidden="hideModal" @ok="handleOk">
-    <b-overlay :show="loading_form" rounded opacity="0.6" size="lg" spinner-variant="danger">
-      <b-form ref="form" @submit.stop.prevent="handleSubmit">
-        <b-row>
-          <b-col cols="12">
-            <b-form-group label="Nama Lengkap" label-for="nama" label-cols-md="3" :invalid-feedback="feedback.nama" :state="state.nama">
-              <b-form-input id="nama" v-model="form.nama" :state="state.nama" placeholder="Nama Lengkap dengan gelar"></b-form-input>
-            </b-form-group>  
-          </b-col>
-          <b-col cols="12">
-            <b-form-group label="NIK" label-for="nik" label-cols-md="3" :invalid-feedback="feedback.nik" :state="state.nik">
-              <b-form-input id="nik" v-model="form.nik" placeholder="NIK"></b-form-input>
-            </b-form-group>  
-          </b-col>
-          <b-col cols="12">
-            <b-form-group label="Nomor Induk" label-for="no_induk" label-cols-md="3" :invalid-feedback="feedback.no_induk" :state="state.no_induk">
-              <b-form-input id="no_induk" v-model="form.no_induk" placeholder="Nomor Induk"></b-form-input>
-            </b-form-group>  
-          </b-col>
-          <b-col cols="12">
-            <b-form-group label="NISN" label-for="nisn" label-cols-md="3" :invalid-feedback="feedback.nisn" :state="state.nisn">
-              <b-form-input id="nisn" v-model="form.nisn" placeholder="NISN"></b-form-input>
-            </b-form-group>  
-          </b-col>
-          <b-col cols="12">
-            <b-form-group label="Jenis Kelamin" label-for="jenis_kelamin" label-cols-md="3" :invalid-feedback="feedback.jenis_kelamin" :state="state.jenis_kelamin">
-              <v-select id="jenis_kelamin" v-model="form.jenis_kelamin" :reduce="name => name.code" label="name" :options="[{name: 'Laki-laki', code: 'L'}, {name: 'Perempuan', code: 'P'}]" placeholder="== Pilih Jenis Kelamin ==" :state="state.jenis_kelamin">
-                <template #no-options="{ search, searching, loading }">
-                  Tidak ada data untuk ditampilkan
-                </template>
-              </v-select>
-            </b-form-group>
-          </b-col>
-          <b-col cols="12">
-            <b-form-group label="Tempat Lahir" label-for="tempat_lahir" label-cols-md="3" :invalid-feedback="feedback.tempat_lahir" :state="state.tempat_lahir">
-              <b-form-input id="nama" v-model="form.tempat_lahir" :state="state.tempat_lahir" placeholder="Tempat Lahir"></b-form-input>
-            </b-form-group>  
-          </b-col>
-          <b-col cols="12">
-            <b-form-group label="Tanggal Lahir*" label-for="tanggal_lahir" label-cols-md="3" :invalid-feedback="feedback.tanggal_lahir" :state="state.tanggal_lahir">
-              <b-form-datepicker v-model="form.tanggal_lahir" show-decade-nav button-variant="outline-secondary" left locale="id" aria-controls="tanggal_lahir" @context="onContext" placeholder="== Pilih Tanggal Lahir ==" :state="state.tanggal_lahir" />
-            </b-form-group>
-          </b-col>
-          <b-col cols="12">
-            <b-form-group label="Agama" label-for="agama_id" label-cols-md="3" :invalid-feedback="feedback.agama_id" :state="state.agama_id">
-              <v-select id="agama_id" v-model="form.agama_id" :reduce="nama => nama.agama_id" label="nama" :options="data_agama" placeholder="== Pilih Agama ==" :state="state.agama_id">
-                <template #no-options="{ search, searching, loading }">
-                  Tidak ada data untuk ditampilkan
-                </template>
-              </v-select>
-            </b-form-group>
-          </b-col>
-          <b-col cols="12">
-            <b-form-group label="Alamat" label-for="alamat_jalan" label-cols-md="3" :invalid-feedback="feedback.alamat_jalan" :state="state.alamat_jalan">
-              <b-form-input id="nama" v-model="form.alamat_jalan" :state="state.alamat_jalan" placeholder="Alamat"></b-form-input>
-            </b-form-group>  
-          </b-col>
-          <b-col cols="12">
-            <b-form-group label="RT/RW" label-for="rt" label-cols-md="3" :invalid-feedback="feedback.rt || feedback.rw" :state="state.rt || state.rw">
-              <b-input-group>
-                <b-form-input placeholder="RT" v-model="form.rt" :state="state.rt"></b-form-input>
-                <b-form-input placeholder="RW" v-model="form.rw" :state="state.rw"></b-form-input>
-              </b-input-group>
-            </b-form-group>  
-          </b-col>
-          <b-col cols="12">
-            <b-form-group label="Provinsi" label-for="provinsi_id" label-cols-md="3" :invalid-feedback="feedback.provinsi_id" :state="state.provinsi_id">
-              <b-overlay :show="loading_provinsi_id" opacity="0.6" size="md" spinner-variant="secondary">
-                <v-select id="provinsi_id" v-model="form.provinsi_id" :reduce="name => name.code" label="name" :options="data_provinsi" placeholder="== Pilih Provinsi ==" @input="changeProvinsi" :state="state.provinsi_id">
+  <div>
+    <b-modal title="Edit Biodata" v-model="editModal" no-close-on-backdrop hide-header-close size="lg" @hidden="hideModal" @ok="handleOk">
+      <b-overlay :show="loading_form" rounded opacity="0.6" size="lg" spinner-variant="danger">
+        <b-form ref="form" @submit.stop.prevent="handleSubmit">
+          <b-row>
+            <b-col cols="12">
+              <b-form-group label="Nama Lengkap" label-for="nama" label-cols-md="3" :invalid-feedback="feedback.nama" :state="state.nama">
+                <b-form-input id="nama" v-model="form.nama" :state="state.nama" placeholder="Nama Lengkap dengan gelar"></b-form-input>
+              </b-form-group>  
+            </b-col>
+            <b-col cols="12">
+              <b-form-group label="NIK" label-for="nik" label-cols-md="3" :invalid-feedback="feedback.nik" :state="state.nik">
+                <b-form-input id="nik" v-model="form.nik" placeholder="NIK"></b-form-input>
+              </b-form-group>  
+            </b-col>
+            <b-col cols="12">
+              <b-form-group label="Nomor Induk" label-for="no_induk" label-cols-md="3" :invalid-feedback="feedback.no_induk" :state="state.no_induk">
+                <b-form-input id="no_induk" v-model="form.no_induk" placeholder="Nomor Induk"></b-form-input>
+              </b-form-group>  
+            </b-col>
+            <b-col cols="12">
+              <b-form-group label="NISN" label-for="nisn" label-cols-md="3" :invalid-feedback="feedback.nisn" :state="state.nisn">
+                <b-form-input id="nisn" v-model="form.nisn" placeholder="NISN"></b-form-input>
+              </b-form-group>  
+            </b-col>
+            <b-col cols="12">
+              <b-form-group label="Jenis Kelamin" label-for="jenis_kelamin" label-cols-md="3" :invalid-feedback="feedback.jenis_kelamin" :state="state.jenis_kelamin">
+                <v-select id="jenis_kelamin" v-model="form.jenis_kelamin" :reduce="name => name.code" label="name" :options="[{name: 'Laki-laki', code: 'L'}, {name: 'Perempuan', code: 'P'}]" placeholder="== Pilih Jenis Kelamin ==" :state="state.jenis_kelamin">
                   <template #no-options="{ search, searching, loading }">
                     Tidak ada data untuk ditampilkan
                   </template>
                 </v-select>
-              </b-overlay>
-            </b-form-group>
-          </b-col>
-          <b-col cols="12">
-            <b-form-group label="Kabupaten/Kota" label-for="provinsi_id" label-cols-md="3" :invalid-feedback="feedback.kabupaten_id" :state="state.kabupaten_id">
-              <b-overlay :show="loading_kabupaten_id" opacity="0.6" size="md" spinner-variant="secondary">
-                <v-select id="kabupaten_id" v-model="form.kabupaten_id" :reduce="name => name.code" label="name" :options="data_kabupaten" placeholder="== Pilih Kabupaten/Kota ==" @input="changeKabupaten" :state="state.kabupaten_id">
+              </b-form-group>
+            </b-col>
+            <b-col cols="12">
+              <b-form-group label="Tempat Lahir" label-for="tempat_lahir" label-cols-md="3" :invalid-feedback="feedback.tempat_lahir" :state="state.tempat_lahir">
+                <b-form-input id="nama" v-model="form.tempat_lahir" :state="state.tempat_lahir" placeholder="Tempat Lahir"></b-form-input>
+              </b-form-group>  
+            </b-col>
+            <b-col cols="12">
+              <b-form-group label="Tanggal Lahir*" label-for="tanggal_lahir" label-cols-md="3" :invalid-feedback="feedback.tanggal_lahir" :state="state.tanggal_lahir">
+                <b-form-datepicker v-model="form.tanggal_lahir" show-decade-nav button-variant="outline-secondary" left locale="id" aria-controls="tanggal_lahir" @context="onContext" placeholder="== Pilih Tanggal Lahir ==" :state="state.tanggal_lahir" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12">
+              <b-form-group label="Agama" label-for="agama_id" label-cols-md="3" :invalid-feedback="feedback.agama_id" :state="state.agama_id">
+                <v-select id="agama_id" v-model="form.agama_id" :reduce="nama => nama.agama_id" label="nama" :options="data_agama" placeholder="== Pilih Agama ==" :state="state.agama_id">
                   <template #no-options="{ search, searching, loading }">
                     Tidak ada data untuk ditampilkan
                   </template>
                 </v-select>
-              </b-overlay>
-            </b-form-group>
-          </b-col>
-          <b-col cols="12">
-            <b-form-group label="Kecamatan" label-for="kecamatan_id" label-cols-md="3" :invalid-feedback="feedback.kecamatan_id" :state="state.kecamatan_id">
-              <b-overlay :show="loading_kecamatan_id" opacity="0.6" size="md" spinner-variant="secondary">
-                <v-select id="kecamatan_id" v-model="form.kecamatan_id" :reduce="name => name.code" label="name" :options="data_kecamatan" placeholder="== Pilih Kecamatan ==" @input="changeKecamatan" :state="state.kecamatan_id">
+              </b-form-group>
+            </b-col>
+            <b-col cols="12">
+              <b-form-group label="Alamat" label-for="alamat_jalan" label-cols-md="3" :invalid-feedback="feedback.alamat_jalan" :state="state.alamat_jalan">
+                <b-form-input id="nama" v-model="form.alamat_jalan" :state="state.alamat_jalan" placeholder="Alamat"></b-form-input>
+              </b-form-group>  
+            </b-col>
+            <b-col cols="12">
+              <b-form-group label="RT/RW" label-for="rt" label-cols-md="3" :invalid-feedback="feedback.rt || feedback.rw" :state="state.rt || state.rw">
+                <b-input-group>
+                  <b-form-input placeholder="RT" v-model="form.rt" :state="state.rt"></b-form-input>
+                  <b-form-input placeholder="RW" v-model="form.rw" :state="state.rw"></b-form-input>
+                </b-input-group>
+              </b-form-group>  
+            </b-col>
+            <b-col cols="12">
+              <b-form-group label="Provinsi" label-for="provinsi_id" label-cols-md="3" :invalid-feedback="feedback.provinsi_id" :state="state.provinsi_id">
+                <b-overlay :show="loading_provinsi_id" opacity="0.6" size="md" spinner-variant="secondary">
+                  <v-select id="provinsi_id" v-model="form.provinsi_id" :reduce="name => name.code" label="name" :options="data_provinsi" placeholder="== Pilih Provinsi ==" @input="changeProvinsi" :state="state.provinsi_id">
+                    <template #no-options="{ search, searching, loading }">
+                      Tidak ada data untuk ditampilkan
+                    </template>
+                  </v-select>
+                </b-overlay>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12">
+              <b-form-group label="Kabupaten/Kota" label-for="provinsi_id" label-cols-md="3" :invalid-feedback="feedback.kabupaten_id" :state="state.kabupaten_id">
+                <b-overlay :show="loading_kabupaten_id" opacity="0.6" size="md" spinner-variant="secondary">
+                  <v-select id="kabupaten_id" v-model="form.kabupaten_id" :reduce="name => name.code" label="name" :options="data_kabupaten" placeholder="== Pilih Kabupaten/Kota ==" @input="changeKabupaten" :state="state.kabupaten_id">
+                    <template #no-options="{ search, searching, loading }">
+                      Tidak ada data untuk ditampilkan
+                    </template>
+                  </v-select>
+                </b-overlay>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12">
+              <b-form-group label="Kecamatan" label-for="kecamatan_id" label-cols-md="3" :invalid-feedback="feedback.kecamatan_id" :state="state.kecamatan_id">
+                <b-overlay :show="loading_kecamatan_id" opacity="0.6" size="md" spinner-variant="secondary">
+                  <v-select id="kecamatan_id" v-model="form.kecamatan_id" :reduce="name => name.code" label="name" :options="data_kecamatan" placeholder="== Pilih Kecamatan ==" @input="changeKecamatan" :state="state.kecamatan_id">
+                    <template #no-options="{ search, searching, loading }">
+                      Tidak ada data untuk ditampilkan
+                    </template>
+                  </v-select>
+                </b-overlay>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12">
+              <b-form-group label="Desa/Kelurahan" label-for="desa_id" label-cols-md="3" :invalid-feedback="feedback.desa_id" :state="state.desa_id">
+                <b-overlay :show="loading_desa_id" opacity="0.6" size="md" spinner-variant="secondary">
+                  <v-select id="desa_id" v-model="form.desa_id" :reduce="name => name.code" label="name" :options="data_desa" placeholder="== Pilih Desa/Kelurahan ==" :state="state.desa_id">
+                    <template #no-options="{ search, searching, loading }">
+                      Tidak ada data untuk ditampilkan
+                    </template>
+                  </v-select>
+                </b-overlay>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12">
+              <b-form-group label="Cita-cita" label-for="cita" label-cols-md="3" :invalid-feedback="feedback.cita" :state="state.cita">
+                <v-select id="cita" ref="cita" v-model="form.cita" :reduce="nama => nama.nama" label="nama" :options="data_cita" placeholder="== Pilih Cita-cita ==" :state="state.cita" @input="changeCita">
                   <template #no-options="{ search, searching, loading }">
                     Tidak ada data untuk ditampilkan
                   </template>
                 </v-select>
-              </b-overlay>
-            </b-form-group>
-          </b-col>
-          <b-col cols="12">
-            <b-form-group label="Desa/Kelurahan" label-for="desa_id" label-cols-md="3" :invalid-feedback="feedback.desa_id" :state="state.desa_id">
-              <b-overlay :show="loading_desa_id" opacity="0.6" size="md" spinner-variant="secondary">
-                <v-select id="desa_id" v-model="form.desa_id" :reduce="name => name.code" label="name" :options="data_desa" placeholder="== Pilih Desa/Kelurahan ==" :state="state.desa_id">
+              </b-form-group>
+            </b-col>
+            <b-col cols="12">
+              <b-form-group label="Nomor HP" label-for="no_hp" label-cols-md="3" :invalid-feedback="feedback.no_hp" :state="state.no_hp">
+                <b-form-input ref="no_hp" id="no_hp" v-model="form.no_hp" :state="state.no_hp" placeholder="Nomor HP"></b-form-input>
+              </b-form-group>  
+            </b-col>
+            <b-col cols="12">
+              <b-form-group label="Sekolah Asal" label-for="sekolah_asal" label-cols-md="3" :invalid-feedback="feedback.sekolah_asal" :state="state.sekolah_asal">
+                <b-form-input id="sekolah_asal" v-model="form.sekolah_asal" :state="state.sekolah_asal" placeholder="Sekolah Asal"></b-form-input>
+              </b-form-group>  
+            </b-col>
+            <b-col cols="12">
+              <b-form-group label="Tanggal Masuk Sekolah" label-for="diterima" label-cols-md="3" :invalid-feedback="feedback.diterima" :state="state.diterima">
+                <b-form-datepicker v-model="form.diterima" show-decade-nav button-variant="outline-secondary" left locale="id" aria-controls="diterima" @context="onContext" placeholder="== Pilih Tanggal Masuk Sekolah ==" :state="state.diterima" />
+              </b-form-group>
+            </b-col>
+            <b-col cols="12">
+              <b-form-group label="Diterima Dikelas" label-for="diterima_kelas" label-cols-md="3" :invalid-feedback="feedback.diterima_kelas" :state="state.diterima_kelas">
+                <b-form-input id="diterima_kelas" v-model="form.diterima_kelas" :state="state.diterima_kelas" placeholder="Diterima Dikelas"></b-form-input>
+              </b-form-group>  
+            </b-col>
+            <b-col cols="12">
+              <b-form-group label="Email" label-for="email" label-cols-md="3" :invalid-feedback="feedback.email" :state="state.email">
+                <b-form-input id="email" v-model="form.email" :state="state.email" placeholder="Email Valid"></b-form-input>
+              </b-form-group>  
+            </b-col>
+            <b-col cols="12">
+              <b-form-group label="Nama Ayah" label-for="nama_ayah" label-cols-md="3" :invalid-feedback="feedback.nama_ayah" :state="state.nama_ayah">
+                <b-form-input id="nama_ayah" v-model="form.nama_ayah" :state="state.nama_ayah" placeholder="Nama Ayah"></b-form-input>
+              </b-form-group>  
+            </b-col>
+            <b-col cols="12">
+              <b-form-group label="Nama Ibu" label-for="nama_ibu" label-cols-md="3" :invalid-feedback="feedback.nama_ibu" :state="state.nama_ibu">
+                <b-form-input id="nama_ibu" v-model="form.nama_ibu" :state="state.nama_ibu" placeholder="Nama Ibu"></b-form-input>
+              </b-form-group>  
+            </b-col>
+            <b-col cols="12">
+              <b-form-group label="Pekerjaan Ayah" label-for="kerja_ayah" label-cols-md="3" :invalid-feedback="feedback.kerja_ayah" :state="state.kerja_ayah">
+                <v-select id="kerja_ayah" v-model="form.kerja_ayah" :reduce="nama => nama.pekerjaan_id" label="nama" :options="data_pekerjaan" placeholder="== Pilih Pekerjaan Ayah ==" :state="state.kerja_ayah">
                   <template #no-options="{ search, searching, loading }">
                     Tidak ada data untuk ditampilkan
                   </template>
                 </v-select>
-              </b-overlay>
-            </b-form-group>
-          </b-col>
-          <b-col cols="12">
-            <b-form-group label="Cita-cita" label-for="cita" label-cols-md="3" :invalid-feedback="feedback.cita" :state="state.cita">
-              <v-select id="cita" v-model="form.cita" :reduce="nama => nama.nama" label="nama" :options="data_cita" placeholder="== Pilih Cita-cita ==" :state="state.cita">
-                <template #no-options="{ search, searching, loading }">
-                  Tidak ada data untuk ditampilkan
-                </template>
-              </v-select>
-            </b-form-group>
-          </b-col>
-          <b-col cols="12">
-            <b-form-group label="Nomor HP" label-for="no_hp" label-cols-md="3" :invalid-feedback="feedback.no_hp" :state="state.no_hp">
-              <b-form-input id="no_hp" v-model="form.no_hp" :state="state.no_hp" placeholder="Nomor HP"></b-form-input>
-            </b-form-group>  
-          </b-col>
-          <b-col cols="12">
-            <b-form-group label="Sekolah Asal" label-for="sekolah_asal" label-cols-md="3" :invalid-feedback="feedback.sekolah_asal" :state="state.sekolah_asal">
-              <b-form-input id="sekolah_asal" v-model="form.sekolah_asal" :state="state.sekolah_asal" placeholder="Sekolah Asal"></b-form-input>
-            </b-form-group>  
-          </b-col>
-          <b-col cols="12">
-            <b-form-group label="Tanggal Masuk Sekolah" label-for="diterima" label-cols-md="3" :invalid-feedback="feedback.diterima" :state="state.diterima">
-              <b-form-datepicker v-model="form.diterima" show-decade-nav button-variant="outline-secondary" left locale="id" aria-controls="diterima" @context="onContext" placeholder="== Pilih Tanggal Masuk Sekolah ==" :state="state.diterima" />
-            </b-form-group>
-          </b-col>
-          <b-col cols="12">
-            <b-form-group label="Diterima Dikelas" label-for="diterima_kelas" label-cols-md="3" :invalid-feedback="feedback.diterima_kelas" :state="state.diterima_kelas">
-              <b-form-input id="diterima_kelas" v-model="form.diterima_kelas" :state="state.diterima_kelas" placeholder="Diterima Dikelas"></b-form-input>
-            </b-form-group>  
-          </b-col>
-          <b-col cols="12">
-            <b-form-group label="Email" label-for="email" label-cols-md="3" :invalid-feedback="feedback.email" :state="state.email">
-              <b-form-input id="email" v-model="form.email" :state="state.email" placeholder="Email Valid"></b-form-input>
-            </b-form-group>  
-          </b-col>
-          <b-col cols="12">
-            <b-form-group label="Nama Ayah" label-for="nama_ayah" label-cols-md="3" :invalid-feedback="feedback.nama_ayah" :state="state.nama_ayah">
-              <b-form-input id="nama_ayah" v-model="form.nama_ayah" :state="state.nama_ayah" placeholder="Nama Ayah"></b-form-input>
-            </b-form-group>  
-          </b-col>
-          <b-col cols="12">
-            <b-form-group label="Nama Ibu" label-for="nama_ibu" label-cols-md="3" :invalid-feedback="feedback.nama_ibu" :state="state.nama_ibu">
-              <b-form-input id="nama_ibu" v-model="form.nama_ibu" :state="state.nama_ibu" placeholder="Nama Ibu"></b-form-input>
-            </b-form-group>  
-          </b-col>
-          <b-col cols="12">
-            <b-form-group label="Pekerjaan Ayah" label-for="kerja_ayah" label-cols-md="3" :invalid-feedback="feedback.kerja_ayah" :state="state.kerja_ayah">
-              <v-select id="kerja_ayah" v-model="form.kerja_ayah" :reduce="nama => nama.pekerjaan_id" label="nama" :options="data_pekerjaan" placeholder="== Pilih Pekerjaan Ayah ==" :state="state.kerja_ayah">
-                <template #no-options="{ search, searching, loading }">
-                  Tidak ada data untuk ditampilkan
-                </template>
-              </v-select>
-            </b-form-group>
-          </b-col>
-          <b-col cols="12">
-            <b-form-group label="Pekerjaan Ibu" label-for="kerja_ibu" label-cols-md="3" :invalid-feedback="feedback.kerja_ibu" :state="state.kerja_ibu">
-              <v-select id="kerja_ibu" v-model="form.kerja_ibu" :reduce="nama => nama.pekerjaan_id" label="nama" :options="data_pekerjaan" placeholder="== Pilih Pekerjaan Ibu ==" :state="state.kerja_ibu">
-                <template #no-options="{ search, searching, loading }">
-                  Tidak ada data untuk ditampilkan
-                </template>
-              </v-select>
-            </b-form-group>
-          </b-col>
-        </b-row>
+              </b-form-group>
+            </b-col>
+            <b-col cols="12">
+              <b-form-group label="Pekerjaan Ibu" label-for="kerja_ibu" label-cols-md="3" :invalid-feedback="feedback.kerja_ibu" :state="state.kerja_ibu">
+                <v-select id="kerja_ibu" v-model="form.kerja_ibu" :reduce="nama => nama.pekerjaan_id" label="nama" :options="data_pekerjaan" placeholder="== Pilih Pekerjaan Ibu ==" :state="state.kerja_ibu">
+                  <template #no-options="{ search, searching, loading }">
+                    Tidak ada data untuk ditampilkan
+                  </template>
+                </v-select>
+              </b-form-group>
+            </b-col>
+          </b-row>
+        </b-form>
+      </b-overlay>
+      <template #modal-footer="{ ok, cancel }">
+          <b-overlay :show="loading_form" rounded opacity="0.6" spinner-small spinner-variant="secondary" class="d-inline-block">
+            <b-button @click="cancel()">Tutup</b-button>
+          </b-overlay>
+          <b-overlay :show="loading_form" rounded opacity="0.6" spinner-small spinner-variant="success" class="d-inline-block">
+            <b-button variant="success" @click="ok()">Perbaharui</b-button>
+          </b-overlay>
+      </template>
+    </b-modal>
+    <b-modal title="Ketikkan cita-cita anda!" v-model="citaModal" no-close-on-backdrop hide-header-close @cancel="handleCancelCita" @ok="handleOkCita">
+      <b-form ref="form" @submit.stop.prevent="handleSubmitCita">
+        <b-form-group invalid-feedback="Cita-cita tidak boleh kosong" :state="citaState">
+          <b-form-input id="custom_cita" v-model="custom_cita" :state="citaState" placeholder="Ketikkan cita-cita anda!" required></b-form-input>
+        </b-form-group>
       </b-form>
-    </b-overlay>
-    <template #modal-footer="{ ok, cancel }">
-        <b-overlay :show="loading_form" rounded opacity="0.6" spinner-small spinner-variant="secondary" class="d-inline-block">
-          <b-button @click="cancel()">Tutup</b-button>
-        </b-overlay>
-        <b-overlay :show="loading_form" rounded opacity="0.6" spinner-small spinner-variant="success" class="d-inline-block">
-          <b-button variant="success" @click="ok()">Perbaharui</b-button>
-        </b-overlay>
-    </template>
-  </b-modal>
+    </b-modal>
+  </div>
 </template>
 
 <script>
@@ -209,6 +218,9 @@ export default {
   },
   data() {
     return {
+      citaState: null,
+      custom_cita: '',
+      citaModal: false,
       editModal: false,
       loading_form: false,
       form: {},
@@ -267,6 +279,48 @@ export default {
     hideModal(){
       this.editModal = false
       this.$emit('reload')
+    },
+    changeCita(val){
+      if(val == 'Lainnya'){
+        this.citaModal = true
+      }
+    },
+    handleCancelCita(){
+      this.form.cita = 'Lainnya'
+      this.state.custom_cita = null
+      this.feedback.custom_cita = ''
+      this.citaModal = false
+    },
+    checkFormValidity() {
+      const valid = this.$refs.form.checkValidity()
+      this.citaState = valid
+      //this.feedback.custom_cita = (!valid) ? 'Cita-cita tidak boleh kosong!' : ''
+      return valid
+    },
+    handleOkCita(bvModalEvent) {
+      bvModalEvent.preventDefault()
+      this.handleSubmitCita()
+    },
+    handleSubmitCita(){
+      if (!this.checkFormValidity()) {
+        return
+      }
+      this.$nextTick(() => {
+        this.form.cita = this.custom_cita
+        this.citaState = null
+        this.$refs.cita.open = !this.$refs.cita.open
+        this.$refs.no_hp.focus()
+        this.citaModal = false
+      })
+      /*console.log(this.custom_cita);
+      if(!this.custom_cita){
+        this.state.custom_cita = false
+        
+      } else {
+        
+        this.citaModal = false
+      }
+      console.log(this.state);*/
     },
     changeProvinsi(val){
       this.loading_kabupaten_id = true
