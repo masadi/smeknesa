@@ -59,10 +59,16 @@
             <b-card-title>Data Pengguna</b-card-title>
             <div>
               <b-overlay :show="loading" rounded opacity="0.6" spinner-variant="warning" spinner-small class="d-inline-block">
-                <b-button variant="primary" size="sm" @click="generatePengguna">Generate Pengguna</b-button>
+                <b-button variant="primary" size="sm" @click="generatePengguna" class="d-none d-md-block">Generate Pengguna</b-button>
+                <b-link @click="generatePengguna" class="d-block d-md-none" bg-variant="primary" title="Generate Pengguna"><feather-icon icon="UsersIcon" /></b-link>
               </b-overlay>
               <b-overlay :show="loading" rounded opacity="0.6" spinner-variant="warning" spinner-small class="d-inline-block">
-                <b-button variant="success" size="sm" @click="aksesGuru">Akses Guru</b-button>
+                <b-button variant="success" size="sm" @click="aksesGuru" class="d-none d-md-block">Akses Guru</b-button>
+                <b-link @click="aksesGuru" class="d-block d-md-none" title="Akses Guru"><font-awesome-icon :icon="['fas', 'user-graduate']" /></b-link>
+              </b-overlay>
+              <b-overlay :show="loading" rounded opacity="0.6" spinner-variant="warning" spinner-small class="d-inline-block">
+                <b-button variant="warning" size="sm" @click="passwordPD" class="d-none d-md-block">Download Password PD</b-button>
+                <b-link @click="passwordPD" class="d-block d-md-none" text-variant="warning" title="Download Password PD"><font-awesome-icon :icon="['fas', 'unlock']" /></b-link>
               </b-overlay>
             </div>
           </b-card-header>
@@ -73,13 +79,15 @@
       </b-col>
     </b-row>
     <user-modal @reload="handleReload"></user-modal>
+    <password-modal></password-modal>
   </div>
 </template>
 
 <script>
-import { BRow, BCol, BCard, BCardHeader, BCardText, BCardBody, BCardTitle, BSpinner, BTableSimple, BTr, BTd, BFormCheckbox, VBTooltip, BAvatar, BButton, BOverlay} from 'bootstrap-vue'
+import { BRow, BCol, BCard, BCardHeader, BCardText, BCardBody, BCardTitle, BSpinner, BTableSimple, BTr, BTd, BFormCheckbox, VBTooltip, BAvatar, BButton, BOverlay, BLink} from 'bootstrap-vue'
 import Datatable from './Datatable.vue'
 import UserModal from './../components/modal/users/UserModal.vue'
+import PasswordModal from './../components/modal/users/PasswordModal.vue'
 import eventBus from '@core/utils/eventBus'
 export default {
   components: {
@@ -99,7 +107,9 @@ export default {
     BButton,
     BOverlay,
     UserModal,
+    PasswordModal,
     BCardTitle,
+    BLink,
     Datatable
   },
   directives: {
@@ -247,6 +257,17 @@ export default {
           this.loadPostsData()
         })
       });
+    },
+    passwordPD(){
+      eventBus.$emit('open-password-pd-modal');
+      /*this.$http.post('/referensi/get-rombel', {
+        sekolah_id: this.user.sekolah_id,
+        semester_id: this.user.semester.semester_id,
+      }).then(response => {
+        let getData = response.data
+        console.log(getData);
+        //
+      })*/
     },
     loadStatistics(){
       this.$http.post('/dashboard', {
