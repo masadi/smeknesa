@@ -48,7 +48,7 @@
       </template>
     </b-row>
     <b-overlay :show="loading" rounded opacity="0.6" size="lg" spinner-variant="warning">
-      <b-table bordered striped :items="items" :fields="fields" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" show-empty :busy="isBusy">
+      <b-table responsive bordered striped :items="items" :fields="fields" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" show-empty :busy="isBusy">
         <template #thead-top="data" v-if="meta.isData === 'guru'">
           <b-tr>
             <b-th colspan="2"><span class="sr-only">Nama dan NIP</span></b-th>

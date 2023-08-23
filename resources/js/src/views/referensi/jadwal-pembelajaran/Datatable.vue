@@ -9,7 +9,7 @@
       </b-col>
     </b-row>
     <b-overlay :show="loading" rounded opacity="0.6" size="lg" spinner-variant="warning">
-      <b-table bordered striped :items="items" :fields="fields" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" show-empty :busy="isBusy" thead-tr-class="hidden_header">
+      <b-table responsive bordered striped :items="items" :fields="fields" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" show-empty :busy="isBusy" thead-tr-class="hidden_header">
         <template #empty="scope">
           <p class="text-center">Tidak ada data untuk ditampilkan</p>
         </template>

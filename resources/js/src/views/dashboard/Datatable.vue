@@ -1,10 +1,10 @@
 <template>
   <div>
-    <b-row>
-      <b-col md="4" class="mb-2">
+    <b-row class="mb-2">
+      <b-col md="4">
         <v-select v-model="meta.per_page" :options="[10, 25, 50, 100]" :searchable="false" :clearable="false" @input="loadPerPage" />
       </b-col>
-      <b-col md="4" class="mb-2">
+      <b-col md="4">
         <v-select id="role_id" v-model="meta.role_id" :reduce="display_name => display_name.name" label="display_name" :options="data_roles" placeholder="== Filter Role ==" @input="changeRole">
           <template #no-options="{ search, searching, loading }">
             Tidak ada data untuk ditampilkan
@@ -16,7 +16,7 @@
       </b-col>
     </b-row>
     <b-overlay :show="loading" rounded opacity="0.6" size="lg" spinner-variant="warning">
-      <b-table bordered striped :items="items" :fields="fields" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" show-empty :busy="isBusy">
+      <b-table responsive bordered striped :items="items" :fields="fields" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" show-empty :busy="isBusy">
         <template #table-busy>
           <div class="text-center text-danger my-2">
             <b-spinner class="align-middle"></b-spinner>
