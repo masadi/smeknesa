@@ -75,7 +75,7 @@ export default {
       this.$http.post('/referensi/detil-data', {
         id: data.jurusan_sp_id,
         data: 'jurusan',
-        edit: true,
+        edit: 1,
         sekolah_id: this.user.sekolah_id,
       }).then(response => {
         var getData = response.data

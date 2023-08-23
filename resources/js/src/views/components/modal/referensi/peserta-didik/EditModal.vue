@@ -241,7 +241,7 @@ export default {
       this.$http.post('/referensi/detil-data', {
         id: data.peserta_didik_id,
         data: 'pd',
-        edit: true,
+        edit: 1,
       }).then(response => {
         var getData = response.data
         if(getData.errors){
