@@ -181,7 +181,7 @@ export default {
       this.$http.post('/referensi/detil-data', {
         id: data.guru_id,
         data: 'guru',
-        edit: true,
+        edit: 1,
       }).then(response => {
         var getData = response.data
         if(getData.errors){
