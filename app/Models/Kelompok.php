@@ -15,4 +15,8 @@ class Kelompok extends Model
     {
         return $this->hasMany(Pembelajaran::class, 'kelompok_id', 'kelompok_id');
     }
+    public function nama_kurikulum()
+    {
+        return $this->belongsTo(Kurikulum::class, 'kurikulum', 'kurikulum_id');
+    }
 }

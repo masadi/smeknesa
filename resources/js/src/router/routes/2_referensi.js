@@ -167,6 +167,32 @@ export default [
     },
   },
   {
+    path: '/referensi/kelompok-mapel',
+    name: 'referensi-kelompok-mapel',
+    component: () => import('@/views/referensi/kelompok-mapel/Index.vue'),
+    meta: {
+      resource: 'Ref_Mapel',
+      action: 'read',
+      pageTitle: 'Kelompok Mapel',
+      breadcrumb: [
+        {
+          text: 'Referensi',
+        },
+        {
+          text: 'Kelompok Mapel',
+          active: true,
+        },
+      ],
+      tombol_add: {
+        action: 'add-kelompok',
+        link: '',
+        variant: 'primary',
+        text: 'Tambah Data',
+        role: ['administrator'],
+      },
+    },
+  },
+  {
     path: '/referensi/kelas',
     name: 'referensi-kelas',
     component: () => import('@/views/referensi/rombongan-belajar/Index.vue'),

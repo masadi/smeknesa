@@ -47,6 +47,13 @@ export default [
       },
       {
         icon: 'hand-click-icon',
+        title: 'Kelompok Mapel',
+        route: 'referensi-kelompok-mapel',
+        resource: 'Ref_Mapel',
+        action: 'read',
+      },
+      {
+        icon: 'hand-click-icon',
         title: 'Kelas',
         route: 'referensi-kelas',
         resource: 'Ref_Kelas',

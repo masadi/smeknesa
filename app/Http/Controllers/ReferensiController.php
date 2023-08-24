@@ -76,6 +76,17 @@ class ReferensiController extends Controller
             }
         };
     }
+    public function kelompok_mapel(){
+        $data = Kelompok::with('nama_kurikulum')->orderBy(request()->sortby, request()->sortbydesc)->orderBy('nama_kelompok')
+        ->when(request()->q, function($query) {
+            $query->where('nama_kelompok', 'ilike', '%'.request()->q.'%');
+            $query->whereHas('nama_kurikulum', function($query){
+                $query->where('nama', 'ilike', '%'.request()->q.'%');
+            });
+        })
+        ->paginate(request()->per_page);
+        return response()->json(['status' => 'success', 'data' => $data]);
+    }
     public function jurusan(){
         $data = Jurusan_sp::with(['kajur', 'rombongan_belajar'])->withCount(['rombongan_belajar as jml_kelas' => function($query){
             $query->where('semester_id', semester_id());
@@ -414,6 +425,30 @@ class ReferensiController extends Controller
                 }
             }
         }
+        if(request()->data == 'kelompok'){
+            $text = 'Kelompok Mapel';
+            $validator = Validator::make(request()->all(), 
+                [
+                    'nama_kelompok' => ['required'],
+                    //'kurikulum_id' => ['required'],
+                ],
+                [
+                    'nama_kelompok.required' => 'Nama Kelompok Mapel tidak boleh kosong',
+                    //'kurikulum_id.required' => 'Kurikulum tidak boleh kosong',
+                ]
+            );
+    
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => FALSE,
+                    'errors' => $validator->errors(),
+                ]);
+            }
+            $insert = Kelompok::create([
+                'nama_kelompok' => request()->nama_kelompok,
+                'kurikulum' => (request()->kurikulum_id) ? request()->kurikulum_id : 0,
+            ]);
+        }
         if($insert){
             $data = [
                 'success' => TRUE,
@@ -461,6 +496,8 @@ class ReferensiController extends Controller
             $get = Mata_pelajaran::find(request()->id);
         } elseif(request()->data == 'rombel'){
             $get = Rombongan_belajar::find(request()->id);
+        } elseif(request()->data == 'kelompok'){
+            $get = Kelompok::find(request()->id);
         }
         
         if($get){
@@ -554,6 +591,11 @@ class ReferensiController extends Controller
             ];
         } elseif(request()->data == 'rombel'){
             $data = Rombongan_belajar::find(request()->id);
+        } elseif(request()->data == 'kelompok'){
+            $data = [
+                'kelompok' => Kelompok::find(request()->id),
+                'data_kurikulum' => Kurikulum::get(),
+            ];
         } else {
             $data = [
                 'success' => FALSE,
@@ -1170,6 +1212,11 @@ class ReferensiController extends Controller
                 'jadwal' => Jadwal::with(['jam.jadwal.pembelajaran'])->where('rombongan_belajar_id', request()->rombongan_belajar_id)->get(),
                 'pembelajaran' => Pembelajaran::withCount('jam')->where('rombongan_belajar_id', request()->rombongan_belajar_id)->get(),    
             ];
+        } elseif(request()->data == 'kelompok'){
+            $data = [
+                'kelompok' => Kelompok::find(request()->kelompok_id),
+                'data_kurikulum' => Kurikulum::get(),    
+            ];
         } else {
             $data = [];
         }
@@ -1190,6 +1237,9 @@ class ReferensiController extends Controller
         }
         if(request()->data == 'mapel'){
             return $this->updateMapel();
+        }
+        if(request()->data == 'kelompok'){
+            return $this->updateKelompok();
         }
         return response()->json([
             'success' => FALSE,
@@ -1241,6 +1291,45 @@ class ReferensiController extends Controller
                 'errors' => NULL,
                 'icon' => 'error',
                 'text' => 'Data Pelajaran gagal diperbaharui. Silahkan coba beberapa saat lagi!',
+                'title' => 'Gagal',
+            ];
+        }
+        return response()->json($data);
+    }
+    private function updateKelompok(){
+        $validator = Validator::make(request()->all(), 
+            [
+                'nama_kelompok' => ['required'],
+                //'kurikulum_id' => ['required'],
+            ],
+            [
+                'nama_kelompok.required' => 'Nama Mata Pelajaran tidak boleh kosong',
+                //'kurikulum_id.required' => 'Kurikulum tidak boleh kosong',
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => FALSE,
+                'errors' => $validator->errors(),
+            ]);
+        }
+        $data = Kelompok::find(request()->id);
+        $data->nama_kelompok = request()->nama_kelompok;
+        $data->kurikulum = (request()->kurikulum_id) ?? 0;
+        if($data->save()){
+            $data = [
+                'success' => TRUE,
+                'errors' => NULL,
+                'icon' => 'success',
+                'text' => 'Data Kelompok Mapel berhasil diperbaharui',
+                'title' => 'Berhasil',
+            ];
+        } else {
+            $data = [
+                'success' => TRUE,
+                'errors' => NULL,
+                'icon' => 'error',
+                'text' => 'Data Kelompok Mapel gagal diperbaharui. Silahkan coba beberapa saat lagi!',
                 'title' => 'Gagal',
             ];
         }

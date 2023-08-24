@@ -74,6 +74,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/sekolah', [ReferensiController::class, 'sekolah']);
     Route::post('/sekolah', [ReferensiController::class, 'sekolah']);
     Route::get('/mata-pelajaran', [ReferensiController::class, 'mata_pelajaran']);
+    Route::get('/kelompok-mapel', [ReferensiController::class, 'kelompok_mapel']);
     Route::get('/jurusan', [ReferensiController::class, 'jurusan']);
     Route::get('/rombongan-belajar', [ReferensiController::class, 'rombongan_belajar']);
     Route::post('/pembelajaran', [ReferensiController::class, 'pembelajaran']);
