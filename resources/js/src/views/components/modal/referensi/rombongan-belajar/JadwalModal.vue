@@ -296,7 +296,7 @@ export default {
               confirmButton: 'btn btn-success',
             },
           }).then(result => {
-            this.form.rombongan_belajar_id = ''
+            //this.form.rombongan_belajar_id = ''
             this.form.pembelajaran_id = ''
             this.form.hari = ''
             this.form.jam = ''

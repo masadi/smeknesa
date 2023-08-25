@@ -5,7 +5,7 @@
         <b-form ref="form" @submit.stop.prevent="handleSubmit">
           <b-row>
             <b-col cols="12">
-              <b-form-group label="Nama Lengkap" label-for="nama" label-cols-md="3" :invalid-feedback="feedback.nama" :state="state.nama">
+              <b-form-group label="Nama Lengkap *" label-for="nama" label-cols-md="3" :invalid-feedback="feedback.nama" :state="state.nama">
                 <b-form-input id="nama" v-model="form.nama" :state="state.nama" placeholder="Nama Lengkap dengan gelar"></b-form-input>
               </b-form-group>  
             </b-col>
@@ -20,7 +20,7 @@
               </b-form-group>  
             </b-col>
             <b-col cols="12">
-              <b-form-group label="NISN" label-for="nisn" label-cols-md="3" :invalid-feedback="feedback.nisn" :state="state.nisn">
+              <b-form-group label="NISN *" label-for="nisn" label-cols-md="3" :invalid-feedback="feedback.nisn" :state="state.nisn">
                 <b-form-input id="nisn" v-model="form.nisn" placeholder="NISN"></b-form-input>
               </b-form-group>  
             </b-col>
@@ -34,12 +34,12 @@
               </b-form-group>
             </b-col>
             <b-col cols="12">
-              <b-form-group label="Tempat Lahir" label-for="tempat_lahir" label-cols-md="3" :invalid-feedback="feedback.tempat_lahir" :state="state.tempat_lahir">
+              <b-form-group label="Tempat Lahir *" label-for="tempat_lahir" label-cols-md="3" :invalid-feedback="feedback.tempat_lahir" :state="state.tempat_lahir">
                 <b-form-input id="nama" v-model="form.tempat_lahir" :state="state.tempat_lahir" placeholder="Tempat Lahir"></b-form-input>
               </b-form-group>  
             </b-col>
             <b-col cols="12">
-              <b-form-group label="Tanggal Lahir*" label-for="tanggal_lahir" label-cols-md="3" :invalid-feedback="feedback.tanggal_lahir" :state="state.tanggal_lahir">
+              <b-form-group label="Tanggal Lahir *" label-for="tanggal_lahir" label-cols-md="3" :invalid-feedback="feedback.tanggal_lahir" :state="state.tanggal_lahir">
                 <b-form-datepicker v-model="form.tanggal_lahir" show-decade-nav button-variant="outline-secondary" left locale="id" aria-controls="tanggal_lahir" @context="onContext" placeholder="== Pilih Tanggal Lahir ==" :state="state.tanggal_lahir" />
               </b-form-group>
             </b-col>
@@ -53,7 +53,7 @@
               </b-form-group>
             </b-col>
             <b-col cols="12">
-              <b-form-group label="Alamat" label-for="alamat_jalan" label-cols-md="3" :invalid-feedback="feedback.alamat_jalan" :state="state.alamat_jalan">
+              <b-form-group label="Alamat *" label-for="alamat_jalan" label-cols-md="3" :invalid-feedback="feedback.alamat_jalan" :state="state.alamat_jalan">
                 <b-form-input id="nama" v-model="form.alamat_jalan" :state="state.alamat_jalan" placeholder="Alamat"></b-form-input>
               </b-form-group>  
             </b-col>
@@ -110,7 +110,7 @@
               </b-form-group>
             </b-col>
             <b-col cols="12">
-              <b-form-group label="Cita-cita" label-for="cita" label-cols-md="3" :invalid-feedback="feedback.cita" :state="state.cita">
+              <b-form-group label="Cita-cita *" label-for="cita" label-cols-md="3" :invalid-feedback="feedback.cita" :state="state.cita">
                 <v-select id="cita" ref="cita" v-model="form.cita" :reduce="nama => nama.nama" label="nama" :options="data_cita" placeholder="== Pilih Cita-cita ==" :state="state.cita" @input="changeCita">
                   <template #no-options="{ search, searching, loading }">
                     Tidak ada data untuk ditampilkan
@@ -119,7 +119,7 @@
               </b-form-group>
             </b-col>
             <b-col cols="12">
-              <b-form-group label="Nomor HP" label-for="no_hp" label-cols-md="3" :invalid-feedback="feedback.no_hp" :state="state.no_hp">
+              <b-form-group label="Nomor HP *" label-for="no_hp" label-cols-md="3" :invalid-feedback="feedback.no_hp" :state="state.no_hp">
                 <b-form-input ref="no_hp" id="no_hp" v-model="form.no_hp" :state="state.no_hp" placeholder="Nomor HP"></b-form-input>
               </b-form-group>  
             </b-col>
