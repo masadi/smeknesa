@@ -1,13 +1,13 @@
 <template>
   <b-overlay :show="loading" rounded opacity="0.6" size="lg" spinner-variant="warning">
-    <b-card title="Timeline Akademik">
+    <b-card title="Riwayat Akademik">
       <app-timeline>
         <app-timeline-body icon="fa-solid fa-user-graduate" variant="success">
           <div class="d-flex flex-sm-row flex-column flex-wrap justify-content-between mb-1 mb-sm-0">
             <h6>Informasi Akademik</h6>
           </div>
           <p class="mb-0">
-            Pantau semua informasi <b-link @click="openModal('akademik')">pencapaian akademik</b-link> Anda.
+            Pantau semua informasi <b-badge variant="primary"><b-link @click="openModal('akademik')">pencapaian akademik</b-link></b-badge> Anda.
           </p>
         </app-timeline-body>
         <app-timeline-body icon="fa-regular fa-calendar-days" variant="primary">
@@ -15,15 +15,15 @@
             <h6>Mapel Remedial</h6>
           </div>
           <p class="mb-0">
-            <b-link @click="openModal('remedial')">Cetak lembar remedial</b-link> dan segera lakukan remedial ke guru.
+            <b-badge variant="primary"><b-link @click="openModal('remedial')">Cetak lembar remedial</b-link></b-badge> dan segera lakukan remedial ke guru.
           </p>
         </app-timeline-body>
         <app-timeline-body icon="fa-regular fa-calendar-check" variant="danger">
           <div class="d-flex flex-sm-row flex-column flex-wrap justify-content-between mb-1 mb-sm-0">
-            <h6>Update Presensi</h6>
+            <h6>Informasi Presensi</h6>
           </div>
           <p class="mb-0">
-            Informasi Presensi diperbaharui setiap hari, <b-link @click="openModal('presensi')">cek disini</b-link>.
+            Informasi Presensi diperbaharui setiap hari, <b-badge variant="primary"><b-link @click="openModal('presensi')">cek disini</b-link></b-badge>.
           </p>
         </app-timeline-body>
         <app-timeline-body icon="fa-solid fa-heart-circle-check" variant="warning">
@@ -31,7 +31,7 @@
             <h6>Catatan Sikap &amp; Tatib</h6>
           </div>
           <p class="mb-0">
-            Lihat history catatan <b-link @click="openModal('sikap')">sikap dan tata tertib</b-link> anda.
+            Lihat riwayat catatan <b-badge variant="primary"><b-link @click="openModal('sikap')">sikap dan tata tertib</b-link></b-badge> anda.
           </p>
         </app-timeline-body>
         <app-timeline-body icon="fa-solid fa-person-skating" variant="info">
@@ -39,7 +39,7 @@
             <h6>Ekstrakurikuler</h6>
           </div>
           <p class="mb-0">
-            Pantau perkembangan mapel ekstra anda <b-link @click="openModal('ekskul')">disini</b-link>.
+            Pantau perkembangan mapel ekstra anda <b-badge variant="primary"><b-link @click="openModal('ekskul')">disini</b-link></b-badge>.
           </p>
         </app-timeline-body>
       </app-timeline>
@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { BCard, BLink, BOverlay } from 'bootstrap-vue'
+import { BCard, BLink, BOverlay, BBadge } from 'bootstrap-vue'
 import AppTimeline from '@core/components/app-timeline/AppTimeline.vue'
 import AppTimelineBody from '@core/components/app-timeline/AppTimelineBody.vue'
 import ModalAkademik from './modal/ModalAkademik.vue'
@@ -68,6 +68,7 @@ export default {
     BCard,
     BLink,
     BOverlay,
+    BBadge,
     AppTimeline,
     AppTimelineBody,
     ModalAkademik,
