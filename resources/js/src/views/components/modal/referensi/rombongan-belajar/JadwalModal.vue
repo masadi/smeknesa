@@ -1,5 +1,5 @@
 <template>
-  <b-modal v-model="jadwalModalShow" title="Jadwal Pembelajaran" modal-class="modal-fullscreen" ok-only ok-variant="secondary" ok-text="Tutup" scrollable>
+  <b-modal v-model="jadwalModalShow" :title="title" modal-class="modal-fullscreen" ok-only ok-variant="secondary" ok-text="Tutup" scrollable>
     <b-overlay :show="loading_form" rounded opacity="0.6" size="lg" spinner-variant="danger">
       <b-form @submit="onSubmit">
         <b-row>
@@ -48,7 +48,7 @@
               <BTr>
                 <BTh>Hari</BTh>
                 <template v-for="jam in 11">
-                  <BTh>{{jam}}</BTh>
+                  <BTh class="text-center">{{jam}}</BTh>
                 </template>
               </BTr>
             </BThead>
@@ -58,10 +58,15 @@
                   <BTd>{{hari}}</BTd>
                   <template v-for="jam in 11">
                     <BTd class="text-center">
-                      {{getJadwalJam(hari, jam)}}
-                      <h6>
-                        <a href="javascript:void(0)" v-if="getJadwalJam(hari, jam)"><span class="text-danger"><trash-icon @click="hapusData('jam', getJamId(hari, jam))"/></span></a>
-                      </h6>
+                      <template v-for="jadwal_jam in getJadwalJam(hari, jam)">
+                        <template v-for="jadwal_mapel in jadwal_jam">
+                          {{jadwal_mapel.jadwal.pembelajaran.nama_mata_pelajaran}}
+                          <h6>
+                            <a href="javascript:void(0)"><span class="text-danger"><trash-icon @click="hapusData('jam', jadwal_mapel.jam_id)"/></span></a>
+                          </h6>
+                        </template>
+                      </template>
+                      <!-- {{getJadwalJam(hari, jam)}} -->
                     </BTd>
                   </template>
                 </BTr>
@@ -153,6 +158,7 @@ export default {
       ],
       data_jadwal: [],
       data_pembelajaran: [],
+      title: '',
     }
   },
   created() {
@@ -160,6 +166,7 @@ export default {
   },
   methods: {
     handleEvent(data){
+      this.title = `Jadwal Pembelajaran Kelas ${data.nama}`
       this.rombongan_belajar_id = data.rombongan_belajar_id
       this.form.rombongan_belajar_id = this.rombongan_belajar_id
       this.getJadwalPembelajaran()
@@ -219,13 +226,31 @@ export default {
       return newArray;
     },
     getJadwalJam(hari, jam){
-      var get_jadwal = this.getJadwal(hari)
+      var get_jadwal = this.getJadwal(hari);
+      var pushArray = []
+      get_jadwal.forEach(element => {
+        var arrayJam = element.jam.filter(function (el) {
+          return el.jam === jam;
+        })
+        pushArray.push(arrayJam)
+      });
+      var clean_jadwal = pushArray.filter(function (el) {
+        return el.length;
+      })
+      var nama_mata_pelajaran = []
+      return clean_jadwal;
+      /*clean_jadwal.forEach(element => {
+        nama_mata_pelajaran.push(element.jadwal)
+      });
+      return nama_mata_pelajaran;
+      return clean_jadwal.length > 1 ? clean_jadwal : '1'
       if(get_jadwal.length){
         var arrayJam = get_jadwal[0].jam.filter(function (el) {
           return el.jam === jam;
         });
-        return (arrayJam.length) ? arrayJam[0].jadwal.pembelajaran.nama_mata_pelajaran : null;
-      }
+        return arrayJam;
+        //return (arrayJam.length) ? arrayJam[0].jadwal.pembelajaran.nama_mata_pelajaran : null;
+      }*/
     },
     hapusData(data, id){
       this.$swal({

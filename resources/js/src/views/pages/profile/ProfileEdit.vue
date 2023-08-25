@@ -15,8 +15,8 @@
               </b-form-group>  
             </b-col>
             <b-col cols="12">
-              <b-form-group label="Nomor Induk" label-for="no_induk" label-cols-md="3" :invalid-feedback="feedback.no_induk" :state="state.no_induk">
-                <b-form-input id="no_induk" v-model="form.no_induk" placeholder="Nomor Induk"></b-form-input>
+              <b-form-group label="NIS" label-for="no_induk" label-cols-md="3" :invalid-feedback="feedback.no_induk" :state="state.no_induk">
+                <b-form-input id="no_induk" v-model="form.no_induk" placeholder="NIS"></b-form-input>
               </b-form-group>  
             </b-col>
             <b-col cols="12">
