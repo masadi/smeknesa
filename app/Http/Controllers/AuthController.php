@@ -406,8 +406,6 @@ class AuthController extends Controller
         ]);
         $foto = $request->foto->store('public/images');
         $generated_new_name = basename($foto);
-        //$file_name = $request->foto->getClientOriginalName();
-        //$generated_new_name = time() . '.' . $request->foto->getClientOriginalExtension();
         $user = User::with(['guru', 'pd'])->find(request()->user_id);
         $user->photo = $generated_new_name;
         $user->save();
@@ -419,8 +417,6 @@ class AuthController extends Controller
             $user->pd->photo = $generated_new_name;
             $user->pd->save();
         }
-        //$request->foto->move($upload_path, $generated_new_name);
-        
         $data = [
             'icon' => 'success',
             'text' => 'Foto Profil berhasil diperbaharui',
