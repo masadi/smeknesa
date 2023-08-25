@@ -66,7 +66,6 @@
                           </h6>
                         </template>
                       </template>
-                      <!-- {{getJadwalJam(hari, jam)}} -->
                     </BTd>
                   </template>
                 </BTr>
@@ -237,20 +236,7 @@ export default {
       var clean_jadwal = pushArray.filter(function (el) {
         return el.length;
       })
-      var nama_mata_pelajaran = []
       return clean_jadwal;
-      /*clean_jadwal.forEach(element => {
-        nama_mata_pelajaran.push(element.jadwal)
-      });
-      return nama_mata_pelajaran;
-      return clean_jadwal.length > 1 ? clean_jadwal : '1'
-      if(get_jadwal.length){
-        var arrayJam = get_jadwal[0].jam.filter(function (el) {
-          return el.jam === jam;
-        });
-        return arrayJam;
-        //return (arrayJam.length) ? arrayJam[0].jadwal.pembelajaran.nama_mata_pelajaran : null;
-      }*/
     },
     hapusData(data, id){
       this.$swal({
