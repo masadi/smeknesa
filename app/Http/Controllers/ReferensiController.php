@@ -1269,6 +1269,7 @@ class ReferensiController extends Controller
         $data->nama = request()->nama;
         $data->tingkat = array_filter(array_values(request()->tingkat));
         if($data->save()){
+            Pembelajaran::where('mata_pelajaran_id', request()->mata_pelajaran_id)->update(['nama_mata_pelajaran' => request()->nama]);
             foreach(array_filter(array_values(request()->tingkat)) as $tingkat){
                 foreach(array_filter(array_values(request()->jurusan_sp_id)) as $jurusan_sp_id){
                     Mapel_tingkat::updateOrCreate([
