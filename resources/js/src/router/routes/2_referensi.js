@@ -171,7 +171,7 @@ export default [
     name: 'referensi-kelompok-mapel',
     component: () => import('@/views/referensi/kelompok-mapel/Index.vue'),
     meta: {
-      resource: 'Ref_Mapel',
+      resource: 'System',
       action: 'read',
       pageTitle: 'Kelompok Mapel',
       breadcrumb: [

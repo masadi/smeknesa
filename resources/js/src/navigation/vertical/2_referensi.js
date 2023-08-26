@@ -49,7 +49,7 @@ export default [
         icon: 'hand-click-icon',
         title: 'Kelompok Mapel',
         route: 'referensi-kelompok-mapel',
-        resource: 'Ref_Mapel',
+        resource: 'System',
         action: 'read',
       },
       {
