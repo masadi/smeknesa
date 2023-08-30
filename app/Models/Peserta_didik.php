@@ -32,6 +32,11 @@ class Peserta_didik extends Model
             'rombongan_belajar_id' // Local key on the cars table...
         );
 	}
+	public function anggota_ekskul(){
+		return $this->hasMany(Anggota_rombel::class, 'peserta_didik_id', 'peserta_didik_id')->whereHas('rombongan_belajar', function($query){
+			$query->where('tingkat', 0);
+		});
+	}
 	public function keluar(){
 		return $this->hasOneThrough(
             Jenis_keluar::class,

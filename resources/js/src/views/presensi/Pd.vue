@@ -11,6 +11,7 @@
     </b-card-body>
     <add-modal @reload="handleReload"></add-modal>
     <detil-modal></detil-modal>
+    <hapus-modal @reload="handleReload"></hapus-modal>
   </b-card>
 </template>
 
@@ -19,6 +20,7 @@ import { BCard, BCardBody, BSpinner } from 'bootstrap-vue'
 import Datatable from './Datatable.vue' //IMPORT COMPONENT DATATABLENYA
 import AddModal from './../components/modal/presensi/peserta-didik/AddModal.vue'
 import DetilModal from './../components/modal/presensi/peserta-didik/DetilModal.vue'
+import HapusModal from './../components/modal/presensi/peserta-didik/HapusModal.vue'
 import eventBus from '@core/utils/eventBus'
 export default {
   components: {
@@ -28,6 +30,7 @@ export default {
     Datatable,
     AddModal,
     DetilModal,
+    HapusModal,
   },
   data() {
     return {
@@ -81,7 +84,7 @@ export default {
           tdClass: 'text-center',
         },
         {
-          key: 'actions',
+          key: 'aksi',
           label: 'Aksi',
           sortable: false,
           thClass: 'text-center',
@@ -195,17 +198,20 @@ export default {
       this.loadPostsData() //DAN LOAD DATA BARU BERDASARKAN SORT
     },
     handleAksi(val){
-      console.log(val);
-      var _this = this
-      const bulan_str = this.data_bulan.filter((item) => {
-        return item.angka === _this.bulan
-      })
-      eventBus.$emit('open-modal-detil-presensi-pd', {
-        rombongan_belajar_id: val.item.rombongan_belajar_id,
-        kelas: val.item.nama,
-        bulan: this.bulan,
-        bulan_str: bulan_str[0]?.huruf
-      });
+      if(val.aksi == 'detil'){
+        var _this = this
+        const bulan_str = this.data_bulan.filter((item) => {
+          return item.angka === _this.bulan
+        })
+        eventBus.$emit('open-modal-detil-presensi-pd', {
+          rombongan_belajar_id: val.item.rombongan_belajar_id,
+          kelas: val.item.nama,
+          bulan: this.bulan,
+          bulan_str: bulan_str[0]?.huruf
+        });
+      } else {
+        eventBus.$emit('open-modal-hapus-presensi-pd', val.item.rombongan_belajar_id);
+      }
     },
   },
 }

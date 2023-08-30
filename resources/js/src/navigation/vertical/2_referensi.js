@@ -59,6 +59,13 @@ export default [
         resource: 'Ref_Kelas',
         action: 'read',
       },
+      {
+        icon: 'hand-click-icon',
+        title: 'Ekstrakurikuler',
+        route: 'referensi-ekstrakurikuler',
+        resource: 'System',
+        action: 'read',
+      },
       /*{
         icon: 'hand-click-icon',
         title: 'Jadwal Pembelajaran',

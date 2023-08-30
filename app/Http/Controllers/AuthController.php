@@ -258,7 +258,7 @@ class AuthController extends Controller
                     }
                     $user->detachRoles($all_role, request()->periode_aktif);
                     $user->attachRole('guru', request()->periode_aktif);
-                    $find = Rombongan_belajar::where('guru_id', $d->guru_id)->where('semester_id', request()->semester_id)->first();
+                    $find = Rombongan_belajar::where('guru_id', $d->guru_id)->where('semester_id', request()->semester_id)->where('tingkat', '<>', 0)->first();
                     if($find){
                         $user->attachRole('walas', request()->periode_aktif);
                     }

@@ -90,6 +90,12 @@
         <template v-slot:cell(actions)="row">
           <b-button size="sm" variant="primary" @click="aksi(row.item, 'detil')">Detil</b-button>
         </template>
+        <template v-slot:cell(aksi)="row">
+          <b-dropdown id="dropdown-dropleft" dropleft text="Detil" variant="primary" size="sm">
+            <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'detil')"><eye-icon /> Detil</b-dropdown-item>
+            <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'hapus')"><trash-icon />Hapus</b-dropdown-item>
+          </b-dropdown>
+        </template>
       </b-table>
     </b-overlay>
     <b-row class="mt-2">
@@ -105,7 +111,7 @@
 
 <script>
 import _ from 'lodash'
-import { BRow, BCol, BFormInput, BTable, BSpinner, BPagination, BOverlay, BTr, BTh, BButton, BFormDatepicker, BBadge } from 'bootstrap-vue'
+import { BRow, BCol, BFormInput, BTable, BSpinner, BPagination, BOverlay, BTr, BTh, BButton, BFormDatepicker, BBadge, BDropdown, BDropdownItem } from 'bootstrap-vue'
 import vSelect from 'vue-select'
 export default {
   components: {
@@ -121,6 +127,8 @@ export default {
     BButton,
     BFormDatepicker,
     BBadge,
+    BDropdown,
+    BDropdownItem,
     vSelect,
   },
   props: {

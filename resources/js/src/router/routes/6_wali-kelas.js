@@ -25,6 +25,31 @@ export default [
     },
   },
   {
+    path: '/wali-kelas/nilai-ekskul',
+    name: 'walas-nilai-ekskul',
+    component: () => import('@/views/wali-kelas/NilaiEkskul.vue'),
+    meta: {
+      resource: 'Wali',
+      action: 'read',
+      pageTitle: 'Nilai Ekskul',
+      breadcrumb: [
+        {
+          text: 'Wali Kelas',
+        },
+        {
+          text: 'Nilai Ekskul',
+          active: true,
+        },
+      ],
+      tombol_add: {
+        action: 'upload-nilai-ekskul',
+        link: '',
+        variant: 'primary',
+        text: 'Upload Nilai Ekskul'
+      },
+    },
+  },
+  {
     path: '/wali-kelas/kenaikan',
     name: 'walas-kenaikan',
     component: () => import('@/views/wali-kelas/KenaikanKelas.vue'),

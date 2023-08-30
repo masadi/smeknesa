@@ -12,6 +12,13 @@ export default [
       },
       {
         icon: 'hand-click-icon',
+        title: 'Nilai Ekskul',
+        route: 'walas-nilai-ekskul',
+        resource: 'Wali',
+        action: 'read',
+      },
+      {
+        icon: 'hand-click-icon',
         title: 'Kenaikan',
         route: 'walas-kenaikan',
         resource: 'Wali',

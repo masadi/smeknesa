@@ -28,5 +28,6 @@ Route::group(['prefix' => 'export'], function () {
     Route::get('/rekap-absensi-siswa/{semester_id}/{rombongan_belajar_id}/{bulan}/{jenis}', [ExportController::class, 'rekap_absensi_siswa']);
     Route::get('/rekap-remedial/{semester_id}', [ExportController::class, 'rekap_remedial']);
     Route::get('/password-pd/{rombongan_belajar_id}', [ExportController::class, 'password_pd']);
+    Route::get('/nilai-ekskul/{rombongan_belajar_id}', [ExportController::class, 'nilai_ekskul']);
 });
 Route::get('/{any}', [ApplicationController::class, 'index'])->where('any', '.*');

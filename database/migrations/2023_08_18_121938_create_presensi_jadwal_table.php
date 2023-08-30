@@ -18,6 +18,7 @@ return new class extends Migration
             $table->uuid('presensi_id');
             $table->uuid('jadwal_id');
             $table->timestamps();
+            $table->primary('presensi_jadwal_id');
             $table->foreign('presensi_id')->references('presensi_id')->on('presensi')->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->foreign('jadwal_id')->references('jadwal_id')->on('jadwal')->onUpdate('CASCADE')->onDelete('CASCADE');
         });

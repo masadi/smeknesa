@@ -40,11 +40,6 @@
                     </v-select>
                   </b-overlay>
                   <b-overlay :show="loading_anggota || loading_jam" opacity="0.6" size="md" spinner-variant="secondary">
-                    <!--v-select id="jam" v-model="form.jam[bolos]" :options="data_jam" placeholder="== Pilih Jam ==" style="width:300px" class="mr-1" multiple>
-                      <template #no-options="{ search, searching, loading }">
-                        Tidak ada data untuk ditampilkan
-                      </template>
-                    </v-select-->
                     <b-dropdown id="dropdown-form" text="Pilih Jam" ref="dropdown" class="mr-1">
                       <b-dropdown-form>
                         <b-form-checkbox-group v-model="form.jam[bolos]" :options="data_jam" name="jam" stacked></b-form-checkbox-group>
@@ -68,42 +63,38 @@
             </b-col>
           </template>
         </b-row>
-        <!--b-overlay :show="loading_table" opacity="0.6" size="md" spinner-variant="danger">
-          <BTableSimple bordered>
-            <BThead>
-              <BTr>
-                <BTh rowspan="2" style="vertical-align:middle;">Nama Lengkap</BTh>
-                <BTh rowspan="2" style="vertical-align:middle;" class="text-center">NISN</BTh>
-                <BTh :colspan="jumlah_jam" class="text-center">Absensi Jam Ke</BTh>
-              </BTr>
-              <BTr>
-                <template v-for="jam_ke in jumlah_jam">
-                  <BTh class="text-center">{{jam_ke}}</BTh>
-                </template>
-              </BTr>
-            </BThead>
-            <BTbody>
-              <template v-if="data_pd.length">
-                <template v-for="pd in data_pd">
-                  <BTr>
-                    <BTd>{{pd.nama}}</BTd>
-                    <BTd class="text-center">{{pd.nisn}}</BTd>
-                    <template v-for="jam_ke in jumlah_jam">
-                      <BTd>
-                        <b-form-select v-model="absensi[pd.anggota_rombel.anggota_rombel_id+'#'+jam_ke]" :options="['A', 'S', 'I', 'D']"></b-form-select>
-                      </BTd>
-                    </template>
-                  </BTr>
-                </template>
-              </template>
-              <template v-else>
-                <BTr>
-                  <BTd :colspan="jumlah_jam + 2" class="text-center">Tidak ada data untuk ditampilkan</BTd>
-                </BTr>
-              </template>
-            </BTbody>
-          </BTableSimple>
-        </b-overlay-->
+        <b-table-simple bordered v-if="data_pd.length">
+          <b-thead>
+            <b-tr>
+              <b-th class="text-center" colspan="8">Data Siswa Kelas {{nama_kelas}} yang telah di absen pada {{tanggal_str}}</b-th>
+            </b-tr>
+            <b-tr>
+              <b-th class="text-center" rowspan="2">No</b-th>
+              <b-th class="text-center" rowspan="2">Nama</b-th>
+              <b-th class="text-center" rowspan="2">NISN</b-th>
+              <b-th class="text-center" colspan="4">Presensi</b-th>
+              <b-th class="text-center" rowspan="2">Aksi</b-th>
+            </b-tr>
+            <b-tr>
+              <b-th class="text-center">A</b-th>
+              <b-th class="text-center">I</b-th>
+              <b-th class="text-center">S</b-th>
+              <b-th class="text-center">D</b-th>
+            </b-tr>
+          </b-thead>
+          <b-tbody>
+            <b-tr v-for="(pd, index) in pd_absen" :key="pd.peserta_didik_id">
+              <b-td class="text-center">{{index + 1}}</b-td>
+              <b-td><media-siswa :data="pd"></media-siswa></b-td>
+              <b-td class="text-center">{{pd.nisn}}</b-td>
+              <b-td class="text-center">{{getPresensi(pd.presensi, 'A').map(u => u.jam).join(', ')}}</b-td>
+              <b-td class="text-center">{{getPresensi(pd.presensi, 'I').map(u => u.jam).join(', ')}}</b-td>
+              <b-td class="text-center">{{getPresensi(pd.presensi, 'S').map(u => u.jam).join(', ')}}</b-td>
+              <b-td class="text-center">{{getPresensi(pd.presensi, 'D').map(u => u.jam).join(', ')}}</b-td>
+              <b-td class="text-center"><a @click="hapusPresensi(pd.anggota_rombel.anggota_rombel_id)" class="text-danger"><trash-icon size="20" /></a></b-td>
+            </b-tr>
+          </b-tbody>
+        </b-table-simple>
       </b-form>
     </b-overlay>
     <template #modal-footer="{ ok, cancel }">
@@ -119,10 +110,12 @@
 
 <script>
 import { BOverlay, BRow, BCol, BForm, BTableSimple, BThead, BTh, BTbody, BTr, BTd, BButton, BFormSelect, BFormDatepicker, BFormGroup, BInputGroup, BInputGroupAppend, BDropdown, BDropdownForm, BFormCheckboxGroup } from 'bootstrap-vue'
+import MediaSiswa from './../../../MediaSiswa.vue'
 import eventBus from '@core/utils/eventBus'
 import vSelect from 'vue-select'
 export default {
   components: {
+    MediaSiswa,
     BOverlay,
     BForm,
     BTableSimple,
@@ -152,6 +145,7 @@ export default {
       loading_table: false,
       loading_jam: false,
       form: {
+        data: 'presensi',
         aksi: 'pd',
         tingkat: '',
         rombongan_belajar_id: '',
@@ -164,6 +158,7 @@ export default {
       hari: '',
       jumlah_jam: 0,
       data_pd: [],
+      pd_absen: [],
       data_tingkat: [
         {
           id: 10,
@@ -186,6 +181,8 @@ export default {
       siswa_bolos: 1,
       loading_anggota: false,
       data_jam: [],
+      nama_kelas: '',
+      tanggal_str: '',
     }
   },
   created() {
@@ -196,6 +193,7 @@ export default {
       this.$http.get('/presensi/get-hari').then(response => {
         let getData = response.data
         this.form.tanggal = getData.tanggal
+        this.tanggal_str = getData.tanggal_str
         this.jumlah_jam = getData.jumlah_jam + 1
         for (let i = 1; i < this.jumlah_jam; i++) {
           this.data_jam.push(i)
@@ -227,15 +225,21 @@ export default {
       })
     },
     changeRombel(val){
+      this.data_pd = []
       this.loading_anggota = true
       this.$http.post('/referensi/get-siswa', this.form).then(response => {
         this.loading_anggota = false
-        this.data_pd = response.data
+        let getData = response.data
+        this.nama_kelas = getData.rombel.nama
+        this.data_pd = getData.pd
         var _this = this
         this.data_pd.forEach(item => {
           for (var i = 1; i < (_this.jumlah_jam + 1); i++) {
             _this.absensi[item.anggota_rombel.anggota_rombel_id+'#'+i] = (_this.getAbsen(item.presensi, i)[0]) ? _this.getAbsen(item.presensi, i)[0].absen : ''
           }
+        });
+        this.pd_absen = this.data_pd.filter((item) => {
+          return item.presensi.length > 0
         });
       })
     },
@@ -255,8 +259,11 @@ export default {
       this.form.tanggal = ''
       this.form.anggota_rombel_id = {}
       this.form.jam = {}
+      this.form.absensi = {}
       this.siswa_bolos = 1
       this.data_jam = []
+      this.data_pd = []
+      this.pd_absen = []
     },
     handleOk(bvModalEvent){
       bvModalEvent.preventDefault()
@@ -292,6 +299,47 @@ export default {
     onContext(ctx) {
       this.formatted = ctx.selectedFormatted
     },
+    getPresensi(presensi, opsi){
+      return presensi.filter((item) => {
+        return item.absen == opsi
+      })
+    },
+    hapusPresensi(anggota_rombel_id){
+      this.$swal({
+          title: 'Apakah Anda yakin?',
+          text: 'Tindakan ini tidak dapat dikembalikan!',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Yakin!',
+          customClass: {
+            confirmButton: 'btn btn-primary',
+            cancelButton: 'btn btn-outline-danger ml-1',
+          },
+          buttonsStyling: false,
+          allowOutsideClick: () => false,
+        }).then(result => {
+          if (result.value) {
+            this.loading_form = true
+            this.$http.post('/presensi/hapus', {
+              anggota_rombel_id: anggota_rombel_id,
+              tanggal: this.form.tanggal,
+            }).then(response => {
+              this.loading_form = false
+              let getData = response.data
+              this.$swal({
+                icon: getData.icon,
+                title: getData.title,
+                text: getData.text,
+                customClass: {
+                  confirmButton: 'btn btn-success',
+                },
+              }).then(result => {
+                this.changeRombel(this.form.rombongan_belajar_id)
+              })
+            });
+          }
+        })
+    }
   },
 }
 </script>

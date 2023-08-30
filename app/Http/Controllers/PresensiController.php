@@ -251,6 +251,29 @@ class PresensiController extends Controller
         ];
         return response()->json($data);
     }
+    public function hapus(){
+        if(request()->tanggal){
+            if(request()->rombongan_belajar_id){
+                Presensi::whereHas('anggota_rombel', function($query){
+                    $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
+                })->where('tanggal', request()->tanggal)->delete();
+            } else {
+                Presensi::where('anggota_rombel_id', request()->anggota_rombel_id)->where('tanggal', request()->tanggal)->delete();
+            }
+            $data = [
+                'icon' => 'success',
+                'text' => 'Presensi Siswa berhasil dihapus',
+                'title' => 'Berhasil',
+            ];
+        } else {
+            $data = [
+                'icon' => 'error',
+                'text' => 'Presensi siswa gagal dihapus. Tanggal tidak boleh kosong!',
+                'title' => 'Gagal',
+            ];
+        }
+        return response()->json($data);
+    }
     public function simpan(){
         if(request()->aksi == 'pd'){
             foreach(request()->anggota_rombel_id as $key => $anggota_rombel_id){
@@ -484,7 +507,7 @@ class PresensiController extends Controller
         return response()->json($data);
     }
     public function pd(){
-        $data = Rombongan_belajar::where('semester_id', semester_id())->orderBy('tingkat')->orderBy('nama')->withCount([
+        $data = Rombongan_belajar::where('tingkat', '<>', 0)->where('semester_id', semester_id())->orderBy('tingkat')->orderBy('nama')->withCount([
             'anggota_rombel',
             'anggota_rombel as hadir' => function($query){
                 $query->whereHas('presensi', function ($query) {

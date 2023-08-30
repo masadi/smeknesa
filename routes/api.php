@@ -113,6 +113,9 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/proses-kenaikan', [ReferensiController::class, 'proses_kenaikan']);
     Route::post('/prepare-data', [ReferensiController::class, 'prepare_data']);
     Route::post('/simpan-data', [ReferensiController::class, 'simpan_data']);
+    Route::get('/ekstrakurikuler', [ReferensiController::class, 'ekstrakurikuler']);
+    Route::post('/anggota-ekskul', [ReferensiController::class, 'anggota_ekskul']);
+    Route::post('/non-anggota-ekskul', [ReferensiController::class, 'non_anggota_ekskul']);
   });
   Route::group(['prefix' => 'jadwal'], function () {
     Route::get('/', [JadwalController::class, 'index']);
@@ -158,6 +161,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/get-hari', [PresensiController::class, 'get_hari']);
     Route::post('/simpan', [PresensiController::class, 'simpan']);
     Route::post('/detil', [PresensiController::class, 'detil']);
+    Route::post('/hapus', [PresensiController::class, 'hapus']);
   });
   Route::group(['prefix' => 'editor'], function () {
     Route::post('/edit-data', [EditorController::class, 'index']);

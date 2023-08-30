@@ -219,24 +219,24 @@ export default [
     },
   },
   {
-    path: '/referensi/jadwal-pembelajaran',
-    name: 'jadwal-pembelajaran',
-    component: () => import('@/views/referensi/jadwal-pembelajaran/Index.vue'),
+    path: '/referensi/ekstrakurikuler',
+    name: 'referensi-ekstrakurikuler',
+    component: () => import('@/views/referensi/ekstrakurikuler/Index.vue'),
     meta: {
-      resource: 'Jadwal',
+      resource: 'System',
       action: 'read',
-      pageTitle: 'Jadwal Pembelajaran',
+      pageTitle: 'Ekstrakurikuler',
       breadcrumb: [
         {
           text: 'Referensi',
         },
         {
-          text: 'Jadwal Pembelajaran',
+          text: 'Ekstrakurikuler',
           active: true,
         },
       ],
       tombol_add: {
-        action: 'add-jadwal',
+        action: 'add-ekskul',
         link: '',
         variant: 'primary',
         text: 'Tambah Data',

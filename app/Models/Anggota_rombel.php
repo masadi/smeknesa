@@ -46,4 +46,8 @@ class Anggota_rombel extends Model
 	{
 		return $this->hasOne(Deskripsi_mapel::class, 'anggota_rombel_id', 'anggota_rombel_id')->where('tercapai', 0);
 	}
+	public function nilai_ekskul()
+	{
+		return $this->hasOne(Nilai_ekskul::class, 'anggota_rombel_id', 'anggota_rombel_id');
+	}
 }

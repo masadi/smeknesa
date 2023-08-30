@@ -165,8 +165,45 @@ export default {
         this.loading = false
         let getData = response.data
         this.data_guru = getData
-        //this.addModalShow = true
+        /*const guru_absen = this.data_guru.filter((item) => {
+          return item.presensi.length > 0
+        })
+        var _this = this
+        var jml_absen = []
+        var absen_a = []
+        var absen_i = []
+        var absen_s = []
+        var absen_d = []
+        guru_absen.forEach(item => {
+          absen_a.push(_this.getPresensi(item.presensi, 'A'))
+          absen_i.push(_this.getPresensi(item.presensi, 'I'))
+          absen_s.push(_this.getPresensi(item.presensi, 'S'))
+          absen_d.push(_this.getPresensi(item.presensi, 'D'))
+          jml_absen.push(absen_a, absen_i, absen_s, absen_d)
+        })
+        const total_absen = jml_absen.filter((item) => {
+          return item[0].length > 0
+        })
+        total_absen.forEach((item, index) => {
+          var jam_guru = []
+          item.forEach(presensi => {
+            presensi.forEach(absensi => {
+              _this.form.guru_id[index + 1] = absensi.guru_id
+              _this.form.absensi[index + 1] = absensi.absen
+              jam_guru.push(absensi.jam)
+              _this.changeGuru(absensi.guru_id)
+            })
+          })
+          _this.form.jam[index + 1] = jam_guru
+        });
+        this.data_bolos = total_absen.length + 1*/
       })
+    },
+    getPresensi(presensi, opsi){
+      const absen_guru = presensi.filter((item) => {
+        return item.absen == opsi
+      })
+      return absen_guru
     },
     addSelect(){
       this.data_bolos = this.data_bolos + 1
@@ -215,6 +252,7 @@ export default {
       this.form.guru_id = {}
       this.form.jam = {}
       this.form.absensi = {}
+      this.data_bolos = 1
     },
     handleOk(bvModalEvent){
       bvModalEvent.preventDefault()

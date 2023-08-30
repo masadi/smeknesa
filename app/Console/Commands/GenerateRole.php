@@ -33,7 +33,7 @@ class GenerateRole extends Command
                 'name' => 'tu',
                 'display_name' => 'Tata Usaha',
                 'description' => 'Tata Usaha',
-            ]
+            ],
         ];
         foreach($roles as $role){
             Role::updateOrCreate(

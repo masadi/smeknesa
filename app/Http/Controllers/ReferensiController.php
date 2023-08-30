@@ -102,6 +102,7 @@ class ReferensiController extends Controller
     }
     public function rombongan_belajar(){
         $data = Rombongan_belajar::with(['wali_kelas', 'jurusan_sp', 'semester'])->where(function($query){
+            $query->where('tingkat', '<>', 0);
             $query->where('semester_id', semester_id());
         })->orderBy(request()->sortby, request()->sortbydesc)
         ->when(request()->q, function($query) {
@@ -449,6 +450,37 @@ class ReferensiController extends Controller
                 'kurikulum' => (request()->kurikulum_id) ? request()->kurikulum_id : 0,
             ]);
         }
+        if(request()->data == 'ekskul'){
+            $text = 'Ekstrakurikuler';
+            $validator = Validator::make(request()->all(), 
+                [
+                    'nama' => ['required'],
+                    'guru_id' => ['required'],
+                ],
+                [
+                    'nama.required' => 'Nama Kelas tidak boleh kosong',
+                    'guru_id.required' => 'Ketua Jurusan tidak boleh kosong',
+                ]
+            );
+    
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => FALSE,
+                    'errors' => $validator->errors(),
+                ]);
+            }
+            $kur = Kurikulum::find(request()->kurikulum_id);
+            $insert = Rombongan_belajar::create([
+                'sekolah_id' => sekolah_id(),
+                'guru_id' => request()->guru_id,
+                'semester_id' => semester_id(),
+                'jurusan_sp_id' => NULL,
+                'kurikulum_id' => NULL,
+                'kurikulum' => '-',
+                'nama' => request()->nama,
+                'tingkat' => 0,
+            ]);
+        }
         if($insert){
             $data = [
                 'success' => TRUE,
@@ -784,6 +816,36 @@ class ReferensiController extends Controller
                     'semester' => Semester::find(request()->semester_id),
                 ];        
             }
+            if(request()->data == 'nilai-ekskul'){
+                $data = [
+                    'pd' => Peserta_didik::withWhereHas('kelas', function ($query) {
+                        $query->where('guru_id', request()->guru_id);
+                        $query->where('rombongan_belajar.semester_id', request()->semester_id);
+                    })->withWhereHas('anggota_rombel', function ($query) {
+                        $query->whereHas('rombongan_belajar', function($query){
+                            $query->where('guru_id', request()->guru_id);
+                            $query->where('semester_id', request()->semester_id);
+                        });
+                    })->with(['anggota_ekskul' => function($query){
+                        $query->where('semester_id', request()->semester_id);
+                        $query->with(['rombongan_belajar', 'nilai_ekskul']);
+                    }])->orderBy('nama')->get(),
+                    'semester' => Semester::find(request()->semester_id),
+                ];        
+            }
+            if(request()->data == 'presensi'){
+                $data = [
+                    'rombel' => Rombongan_belajar::find(request()->rombongan_belajar_id),
+                    'pd' => Peserta_didik::withWhereHas('anggota_rombel', function ($query) {
+                        $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
+                    })->with([
+                        'presensi' => function($query){
+                            $query->whereDate('tanggal', request()->tanggal);
+                            $query->orderBy('jam');
+                        },
+                    ])->orderBy('nama')->get(),
+                ];
+            }
         } else {
             $data = Peserta_didik::withWhereHas('anggota_rombel', function ($query) {
                 $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
@@ -948,6 +1010,12 @@ class ReferensiController extends Controller
         $data = Peserta_didik::whereHas('anggota_rombel', function($query){
             $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
         })->with(['agama'])->orderBy('nama')->get();
+        return response()->json($data);
+    }
+    public function anggota_ekskul(){
+        $data = Peserta_didik::whereHas('anggota_rombel', function($query){
+            $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
+        })->orderBy('nama')->get();
         return response()->json($data);
     }
     public function get_semester(){
@@ -1166,8 +1234,9 @@ class ReferensiController extends Controller
         } elseif(request()->data == 'rombel'){
             if(request()->rombongan_belajar_id){
                 $data = Rombongan_belajar::find(request()->rombongan_belajar_id);
-            } else {
-
+            }
+            if(request()->guru_id){
+                $data = Rombongan_belajar::where('guru_id', request()->guru_id)->where('semester_id', request()->semester_id)->first();
             }
         } elseif(request()->data == 'guru'){
             $data = Guru::select('guru_id', 'nama', 'tanggal_lahir')->where($this->kondisi())->orderBy('nama')->get();
@@ -1657,6 +1726,22 @@ class ReferensiController extends Controller
         $data = Peserta_didik::where(function($query){
             $query->whereDoesntHave('anggota_rombel', function($query){
                 $query->whereHas('rombongan_belajar', function($query){
+                    $query->where('tingkat', '<>', 0);
+                    $query->where('semester_id', semester_id());
+                });
+            });
+            $query->whereDoesntHave('pd_keluar', function($query){
+                $query->where('semester_id', semester_id());
+            });
+        })->with(['agama'])->orderBy('nama')->get();
+        return response()->json($data);
+    }
+    public function non_anggota_ekskul(){
+        $data = Peserta_didik::where(function($query){
+            $query->whereDoesntHave('anggota_rombel', function($query){
+                $query->whereHas('rombongan_belajar', function($query){
+                    $query->where('tingkat', 0);
+                    $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
                     $query->where('semester_id', semester_id());
                 });
             });
@@ -1829,5 +1914,17 @@ class ReferensiController extends Controller
             }
         }
         return response()->json($data);        
+    }
+    public function ekstrakurikuler(){
+        $data = Rombongan_belajar::with(['wali_kelas'])->where(function($query){
+            $query->where('tingkat', 0);
+            $query->where('semester_id', semester_id());
+        })->withCount('anggota_rombel')->orderBy(request()->sortby, request()->sortbydesc)
+        ->when(request()->q, function($query) {
+            $query->where('nama', 'ilike', '%'.request()->q.'%');
+            $query->where('semester_id', semester_id());
+        })
+        ->paginate(request()->per_page);
+        return response()->json(['status' => 'success', 'data' => $data, 'semester_id' => semester_id()]);
     }
 }
