@@ -670,8 +670,8 @@ class PresensiController extends Controller
     }
     public function get_guru(){
         $tanggal = Carbon::createFromDate(request()->tanggal);
-        $data = [
-            'guru' => Guru::orderBy('nama')->where(function($query) use ($tanggal) {
+        /*
+        Guru::orderBy('nama')->where(function($query) use ($tanggal) {
                 $query->whereHas('jadwal', function($query) use ($tanggal){
                     $query->where('hari', $tanggal->translatedFormat('l'));
                     $query->where('jadwal.rombongan_belajar_id', request()->rombongan_belajar_id);
@@ -685,7 +685,19 @@ class PresensiController extends Controller
                     $query->where('hari', $tanggal->translatedFormat('l'));
                     $query->with(['jam']);
                 }
-            ])->get(),
+            ])->get()
+        */
+        $data = [
+            'guru' => Guru::withWhereHas('jadwal', function($query) use ($tanggal){
+                $query->where('hari', $tanggal->translatedFormat('l'));
+                $query->where('jadwal.rombongan_belajar_id', request()->rombongan_belajar_id);
+                $query->with(['jam']);
+            })->with([
+                'presensi' => function($query) use ($tanggal){
+                    $query->whereDate('tanggal', $tanggal);
+                    $query->orderBy('jam');
+                }
+            ])->orderBy('nama')->get(),
             'tanggal' => request()->tanggal,
             'hari' => $tanggal->translatedFormat('l'),
         ];
