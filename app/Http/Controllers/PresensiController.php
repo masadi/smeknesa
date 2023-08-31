@@ -691,7 +691,7 @@ class PresensiController extends Controller
             'guru' => Guru::withWhereHas('jadwal', function($query) use ($tanggal){
                 $query->where('hari', $tanggal->translatedFormat('l'));
                 $query->where('jadwal.rombongan_belajar_id', request()->rombongan_belajar_id);
-                $query->with(['jam']);
+                $query->withWhereHas('jam');
             })->with([
                 'presensi' => function($query) use ($tanggal){
                     $query->whereDate('tanggal', $tanggal);
