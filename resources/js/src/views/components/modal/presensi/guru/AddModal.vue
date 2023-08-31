@@ -217,6 +217,7 @@ export default {
     changeGuru(val){
       var _this = this
       this.data_jam = []
+      var set_data_jam = []
       if(val){
         const guru = this.data_guru.filter((item) => {
           return item.guru_id === val
@@ -226,12 +227,16 @@ export default {
           guru[0].jadwal.forEach(item => {
             jadwal_id[item.jadwal_id] = item.jadwal_id
             item.jam.forEach(item => {
-              _this.data_jam.push(item.jam)
+              set_data_jam.push(item.jam)
             })
           })
           this.form.jadwal_id = jadwal_id
         }
       }
+      this.data_jam = this.uniqueChars(set_data_jam)
+    },
+    uniqueChars(arr){
+      return [...new Set(arr)];
     },
     getAbsen(arr, jam_ke){
       const absen = arr.filter((item) => {
