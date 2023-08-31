@@ -104,15 +104,13 @@ export default {
       type: Boolean,
       default: () => true,
     },
-    isAsesor: {
+    loading: {
       type: Boolean,
       default: () => false,
     }
   },
   data() {
     return {
-      loading: false,
-      loading_modal: false,
       sortBy: null,
       sortDesc: false,
     }

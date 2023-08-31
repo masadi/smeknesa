@@ -38,7 +38,7 @@
                     </b-dropdown>
                   </b-overlay>
                   <b-overlay :show="loading" opacity="0.6" size="md" spinner-variant="secondary">
-                    <v-select id="jam" v-model="form.absensi[bolos]" :options="['A', 'I', 'S', 'D']" placeholder="== Pilih Opsi ==" style="width:100px" class="mr-1">
+                    <v-select id="jam" v-model="form.absensi[bolos]" :options="['A', 'I', 'S']" placeholder="== Pilih Opsi ==" style="width:100px" class="mr-1">
                       <template #no-options="{ search, searching, loading }">
                         Tidak ada data untuk ditampilkan
                       </template>
@@ -155,16 +155,15 @@ export default {
       this.data_jam = []
       this.data_guru = []
       eventBus.$emit('loading', true)
-      this.$http.get('/presensi/get-guru', {
-        params: {
-          tanggal: this.form.tanggal,
-          rombongan_belajar_id: this.form.rombongan_belajar_id,
-        }
+      this.$http.post('/presensi/get-guru', {
+        tanggal: this.form.tanggal,
+        rombongan_belajar_id: this.form.rombongan_belajar_id,
       }).then(response => {
         eventBus.$emit('loading', false)
         this.loading = false
         let getData = response.data
-        this.data_guru = getData
+        console.log(getData);
+        this.data_guru = getData.guru
         /*const guru_absen = this.data_guru.filter((item) => {
           return item.presensi.length > 0
         })

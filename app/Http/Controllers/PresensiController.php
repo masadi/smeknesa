@@ -670,24 +670,25 @@ class PresensiController extends Controller
     }
     public function get_guru(){
         $tanggal = Carbon::createFromDate(request()->tanggal);
-        $data = Guru::orderBy('nama')->where(function($query) use ($tanggal) {
-            $query->whereHas('jadwal', function($query) use ($tanggal){
-                $query->where('hari', $tanggal->translatedFormat('l'));
-                $query->where('jadwal.rombongan_belajar_id', request()->rombongan_belajar_id);
-            });
-            /*$query->whereHas('pembelajaran', function($query){
-                $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
-            });*/
-        })->with([
-            'presensi' => function($query) use ($tanggal){
-                $query->whereDate('tanggal', $tanggal);
-                $query->orderBy('jam');
-            },
-            'jadwal' => function($query) use ($tanggal){
-                $query->where('hari', $tanggal->translatedFormat('l'));
-                $query->with(['jam']);
-            }
-        ])->get();
+        $data = [
+            'guru' => Guru::orderBy('nama')->where(function($query) use ($tanggal) {
+                $query->whereHas('jadwal', function($query) use ($tanggal){
+                    $query->where('hari', $tanggal->translatedFormat('l'));
+                    $query->where('jadwal.rombongan_belajar_id', request()->rombongan_belajar_id);
+                });
+            })->with([
+                'presensi' => function($query) use ($tanggal){
+                    $query->whereDate('tanggal', $tanggal);
+                    $query->orderBy('jam');
+                },
+                'jadwal' => function($query) use ($tanggal){
+                    $query->where('hari', $tanggal->translatedFormat('l'));
+                    $query->with(['jam']);
+                }
+            ])->get(),
+            'tanggal' => request()->tanggal,
+            'hari' => $tanggal->translatedFormat('l'),
+        ];
         return response()->json($data);
     }
 }

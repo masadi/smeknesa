@@ -40,11 +40,11 @@
                     </v-select>
                   </b-overlay>
                   <b-overlay :show="loading_anggota || loading_jam" opacity="0.6" size="md" spinner-variant="secondary">
-                    <b-dropdown id="dropdown-form" text="== Pilih Jam ==" ref="dropdown" class="mr-1">
+                    <b-dropdown id="dropdown-form" text="== Pilih Jam ==" ref="dropdown" class="mr-1" checkbox-menu allow-focus>
                       <b-dropdown-form>
-                        <b-form-checkbox v-model="allSelected[bolos]" :indeterminate="indeterminate" aria-describedby="jam" aria-controls="jam" @change="toggleAll(bolos)" value="all" unchecked-value="none">
+                        <!--b-form-checkbox v-model="allSelected[bolos]" :indeterminate="indeterminate" aria-describedby="jam" aria-controls="jam" @change="toggleAll(bolos)" value="all" unchecked-value="none">
                           {{ allSelected[bolos] ? 'Lepas Semua' : 'Pilih Semua' }}
-                        </b-form-checkbox>
+                        </b-form-checkbox-->
                         <b-form-checkbox-group id="jam" v-model="form.jam[bolos]" :options="data_jam" name="jam" stacked></b-form-checkbox-group>
                       </b-dropdown-form>
                     </b-dropdown>

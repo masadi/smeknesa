@@ -156,7 +156,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/get-kelas', [PresensiController::class, 'get_kelas']);
     Route::post('/get-rekap', [PresensiController::class, 'get_rekap']);
     Route::get('/get-rombel', [PresensiController::class, 'get_rombel']);
-    Route::get('/get-guru', [PresensiController::class, 'get_guru']);
+    Route::post('/get-guru', [PresensiController::class, 'get_guru']);
     Route::get('/get-hari', [PresensiController::class, 'get_hari']);
     Route::post('/get-hari', [PresensiController::class, 'get_hari']);
     Route::post('/simpan', [PresensiController::class, 'simpan']);
