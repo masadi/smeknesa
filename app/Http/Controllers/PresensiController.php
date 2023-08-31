@@ -673,7 +673,7 @@ class PresensiController extends Controller
         $data = Guru::orderBy('nama')->where(function($query) use ($tanggal) {
             $query->whereHas('jadwal', function($query) use ($tanggal){
                 $query->where('hari', $tanggal->translatedFormat('l'));
-                $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
+                $query->where('jadwal.rombongan_belajar_id', request()->rombongan_belajar_id);
             });
             /*$query->whereHas('pembelajaran', function($query){
                 $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
