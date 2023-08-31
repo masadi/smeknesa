@@ -145,10 +145,9 @@ export default {
             })
           },
         }).then(result => {
-          //eventBus.$emit('loading', false);
-          window.open(`/export/rekap-absensi-siswa/${getData.semester_id}/${getData.rombongan_belajar_id}/${getData.bulan}/${result.value}`, '_blank'); 
-          console.log(getData);
-          console.log(result.value);
+          if(result.isConfirmed){
+            window.open(`/export/rekap-absensi-siswa/${getData.semester_id}/${getData.rombongan_belajar_id}/${getData.bulan}/${result.value}`, '_blank'); 
+          }
         })
       });
       /*
