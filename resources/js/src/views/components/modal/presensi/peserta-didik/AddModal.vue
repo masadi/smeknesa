@@ -39,17 +39,13 @@
                       </template>
                     </v-select>
                   </b-overlay>
-                  <b-overlay :show="loading_anggota || loading_jam" opacity="0.6" size="md" spinner-variant="secondary">
-                    <b-dropdown id="dropdown-form" text="== Pilih Jam ==" ref="dropdown" class="mr-1" checkbox-menu allow-focus>
+                  <b-overlay :show="loading_anggota" opacity="0.6" size="md" spinner-variant="secondary">
+                    <b-dropdown id="dropdown-form" text="Pilih Jam" ref="dropdown" class="mr-1">
                       <b-dropdown-form>
-                        <!--b-form-checkbox v-model="allSelected[bolos]" :indeterminate="indeterminate" aria-describedby="jam" aria-controls="jam" @change="toggleAll(bolos)" value="all" unchecked-value="none">
-                          {{ allSelected[bolos] ? 'Lepas Semua' : 'Pilih Semua' }}
-                        </b-form-checkbox-->
-                        <b-form-checkbox-group id="jam" v-model="form.jam[bolos]" :options="data_jam" name="jam" stacked></b-form-checkbox-group>
+                        <b-form-checkbox-group v-model="form.jam[bolos]" :options="data_jam" name="jam" stacked></b-form-checkbox-group>
                       </b-dropdown-form>
                     </b-dropdown>
                   </b-overlay>
-                  <!--v-model="form.jam[bolos]"-->
                   <b-overlay :show="loading_anggota" opacity="0.6" size="md" spinner-variant="secondary">
                     <v-select id="jam" v-model="form.absensi[bolos]" :options="['A', 'I', 'S', 'D']" placeholder="== Pilih Opsi ==" style="width:100px" class="mr-1">
                       <template #no-options="{ search, searching, loading }">
@@ -193,35 +189,9 @@ export default {
     }
   },
   created() {
-    this.form.jam[1] = []
     eventBus.$on('open-modal-presensi-pd', this.handleEvent);
   },
-  /*watch: {
-    selected(newValue, oldValue) {
-      console.log(newValue);
-      console.log(oldValue);
-      // Handle changes in individual flavour checkboxes
-      if (newValue.length === 0) {
-        this.indeterminate = false
-        this.allSelected = false
-      } else if (newValue.length === this.data_jam.length) {
-        this.indeterminate = false
-        this.allSelected = true
-      } else {
-        this.indeterminate = true
-        this.allSelected = false
-      }
-    }
-  },*/
   methods: {
-    toggleAll(bolos) {
-      if(this.allSelected[bolos] == 'all'){
-        this.data_jam.forEach(element => {
-          this.form.jam[bolos].push(element)
-        });
-      }
-      this.form.jam[bolos] = []
-    },
     handleEvent(){
       this.$http.get('/presensi/get-hari').then(response => {
         let getData = response.data
@@ -237,7 +207,6 @@ export default {
     },
     addSelect(){
       this.siswa_bolos = this.siswa_bolos + 1
-      this.form.jam[this.siswa_bolos] = []
     },
     changeHari(){
       this.loading_jam = true
