@@ -53,7 +53,7 @@
         </template>
         <template v-else>
           <b-tr>
-            <b-td class="text-center" colspan="4">Tidak ada data untuk ditampilkan</b-td>
+            <b-td class="text-center" colspan="7">Tidak ada data untuk ditampilkan</b-td>
           </b-tr>
         </template>
       </b-tbody>
