@@ -257,18 +257,22 @@ class PresensiController extends Controller
                 Presensi::whereHas('anggota_rombel', function($query){
                     $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
                 })->where('tanggal', request()->tanggal)->delete();
-            } else {
+            } 
+            if(request()->anggota_rombel_id) {
                 Presensi::where('anggota_rombel_id', request()->anggota_rombel_id)->where('tanggal', request()->tanggal)->delete();
+            }
+            if(request()->guru_id) {
+                Presensi::where('guru_id', request()->guru_id)->where('tanggal', request()->tanggal)->delete();
             }
             $data = [
                 'icon' => 'success',
-                'text' => 'Presensi Siswa berhasil dihapus',
+                'text' => 'Presensi berhasil dihapus',
                 'title' => 'Berhasil',
             ];
         } else {
             $data = [
                 'icon' => 'error',
-                'text' => 'Presensi siswa gagal dihapus. Tanggal tidak boleh kosong!',
+                'text' => 'Presensi gagal dihapus. Tanggal tidak boleh kosong!',
                 'title' => 'Gagal',
             ];
         }

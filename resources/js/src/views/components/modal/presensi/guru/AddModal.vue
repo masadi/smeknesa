@@ -54,6 +54,34 @@
             </b-col>
           </template>
         </b-row>
+        <b-table-simple bordered v-if="data_guru.length">
+          <b-thead>
+            <b-tr>
+              <b-th class="text-center" colspan="8">Data Guru yang telah di absen pada hari {{hari}}</b-th>
+            </b-tr>
+            <b-tr>
+              <b-th class="text-center" rowspan="2">No</b-th>
+              <b-th class="text-center" rowspan="2">Nama</b-th>
+              <b-th class="text-center" colspan="3">Presensi</b-th>
+              <b-th class="text-center" rowspan="2">Aksi</b-th>
+            </b-tr>
+            <b-tr>
+              <b-th class="text-center">A</b-th>
+              <b-th class="text-center">I</b-th>
+              <b-th class="text-center">S</b-th>
+            </b-tr>
+          </b-thead>
+          <b-tbody>
+            <b-tr v-for="(item, index) in guru_absen" :key="item.guru_id">
+              <b-td class="text-center">{{index + 1}}</b-td>
+              <b-td>{{item.nama}}</b-td>
+              <b-td class="text-center">{{getPresensi(item.presensi, 'A').map(u => u.jam).join(', ')}}</b-td>
+              <b-td class="text-center">{{getPresensi(item.presensi, 'I').map(u => u.jam).join(', ')}}</b-td>
+              <b-td class="text-center">{{getPresensi(item.presensi, 'S').map(u => u.jam).join(', ')}}</b-td>
+              <b-td class="text-center"><a @click="hapusPresensi(item.guru_id)" class="text-danger"><trash-icon size="20" /></a></b-td>
+            </b-tr>
+          </b-tbody>
+        </b-table-simple>
       </b-form>
     </b-overlay>
     <template #modal-footer="{ ok, cancel }">
@@ -116,6 +144,7 @@ export default {
       data_guru: [],
       data_bolos: 1,
       data_jam: [],
+      guru_absen: [],
     }
   },
   created() {
@@ -164,6 +193,9 @@ export default {
         let getData = response.data
         console.log(getData);
         this.data_guru = getData.guru
+        this.guru_absen = this.data_guru.filter((item) => {
+          return item.presensi.length > 0
+        });
         /*const guru_absen = this.data_guru.filter((item) => {
           return item.presensi.length > 0
         })
@@ -301,6 +333,42 @@ export default {
         }
       }).catch(error => {
         console.log(error);
+      })
+    },
+    hapusPresensi(guru_id){
+      this.$swal({
+        title: 'Apakah Anda yakin?',
+        text: 'Tindakan ini tidak dapat dikembalikan!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yakin!',
+        customClass: {
+          confirmButton: 'btn btn-primary',
+          cancelButton: 'btn btn-outline-danger ml-1',
+        },
+        buttonsStyling: false,
+        allowOutsideClick: () => false,
+      }).then(result => {
+        if (result.value) {
+          this.loading_form = true
+          this.$http.post('/presensi/hapus', {
+            guru_id: guru_id,
+            tanggal: this.form.tanggal,
+          }).then(response => {
+            this.loading_form = false
+            let getData = response.data
+            this.$swal({
+              icon: getData.icon,
+              title: getData.title,
+              text: getData.text,
+              customClass: {
+                confirmButton: 'btn btn-success',
+              },
+            }).then(result => {
+              this.getGuru()
+            })
+          });
+        }
       })
     },
     onContext(ctx) {

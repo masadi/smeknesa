@@ -135,6 +135,7 @@ class AuthController extends Controller
                     $query->where('absen', 'I');
                 },
             ])->where(function($query) use ($request){
+                $query->has('jam');
                 $query->whereHas('pembelajaran', function($query) use ($request){
                     $query->where('semester_id', semester_id());
                     if($request->user()->guru_id){
