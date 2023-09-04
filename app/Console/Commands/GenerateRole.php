@@ -34,6 +34,11 @@ class GenerateRole extends Command
                 'display_name' => 'Tata Usaha',
                 'description' => 'Tata Usaha',
             ],
+            [
+                'name' => 'super',
+                'display_name' => 'Super Admin',
+                'description' => 'Super Admin',
+            ],
         ];
         foreach($roles as $role){
             Role::updateOrCreate(

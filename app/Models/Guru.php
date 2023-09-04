@@ -101,4 +101,7 @@ class Guru extends Model
 	public function agama(){
 		return $this->hasOne(Agama::class, 'agama_id', 'agama_id');
 	}
+	public function kelas_bk(){
+		return $this->hasMany(Kelas_bk::class, 'guru_id', 'guru_id');
+	}
 }

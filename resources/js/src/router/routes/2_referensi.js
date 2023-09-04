@@ -244,4 +244,30 @@ export default [
       },
     },
   },
+  {
+    path: '/referensi/mapping-guru-bk',
+    name: 'guru-bk',
+    component: () => import('@/views/referensi/guru-bk/Index.vue'),
+    meta: {
+      resource: 'Guru_BK',
+      action: 'read',
+      pageTitle: 'Mapping Guru BK',
+      breadcrumb: [
+        {
+          text: 'Referensi',
+        },
+        {
+          text: 'Mapping Guru BK',
+          active: true,
+        },
+      ],
+      tombol_add: {
+        action: 'add-bk',
+        link: '',
+        variant: 'primary',
+        text: 'Tambah Data',
+        role: ['administrator'],
+      },
+    },
+  },
 ]

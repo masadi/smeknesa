@@ -93,9 +93,17 @@ class PresensiController extends Controller
                     if(loggedUser()->hasRole('walas', request()->periode_aktif)){
                         $query->whereHas('rombongan_belajar', function($query){
                             $query->where('semester_id', semester_id());
-                                $query->where('guru_id', request()->guru_id);
+                            $query->where('guru_id', request()->guru_id);
                         });
                     }
+                }
+                if(loggedUser()->hasRole(['bk'], request()->periode_aktif)){
+                    $query->whereHas('rombongan_belajar', function($query){
+                        $query->whereHas('kelas_bk', function($query){
+                            $query->where('semester_id', semester_id());
+                            $query->where('guru_id', request()->tingkat);
+                        });
+                    });
                 }
             } else {
                 /*$query->whereHas('jadwal', function ($query) {

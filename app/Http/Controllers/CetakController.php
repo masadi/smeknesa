@@ -34,7 +34,11 @@ class CetakController extends Controller
                 $query->with(['wali_kelas', 'jurusan_sp', 'semester', 'pembelajaran' => function($query){
                     $query->with(['nilai' => function($query){
                         $query->where('jenis_penilaian_id', 2);
-                        $query->where('angka', '<', 75);
+                        //$query->where('angka', '<', 75);
+                        $query->join('pembelajaran', function ($join) {
+                            $join->on('nilai.pembelajaran_id', '=', 'pembelajaran.pembelajaran_id');
+                            $join->on('nilai.angka', '<', 'pembelajaran.kktp');
+                        });
                         $query->with('tp');
                         $query->whereHas('pd', function($query){
                             $query->where('peserta_didik.peserta_didik_id', request()->route('peserta_didik_id'));

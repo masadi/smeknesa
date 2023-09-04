@@ -17,7 +17,7 @@
         </b-col>
       </template>
       <template v-else>
-        <b-col :md="cols" class="mb-2">
+        <!--b-col :md="cols" class="mb-2">
           <v-select v-model="meta.bulan" :reduce="huruf => huruf.angka" label="huruf" :options="meta.data_bulan" placeholder="== Filter Bulan ==" @input="changeBulan">
             <template #no-options="{ search, searching, loading }">
               Tidak ada data untuk ditampilkan
@@ -44,6 +44,12 @@
         </b-col>
         <b-col md="6" class="mb-2">
           <b-form-input @input="search" placeholder="Cari data..."></b-form-input>
+        </b-col-->
+        <b-col md="6" class="mb-2">
+          <v-select v-model="meta.per_page" :options="[10, 25, 50, 100]" @input="loadPerPage" :clearable="false" :searchable="false"></v-select>
+        </b-col>
+        <b-col md="6" class="mb-2">
+          <b-form-input @input="search" placeholder="Cari data..."></b-form-input>
         </b-col>
       </template>
     </b-row>
@@ -65,35 +71,85 @@
           </div>
         </template>
         <template v-slot:cell(A)="row">
-          <template v-if="row.item.A > 0">
-            <b-badge :variant="getBadge('A')">{{row.item.A}}</b-badge>
+          <template v-if="meta.isData == 'guru'">
+            <template v-if="row.item.A > 0">
+              <b-badge :variant="getBadge('A')">
+                {{row.item.A}}
+              </b-badge>
+            </template>
+            <template v-else>
+              {{row.item.A}}
+            </template>
           </template>
           <template v-else>
-            {{row.item.A}}
+            <template v-if="dibagi(row.item.A) > 0">
+              <b-badge :variant="getBadge('A')">
+                {{dibagi(row.item.A)}}
+              </b-badge>
+            </template>
+            <template v-else>
+              {{dibagi(row.item.A)}}
+            </template>
           </template>
         </template>
         <template v-slot:cell(S)="row">
-          <template v-if="row.item.S > 0">
-            <b-badge :variant="getBadge('S')">{{row.item.S}}</b-badge>
+          <template v-if="meta.isData == 'guru'">
+            <template v-if="row.item.S > 0">
+              <b-badge :variant="getBadge('S')">{{row.item.S}}</b-badge>
+            </template>
+            <template v-else>
+              {{row.item.S}}
+            </template>
           </template>
           <template v-else>
-            {{row.item.S}}
+            <template v-if="dibagi(row.item.S) > 0">
+              <b-badge :variant="getBadge('S')">
+                {{dibagi(row.item.S)}}
+              </b-badge>
+            </template>
+            <template v-else>
+              {{dibagi(row.item.S)}}
+            </template>
           </template>
         </template>
         <template v-slot:cell(I)="row">
-          <template v-if="row.item.I > 0">
-            <b-badge :variant="getBadge('I')">{{row.item.I}}</b-badge>
+          <template v-if="meta.isData == 'guru'">
+            <template v-if="row.item.I > 0">
+              <b-badge :variant="getBadge('I')">{{row.item.I}}</b-badge>
+            </template>
+            <template v-else>
+              {{row.item.I}}
+            </template>
           </template>
           <template v-else>
-            {{row.item.I}}
+            <template v-if="dibagi(row.item.I) > 0">
+              <b-badge :variant="getBadge('I')">
+                {{dibagi(row.item.I)}}
+              </b-badge>
+            </template>
+            <template v-else>
+              {{dibagi(row.item.I)}}
+            </template>
           </template>
         </template>
         <template v-slot:cell(D)="row">
-          <template v-if="row.item.D > 0">
-            <b-badge :variant="getBadge('D')">{{row.item.D}}</b-badge>
+          <template v-if="meta.isData == 'guru'">
+            <template v-if="row.item.D > 0">
+              <b-badge :variant="getBadge('D')">{{row.item.D}}</b-badge>
+            </template>
+            <template v-else>
+              {{row.item.D}}
+            </template>
           </template>
           <template v-else>
-            {{row.item.D}}
+            <template v-if="dibagi(row.item.D) > 0">
+              <b-badge :variant="getBadge('D')">
+                {{dibagi(row.item.D)}}
+              </b-badge>
+            </template>
+            <template v-else>
+              {{dibagi(row.item.D)}}
+            </template>
           </template>
         </template>
         <template v-slot:cell(actions)="row">
@@ -284,6 +340,12 @@ export default {
           data_rombel: [],
         })
       }
+    },
+    dibagi(angka){
+      if(angka){
+        angka = angka / 11;
+      }
+      return angka.toFixed();
     },
   },
 }

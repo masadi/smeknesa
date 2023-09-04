@@ -66,13 +66,13 @@ export default [
         resource: 'System',
         action: 'read',
       },
-      /*{
+      {
         icon: 'hand-click-icon',
-        title: 'Jadwal Pembelajaran',
-        route: 'jadwal-pembelajaran',
-        resource: 'Jadwal',
+        title: 'Mapping Guru BK',
+        route: 'guru-bk',
+        resource: 'Guru_BK',
         action: 'read',
-      },*/
+      },
     ],
   },
 ]

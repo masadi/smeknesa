@@ -30,20 +30,88 @@ class GenerateAkses extends Command
     {
         $abilities = [
             [
+                'role' => 'administrator',
+                'akses' => ['Web', 'Beranda', 'Profile', 'Ref_Sekolah', 'Ref_Mapel', 'Ref_Jurusan', 'Ref_Kelas', 'Ref_Pd', 'Ref_Pd_Keluar', 'System', 'Akun', 'Jadwal', 'Magang_Dudi', 'Magang_Pembimbing', 'Magang_Permohonan', 'Magang_Absensi', 'Magang_Monitoring', 'Magang_Nilai', 'Magang_Sertifikat', 'Tatib_Sekolah', 'Tatib_Pelanggaran', 'Tatib_Rekap', 'Tatib_Bukti', 'Tatib_Ortu', 'Tatib_Pernyataan', 'Tatib_Peringatan', 'Tatib_Mundur', 'Whatsapp', 'Hak_Akses', 'Guru_BK'],
                 'action' => 'read',
-                'subject' => 'Web',
-                'roles' => ['administrator', 'guru', 'kepsek', 'pengajar', 'pd', 'piket', 'wakakur', 'walas', 'kajur', 'wakahumas', 'wakasiswa', 'bk'],
             ],
             [
+                'role' => 'guru',
+                'akses' => ['Web', 'Beranda', 'Profile'],
                 'action' => 'read',
-                'subject' => 'Beranda',
-                'roles' => ['administrator', 'guru', 'kepsek', 'pengajar', 'piket', 'wakakur', 'walas', 'kajur', 'wakahumas', 'wakasiswa', 'bk'],
             ],
             [
+                'role' => 'kepsek',
+                'akses' => ['Ref_Sekolah', 'Ref_Mapel', 'Ref_Guru', 'Kelulusan', 'Magang_Dudi'],
                 'action' => 'read',
-                'subject' => 'Profile',
-                'roles' => ['administrator', 'guru', 'kepsek', 'pengajar', 'piket', 'wakakur', 'walas', 'kajur', 'wakahumas', 'wakasiswa', 'bk'],
             ],
+            [
+                'role' => 'pengajar',
+                'akses' => ['Perencanaan', 'Penilaian', 'Rekap_Nilai', 'Modul'],
+                'action' => 'read',
+            ],
+            [
+                'role' => 'pd',
+                'akses' => ['Web', 'Beranda', 'Profile'],
+                'action' => 'read',
+            ],
+            [
+                'role' => 'piket',
+                'akses' => ['Ref_Mapel', 'Presensi_Guru', 'Presensi_Pd', 'Jadwal', 'Rekap_Presensi'],
+                'action' => 'read',
+            ],
+            [
+                'role' => 'wakakur',
+                'akses' => ['Ref_Mapel', 'Ref_Jurusan', 'Ref_Kelas', 'Remedial', 'Ref_Pd', 'Ref_Guru', 'Rekap_Presensi', 'Jadwal', 'Perencanaan', 'Penilaian', 'Rekap_Nilai', 'Modul', 'Kelulusan', 'Magang_Nilai'],
+                'action' => 'read',
+            ],
+            [
+                'role' => 'walas',
+                'akses' => ['Ref_Mapel', 'Ref_Pd', 'Rekap_Presensi', 'Jadwal', 'Kenaikan', 'Wali'],
+                'action' => 'read',
+            ],
+            [
+                'role' => 'kajur',
+                'akses' => ['Ref_Sekolah', 'Ref_Mapel', 'Ref_Pd', 'Jadwal', 'Kelulusan', 'Magang_Dudi', 'Magang_Pembimbing', 'Magang_Permohonan', 'Magang_Absensi', 'Magang_Nilai', 'Magang_Sertifikat', 'Tatib_Pelanggaran', 'Tatib_Rekap', 'Tatib_Bukti', 'Tatib_Ortu', 'Tatib_Pernyataan', 'Tatib_Peringatan', 'Tatib_Mundur'],
+                'action' => 'read',
+            ],
+            [
+                'role' => 'wakahumas',
+                'akses' => ['Ref_Mapel', 'Ref_Guru', 'Jadwal', 'Magang_Dudi', 'Magang_Pembimbing', 'Magang_Permohonan', 'Magang_Absensi', 'Magang_Nilai', 'Magang_Sertifikat'],
+                'action' => 'read',
+            ],
+            [
+                'role' => 'wakasiswa',
+                'akses' => ['Ref_Sekolah', 'Ref_Mapel', 'Ref_Pd', 'Ref_Guru', 'Rekap_Presensi', 'Jadwal', 'Tatib_Sekolah', 'Tatib_Pelanggaran', 'Tatib_Rekap', 'Tatib_Bukti', 'Tatib_Ortu', 'Tatib_Pernyataan', 'Tatib_Peringatan', 'Tatib_Mundur'],
+                'action' => 'read',
+            ],
+            [
+                'role' => 'bk',
+                'akses' => ['Ref_Sekolah', 'Rekap_Presensi', 'Jadwal', 'Kelulusan', 'Tatib_Sekolah', 'Tatib_Pelanggaran', 'Tatib_Rekap', 'Tatib_Bukti', 'Tatib_Ortu', 'Tatib_Pernyataan', 'Tatib_Peringatan', 'Tatib_Mundur'],
+                'action' => 'read',
+            ],
+            [
+                'role' => 'super',
+                'akses' => ['manage'],
+                'action' => 'all',
+            ],
+        ];
+        Permission::truncate();
+        foreach($abilities as $ab){
+            $r = Role::where('name', $ab['role'])->first();
+            foreach($ab['akses'] as $perm){
+                $permission = Permission::updateOrCreate([
+                    'name' => $perm,
+                    'display_name' => $perm,
+                    'description' => 'read',
+                ]);
+                if(!$r->hasPermission($permission->name)){
+                    $r->attachPermission($permission);
+                }
+            }
+            
+        }
+        return Command::SUCCESS;
+        $abilities = [
             [
                 'action' => 'read',
                 'subject' => 'Ref_Sekolah',
@@ -52,7 +120,7 @@ class GenerateAkses extends Command
             [
                 'action' => 'read',
                 'subject' => 'Ref_Mapel',
-                'roles' => ['administrator', 'pengajar', 'wakakur', 'kajur'],
+                'roles' => ['administrator', 'kepsek', 'piket', 'wakakur', 'walas', 'kajur', 'wakahumas', 'wakasiswa'],
             ],
             [
                 'action' => 'read',
@@ -73,11 +141,6 @@ class GenerateAkses extends Command
                 'action' => 'read',
                 'subject' => 'Ref_Pd',
                 'roles' => ['administrator', 'wakakur', 'walas', 'kajur', 'wakasiswa'],
-            ],
-            [
-                'action' => 'read',
-                'subject' => 'Ref_Pd_Keluar',
-                'roles' => ['administrator', 'wakasiswa', 'bk', 'tu'],
             ],
             [
                 'action' => 'read',
@@ -162,17 +225,17 @@ class GenerateAkses extends Command
             [
                 'action' => 'read',
                 'subject' => 'Magang_Pembimbing',
-                'roles' => ['administrator', 'walas', 'kajur', 'wakahumas'],
+                'roles' => ['administrator', 'kajur', 'wakahumas'],
             ],
             [
                 'action' => 'read',
                 'subject' => 'Magang_Permohonan',
-                'roles' => ['administrator', 'walas', 'kajur', 'wakahumas'],
+                'roles' => ['administrator', 'kajur', 'wakahumas'],
             ],
             [
                 'action' => 'read',
                 'subject' => 'Magang_Absensi',
-                'roles' => ['administrator', 'walas', 'kajur', 'wakahumas'],
+                'roles' => ['administrator', 'kajur', 'wakahumas'],
             ],
             [
                 'action' => 'read',
@@ -182,12 +245,12 @@ class GenerateAkses extends Command
             [
                 'action' => 'read',
                 'subject' => 'Magang_Nilai',
-                'roles' => ['administrator', 'wakakur', 'walas', 'kajur', 'wakahumas'],
+                'roles' => ['administrator', 'wakakur', 'kajur', 'wakahumas'],
             ],
             [
                 'action' => 'read',
                 'subject' => 'Magang_Sertifikat',
-                'roles' => ['administrator', 'walas', 'kajur', 'wakahumas'],
+                'roles' => ['administrator', 'kajur', 'wakahumas'],
             ],
             [
                 'action' => 'read',
@@ -197,37 +260,37 @@ class GenerateAkses extends Command
             [
                 'action' => 'read',
                 'subject' => 'Tatib_Pelanggaran',
-                'roles' => ['administrator', 'walas', 'kajur', 'wakasiswa', 'bk'],
+                'roles' => ['administrator', 'kajur', 'wakasiswa', 'bk'],
             ],
             [
                 'action' => 'read',
                 'subject' => 'Tatib_Rekap',
-                'roles' => ['administrator', 'walas', 'kajur', 'wakasiswa', 'bk'],
+                'roles' => ['administrator', 'kajur', 'wakasiswa', 'bk'],
             ],
             [
                 'action' => 'read',
                 'subject' => 'Tatib_Bukti',
-                'roles' => ['administrator', 'walas', 'kajur', 'wakasiswa', 'bk'],
+                'roles' => ['administrator', 'kajur', 'wakasiswa', 'bk'],
             ],
             [
                 'action' => 'read',
                 'subject' => 'Tatib_Ortu',
-                'roles' => ['administrator', 'walas', 'kajur', 'wakasiswa', 'bk'],
+                'roles' => ['administrator', 'kajur', 'wakasiswa', 'bk'],
             ],
             [
                 'action' => 'read',
                 'subject' => 'Tatib_Pernyataan',
-                'roles' => ['administrator', 'walas', 'kajur', 'wakasiswa', 'bk'],
+                'roles' => ['administrator', 'kajur', 'wakasiswa', 'bk'],
             ],
             [
                 'action' => 'read',
                 'subject' => 'Tatib_Peringatan',
-                'roles' => ['administrator', 'walas', 'kajur', 'wakasiswa', 'bk'],
+                'roles' => ['administrator', 'kajur', 'wakasiswa', 'bk'],
             ],
             [
                 'action' => 'read',
                 'subject' => 'Tatib_Mundur',
-                'roles' => ['administrator', 'walas', 'kajur', 'wakasiswa', 'bk'],
+                'roles' => ['administrator', 'kajur', 'wakasiswa', 'bk'],
             ],
             [
                 'action' => 'read',
@@ -254,21 +317,11 @@ class GenerateAkses extends Command
                 'subject' => 'Rekapitulasi',
                 'roles' => ['wakakur', 'wakasiswa'],
             ],
+            [
+                'action' => 'read',
+                'subject' => 'Guru_BK',
+                'roles' => ['administrator'],
+            ],
         ];
-        Permission::truncate();
-        foreach($abilities as $ab){
-            $permission = Permission::updateOrCreate([
-                'name' => $ab['subject'],
-                'display_name' => $ab['subject'],
-                'description' => $ab['action'],
-            ]);
-            foreach($ab['roles'] as $role){
-                $r = Role::where('name', $role)->first();
-                if(!$r->hasPermission($permission->name)){
-                    $r->attachPermission($permission);
-                }
-            }
-        }
-        return Command::SUCCESS;
     }
 }

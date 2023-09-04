@@ -19,6 +19,10 @@ class Rombongan_belajar extends Model
 	{
 		return $this->hasOne(Guru::class, 'guru_id', 'guru_id');
 	}
+	public function kelas_bk()
+	{
+		return $this->hasOne(Kelas_bk::class, 'rombongan_belajar_id', 'rombongan_belajar_id');
+	}
 	public function kurikulum()
 	{
 		return $this->hasOne(Kurikulum::class, 'kurikulum_id', 'kurikulum_id');

@@ -6,7 +6,7 @@
     <template v-else-if="hasRole('administrator')">
       <dashboard-admin></dashboard-admin>
     </template>
-    <template v-else-if="hasRole(['pengajar', 'walas'])">
+    <template v-else-if="hasRole('guru')">
       <dashboard-guru></dashboard-guru>
     </template>
     <template v-else-if="hasRole('siswa')">
@@ -36,6 +36,9 @@ export default {
   created() {
     if(this.hasRole('pd')){
       this.$router.replace(getHomeRouteForLoggedInUser(this.user.roles))
+    }
+    if(!this.hasRole(['administrator', 'kepsek', 'piket', 'wakakur', 'walas', 'kajur', 'wakahumas', 'wakasiswa'])){
+      this.$router.replace('/profile')
     }
   },
 }

@@ -191,7 +191,6 @@ class NilaiController extends Controller
                                 'penilaian_id' => NULL,
                                 'pembelajaran_id' => request()->pembelajaran_id,
                                 'jenis_penilaian_id' => request()->jenis_id,
-                                'peserta_didik_id' => request()->peserta_didik_id[$anggota_rombel_id],
                             ],
                             [
                                 'angka' => $nilai
@@ -205,7 +204,6 @@ class NilaiController extends Controller
                                 'penilaian_id' => $asesmen[$tp_id]->penilaian_id,
                                 'pembelajaran_id' => request()->pembelajaran_id,
                                 'jenis_penilaian_id' => request()->jenis_id,
-                                'peserta_didik_id' => request()->peserta_didik_id[$anggota_rombel_id],
                             ],
                             [
                                 'angka' => $nilai

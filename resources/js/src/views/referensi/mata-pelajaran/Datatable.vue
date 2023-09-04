@@ -19,6 +19,9 @@
             <strong>Loading...</strong>
           </div>
         </template>
+        <template v-slot:cell(guru)="row">
+          {{row.item.pembelajaran.guru.nama}}
+        </template>
         <template v-slot:cell(mapel_tingkat)="row">
           {{getJurusan(row.item.mapel_tingkat)}}
         </template>
@@ -26,10 +29,11 @@
           {{getTingkat(row.item.mapel_tingkat)}}
         </template>
         <template v-slot:cell(actions)="row">
-          <b-dropdown id="dropdown-dropleft" dropleft text="Detil" variant="primary" size="sm">
+          <b-dropdown id="dropdown-dropleft" dropleft text="Detil" variant="primary" size="sm" v-if="hasRole('administrator')">
             <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'edit')"><pencil-icon />Edit</b-dropdown-item>
             <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'hapus')"><trash-icon />Hapus</b-dropdown-item>
           </b-dropdown>
+          <b-button variant="primary" size="sm" v-if="hasRole('wakakur')" @click="aksi(row.item, 'kktp')">KKTP</b-button>
         </template>
       </b-table>
     </b-overlay>
@@ -46,7 +50,7 @@
 
 <script>
 import _ from 'lodash'
-import { BRow, BCol, BFormInput, BTable, BSpinner, BPagination, BDropdown, BDropdownItem, BOverlay } from 'bootstrap-vue'
+import { BRow, BCol, BFormInput, BTable, BSpinner, BPagination, BDropdown, BDropdownItem, BOverlay, BButton } from 'bootstrap-vue'
 import vSelect from 'vue-select'
 export default {
   components: {
@@ -59,6 +63,7 @@ export default {
     BDropdown,
     BDropdownItem,
     BOverlay,
+    BButton,
     vSelect,
   },
   props: {

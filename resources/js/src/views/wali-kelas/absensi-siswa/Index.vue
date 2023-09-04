@@ -71,13 +71,6 @@ export default {
           thClass: 'text-center',
           tdClass: 'text-center',
         },
-        {
-          key: 'actions',
-          label: 'Aksi',
-          sortable: false,
-          thClass: 'text-center',
-          tdClass: 'text-center',
-        },
       ],
       items: [],
       meta: {},

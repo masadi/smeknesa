@@ -4,7 +4,7 @@ export default [
     name: 'rekapitulasi-absensi-siswa',
     component: () => import('@/views/rekapitulasi/absensi-siswa/Index.vue'),
     meta: {
-      resource: 'Rekapitulasi',
+      resource: 'Rekap_Presensi',
       action: 'read',
       pageTitle: 'Absensi Siswa',
       breadcrumb: [
@@ -23,7 +23,7 @@ export default [
     name: 'rekapitulasi-absensi-guru',
     component: () => import('@/views/pages/Blank.vue'),
     meta: {
-      resource: 'Rekapitulasi',
+      resource: 'Rekap_Presensi',
       action: 'read',
       pageTitle: 'Rekap Absensi Guru',
       breadcrumb: [

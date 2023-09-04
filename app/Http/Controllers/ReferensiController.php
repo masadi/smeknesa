@@ -30,6 +30,7 @@ use App\Models\Jenis_keluar;
 use App\Models\Kenaikan_kelas;
 use App\Models\Jadwal;
 use App\Models\Jam;
+use App\Models\Kelas_bk;
 use Carbon\Carbon;
 use Indonesia;
 
@@ -44,6 +45,9 @@ class ReferensiController extends Controller
                 $query->withWhereHas('rombongan_belajar', function($query){
                     $query->where('semester_id', semester_id());
                 });
+                $query->withWhereHas('guru', function($query){
+                    $query->select('guru_id', 'nama');
+                });
             },
             'mapel_tingkat.jurusan_sp'
         ])->where($this->kondisiMapel())->orderBy(request()->sortby, request()->sortbydesc)
@@ -56,12 +60,12 @@ class ReferensiController extends Controller
     }
     private function kondisiMapel(){
         return function($query){
-            if($this->loggedUser()->hasRole('pengajar', periode_aktif())){
+            if($this->loggedUser()->hasRole('walas', periode_aktif())){
                 $query->whereHas('pembelajaran', function($query){
                     $query->whereHas('rombongan_belajar', function($query){
                         $query->where('semester_id', semester_id());
+                        $query->where('guru_id', $this->loggedUser()->guru_id);
                     });
-                    $query->where('guru_id', $this->loggedUser()->guru_id);
                 });
             }
             if($this->loggedUser()->hasRole('pd', periode_aktif())){
@@ -239,6 +243,21 @@ class ReferensiController extends Controller
     }
     public function guru_mapel(){
         $data = Guru::select('guru_id', 'nama', 'tanggal_lahir')->where($this->kondisi())->orderBy('nama')->get();
+        return response()->json($data);
+    }
+    public function guru_bk(){
+        $data = Guru::withWhereHas('kelas_bk', function($query){
+            $query->where('semester_id', semester_id());
+            $query->with('rombongan_belajar');
+        })->orderBy(request()->sortby, request()->sortbydesc)
+        ->when(request()->q, function($query) {
+            $query->where('nama', 'ilike', '%'.request()->q.'%');
+        })
+        ->paginate(request()->per_page);
+        return response()->json(['status' => 'success', 'data' => $data, 'semester_id' => semester_id()]);
+    }
+    public function get_kelas_bk(){
+        $data = rombongan_belajar::where('tingkat', request()->tingkat)->orderBy('nama')->get();
         return response()->json($data);
     }
     public function perangkat_pembelajaran(){
@@ -481,6 +500,42 @@ class ReferensiController extends Controller
                 'tingkat' => 0,
             ]);
         }
+        if(request()->data == 'bk'){
+            $text = 'Guru BK';
+            $validator = Validator::make(request()->all(), 
+                [
+                    'guru_id' => ['required'],
+                    'tingkat' => ['required'],
+                    'rombongan_belajar_id' => ['required'],
+                ],
+                [
+                    'guru_id.required' => 'Guru BK tidak boleh kosong',
+                    'tingkat.required' => 'Tingkat Kelas tidak boleh kosong',
+                    'rombongan_belajar_id.required' => 'Kelas tidak boleh kosong',
+                ]
+            );
+    
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => FALSE,
+                    'errors' => $validator->errors(),
+                ]);
+            }
+            $user = User::where('guru_id', request()->guru_id)->first();
+            if($user){
+                if(!$user->hasRole('bk', request()->periode_aktif)){
+                    $user->attachRole('bk', request()->periode_aktif);
+                }
+                foreach(request()->rombongan_belajar_id as $rombongan_belajar_id){
+                    Kelas_bk::updateOrCreate([
+                        'guru_id' => request()->guru_id,
+                        'semester_id' => request()->semester_id,
+                        'rombongan_belajar_id' => $rombongan_belajar_id,
+                    ]);
+                    $insert++;    
+                }
+            }
+        }
         if($insert){
             $data = [
                 'success' => TRUE,
@@ -530,6 +585,8 @@ class ReferensiController extends Controller
             $get = Rombongan_belajar::find(request()->id);
         } elseif(request()->data == 'kelompok'){
             $get = Kelompok::find(request()->id);
+        } elseif(request()->data == 'bk'){
+            $get = Kelas_bk::where('guru_id', request()->id)->where('semester_id', semester_id())->get();
         }
         
         if($get){
@@ -537,6 +594,12 @@ class ReferensiController extends Controller
             if(is_a($get, 'Illuminate\Database\Eloquent\Collection')) {
                 if(request()->data == 'jadwal-mapel'){
                     $delete = Jadwal::where('pembelajaran_id', request()->id)->delete();
+                }
+                if(request()->data == 'bk'){
+                    $delete = Kelas_bk::where('guru_id', request()->id)->where('semester_id', semester_id())->delete();
+                    $user = User::where('guru_id', request()->id)->first();
+                    $user->detachRole('bk', periode_aktif());
+                    $text = 'Guru BK';
                 }
             } else {
                 $delete = $get->delete();
@@ -719,21 +782,6 @@ class ReferensiController extends Controller
                 }
             }
             if(request()->aksi){
-                /*if(request()->aksi != 'pd'){
-                    if(request()->aksi == 'naik'){
-                        $query->whereHas('semester', function($query){
-                            $query->where('semester', 2);
-                            $query->where('tahun_ajaran_id', (tahun_ajaran_id() - 1));
-                            $query->where('tingkat', '<>', 12);
-                        });
-                    } else {
-                        $query->whereHas('semester', function($query){
-                            $query->where('semester', 1);
-                            $query->where('tahun_ajaran_id', tahun_ajaran_id());
-                        });
-                    }
-                    $query->doesntHave('rombel_trigger');
-                }*/
                 if(request()->aksi == 'kenaikan'){
                     $rombel = Rombongan_belajar::find(request()->id);
                     $query->where('tingkat', ($rombel->tingkat + 1));
@@ -742,6 +790,18 @@ class ReferensiController extends Controller
             }
             if(request()->nama){
                 $query->where('nama', 'ilike', '%'.request()->nama.'%');
+            }
+            if(request()->data){
+                if(request()->data == 'edit-bk'){
+                    $query->whereHas('kelas_bk', function($query){
+                        $query->where('guru_id', request()->guru_id);
+                    });
+                }
+                if(request()->data == 'bk'){
+                    $query->whereDoesntHave('kelas_bk', function($query){
+                        $query->where('semester_id', request()->semester_id);
+                    });
+                }
             }
             $query->where('semester_id', semester_id());
         })->select('rombongan_belajar_id', 'nama', 'semester_id')->orderBy('nama')->get();
@@ -1307,13 +1367,47 @@ class ReferensiController extends Controller
         if(request()->data == 'mapel'){
             return $this->updateMapel();
         }
+        if(request()->data == 'kktp'){
+            return $this->updateKktp();
+        }
         if(request()->data == 'kelompok'){
             return $this->updateKelompok();
+        }
+        if(request()->data == 'edit-bk'){
+            return $this->updateKelasBk();
         }
         return response()->json([
             'success' => FALSE,
             'errors' => 'Query tidak ditemukan',
         ]);
+    }
+    private function updateKelasBk(){
+        $validator = Validator::make(request()->all(), 
+            [
+                'rombongan_belajar_id' => ['required'],
+            ],
+            [
+                'rombongan_belajar_id.required' => 'Jurusan tidak boleh kosong',
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => FALSE,
+                'errors' => $validator->errors(),
+            ]);
+        }
+        Kelas_bk::whereNotIn('rombongan_belajar_id', request()->rombongan_belajar_id)->where(function($query){
+            $query->where('guru_id', request()->guru_id);
+            $query->where('semester_id', request()->semester_id);
+        })->delete();
+        $data = [
+            'success' => TRUE,
+            'errors' => NULL,
+            'icon' => 'success',
+            'text' => 'Kelas BK berhasil diperbaharui',
+            'title' => 'Berhasil',
+        ];
+        return response()->json($data);
     }
     private function updateMapel(){
         $validator = Validator::make(request()->all(), 
@@ -1348,6 +1442,43 @@ class ReferensiController extends Controller
                     ]);
                 }
             }
+            $data = [
+                'success' => TRUE,
+                'errors' => NULL,
+                'icon' => 'success',
+                'text' => 'Data Mata Pelajaran berhasil diperbaharui',
+                'title' => 'Berhasil',
+            ];
+        } else {
+            $data = [
+                'success' => TRUE,
+                'errors' => NULL,
+                'icon' => 'error',
+                'text' => 'Data Pelajaran gagal diperbaharui. Silahkan coba beberapa saat lagi!',
+                'title' => 'Gagal',
+            ];
+        }
+        return response()->json($data);
+    }
+    private function updateKktp(){
+        $validator = Validator::make(request()->all(), 
+            [
+                'kktp' => ['required'],
+            ],
+            [
+                'kktp.required' => 'KKTP tidak boleh kosong',
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => FALSE,
+                'errors' => $validator->errors(),
+            ]);
+        }
+        $data = Mata_pelajaran::find(request()->mata_pelajaran_id);
+        $data->kktp = request()->kktp;
+        if($data->save()){
+            Pembelajaran::where('mata_pelajaran_id', request()->mata_pelajaran_id)->where('semester_id', semester_id())->update(['kktp' => request()->kktp]);
             $data = [
                 'success' => TRUE,
                 'errors' => NULL,

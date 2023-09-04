@@ -11,6 +11,7 @@
     </b-card-body>
     <add-modal @reload="handleReload"></add-modal>
     <edit-modal @reload="handleReload"></edit-modal>
+    <kktp-modal @reload="handleReload"></kktp-modal>
   </b-card>
 </template>
 
@@ -19,6 +20,7 @@ import { BCard, BCardBody, BSpinner } from 'bootstrap-vue'
 import Datatable from './Datatable.vue' //IMPORT COMPONENT DATATABLENYA
 import AddModal from './../../components/modal/referensi/mata-pelajaran/AddModal.vue'
 import EditModal from './../../components/modal/referensi/mata-pelajaran/EditModal.vue'
+import KktpModal from './../../components/modal/referensi/mata-pelajaran/KktpModal.vue'
 import eventBus from '@core/utils/eventBus'
 export default {
   components: {
@@ -28,11 +30,12 @@ export default {
     Datatable,
     AddModal,
     EditModal,
+    KktpModal,
   },
   data() {
     return {
       isBusy: true,
-      fields: [
+      fields_walas: [
         {
           key: 'nama',
           label: 'Nama',
@@ -40,11 +43,25 @@ export default {
           thClass: 'text-center',
         },
         {
+          key: 'guru',
+          label: 'guru pengajar',
+          sortable: false,
+          thClass: 'text-center',
+        },
+      ],
+      fields: [
+        {
           key: 'mata_pelajaran_id',
           label: 'kode',
           sortable: true,
           thClass: 'text-center',
           tdClass: 'text-center'
+        },
+        {
+          key: 'nama',
+          label: 'Nama',
+          sortable: true,
+          thClass: 'text-center',
         },
         {
           key: 'mapel_tingkat',
@@ -80,8 +97,11 @@ export default {
     }
   },
   created() {
-    if(this.hasRole('administrator')){
+    if(this.hasRole(['administrator', 'wakakur'])){
       Array.prototype.push.apply(this.fields, this.fields_admin);
+    } 
+    if(this.hasRole('walas')){
+      this.fields = this.fields_walas
     }
     eventBus.$on('add-mapel', this.handleEvent);
     this.loadPostsData()

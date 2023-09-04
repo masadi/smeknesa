@@ -85,6 +85,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/peserta-didik', [ReferensiController::class, 'peserta_didik']);
     Route::get('/pd-keluar', [ReferensiController::class, 'pd_keluar']);
     Route::get('/guru-mapel', [ReferensiController::class, 'guru_mapel']);
+    Route::get('/guru-bk', [ReferensiController::class, 'guru_bk']);
     Route::get('/guru', [ReferensiController::class, 'data_guru']);
     Route::post('/get-data', [ReferensiController::class, 'get_data']);
     Route::post('/add-data', [ReferensiController::class, 'add_data']);

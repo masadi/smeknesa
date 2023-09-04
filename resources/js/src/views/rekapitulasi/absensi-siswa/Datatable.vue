@@ -48,35 +48,43 @@
           </div>
         </template>
         <template v-slot:cell(A)="row">
-          <template v-if="row.item.A > 0">
-            <b-badge :variant="getBadge('A')">{{row.item.A}}</b-badge>
+          <template v-if="dibagi(row.item.A) > 0">
+            <b-badge :variant="getBadge('A')">
+              {{dibagi(row.item.A)}}
+            </b-badge>
           </template>
           <template v-else>
-            {{row.item.A}}
+            {{dibagi(row.item.A)}}
           </template>
         </template>
         <template v-slot:cell(S)="row">
-          <template v-if="row.item.S > 0">
-            <b-badge :variant="getBadge('S')">{{row.item.S}}</b-badge>
+          <template v-if="dibagi(row.item.S) > 0">
+            <b-badge :variant="getBadge('S')">
+              {{dibagi(row.item.S)}}
+            </b-badge>
           </template>
           <template v-else>
-            {{row.item.S}}
+            {{dibagi(row.item.S)}}
           </template>
         </template>
         <template v-slot:cell(I)="row">
-          <template v-if="row.item.I > 0">
-            <b-badge :variant="getBadge('I')">{{row.item.I}}</b-badge>
+          <template v-if="dibagi(row.item.I) > 0">
+            <b-badge :variant="getBadge('I')">
+              {{dibagi(row.item.I)}}
+            </b-badge>
           </template>
           <template v-else>
-            {{row.item.I}}
+            {{dibagi(row.item.I)}}
           </template>
         </template>
         <template v-slot:cell(D)="row">
-          <template v-if="row.item.D > 0">
-            <b-badge :variant="getBadge('D')">{{row.item.D}}</b-badge>
+          <template v-if="dibagi(row.item.D) > 0">
+            <b-badge :variant="getBadge('D')">
+              {{dibagi(row.item.D)}}
+            </b-badge>
           </template>
           <template v-else>
-            {{row.item.D}}
+            {{dibagi(row.item.D)}}
           </template>
         </template>
         <template v-slot:cell(actions)="row">
@@ -250,6 +258,12 @@ export default {
           data_rombel: [],
         })
       }
+    },
+    dibagi(angka){
+      if(angka){
+        angka = angka / 11;
+      }
+      return angka.toFixed();
     },
   },
 }

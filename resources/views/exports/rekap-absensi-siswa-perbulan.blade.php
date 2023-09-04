@@ -1,10 +1,13 @@
-<table border="1">
+<table>
   <thead>
     <tr>
       <td colspan="{{($hari * count($presensi)) + 7}}">REKAP ABSENSI SISWA KELAS {{$rombel->nama}}: {{($hari * count($presensi)) + 4}}</td>
     </tr>
     <tr>
       <td colspan="{{($hari * count($presensi)) + 7}}">SEMESTER {{strtoupper($semester->nama)}}</td>
+    </tr>
+    <tr>
+      <td colspan="{{($hari * count($presensi)) + 7}}">Di Download pada: {{$today}}</td>
     </tr>
     <tr>
         <th rowspan="3">No</th>
