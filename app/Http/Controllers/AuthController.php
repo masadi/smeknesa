@@ -124,6 +124,7 @@ class AuthController extends Controller
                 'guru',
                 'kelas',
                 'jam',
+                'presensi_jadwal',
             ])->withCount([
                 'presensi_jadwal as alpha' => function($query){
                     $query->where('absen', 'A');
