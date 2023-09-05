@@ -24,47 +24,6 @@ class AbsensiSiswa implements FromView, ShouldAutoSize, WithStyles
         $this->bulan = $bulan;
         $this->jenis = $jenis;
     }
-    /*public function registerEvents(): array
-    {
-        $semester = Semester::find($this->semester_id);
-        if($this->jenis == 1){
-            $date = date('Y').'-'.$this->bulan.'-'.date('d');
-            $bulan = Carbon::create($date);
-            $firstOfMonth = Carbon::create($date)->firstOfMonth()->format('Y-m-d');
-            $endOfMonth = Carbon::create($date)->endOfMonth()->format('Y-m-d');
-            $period = CarbonPeriod::between($firstOfMonth, $endOfMonth);
-            $plus = 6;
-        } else {
-            $period = CarbonPeriod::create($semester->tanggal_mulai, '1 month', $semester->tanggal_selesai);
-            $plus = 5;
-        }
-        $totalValue = (count($period) * 4) + 7;
-        $alphabet = num2alpha($totalValue - 1);
-        $pd = Peserta_didik::whereHas('anggota_rombel', function($query){
-            $query->where('rombongan_belajar_id', $this->rombongan_belajar_id);
-        })->with(['presensi' => function($query) use ($semester){
-            $query->orderBy('tanggal');
-            if($this->jenis == 1){
-                $query->whereMonth('tanggal', $this->bulan);
-            } else {
-                $query->whereBetween('tanggal', [$semester->tanggal_mulai, $semester->tanggal_selesai]);
-            }
-        }])->count();
-        $totalRow = $pd + $plus;
-        $cellRange      = 'A1:'.$alphabet.$totalRow;
-        return [
-            BeforeSheet::class    => function(BeforeSheet $event) use($cellRange) {
-                $event->sheet->getStyle($cellRange)->applyFromArray([
-                    'borders' => [
-                        'allBorders' => [
-                            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
-                            'color' => ['argb' => '000000'],
-                        ],
-                    ],
-                ])->getAlignment()->setWrapText(true);
-            },
-        ];
-    }*/
     public function styles(Worksheet $sheet)
     {
         $semester = Semester::find($this->semester_id);

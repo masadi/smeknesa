@@ -7,6 +7,9 @@
             <Formulir :form="form" :feedback="feedback" :state="state" @hide_form="handleHideForm" @show_form="handleShowForm" />
             <b-overlay :show="loading_table" rounded opacity="0.6" size="lg" spinner-variant="danger">
               <template v-if="show">
+                <b-form-group label="Download Rekap" label-cols-md="3">
+                  <b-button block variant="primary" @click="downloadRekap">Download Rekap</b-button>
+                </b-form-group>
                 <b-table-simple bordered class="mt-2">
                   <b-thead>
                     <b-tr>
@@ -17,16 +20,6 @@
                       <b-th class="text-center" rowspan="2" v-if="data_tp.length">NILAI AKHIR <br/>FORMATIF</b-th>
                       <b-th class="text-center" :colspan="data_sumatif.length" v-if="data_sumatif.length">Assesment Sumatif</b-th>
                       <b-th class="text-center" rowspan="2" v-if="data_sumatif.length">NILAI AKHIR <br/>SUMATIF</b-th>
-                      <!--
-                        <th scope="col" class="text-center font-weight-semibold" :colspan="data_tp.length" v-if="data_tp.length">
-                          Assesment Formatif
-                        </th>
-                        <th scope="col" class="text-center font-weight-semibold" rowspan="2" v-if="data_tp.length">NILAI AKHIR <br/>FORMATIF</th>
-                        <th scope="col" class="text-center font-weight-semibold" :colspan="data_sumatif.length" v-if="data_sumatif.length">
-                          Assesment Sumatif
-                        </th>
-                        <th scope="col" class="text-center font-weight-semibold" rowspan="2" v-if="data_sumatif.length">NILAI AKHIR <br/>SUMATIF</th>
-                      -->
                     </b-tr>
                     <b-tr>
                       <b-th class="text-center" v-for="(diagnosis, index) in data_diagnosis" :key="diagnosis.penilaian_id" v-if="data_diagnosis.length">
@@ -81,7 +74,7 @@
 </template>
 
 <script>
-import { BRow, BCol, BCard, BOverlay, BForm, BTableSimple, BThead, BTbody, BTr, BTh, BTd, BFormTextarea, BButton, VBTooltip } from 'bootstrap-vue'
+import { BRow, BCol, BCard, BOverlay, BForm, BTableSimple, BThead, BTbody, BTr, BTh, BTd, BFormTextarea, BButton, VBTooltip, BFormGroup } from 'bootstrap-vue'
 import Ripple from 'vue-ripple-directive'
 import Formulir from './../components/Formulir.vue'
 import MediaSiswa from '@/views/components/MediaSiswa.vue'
@@ -101,6 +94,7 @@ export default {
     BFormTextarea,
     BButton,
     VBTooltip,
+    BFormGroup,
     Formulir,
     MediaSiswa,
   },
@@ -232,6 +226,9 @@ export default {
         }
       }
       return push_nilai
+    },
+    downloadRekap(){
+      window.open(`/export/rekap-nilai/${this.form.pembelajaran_id}`)
     },
   },
 }

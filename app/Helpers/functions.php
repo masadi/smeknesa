@@ -671,3 +671,52 @@ function alpha2num($a) {
     }
     return $r - 1;
 }
+function showNilaiNama($penilaian_id, $nilai){
+    for ($i = 0; $i < count($nilai); $i++) {
+      if($nilai[$i] && $nilai[$i]->penilaian_id === $penilaian_id){
+        return $nilai[$i]->angka;
+      }
+    }
+    return '-';
+}
+function showNilaiTp($tp_id, $nilai) {
+    for ($i = 0; $i < count($nilai); $i++) {
+      if($nilai[$i] && $nilai[$i]->tp_id === $tp_id){
+        return $nilai[$i]->angka;
+      }
+    }
+    return '-';
+}
+function findAverageAge($arr){
+    $collection = collect($arr);
+    $total = $collection->reduce(function ($carry, $item) use ($arr){
+        return $carry + ($item->angka / count($arr));
+    });
+    return $total;
+}
+function nilaiTp($data_nilai, $data_tp){
+    $push_nilai = [];
+    for ($a = 0; $a < count($data_tp); $a++) {
+      for ($i = 0; $i < count($data_nilai); $i++) {
+        if($data_nilai[$i] && $data_nilai[$i]->tp_id === $data_tp[$a]->tp_id){
+          if($data_nilai[$i]->tp_id){
+            array_push($push_nilai, $data_nilai[$i]);
+          }
+        }
+      }
+    }
+    return $push_nilai;
+}
+function nilaiAsesmen($data_nilai, $data_asesmen){
+    $push_nilai = [];
+    for ($a = 0; $a < count($data_asesmen); $a++) {
+      for ($i = 0; $i < count($data_nilai); $i++) {
+        if($data_nilai[$i] && $data_nilai[$i]->penilaian_id === $data_asesmen[$a]->penilaian_id){
+          if($data_nilai[$i]->penilaian_id){
+            array_push($push_nilai, $data_nilai[$i]);
+          }
+        }
+      }
+    }
+    return $push_nilai;
+}

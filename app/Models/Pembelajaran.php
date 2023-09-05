@@ -242,6 +242,9 @@ class Pembelajaran extends Model
 	public function induk(){
 		return $this->hasOne(Pembelajaran::class, 'pembelajaran_id', 'induk_pembelajaran_id');
 	}
+	public function semester(){
+		return $this->hasOne(Semester::class, 'semester_id', 'semester_id');
+	}
 	public function tema()
 	{
 		return $this->hasMany(Pembelajaran::class, 'induk_pembelajaran_id', 'pembelajaran_id');

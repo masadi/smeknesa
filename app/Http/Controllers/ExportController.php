@@ -5,9 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Rombongan_belajar;
+use App\Models\Pembelajaran;
 use App\Models\Nilai_ekskul;
 use App\Exports\AbsensiSiswa;
 use App\Exports\RekapRemedial;
+use App\Exports\RekapNilai;
+use App\Models\Peserta_didik;
+use App\Models\Tujuan_pembelajaran;
+use App\Models\Penilaian;
 use Maatwebsite\Excel\Facades\Excel;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Rap2hpoutre\FastExcel\SheetCollection;
@@ -81,5 +86,47 @@ class ExportController extends Controller
         }
         $sheets = new SheetCollection($collection);
         return (new FastExcel($sheets))->download('Nilai Ekstrakurikuler Kelas '.$rombel->nama.'.xlsx');
+    }
+    public function rekap_nilai(){
+        $pembelajaran = Pembelajaran::with(['rombongan_belajar', 'semester'])->find(request()->route('pembelajaran_id'));
+        $file = 'REKAP NILAI MAPEL '.$pembelajaran->nama_mata_pelajaran.' KELAS '.$pembelajaran->rombongan_belajar->nama.'.xlsx';
+        $data = [
+            'nama_mata_pelajaran' => $pembelajaran->nama_mata_pelajaran,
+            'nama' => $pembelajaran->rombongan_belajar->nama,
+            'semester' => $pembelajaran->semester,
+            'pd' => Peserta_didik::with(['nilai' => function($query){
+                $query->where('pembelajaran_id', request()->route('pembelajaran_id'));
+            }])->where(function($query) use ($pembelajaran){
+                $query->whereHas('anggota_rombel', function($query) use ($pembelajaran){
+                    $query->where('rombongan_belajar_id', $pembelajaran->rombongan_belajar_id);
+                });
+            })->orderBy('nama')->get(),
+            'data_tp' => Tujuan_pembelajaran::where(function($query) use ($pembelajaran){
+                $query->whereHas('cp', function($query) use ($pembelajaran){
+                    $query->whereHas('pembelajaran', function($query){
+                        $query->where('pembelajaran_id', request()->route('pembelajaran_id'));
+                    });
+                    $query->where('guru_id', $pembelajaran->guru_id);
+                });
+                $query->whereHas('nilai', function($query){
+                    $query->where('pembelajaran_id', request()->route('pembelajaran_id'));
+                });
+            })->orderBy('created_at')->get(),
+            'diagnosis' => Penilaian::whereHas('jenis_penilaian', function($query){
+                $query->where('nama', 'Assesment Diagnosis');
+            })->whereHas('pembelajaran', function($query){
+                $query->where('pembelajaran_id', request()->route('pembelajaran_id'));
+            })->whereHas('nilai', function($query){
+                $query->where('pembelajaran_id', request()->route('pembelajaran_id'));
+            })->orderBy('created_at')->get(),
+            'sumatif' => Penilaian::whereHas('jenis_penilaian', function($query){
+                $query->where('nama', 'Assesment Sumatif');
+            })->whereHas('pembelajaran', function($query){
+                $query->where('pembelajaran_id', request()->route('pembelajaran_id'));
+            })->whereHas('nilai', function($query){
+                $query->where('pembelajaran_id', request()->route('pembelajaran_id'));
+            })->orderBy('created_at')->get(),
+        ];
+        return Excel::download(new RekapNilai($pembelajaran->pembelajaran_id, $pembelajaran->rombongan_belajar_id, $pembelajaran->guru_id, $data), $file);
     }
 }

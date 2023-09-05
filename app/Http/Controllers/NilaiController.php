@@ -269,11 +269,6 @@ class NilaiController extends Controller
                     $query->where('pembelajaran_id', request()->pembelajaran_id);
                 });
             })->orderBy('created_at')->get();
-            /*$jenis_penilaian = Jenis_penilaian::with([
-                'penilaian' => function($query){
-                    $query->where('pembelajaran_id', request()->pembelajaran_id);
-                }
-            ])->whereHas('penilaian')->orderBy('id')->get();*/
             $diagnosis = Penilaian::whereHas('jenis_penilaian', function($query){
                 $query->where('nama', 'Assesment Diagnosis');
             })->whereHas('pembelajaran', function($query){
