@@ -185,5 +185,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
   Route::group(['prefix' => 'rekapitulasi'], function () {
     Route::get('/remedial', [RekapController::class, 'remedial']);
     Route::get('/remed', [RekapController::class, 'remed']);
+    Route::get('/absen-guru', [RekapController::class, 'absen_guru']);
   });
 });

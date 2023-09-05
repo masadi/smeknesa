@@ -56,17 +56,17 @@ class GenerateAkses extends Command
             ],
             [
                 'role' => 'piket',
-                'akses' => ['Ref_Mapel', 'Presensi_Guru', 'Presensi_Pd', 'Jadwal', 'Rekap_Presensi'],
+                'akses' => ['Ref_Mapel', 'Presensi_Guru', 'Presensi_Pd', 'Jadwal', 'Rekap_Absen_Siswa', 'Rekap_Absen_Guru'],
                 'action' => 'read',
             ],
             [
                 'role' => 'wakakur',
-                'akses' => ['Ref_Mapel', 'Ref_Jurusan', 'Ref_Kelas', 'Remedial', 'Ref_Pd', 'Ref_Guru', 'Rekap_Presensi', 'Jadwal', 'Perencanaan', 'Penilaian', 'Rekap_Nilai', 'Modul', 'Kelulusan', 'Magang_Nilai'],
+                'akses' => ['Ref_Mapel', 'Ref_Jurusan', 'Ref_Kelas', 'Remedial', 'Ref_Pd', 'Ref_Guru', 'Rekap_Absen_Guru', 'Jadwal', 'Perencanaan', 'Penilaian', 'Rekap_Nilai', 'Modul', 'Kelulusan', 'Magang_Nilai'],
                 'action' => 'read',
             ],
             [
                 'role' => 'walas',
-                'akses' => ['Ref_Mapel', 'Ref_Pd', 'Rekap_Presensi', 'Jadwal', 'Kenaikan', 'Wali'],
+                'akses' => ['Ref_Mapel', 'Ref_Pd', 'Rekap_Absen_Siswa', 'Jadwal', 'Kenaikan', 'Wali'],
                 'action' => 'read',
             ],
             [
@@ -81,12 +81,12 @@ class GenerateAkses extends Command
             ],
             [
                 'role' => 'wakasiswa',
-                'akses' => ['Ref_Sekolah', 'Ref_Mapel', 'Ref_Pd', 'Ref_Guru', 'Rekap_Presensi', 'Jadwal', 'Tatib_Sekolah', 'Tatib_Pelanggaran', 'Tatib_Rekap', 'Tatib_Bukti', 'Tatib_Ortu', 'Tatib_Pernyataan', 'Tatib_Peringatan', 'Tatib_Mundur'],
+                'akses' => ['Ref_Sekolah', 'Ref_Mapel', 'Ref_Pd', 'Ref_Guru', 'Rekap_Absen_Siswa', 'Jadwal', 'Tatib_Sekolah', 'Tatib_Pelanggaran', 'Tatib_Rekap', 'Tatib_Bukti', 'Tatib_Ortu', 'Tatib_Pernyataan', 'Tatib_Peringatan', 'Tatib_Mundur'],
                 'action' => 'read',
             ],
             [
                 'role' => 'bk',
-                'akses' => ['Ref_Sekolah', 'Rekap_Presensi', 'Jadwal', 'Kelulusan', 'Tatib_Sekolah', 'Tatib_Pelanggaran', 'Tatib_Rekap', 'Tatib_Bukti', 'Tatib_Ortu', 'Tatib_Pernyataan', 'Tatib_Peringatan', 'Tatib_Mundur'],
+                'akses' => ['Ref_Sekolah', 'Rekap_Absen_Siswa', 'Jadwal', 'Kelulusan', 'Tatib_Sekolah', 'Tatib_Pelanggaran', 'Tatib_Rekap', 'Tatib_Bukti', 'Tatib_Ortu', 'Tatib_Pernyataan', 'Tatib_Peringatan', 'Tatib_Mundur'],
                 'action' => 'read',
             ],
             [

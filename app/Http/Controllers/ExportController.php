@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use App\Models\User;
 use App\Models\Rombongan_belajar;
 use App\Models\Pembelajaran;
@@ -10,12 +11,15 @@ use App\Models\Nilai_ekskul;
 use App\Exports\AbsensiSiswa;
 use App\Exports\RekapRemedial;
 use App\Exports\RekapNilai;
+use App\Exports\AbsensiGuru;
 use App\Models\Peserta_didik;
 use App\Models\Tujuan_pembelajaran;
 use App\Models\Penilaian;
+use App\Models\Guru;
 use Maatwebsite\Excel\Facades\Excel;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Rap2hpoutre\FastExcel\SheetCollection;
+use Carbon\Carbon;
 
 class ExportController extends Controller
 {
@@ -30,6 +34,18 @@ class ExportController extends Controller
             $file = 'REKAP ABSENSI KELAS '.$rombel->nama.' PERSEMESTER.xlsx';
         }
         return Excel::download(new AbsensiSiswa($semester_id, $rombongan_belajar_id, $bulan, $jenis), $file);
+    }
+    public function rekap_absensi_guru(){
+        $bulan = request()->route('bulan') + 1;
+        $padded = Str::padLeft($bulan, 2, '0');
+        $data = Guru::with([
+            'presensi' => function($query) use ($padded){
+                $query->has('presensi_jadwal');
+                $query->whereMonth('tanggal', $padded);
+            },
+        ])->orderBy('nama')->get();
+        $nama = strtoupper(Carbon::create(date('Y').'-'.$padded.'-'.date('d'))->translatedFormat('F'));
+        return Excel::download(new AbsensiGuru($data, $padded, $nama), 'REKAP ABSENSI GURU PERBULAN '.$nama.'.xlsx');
     }
     public function rekap_remedial(){
         $semester_id = request()->route('semester_id');

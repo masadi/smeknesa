@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Rombongan_belajar;
 use App\Models\Peserta_didik;
+use App\Models\Guru;
 
 class RekapController extends Controller
 {
@@ -49,5 +50,35 @@ class RekapController extends Controller
         })
         ->paginate(request()->per_page);
         return response()->json(['status' => 'success', 'data' => $data]);
+    }
+    public function absen_guru(){
+        $data = Guru::withCount([
+            'presensi as alpha' => function($query){
+                $query->has('presensi_jadwal');
+                $query->where('absen', 'A');
+                $query->whereMonth('fecha', '=', '06');
+            },
+            'presensi as izin' => function($query){
+                $query->has('presensi_jadwal');
+                $query->where('absen', 'I');
+            },
+            'presensi as sakit' => function($query){
+                $query->has('presensi_jadwal');
+                $query->where('absen', 'S');
+            },
+        ])->where($this->kondisi())->orderBy(request()->sortby, request()->sortbydesc)
+        ->when(request()->q, function($query) {
+            $query->where($this->kondisi());
+            $query->where('nama', 'ilike', '%'.request()->q.'%');
+        })
+        ->paginate(request()->per_page);
+        return response()->json(['status' => 'success', 'data' => $data]);
+    }
+    private function kondisi(){
+        return function($query){
+            if(request()->sekolah_id){
+                $query->where('sekolah_id', request()->sekolah_id);
+            }
+        };
     }
 }

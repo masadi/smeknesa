@@ -7,14 +7,14 @@ export default [
         icon: 'hand-click-icon',
         title: 'Absensi Siswa',
         route: 'rekapitulasi-absensi-siswa',
-        resource: 'Rekapitulasi',
+        resource: 'Rekap_Absen_Siswa',
         action: 'read',
       },
       {
         icon: 'hand-click-icon',
         title: 'Absensi Guru',
         route: 'rekapitulasi-absensi-guru',
-        resource: 'Rekapitulasi',
+        resource: 'Rekap_Absen_Guru',
         action: 'read',
       },
       {
