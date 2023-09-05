@@ -136,6 +136,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/rekap', [NilaiController::class, 'rekap']);
     Route::post('/detil', [NilaiController::class, 'detil']);
     Route::post('/chart', [NilaiController::class, 'chart']);
+    Route::post('/chart-jurusan', [NilaiController::class, 'chart_jurusan']);
     Route::post('/nilai-pd', [NilaiController::class, 'nilai_pd']);
     Route::post('/get-desc', [NilaiController::class, 'get_desc']);
     Route::post('/deskripsi', [NilaiController::class, 'deskripsi']);
@@ -156,6 +157,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/dashboard', [PresensiController::class, 'dashboard']);
     Route::post('/get-kelas', [PresensiController::class, 'get_kelas']);
     Route::post('/get-rekap', [PresensiController::class, 'get_rekap']);
+    Route::post('/get-rekap-guru', [PresensiController::class, 'get_rekap_guru']);
     Route::get('/get-rombel', [PresensiController::class, 'get_rombel']);
     Route::post('/get-guru', [PresensiController::class, 'get_guru']);
     Route::get('/get-hari', [PresensiController::class, 'get_hari']);

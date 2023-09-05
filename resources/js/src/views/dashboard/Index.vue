@@ -6,8 +6,8 @@
     <template v-else-if="hasRole('administrator')">
       <dashboard-admin></dashboard-admin>
     </template>
-    <template v-else-if="hasRole('guru')">
-      <dashboard-guru></dashboard-guru>
+    <template v-else-if="hasRole('wakakur')">
+      <dashboard-kurikulum></dashboard-kurikulum>
     </template>
     <template v-else-if="hasRole('siswa')">
       <dashboard-siswa></dashboard-siswa>
@@ -21,7 +21,7 @@
 <script>
 import DashboardWaka from './DashboardWaka.vue'
 import DashboardAdmin from './DashboardAdmin.vue'
-import DashboardGuru from './DashboardGuru.vue'
+import DashboardKurikulum from './DashboardKurikulum.vue'
 import DashboardSiswa from './DashboardSiswa.vue'
 import DashboardUser from './DashboardUser.vue'
 import { getHomeRouteForLoggedInUser } from '@/auth/utils'
@@ -29,7 +29,7 @@ export default {
   components: {
     DashboardWaka,
     DashboardAdmin, 
-    DashboardGuru,
+    DashboardKurikulum,
     DashboardSiswa,
     DashboardUser,
   },

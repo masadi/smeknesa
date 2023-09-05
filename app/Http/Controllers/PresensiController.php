@@ -438,6 +438,64 @@ class PresensiController extends Controller
             }
         };
     }
+    public function get_rekap_guru(){
+        $data_jurusan = Jurusan_sp::withWhereHas('pembelajaran', function($query){
+            $query->where('pembelajaran.semester_id', semester_id());
+            $query->withWhereHas('guru', function($query){
+                $query->withCount([
+                    'presensi as alpa' => function($query){
+                        $query->has('presensi_jadwal');
+                        $query->where('absen', 'A');
+                    },
+                    'presensi as izin' => function($query){
+                        $query->has('presensi_jadwal');
+                        $query->where('absen', 'I');
+                    },
+                    'presensi as sakit' => function($query){
+                        $query->has('presensi_jadwal');
+                        $query->where('absen', 'S');
+                    },
+                ]);
+            });
+        })->orderBy('nama_jurusan_sp')->get();
+        $alpha = 0;
+        $izin = 0;
+        $sakit = 0;
+        $alpha_jurusan = [];
+        $izin_jurusan = [];
+        $sakit_jurusan = [];
+        foreach($data_jurusan as $jurusan){
+            $alpha = 0;
+            $izin = 0;
+            $sakit = 0;
+            foreach($jurusan->pembelajaran as $pembelajaran){
+                $alpha += $pembelajaran->guru->alpha;
+                $izin += $pembelajaran->guru->izin;
+                $sakit += $pembelajaran->guru->sakit;
+            }
+            $alpha_jurusan[] = $alpha;
+            $izin_jurusan[] = $izin;
+            $sakit_jurusan[] = $sakit;
+        }
+        $data = [
+            'series' => [
+                [
+                'name' => 'ALPHA',
+                'data' => $alpha_jurusan
+                ], 
+                [
+                'name' => 'IZIN',
+                'data' => $izin_jurusan
+                ],
+                [
+                'name' => 'SAKIT',
+                'data' => $sakit_jurusan
+                ],
+            ],
+            'categories' => $data_jurusan->pluck('alias'),
+        ];
+        return response()->json($data);
+    }
     public function get_rekap(){
         $data = [];
         $data_bulan = array_merge([

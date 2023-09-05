@@ -13,6 +13,7 @@ use App\Models\Jenis_penilaian;
 use App\Models\Penilaian;
 use App\Models\Sekolah;
 use App\Models\Deskripsi_mapel;
+use App\Models\Jurusan_sp;
 use Validator;
 
 class NilaiController extends Controller
@@ -342,6 +343,56 @@ class NilaiController extends Controller
             'data_tp' => Tujuan_pembelajaran::where('cp_id', request()->cp_id)->orderBy('created_at')->get(),
             'penilaian' => $penilaian,
             'jumlah_form' => ($penilaian->count()) ? $penilaian->count() : 2,
+        ];
+        return response()->json($data);
+    }
+    public function chart_jurusan(){
+        $data_jurusan = Jurusan_sp::whereHas('anggota_rombel', function($query){
+            $query->where('anggota_rombel.semester_id', semester_id());
+        })->withCount([
+            'anggota_rombel as nilai_0' => function($query){
+                $query->whereHas('nilai_satuan', function($query){
+                    $query->where('angka', '<', 70);
+                });
+            },
+            'anggota_rombel as nilai_70' => function($query){
+                $query->whereHas('nilai_satuan', function($query){
+                    $query->whereBetween('angka', [69, 86]);
+                });
+            },
+            'anggota_rombel as nilai_85' => function($query){
+                $query->whereHas('nilai_satuan', function($query){
+                    $query->where('angka', '>', 85);
+                });
+            },
+        ])->orderBy('nama_jurusan_sp')->get();
+        $nilai_0_jurusan = [];
+        $nilai_70_jurusan = [];
+        $nilai_85_jurusan = [];
+        $nilai_0 = 0;
+        $nilai_70 = 0;
+        $nilai_85 = 0;
+        foreach($data_jurusan as $jurusan){
+            $nilai_0_jurusan[] = $jurusan->nilai_0;
+            $nilai_70_jurusan[] = $jurusan->nilai_70;
+            $nilai_85_jurusan[] = $jurusan->nilai_85;
+        }
+        $data = [
+            'series' => [
+                [
+                'name' => '>0',
+                'data' => $nilai_0_jurusan
+                ], 
+                [
+                'name' => '>70',
+                'data' => $nilai_70_jurusan
+                ],
+                [
+                'name' => '>85',
+                'data' => $nilai_85_jurusan
+                ],
+            ],
+            'categories' => $data_jurusan->pluck('alias'),
         ];
         return response()->json($data);
     }
