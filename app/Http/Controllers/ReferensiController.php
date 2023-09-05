@@ -1816,7 +1816,7 @@ class ReferensiController extends Controller
                 'errors' => $validator->errors(),
             ]);
         }
-        $find = Guru::find(request()->guru_id);
+        $find = Guru::with('pengguna')->find(request()->guru_id);
         $find->nama = request()->nama;
         $find->nuptk = request()->nuptk;
         $find->nip = request()->nip;
@@ -1835,6 +1835,10 @@ class ReferensiController extends Controller
         $find->desa_id = request()->desa_id;
         $find->no_hp = request()->no_hp;
         if($find->save()){
+            if($find->pengguna){
+                $find->pengguna->email = request()->email;
+                $find->pengguna->save();
+            }
             $data = [
                 'success' => TRUE,
                 'errors' => NULL,

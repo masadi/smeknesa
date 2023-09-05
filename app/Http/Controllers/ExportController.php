@@ -17,11 +17,12 @@ class ExportController extends Controller
     public function rekap_absensi_siswa(){
         $semester_id = request()->route('semester_id');
         $rombongan_belajar_id = request()->route('rombongan_belajar_id');
+        $rombel = Rombongan_belajar::find($rombongan_belajar_id);
         $bulan = request()->route('bulan');
         $jenis = request()->route('jenis');
-        $file = 'DOWNLOAD REKAP ABSENSI SISWA PERBULAN.xlsx';
+        $file = 'REKAP ABSENSI KELAS '.$rombel->nama.' PERBULAN.xlsx';
         if($jenis == 2){
-            $file = 'DOWNLOAD REKAP ABSENSI SISWA PERSEMESTER.xlsx';
+            $file = 'REKAP ABSENSI KELAS '.$rombel->nama.' PERSEMESTER.xlsx';
         }
         return Excel::download(new AbsensiSiswa($semester_id, $rombongan_belajar_id, $bulan, $jenis), $file);
     }

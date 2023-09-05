@@ -31,7 +31,7 @@ class GenerateAkses extends Command
         $abilities = [
             [
                 'role' => 'administrator',
-                'akses' => ['Web', 'Beranda', 'Profile', 'Ref_Sekolah', 'Ref_Mapel', 'Ref_Jurusan', 'Ref_Kelas', 'Ref_Pd', 'Ref_Pd_Keluar', 'System', 'Akun', 'Jadwal', 'Magang_Dudi', 'Magang_Pembimbing', 'Magang_Permohonan', 'Magang_Absensi', 'Magang_Monitoring', 'Magang_Nilai', 'Magang_Sertifikat', 'Tatib_Sekolah', 'Tatib_Pelanggaran', 'Tatib_Rekap', 'Tatib_Bukti', 'Tatib_Ortu', 'Tatib_Pernyataan', 'Tatib_Peringatan', 'Tatib_Mundur', 'Whatsapp', 'Hak_Akses', 'Guru_BK'],
+                'akses' => ['Web', 'Beranda', 'Profile', 'Ref_Sekolah', 'Ref_Guru', 'Ref_Mapel', 'Ref_Jurusan', 'Ref_Kelas', 'Ref_Pd', 'Ref_Pd_Keluar', 'System', 'Akun', 'Jadwal', 'Magang_Dudi', 'Magang_Pembimbing', 'Magang_Permohonan', 'Magang_Absensi', 'Magang_Monitoring', 'Magang_Nilai', 'Magang_Sertifikat', 'Tatib_Sekolah', 'Tatib_Pelanggaran', 'Tatib_Rekap', 'Tatib_Bukti', 'Tatib_Ortu', 'Tatib_Pernyataan', 'Tatib_Peringatan', 'Tatib_Mundur', 'Whatsapp', 'Hak_Akses', 'Guru_BK'],
                 'action' => 'read',
             ],
             [
@@ -41,7 +41,7 @@ class GenerateAkses extends Command
             ],
             [
                 'role' => 'kepsek',
-                'akses' => ['Ref_Sekolah', 'Ref_Mapel', 'Ref_Guru', 'Kelulusan', 'Magang_Dudi'],
+                'akses' => ['Ref_Sekolah', 'Ref_Guru', 'Ref_Mapel', 'Kelulusan', 'Magang_Dudi'],
                 'action' => 'read',
             ],
             [
