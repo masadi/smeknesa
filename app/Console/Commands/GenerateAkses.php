@@ -51,7 +51,7 @@ class GenerateAkses extends Command
             ],
             [
                 'role' => 'pd',
-                'akses' => ['Web', 'Beranda', 'Profile'],
+                'akses' => ['Profile_Pd'],
                 'action' => 'read',
             ],
             [
