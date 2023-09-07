@@ -107,19 +107,19 @@ export default [
     },
   },
   {
-    path: '/penilaian/kelulusan',
-    name: 'penilaian-kelulusan',
+    path: '/penilaian/sikap',
+    name: 'penilaian-sikap',
     component: () => import('@/views/pages/Blank.vue'),
     meta: {
-      pageTitle: 'Kelulusan',
+      pageTitle: 'Penilaian Sikap',
       action: 'read',
-      resource: 'Kelulusan',
+      resource: 'Penilaian_Sikap',
       breadcrumb: [
         {
           text: 'Penilaian',
         },
         {
-          text: 'Kelulusan',
+          text: 'Penilaian Sikap',
           active: true,
         },
       ],

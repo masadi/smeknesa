@@ -40,10 +40,10 @@ export default [
       },
       {
         icon: 'hand-click-icon',
-        title: 'Kelulusan',
-        route: 'penilaian-kelulusan',
+        title: 'Penilaian Sikap',
+        route: 'penilaian-sikap',
         action: 'read',
-        resource: 'Kelulusan',
+        resource: 'Penilaian_Sikap',
       },
       {
         icon: 'hand-click-icon',

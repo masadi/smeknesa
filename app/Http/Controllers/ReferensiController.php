@@ -248,7 +248,9 @@ class ReferensiController extends Controller
     public function guru_bk(){
         $data = Guru::withWhereHas('kelas_bk', function($query){
             $query->where('semester_id', semester_id());
-            $query->with('rombongan_belajar');
+            $query->with(['rombongan_belajar' => function($query){
+                $query->withCount('anggota_rombel');
+            }]);
         })->orderBy(request()->sortby, request()->sortbydesc)
         ->when(request()->q, function($query) {
             $query->where('nama', 'ilike', '%'.request()->q.'%');

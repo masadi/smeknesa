@@ -31,7 +31,7 @@ class GenerateAkses extends Command
         $abilities = [
             [
                 'role' => 'administrator',
-                'akses' => ['Web', 'Beranda', 'Profile', 'Ref_Sekolah', 'Ref_Guru', 'Ref_Mapel', 'Ref_Jurusan', 'Ref_Kelas', 'Ref_Pd', 'Ref_Pd_Keluar', 'System', 'Akun', 'Jadwal', 'Magang_Dudi', 'Magang_Pembimbing', 'Magang_Permohonan', 'Magang_Absensi', 'Magang_Monitoring', 'Magang_Nilai', 'Magang_Sertifikat', 'Tatib_Sekolah', 'Tatib_Pelanggaran', 'Tatib_Rekap', 'Tatib_Bukti', 'Tatib_Ortu', 'Tatib_Pernyataan', 'Tatib_Peringatan', 'Tatib_Mundur', 'Whatsapp', 'Hak_Akses', 'Guru_BK'],
+                'akses' => ['Web', 'Beranda', 'Profile', 'Ref_Periodik', 'Ref_Sekolah', 'Ref_Guru', 'Ref_Mapel', 'Ref_Jurusan', 'Ref_Kelas', 'Ref_Pd', 'Ref_Pd_Keluar', 'System', 'Akun', 'Jadwal', 'Magang_Dudi', 'Magang_Pembimbing', 'Magang_Permohonan', 'Magang_Absensi', 'Magang_Monitoring', 'Magang_Nilai', 'Magang_Sertifikat', 'Tatib_Sekolah', 'Tatib_Pelanggaran', 'Tatib_Rekap', 'Tatib_Bukti', 'Tatib_Ortu', 'Tatib_Pernyataan', 'Tatib_Peringatan', 'Tatib_Mundur', 'Whatsapp', 'Hak_Akses', 'Guru_BK'],
                 'action' => 'read',
             ],
             [
@@ -41,7 +41,7 @@ class GenerateAkses extends Command
             ],
             [
                 'role' => 'kepsek',
-                'akses' => ['Ref_Sekolah', 'Ref_Guru', 'Ref_Mapel', 'Kelulusan', 'Magang_Dudi'],
+                'akses' => ['Ref_Sekolah', 'Ref_Guru', 'Ref_Mapel', 'Magang_Dudi'],
                 'action' => 'read',
             ],
             [
@@ -61,7 +61,7 @@ class GenerateAkses extends Command
             ],
             [
                 'role' => 'wakakur',
-                'akses' => ['Ref_Mapel', 'Ref_Jurusan', 'Ref_Kelas', 'Remedial', 'Ref_Pd', 'Ref_Guru', 'Rekap_Absen_Guru', 'Jadwal', 'Perencanaan', 'Penilaian', 'Rekap_Nilai', 'Modul', 'Kelulusan', 'Magang_Nilai'],
+                'akses' => ['Ref_Mapel', 'Ref_Jurusan', 'Ref_Kelas', 'Remedial', 'Ref_Pd', 'Ref_Guru', 'Rekap_Absen_Guru', 'Jadwal', 'Perencanaan', 'Penilaian', 'Rekap_Nilai', 'Modul', 'Magang_Nilai'],
                 'action' => 'read',
             ],
             [
@@ -71,7 +71,7 @@ class GenerateAkses extends Command
             ],
             [
                 'role' => 'kajur',
-                'akses' => ['Ref_Sekolah', 'Ref_Mapel', 'Ref_Pd', 'Jadwal', 'Kelulusan', 'Magang_Dudi', 'Magang_Pembimbing', 'Magang_Permohonan', 'Magang_Absensi', 'Magang_Nilai', 'Magang_Sertifikat', 'Tatib_Pelanggaran', 'Tatib_Rekap', 'Tatib_Bukti', 'Tatib_Ortu', 'Tatib_Pernyataan', 'Tatib_Peringatan', 'Tatib_Mundur'],
+                'akses' => ['Ref_Sekolah', 'Ref_Mapel', 'Ref_Pd', 'Jadwal', 'Magang_Dudi', 'Magang_Pembimbing', 'Magang_Permohonan', 'Magang_Absensi', 'Magang_Nilai', 'Magang_Sertifikat', 'Tatib_Pelanggaran', 'Tatib_Rekap', 'Tatib_Bukti', 'Tatib_Ortu', 'Tatib_Pernyataan', 'Tatib_Peringatan', 'Tatib_Mundur'],
                 'action' => 'read',
             ],
             [
@@ -86,7 +86,7 @@ class GenerateAkses extends Command
             ],
             [
                 'role' => 'bk',
-                'akses' => ['Ref_Sekolah', 'Rekap_Absen_Siswa', 'Jadwal', 'Kelulusan', 'Tatib_Sekolah', 'Tatib_Pelanggaran', 'Tatib_Rekap', 'Tatib_Bukti', 'Tatib_Ortu', 'Tatib_Pernyataan', 'Tatib_Peringatan', 'Tatib_Mundur'],
+                'akses' => ['Rekap_Absen_Siswa', 'Jadwal', 'Tatib_Sekolah', 'Tatib_Pelanggaran', 'Tatib_Rekap', 'Tatib_Bukti', 'Tatib_Ortu', 'Tatib_Pernyataan', 'Tatib_Peringatan', 'Tatib_Mundur', 'Penilaian_Sikap'],
                 'action' => 'read',
             ],
             [

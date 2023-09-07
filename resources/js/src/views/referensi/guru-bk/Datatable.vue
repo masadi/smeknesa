@@ -22,6 +22,9 @@
         <template v-slot:cell(kelas_bk)="row">
           {{kelasBk(row.item.kelas_bk)}}
         </template>
+        <template v-slot:cell(jml_siswa)="row">
+          {{jmlSiswa(row.item.kelas_bk)}}
+        </template>
         <template v-slot:cell(actions)="row">
           <b-dropdown id="dropdown-dropleft" dropleft text="Detil" variant="primary" size="sm">
             <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'edit')"><pencil-icon /> Edit</b-dropdown-item>
@@ -74,15 +77,13 @@ export default {
       type: Boolean,
       default: () => true,
     },
-    isAsesor: {
+    loading: {
       type: Boolean,
       default: () => false,
     }
   },
   data() {
     return {
-      loading: false,
-      loading_modal: false,
       sortBy: null,
       sortDesc: false,
     }
@@ -123,7 +124,14 @@ export default {
         temp.push(element.rombongan_belajar.nama)
       });
       return temp.join(', ')
-    }
+    },
+    jmlSiswa(kelas_bk){
+      var jml_siswa = 0;
+      kelas_bk.forEach(element => {
+        jml_siswa += element.rombongan_belajar.anggota_rombel_count
+      });
+      return jml_siswa;
+    },
   },
 }
 </script>
