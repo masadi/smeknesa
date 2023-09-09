@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Http\Request;
 use App\Models\Peserta_didik;
+use App\Models\Ijin;
 use PDF;
 
 class CetakController extends Controller
@@ -52,5 +54,44 @@ class CetakController extends Controller
 		$pdf->getMpdf()->defaultfooterline=1;
 		$pdf->getMpdf()->SetFooter('{PAGENO} ||Dicetak dari '.config('app.name').' v.'.get_setting('app_version'));
         return $pdf->stream('document.pdf');
+    }
+    public function perijinan(){
+        $ijin = Ijin::with(['pd' => function($query){
+            $query->withCount([
+                'presensi as A' => function($query){
+                    $query->where('absen', 'A');
+                    $query->where('semester_id', semester_id());
+                },
+                'presensi as I' => function($query){
+                    $query->where('absen', 'I');
+                    $query->where('semester_id', semester_id());
+                },
+                'presensi as S' => function($query){
+                    $query->where('absen', 'S');
+                    $query->where('semester_id', semester_id());
+                },
+                'presensi as D' => function($query){
+                    $query->where('absen', 'D');
+                    $query->where('semester_id', semester_id());
+                },
+            ]);
+            $query->with(['kelas' => function($query){
+                $query->where('rombongan_belajar.semester_id', semester_id());
+            }]);
+        }])->with(['presensi'])->find(request()->route('ijin_id'));
+        $data = [
+            'user' => auth()->user()->name,
+            'ijin' => $ijin,
+            'qrcode' => base64_encode(QrCode::format('svg')->size(150)->errorCorrection('H')->generate($ijin->pd->nisn??'string')),
+        ];
+        $pdf = PDF::loadView('cetak.perijinan', $data);
+        $pdf->getMpdf()->defaultfooterfontsize=6;
+		$pdf->getMpdf()->defaultfooterline=0;
+        $pdf->getMpdf()->allow_charset_conversion=true;  // Set by default to TRUE
+        $pdf->getMpdf()->charset_in='UTF-8';
+        $pdf->getMpdf()->autoLangToFont = true;
+		//$pdf->getMpdf()->SetFooter('|Surat ini dicetak dari akun: ---|');
+        //$pdf->getMpdf()->SetFooter('Surat ini dicetak dari akun: '.auth()->user()->name);
+        return $pdf->stream('document.pdf');        
     }
 }

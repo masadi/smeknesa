@@ -5,7 +5,12 @@
     </b-media-aside>
     <b-media-body class="my-auto">
       <h6 class="mb-0">{{ data.nama }}</h6>
-      <small>{{ (data.cita) ? data.cita : '-' }}</small>
+      <template v-if="data.kelas">
+        <small>{{ (data.kelas) ? `Kelas: ${data.kelas.nama}` : '-' }}</small>
+      </template>
+      <template v-else>
+        <small>{{ (data.cita) ? data.cita : '-' }}</small>
+      </template>
     </b-media-body>
   </b-media>
 </template>

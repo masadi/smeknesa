@@ -11,16 +11,14 @@
     </b-card-body>
     <add-modal @reload="handleReload"></add-modal>
     <edit-modal @reload="handleReload"></edit-modal>
-    <anggota-modal @reload="handleReload"></anggota-modal>
   </b-card>
 </template>
 
 <script>
 import { BCard, BCardBody, BSpinner } from 'bootstrap-vue'
 import Datatable from './Datatable.vue' //IMPORT COMPONENT DATATABLENYA
-import AddModal from './../../components/modal/referensi/ekstrakurikuler/AddModal.vue'
-import EditModal from './../../components/modal/referensi/ekstrakurikuler/EditModal.vue'
-import AnggotaModal from './../../components/modal/referensi/ekstrakurikuler/AnggotaModal.vue'
+import AddModal from './../../components/modal/presensi/perijinan/AddModal.vue'
+import EditModal from './../../components/modal/presensi/perijinan/EditModal.vue'
 import eventBus from '@core/utils/eventBus'
 export default {
   components: {
@@ -30,7 +28,6 @@ export default {
     Datatable,
     AddModal,
     EditModal,
-    AnggotaModal,
   },
   data() {
     return {
@@ -44,17 +41,31 @@ export default {
           thClass: 'text-center',
         },
         {
-          key: 'wali_kelas',
-          label: 'Pembina',
+          key: 'kelas',
+          label: 'Kelas',
           sortable: false,
           thClass: 'text-center',
+          tdClass: 'text-center'
         },
         {
-          key: 'anggota_rombel_count',
-          label: 'Jml Anggota',
+          key: 'pilihan_ijin',
+          label: 'Jenis Ijin',
+          sortable: false,
+          thClass: 'text-center',
+          tdClass: 'text-center',
+        },
+        {
+          key: 'tanggal_ijin',
+          label: 'Tanggal',
+          sortable: false,
+          thClass: 'text-center',
+          tdClass: 'text-center',
+        },
+        {
+          key: 'alasan',
+          label: 'Alasan',
           sortable: true,
           thClass: 'text-center',
-          tdClass: 'text-center'
         },
         {
           key: 'actions',
@@ -69,17 +80,17 @@ export default {
       current_page: 1, //DEFAULT PAGE YANG AKTIF ADA PAGE 1
       per_page: 10, //DEFAULT LOAD PERPAGE ADALAH 10
       search: '',
-      sortBy: 'nama', //DEFAULT SORTNYA ADALAH CREATED_AT
+      sortBy: 'tanggal_mulai', //DEFAULT SORTNYA ADALAH CREATED_AT
       sortByDesc: false, //ASCEDING
     }
   },
   created() {
-    eventBus.$on('add-ekskul', this.handleEvent);
+    eventBus.$on('add-perijinan', this.handleEvent);
     this.loadPostsData()
   },
   methods: {
     handleEvent(){
-      eventBus.$emit('open-modal-add-ekskul');
+      eventBus.$emit('open-modal-add-perijinan');
     },
     handleReload(){
       this.loadPostsData()
@@ -89,7 +100,7 @@ export default {
       //let current_page = this.search == '' ? this.current_page : this.current_page != 1 ? 1 : this.current_page
       let current_page = this.current_page//this.search == '' ? this.current_page : 1
       //LAKUKAN REQUEST KE API UNTUK MENGAMBIL DATA POSTINGAN
-      this.$http.get('/referensi/ekstrakurikuler', {
+      this.$http.get('/presensi/perijinan', {
         params: {
           user_id: this.user.user_id,
           sekolah_id: this.user.sekolah_id,
@@ -141,7 +152,6 @@ export default {
       }
     },
     handleAksi(val){
-      console.log(val);
       this.loading = true
       if(val.aksi === 'hapus'){
         this.$swal({
@@ -160,8 +170,8 @@ export default {
           if (result.value) {
             this.loading_form = true
             this.$http.post('/referensi/hapus-data', {
-              data: 'ekskul',
-              id: val.item.rombongan_belajar_id,
+              data: 'perijinan',
+              id: val.item.ijin_id,
             }).then(response => {
               this.loading_form = false
               let getData = response.data
@@ -178,8 +188,12 @@ export default {
             });
           }
         })
+      } else if(val.aksi === 'print'){
+        this.loading = false
+        window.open(`/cetak/perijinan/${val.item.ijin_id}`, '_blank')
+        console.log('print');
       } else {
-        eventBus.$emit(`open-modal-${val.aksi}-ekskul`, val.item);
+        eventBus.$emit(`open-modal-${val.aksi}-perijinan`, val.item);
         this.loading = false
       }
     },

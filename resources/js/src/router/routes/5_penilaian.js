@@ -144,4 +144,26 @@ export default [
       ],
     },
   },
+  {
+    path: '/perizinan',
+    name: 'perizinan',
+    component: () => import('@/views/presensi/perijinan/Index.vue'),
+    meta: {
+      pageTitle: 'Perizinan',
+      resource: 'Perijinan',
+      action: 'read',
+      breadcrumb: [
+        {
+          text: 'Perizinan',
+          active: true,
+        },
+      ],
+      tombol_add: {
+        action: 'add-perijinan',
+        link: '',
+        variant: 'primary',
+        text: 'Tambah Data'
+      },
+    },
+  },
 ]

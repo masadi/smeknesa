@@ -31,6 +31,7 @@ use App\Models\Kenaikan_kelas;
 use App\Models\Jadwal;
 use App\Models\Jam;
 use App\Models\Kelas_bk;
+use App\Models\Ijin;
 use Carbon\Carbon;
 use Indonesia;
 
@@ -583,12 +584,14 @@ class ReferensiController extends Controller
             $get = Jam::find(request()->id);
         } elseif(request()->data == 'mapel'){
             $get = Mata_pelajaran::find(request()->id);
-        } elseif(request()->data == 'rombel'){
+        } elseif(request()->data == 'rombel' || request()->data == 'ekskul'){
             $get = Rombongan_belajar::find(request()->id);
         } elseif(request()->data == 'kelompok'){
             $get = Kelompok::find(request()->id);
         } elseif(request()->data == 'bk'){
             $get = Kelas_bk::where('guru_id', request()->id)->where('semester_id', semester_id())->get();
+        } elseif(request()->data == 'perijinan'){
+            $get = Ijin::find(request()->id);
         }
         
         if($get){
@@ -686,7 +689,7 @@ class ReferensiController extends Controller
                 'mapel' => Mata_pelajaran::with(['mapel_tingkat.jurusan_sp'])->find(request()->id),
                 'jurusan' => Jurusan_sp::where('semester_id', semester_id())->orderBy('nama_jurusan_sp')->get(),
             ];
-        } elseif(request()->data == 'rombel'){
+        } elseif(request()->data == 'rombel' || request()->data == 'ekskul'){
             $data = Rombongan_belajar::find(request()->id);
         } elseif(request()->data == 'kelompok'){
             $data = [
@@ -1378,6 +1381,9 @@ class ReferensiController extends Controller
         if(request()->data == 'edit-bk'){
             return $this->updateKelasBk();
         }
+        if(request()->data == 'ekskul'){
+            return $this->updateEkskul();
+        }
         return response()->json([
             'success' => FALSE,
             'errors' => 'Query tidak ditemukan',
@@ -1533,6 +1539,46 @@ class ReferensiController extends Controller
                 'errors' => NULL,
                 'icon' => 'error',
                 'text' => 'Data Kelompok Mapel gagal diperbaharui. Silahkan coba beberapa saat lagi!',
+                'title' => 'Gagal',
+            ];
+        }
+        return response()->json($data);
+    }
+    private function updateEkskul(){
+        $validator = Validator::make(request()->all(), 
+            [
+                'nama' => ['required'],
+                'guru_id' => ['required'],
+            ],
+            [
+                'nama.required' => 'Nama Ekstrakurikuler tidak boleh kosong',
+                'guru_id.required' => 'Guru Pembina tidak boleh kosong',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => FALSE,
+                'errors' => $validator->errors(),
+            ]);
+        }
+        $data = Rombongan_belajar::find(request()->rombongan_belajar_id);
+        $data->guru_id = request()->guru_id;
+        $data->nama = request()->nama;
+        if($data->save()){
+            $data = [
+                'success' => TRUE,
+                'errors' => NULL,
+                'icon' => 'success',
+                'text' => 'Data Ekstrakurikuler berhasil diperbaharui',
+                'title' => 'Berhasil',
+            ];
+        } else {
+            $data = [
+                'success' => TRUE,
+                'errors' => NULL,
+                'icon' => 'error',
+                'text' => 'Data Ekstrakurikuler gagal diperbaharui. Silahkan coba beberapa saat lagi!',
                 'title' => 'Gagal',
             ];
         }
@@ -1870,7 +1916,9 @@ class ReferensiController extends Controller
             $query->whereDoesntHave('pd_keluar', function($query){
                 $query->where('semester_id', semester_id());
             });
-        })->with(['agama'])->orderBy('nama')->get();
+        })->when(request()->filter_nama, function($query) {
+            $query->where('nama', 'ilike', '%'.request()->filter_nama.'%');
+        })->orderBy('nama')->get();
         return response()->json($data);
     }
     public function non_anggota_ekskul(){
@@ -1885,7 +1933,11 @@ class ReferensiController extends Controller
             $query->whereDoesntHave('pd_keluar', function($query){
                 $query->where('semester_id', semester_id());
             });
-        })->with(['agama'])->orderBy('nama')->get();
+        })->withWhereHas('kelas', function($query){
+            $query->where('rombongan_belajar.semester_id', semester_id());
+        })->when(request()->filter_nama, function($query) {
+            $query->where('nama', 'ilike', '%'.request()->filter_nama.'%');
+        })->orderBy('nama')->get();
         return response()->json($data);
     }
     public function set_anggota(){

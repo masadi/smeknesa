@@ -246,7 +246,7 @@ class AuthController extends Controller
                     if(!$user){
                         $user_email = $this->check_email($d, 'guru_id');
                         $user = User::create([
-                            'name' => $d->nama_lengkap,
+                            'name' => $d->nama,
                             'email' => $user_email,
                             'password' => bcrypt($new_password),
                             'default_password' => $new_password,
@@ -255,7 +255,7 @@ class AuthController extends Controller
                         ]);
                     } else {
                         $user->guru_id = $d->guru_id;
-                        $user->name = $d->nama_lengkap;
+                        $user->name = $d->nama;
                         $user->save();
                     }
                     $user->detachRoles($all_role, request()->periode_aktif);

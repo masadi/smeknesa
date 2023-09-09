@@ -54,5 +54,12 @@ export default [
       },
     ]
   },
+  {
+    icon: 'hand-click-icon',
+    title: 'Perizinan',
+    route: 'perizinan',
+    resource: 'Perijinan',
+    action: 'read',
+  },
 ]
   

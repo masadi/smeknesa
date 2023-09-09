@@ -9,7 +9,7 @@
       </b-col>
     </b-row>
     <b-overlay :show="loading" rounded opacity="0.6" size="lg" spinner-variant="warning">
-      <b-table bordered striped :items="items" :fields="fields" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" show-empty :busy="isBusy">
+      <b-table responsive bordered striped :items="items" :fields="fields" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" show-empty :busy="isBusy">
         <template #empty="scope">
           <p class="text-center">Tidak ada data untuk ditampilkan</p>
         </template>
@@ -19,14 +19,17 @@
             <strong>Loading...</strong>
           </div>
         </template>
-        <template v-slot:cell(wali_kelas)="row">
-          {{row.item.wali_kelas.nama}}
+        <template v-slot:cell(nama)="row">
+          {{row.item.pd.nama}}
+        </template>
+        <template v-slot:cell(kelas)="row">
+          {{row.item.pd.kelas.nama}}
         </template>
         <template v-slot:cell(actions)="row">
           <b-dropdown id="dropdown-dropleft" dropleft text="Aksi" variant="primary" size="sm">
-            <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'anggota')"><users-icon /> Anggota Ekskul</b-dropdown-item>
-            <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'edit')"><pencil-icon /> Edit</b-dropdown-item>
-            <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'hapus')"><trash-icon /> Hapus</b-dropdown-item>
+            <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'print')"><printer-icon :size="`12`" /> Cetak</b-dropdown-item>
+            <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'edit')"><pencil-icon :size="`12`" /> Edit Alasan</b-dropdown-item>
+            <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'hapus')"><trash-icon :size="`12`" /> Hapus</b-dropdown-item>
           </b-dropdown>
         </template>
       </b-table>

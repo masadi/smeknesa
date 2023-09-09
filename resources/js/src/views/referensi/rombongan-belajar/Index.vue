@@ -6,7 +6,7 @@
         <strong>Loading...</strong>
       </div>
       <div v-else>
-        <datatable :isBusy="isBusy" :items="items" :fields="fields" :meta="meta" @per_page="handlePerPage" @pagination="handlePagination" @search="handleSearch" @sort="handleSort" @aksi="handleAksi" />
+        <datatable :loading="loading" :isBusy="isBusy" :items="items" :fields="fields" :meta="meta" @per_page="handlePerPage" @pagination="handlePagination" @search="handleSearch" @sort="handleSort" @aksi="handleAksi" />
       </div>
     </b-card-body>
     <add-modal @reload="handleReload"></add-modal>
@@ -40,6 +40,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       isBusy: true,
       fields: [
         {
@@ -104,7 +105,7 @@ export default {
       this.loadPostsData()
     },
     loadPostsData() {
-      this.isBusy = true
+      this.loading = true
       //let current_page = this.search == '' ? this.current_page : this.current_page != 1 ? 1 : this.current_page
       let current_page = this.current_page//this.search == '' ? this.current_page : 1
       //LAKUKAN REQUEST KE API UNTUK MENGAMBIL DATA POSTINGAN
@@ -124,6 +125,7 @@ export default {
         //this.items = response.data.all_pd
         let getData = response.data.data
         this.isBusy = false
+        this.loading = false
         this.items = getData.data//MAKA ASSIGN DATA POSTINGAN KE DALAM VARIABLE ITEMS
         //DAN ASSIGN INFORMASI LAINNYA KE DALAM VARIABLE META
         this.meta = {
@@ -161,6 +163,7 @@ export default {
       }
     },
     handleAksi(val){
+      this.loading = true
       if(val.aksi === 'hapus'){
         this.$swal({
           title: 'Apakah Anda yakin?',
@@ -198,6 +201,7 @@ export default {
         })
       } else {
         eventBus.$emit(`open-modal-${val.aksi}-rombel`, val.item);
+        this.loading = false
       }
     },
   },

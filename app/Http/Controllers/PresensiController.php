@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Presensi;
@@ -12,6 +13,7 @@ use App\Models\Guru;
 use App\Models\Jurusan_sp;
 use App\Models\Rombongan_belajar;
 use App\Models\Sekolah;
+use App\Models\Ijin;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 
@@ -771,6 +773,156 @@ class PresensiController extends Controller
             'tanggal' => request()->tanggal,
             'hari' => $tanggal->translatedFormat('l'),
         ];
+        return response()->json($data);
+    }
+    public function perijinan(){
+        $data = Ijin::withWhereHas('pd', function($query){
+            $query->where('semester_id', request()->semester_id);
+            $query->with(['kelas' => function($query){
+                $query->where('rombongan_belajar.semester_id', request()->semester_id);
+            }]);
+        })->orderBy(request()->sortby, request()->sortbydesc)
+        ->orderBy('anggota_rombel_id')
+        ->when(request()->q, function($query) {
+            $query->whereHas('pd', function($query){
+                $query->where('nama', 'ilike', '%'.request()->q.'%');
+            });
+        })->paginate(request()->per_page);
+        return response()->json(['status' => 'success', 'data' => $data]);
+    }
+    public function get_siswa(){
+        $data = [
+            'items' => Peserta_didik::withWhereHas('kelas', function($query){
+                $query->where('rombongan_belajar.semester_id', semester_id());
+            })->withWhereHas('anggota_rombel', function($query){
+                $query->where('semester_id', semester_id());
+                $query->whereHas('rombongan_belajar', function($query){
+                    $query->where('tingkat', '<>', 0);
+                });
+            })->when(request()->nama_siswa, function($query) {
+                $query->where('nama', 'ilike', '%'.request()->nama_siswa.'%');
+            })->orderBy('nama')->get(),
+        ];
+        return response()->json($data);
+    }
+    public function add_perijinan(){
+        $validator = Validator::make(request()->all(), 
+            [
+                'anggota_rombel_id' => ['required'],
+                'jam_ke' => ['required_if:jenis_ijin,jam'],
+                'jenis_ijin' => ['required'],
+                'pilihan_ijin' => ['required'],
+                'tanggal_ijin' => ['required_if:jenis_ijin,jam'],
+                'tanggal_mulai_ijin' => ['required_if:jenis_ijin,hari'],
+                'tanggal_selesai_ijin' => ['required_if:jenis_ijin,hari'],
+            ],
+            [
+                'anggota_rombel_id.required' => 'Siswa tidak boleh kosong',
+                'jam_ke.required_if' => 'Jam tidak boleh kosong',
+                'jenis_ijin.required' => 'Jenis Ijin tidak boleh kosong',
+                'pilihan_ijin.required' => 'Pilihan Ijin tidak boleh kosong',
+                'tanggal_ijin.required_if' => 'Tanggal Ijin tidak boleh kosong',
+                'tanggal_mulai_ijin.required_if' => 'Tanggal Mulai Ijin tidak boleh kosong',
+                'tanggal_selesai_ijin.required_if' => 'Tanggal Selesai Ijin tidak boleh kosong',
+            ]
+        );
+ 
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => FALSE,
+                'errors' => $validator->errors(),
+            ]);
+        }
+        $insert = 0;
+        if(request()->jenis_ijin == 'hari'){
+            $startDate = Carbon::createFromDate(request()->tanggal_mulai_ijin);
+            $endDate = Carbon::createFromDate(request()->tanggal_selesai_ijin);
+            //$period = CarbonPeriod::create($startDate, $endDate);
+            $period = CarbonPeriod::between($startDate, $endDate)->addFilter(function ($date) {
+                return $date->isMonday() || $date->isTuesday() || $date->isWednesday() || $date->isThursday() || $date->isFriday();
+            });
+            //$period = CarbonPeriod::create(now()->startOfMonth(), now()->endOfMonth());
+            $ijin = Ijin::updateOrCreate(
+                [
+                    'anggota_rombel_id' => request()->anggota_rombel_id,
+                    'guru_id' => request()->guru_id,
+                    'tanggal_mulai' => request()->tanggal_mulai_ijin,
+                    'tanggal_selesai' => request()->tanggal_selesai_ijin,
+                    'jenis_ijin' => request()->jenis_ijin,
+                    'pilihan_ijin' => request()->pilihan_ijin,
+                ],
+                [
+                    'alasan' => request()->alasan,
+                ]
+            );
+            foreach($period as $date){
+                $insert++;
+                $data_jam = ($date->dayOfWeek == Carbon::FRIDAY) ? [1,2,3,4,5,6] : [1,2,3,4,5,6,7,8,9,10,11];
+                foreach($data_jam as $jam){
+                    Presensi::updateOrCreate(
+                        [
+                            'anggota_rombel_id' => request()->anggota_rombel_id,
+                            'tanggal' => $date->format('d-m-Y'),
+                            'jam' => $jam,
+                        ],
+                        [
+                            'absen' => request()->pilihan_ijin,
+                            'user_id' => request()->user_id,
+                            'ijin_id' => $ijin->ijin_id,
+                        ]
+                    );
+                }
+            }
+        } else {
+            $ijin = Ijin::updateOrCreate(
+                [
+                    'anggota_rombel_id' => request()->anggota_rombel_id,
+                    'guru_id' => request()->guru_id,
+                    'tanggal_mulai' => request()->tanggal_ijin,
+                    'tanggal_selesai' => NULL,
+                    'jenis_ijin' => request()->jenis_ijin,
+                    'pilihan_ijin' => request()->pilihan_ijin,
+                ],
+                [
+                    'alasan' => request()->alasan,
+                ]
+            );
+            foreach(request()->jam_ke as $jam){
+                $insert++;
+                Presensi::updateOrCreate(
+                    [
+                        'anggota_rombel_id' => request()->anggota_rombel_id,
+                        'tanggal' => request()->tanggal_ijin,
+                        'jam' => $jam,
+                    ],
+                    [
+                        'absen' => request()->pilihan_ijin,
+                        'user_id' => request()->user_id,
+                        'ijin_id' => $ijin->ijin_id,
+                    ]
+                );
+            }
+        }
+        if($insert){
+            $data = [
+                'success' => TRUE,
+                'icon' => 'success',
+                'text' => 'Data Perijinan berhasil disimpan',
+                'title' => 'Berhasil',
+            ];
+        } else {
+            $data = [
+                'success' => FALSE,
+                'icon' => 'error',
+                'text' => 'Data Perijinan gagal disimpan. Silahkan coba beberapa saat lagi!',
+                'title' => 'Gagal',
+            ];
+        }
+        return response()->json($data);
+    }
+    public function get_jam(){
+        $tanggal = Carbon::createFromDate(request()->tanggal_mulai_ijin);
+        $data = ($tanggal->dayOfWeek == Carbon::FRIDAY) ? [1,2,3,4,5,6] : [1,2,3,4,5,6,7,8,9,10,11];
         return response()->json($data);
     }
 }

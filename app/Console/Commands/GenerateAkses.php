@@ -86,7 +86,7 @@ class GenerateAkses extends Command
             ],
             [
                 'role' => 'bk',
-                'akses' => ['Rekap_Absen_Siswa', 'Jadwal', 'Tatib_Sekolah', 'Tatib_Pelanggaran', 'Tatib_Rekap', 'Tatib_Bukti', 'Tatib_Ortu', 'Tatib_Pernyataan', 'Tatib_Peringatan', 'Tatib_Mundur', 'Penilaian_Sikap'],
+                'akses' => ['Rekap_Absen_Siswa', 'Jadwal', 'Tatib_Sekolah', 'Tatib_Pelanggaran', 'Tatib_Rekap', 'Tatib_Bukti', 'Tatib_Ortu', 'Tatib_Pernyataan', 'Tatib_Peringatan', 'Tatib_Mundur', 'Penilaian_Sikap', 'Perijinan'],
                 'action' => 'read',
             ],
             [

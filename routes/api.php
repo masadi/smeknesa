@@ -165,6 +165,10 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/simpan', [PresensiController::class, 'simpan']);
     Route::post('/detil', [PresensiController::class, 'detil']);
     Route::post('/hapus', [PresensiController::class, 'hapus']);
+    Route::get('/perijinan', [PresensiController::class, 'perijinan']);
+    Route::post('/get-siswa', [PresensiController::class, 'get_siswa']);
+    Route::post('/add-perijinan', [PresensiController::class, 'add_perijinan']);
+    Route::post('/get-jam', [PresensiController::class, 'get_jam']);
   });
   Route::group(['prefix' => 'editor'], function () {
     Route::post('/edit-data', [EditorController::class, 'index']);
