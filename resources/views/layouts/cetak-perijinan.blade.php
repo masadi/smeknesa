@@ -32,7 +32,7 @@
         @media print {
             @page {
                 margin: 0 auto; /* imprtant to logo margin */
-                sheet-size: 300px 250mm; /* imprtant to set paper size */
+                sheet-size: 300px 108mm; /* imprtant to set paper size */
                 margin-top: 10px;
             }
             html {
