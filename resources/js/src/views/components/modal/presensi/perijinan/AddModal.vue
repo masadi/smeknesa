@@ -10,7 +10,9 @@
                   Cari nama siswa...
                 </template>
                 <template slot="option" slot-scope="option">
-                  <media-siswa :data="option"></media-siswa>
+                  <!--media-siswa :data="option"></media-siswa-->
+                  <strong>{{ option.nama }}</strong><br>
+                  Kelas: {{ option.kelas.nama }}
                 </template>
                 <template slot="selected-option" slot-scope="option">
                   <div class="selected d-center">
