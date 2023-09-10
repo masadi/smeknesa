@@ -95,9 +95,9 @@ class CetakController extends Controller
             $pdf->getMpdf()->autoLangToFont = true;
             //$pdf->getMpdf()->SetFooter('|Surat ini dicetak dari akun: ---|');
             //$pdf->getMpdf()->SetFooter('Surat ini dicetak dari akun: '.auth()->user()->name);
-            $output = 'perijikan_' . date('Y_m_d_H_i_s') . '.pdf';
+            $output = clean($ijin->pd->nama . ' - ' . $ijin->pd->kelas->nama) . '.pdf';
             //$pdf->getMpdf()->Output("$output", 'F');
-            $pdf->stream('document.pdf'); 
+            $pdf->stream($output); 
         } else {
             return view('cetak.cetak-perijinan', $data);
         }      

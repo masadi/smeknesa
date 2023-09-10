@@ -242,11 +242,7 @@ export default {
               this.hideModal()
               this.$emit('reload')
               if(getData.ijin){
-                if(aksi == 'preview'){
-                  window.open(`/cetak/perijinan/${aksi}/${getData.ijin.ijin_id}/${this.user.user_id}`, '_blank')
-                } else {
-                  window.open(`/cetak/perijinan/${aksi}/${getData.ijin.ijin_id}/${this.user.user_id}`, '_blank')
-                }
+                window.open(`/cetak/perijinan/${aksi}/${getData.ijin.ijin_id}/${this.user.user_id}`, '_blank')
               }
             }
           })

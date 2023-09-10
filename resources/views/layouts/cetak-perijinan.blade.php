@@ -29,6 +29,7 @@
         }
         p.mt-1 {margin-top: 10px !important;}
         table tr td.p0 {padding: 5px -1px !important;}
+        p.small{font-size: 8px;}
         @media print {
             @page {
                 margin: 0 auto; /* imprtant to logo margin */

@@ -22,7 +22,7 @@ use File;
 class DashboardController extends Controller
 {
     public function index(){
-        if($this->loggedUser()->hasRole(['administrator', 'wakakur', 'wakasiswa'], periode_aktif())){
+        if($this->loggedUser()->hasRole(['administrator', 'wakakur', 'wakasiswa', 'bk'], periode_aktif())){
             $data = [
                 'statistics' => [
                     [
