@@ -84,7 +84,7 @@ class CetakController extends Controller
         $data = [
             'user' => $user->name,
             'ijin' => $ijin,
-            'qrcode' => base64_encode(QrCode::format('svg')->size(150)->errorCorrection('H')->generate($ijin->pd->nisn??'string')),
+            'qrcode' => base64_encode(QrCode::format('svg')->size(150)->errorCorrection('H')->generate($ijin->pd->peserta_didik_id??'string')),
         ];
         if(request()->aksi == 'preview'){
             $pdf = PDF::loadView('cetak.perijinan', $data);
