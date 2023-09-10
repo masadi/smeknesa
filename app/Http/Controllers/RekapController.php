@@ -56,7 +56,7 @@ class RekapController extends Controller
             'presensi as alpha' => function($query){
                 $query->has('presensi_jadwal');
                 $query->where('absen', 'A');
-                $query->whereMonth('fecha', '=', '06');
+                //$query->whereMonth('fecha', '=', '06');
             },
             'presensi as izin' => function($query){
                 $query->has('presensi_jadwal');

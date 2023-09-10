@@ -60,9 +60,8 @@ class PresensiController extends Controller
         }
         $period = CarbonPeriod::create($startDate, $endDate);
         //$period = CarbonPeriod::create(now()->startOfMonth(), now()->endOfMonth());
-        foreach($period as $date)
-        {
-        $dates[] = $date->format('d-m-Y');
+        foreach($period as $date){
+            $dates[] = $date->format('d-m-Y');
         }
         return $dates;
     }
@@ -862,7 +861,7 @@ class PresensiController extends Controller
                     Presensi::updateOrCreate(
                         [
                             'anggota_rombel_id' => request()->anggota_rombel_id,
-                            'tanggal' => $date->format('d-m-Y'),
+                            'tanggal' => $date->format('Y-m-d'),
                             'jam' => $jam,
                         ],
                         [
