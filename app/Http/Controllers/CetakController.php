@@ -6,6 +6,7 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Http\Request;
 use App\Models\Peserta_didik;
 use App\Models\Ijin;
+use App\Models\User;
 use PDF;
 
 class CetakController extends Controller
@@ -56,6 +57,7 @@ class CetakController extends Controller
         return $pdf->stream('document.pdf');
     }
     public function perijinan(){
+        $user = User::find(request()->route('user_id'));
         $ijin = Ijin::with(['pd' => function($query){
             $query->withCount([
                 'presensi as A' => function($query){
@@ -80,18 +82,24 @@ class CetakController extends Controller
             }]);
         }])->with(['presensi'])->find(request()->route('ijin_id'));
         $data = [
-            'user' => auth()->user()->name,
+            'user' => $user->name,
             'ijin' => $ijin,
             'qrcode' => base64_encode(QrCode::format('svg')->size(150)->errorCorrection('H')->generate($ijin->pd->nisn??'string')),
         ];
-        $pdf = PDF::loadView('cetak.perijinan', $data);
-        $pdf->getMpdf()->defaultfooterfontsize=6;
-		$pdf->getMpdf()->defaultfooterline=0;
-        $pdf->getMpdf()->allow_charset_conversion=true;  // Set by default to TRUE
-        $pdf->getMpdf()->charset_in='UTF-8';
-        $pdf->getMpdf()->autoLangToFont = true;
-		//$pdf->getMpdf()->SetFooter('|Surat ini dicetak dari akun: ---|');
-        //$pdf->getMpdf()->SetFooter('Surat ini dicetak dari akun: '.auth()->user()->name);
-        return $pdf->stream('document.pdf');        
+        if(request()->aksi == 'preview'){
+            $pdf = PDF::loadView('cetak.perijinan', $data);
+            $pdf->getMpdf()->defaultfooterfontsize=6;
+            $pdf->getMpdf()->defaultfooterline=0;
+            $pdf->getMpdf()->allow_charset_conversion=true;  // Set by default to TRUE
+            $pdf->getMpdf()->charset_in='UTF-8';
+            $pdf->getMpdf()->autoLangToFont = true;
+            //$pdf->getMpdf()->SetFooter('|Surat ini dicetak dari akun: ---|');
+            //$pdf->getMpdf()->SetFooter('Surat ini dicetak dari akun: '.auth()->user()->name);
+            $output = 'perijikan_' . date('Y_m_d_H_i_s') . '.pdf';
+            //$pdf->getMpdf()->Output("$output", 'F');
+            $pdf->stream('document.pdf'); 
+        } else {
+            return view('cetak.cetak-perijinan', $data);
+        }      
     }
 }

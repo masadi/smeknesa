@@ -69,10 +69,13 @@
     </b-overlay>
     <template #modal-footer="{ ok, cancel }">
         <b-overlay :show="loading_form" rounded opacity="0.6" spinner-small spinner-variant="secondary" class="d-inline-block">
-          <b-button @click="cancel()">Tutup</b-button>
+          <b-button @click="cancel()">Batal</b-button>
         </b-overlay>
         <b-overlay :show="loading_form" rounded opacity="0.6" spinner-small spinner-variant="success" class="d-inline-block">
-          <b-button variant="success" @click="ok()">Simpan</b-button>
+          <b-button variant="primary" @click="ok()">Preview</b-button>
+        </b-overlay>
+        <b-overlay :show="loading_form" rounded opacity="0.6" spinner-small spinner-variant="success" class="d-inline-block">
+          <b-button variant="success" @click="cetak()">Cetak</b-button>
         </b-overlay>
       </template>
   </b-modal>
@@ -198,9 +201,12 @@ export default {
     },
     handleOk(bvModalEvent){
       bvModalEvent.preventDefault()
-      this.handleSubmit()
+      this.handleSubmit('preview')
     },
-    handleSubmit(){
+    cetak(){
+      this.handleSubmit('cetak')
+    },
+    handleSubmit(aksi){
       this.form.jam_ke = this.jam_selected
       this.loading_form = true
       this.$http.post('/presensi/add-perijinan', this.form).then(response => {
@@ -229,11 +235,19 @@ export default {
             customClass: {
               confirmButton: 'btn btn-success',
             },
+            confirmButtonText: aksi.toUpperCase(),
             allowOutsideClick: false,
           }).then(result => {
             if(getData.success){
               this.hideModal()
               this.$emit('reload')
+              if(getData.ijin){
+                if(aksi == 'preview'){
+                  window.open(`/cetak/perijinan/${aksi}/${getData.ijin.ijin_id}/${this.user.user_id}`, '_blank')
+                } else {
+                  window.open(`/cetak/perijinan/${aksi}/${getData.ijin.ijin_id}/${this.user.user_id}`, '_blank')
+                }
+              }
             }
           })
         }
