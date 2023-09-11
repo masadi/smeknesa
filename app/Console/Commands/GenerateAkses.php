@@ -56,7 +56,7 @@ class GenerateAkses extends Command
             ],
             [
                 'role' => 'piket',
-                'akses' => ['Ref_Mapel', 'Presensi_Guru', 'Presensi_Pd', 'Jadwal', 'Rekap_Absen_Siswa', 'Rekap_Absen_Guru'],
+                'akses' => ['Ref_Mapel', 'Presensi_Guru', 'Presensi_Pd', 'Jadwal', 'Rekap_Absen_Siswa'],
                 'action' => 'read',
             ],
             [
@@ -81,7 +81,7 @@ class GenerateAkses extends Command
             ],
             [
                 'role' => 'wakasiswa',
-                'akses' => ['Ref_Sekolah', 'Ref_Mapel', 'Ref_Pd', 'Ref_Guru', 'Rekap_Absen_Siswa', 'Jadwal', 'Tatib_Sekolah', 'Tatib_Pelanggaran', 'Tatib_Rekap', 'Tatib_Bukti', 'Tatib_Ortu', 'Tatib_Pernyataan', 'Tatib_Peringatan', 'Tatib_Mundur'],
+                'akses' => ['Ref_Sekolah', 'Ref_Mapel', 'Ref_Pd', 'Ref_Guru', 'Rekap_Absen_Siswa', 'Rekap_Absen_Guru', 'Jadwal', 'Tatib_Sekolah', 'Tatib_Pelanggaran', 'Tatib_Rekap', 'Tatib_Bukti', 'Tatib_Ortu', 'Tatib_Pernyataan', 'Tatib_Peringatan', 'Tatib_Mundur'],
                 'action' => 'read',
             ],
             [
