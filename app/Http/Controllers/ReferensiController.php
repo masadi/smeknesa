@@ -212,9 +212,18 @@ class ReferensiController extends Controller
                 $query->where('nama', 'ilike', '%'.request()->q.'%');
                 $query->whereHas('kelas', function($query){
                     $query->where('rombongan_belajar.semester_id', semester_id());
-                    $query->whereHas('pembelajaran', function($query){
+                    /*$query->whereHas('pembelajaran', function($query){
                         $query->where('guru_id', loggedUser()->guru_id);
-                    });
+                    });*/
+                    if($this->loggedUser()->hasRole('guru', periode_aktif())){
+                        if($this->loggedUser()->hasRole('walas', periode_aktif())){
+                            $query->where('guru_id', loggedUser()->guru_id);
+                        } else {
+                            $query->whereHas('pembelajaran', function($query){
+                                $query->where('guru_id', loggedUser()->guru_id);
+                            });
+                        }
+                    }
                 });
             })
             ->paginate(request()->per_page);
