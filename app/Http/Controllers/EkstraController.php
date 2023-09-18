@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Materi_ekstra;
 use App\Models\Nilai_ekstra;
 use App\Models\Absensi_ekstra;
 use App\Models\Rombongan_belajar;
+use App\Models\Peserta_didik;
 
 class EkstraController extends Controller
 {
@@ -101,6 +103,114 @@ class EkstraController extends Controller
             $data = [
                 'icon' => 'error',
                 'text' => 'Data Materi Ekstra gagal dihapus. Silahkan coba beberapa saat lagi!',
+                'title' => 'Gagal',
+            ];
+        }
+        return response()->json($data);
+    }
+    /*
+    Rombongan_belajar::where(function($query){
+                $query->where('tingkat', 0);
+                $query->where('semester_id', request()->semester_id);
+            })->withWhereHas('pd', function($query){
+                $query->withWhereHas('kelas', function($query){
+                    $query->where('tingkat', '<>', 0);
+                    $query->where('guru_id', request()->guru_id);
+                    $query->where('rombongan_belajar.semester_id', request()->semester_id);
+                });
+            })->orderBy('nama')->get()
+    */
+    public function get_ektra(){
+        $data = [
+            'data' => Rombongan_belajar::where(function($query){
+                $query->where('tingkat', 0);
+                $query->where('semester_id', request()->semester_id);
+                $query->where('guru_id', request()->guru_id);
+            })->orderBy('nama')->get(),
+        ];
+        return response()->json($data);
+    }
+    public function get_siswa_ektra(){
+        $data = [
+            'data' => Peserta_didik::withWhereHas('anggota_rombel', function($query){
+                $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
+                $query->with([
+                    'nilai_ekstra' => function($query){
+                        $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
+                    },
+                    'absensi_ekstra' => function($query){
+                        $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
+                    },
+                ]);
+            })->orderBy('nama')->get(),
+            'materi' => Materi_ekstra::where('rombongan_belajar_id', request()->rombongan_belajar_id)->orderBy('created_at')->get(),
+        ];
+        return response()->json($data);
+    }
+    public function add_nilai_ektra(){
+        $insert = 0;
+        foreach(request()->nilai as $uuid => $angka){
+            $segments = Str::of($uuid)->split('/[\s#]+/');
+            $anggota_rombel_id = $segments->first();
+            $materi_id = $segments->last();
+            if($angka){
+                if(Nilai_ekstra::updateOrCreate(
+                    [
+                        'materi_id' => $materi_id,
+                        'anggota_rombel_id' => $anggota_rombel_id,
+                        'rombongan_belajar_id' => request()->rombongan_belajar_id,
+                    ],
+                    [
+                        'angka' => $angka,
+                    ]
+                )){
+                    $insert++;
+                }
+            } else {
+                Nilai_ekstra::where('materi_id', $materi_id)->where('anggota_rombel_id', $anggota_rombel_id)->where('rombongan_belajar_id', request()->rombongan_belajar_id)->delete();
+            }
+        }
+        if($insert){
+            $data = [
+                'icon' => 'success',
+                'text' => 'Nilai Ekstra berhasil disimpan',
+                'title' => 'Berhasil',
+            ];
+        } else {
+            $data = [
+                'icon' => 'error',
+                'text' => 'Nilai Ekstra gagal disimpan. Silahkan coba beberapa saat lagi!',
+                'title' => 'Gagal',
+            ];
+        }
+        return response()->json($data);
+    }
+    public function add_absen_ektra(){
+        $insert = 0;
+        foreach(request()->alpa as $anggota_rombel_id => $alpa){
+            $insert++;
+            Absensi_ekstra::updateOrCreate(
+                [
+                    'anggota_rombel_id' => $anggota_rombel_id,
+                    'rombongan_belajar_id' => request()->rombongan_belajar_id,
+                ],
+                [
+                    'alpa' => $alpa??0,
+                    'sakit' => request()->sakit[$anggota_rombel_id]??0,
+                    'izin' => request()->izin[$anggota_rombel_id]??0,
+                ],
+            );
+        }
+        if($insert){
+            $data = [
+                'icon' => 'success',
+                'text' => 'Absensi Ekstra berhasil disimpan',
+                'title' => 'Berhasil',
+            ];
+        } else {
+            $data = [
+                'icon' => 'error',
+                'text' => 'Absensi Ekstra gagal disimpan. Silahkan coba beberapa saat lagi!',
                 'title' => 'Gagal',
             ];
         }

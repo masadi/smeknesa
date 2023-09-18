@@ -50,4 +50,12 @@ class Anggota_rombel extends Model
 	{
 		return $this->hasOne(Nilai_ekskul::class, 'anggota_rombel_id', 'anggota_rombel_id');
 	}
+	public function nilai_ekstra()
+	{
+		return $this->hasMany(Nilai_ekstra::class, 'anggota_rombel_id', 'anggota_rombel_id');
+	}
+	public function absensi_ekstra()
+	{
+		return $this->hasOne(Absensi_ekstra::class, 'anggota_rombel_id', 'anggota_rombel_id');
+	}
 }

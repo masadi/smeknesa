@@ -172,7 +172,7 @@ export default [
   {
     path: '/ekskul/entri-nilai',
     name: 'ekskul-entri-nilai',
-    component: () => import('@/views/pages/Blank.vue'),
+    component: () => import('@/views/penilaian/ekstrakurikuler/EntriNilai.vue'),
     meta: {
       pageTitle: 'Nilai',
       action: 'read',
@@ -191,7 +191,7 @@ export default [
   {
     path: '/ekskul/entri-absensi',
     name: 'ekskul-entri-absensi',
-    component: () => import('@/views/pages/Blank.vue'),
+    component: () => import('@/views/penilaian/ekstrakurikuler/EntriAbsensi.vue'),
     meta: {
       pageTitle: 'Absensi',
       action: 'read',

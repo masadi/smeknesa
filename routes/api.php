@@ -150,6 +150,10 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/detil-materi', [EkstraController::class, 'detil_materi']);
     Route::post('/update-materi', [EkstraController::class, 'update_materi']);
     Route::post('/hapus-materi', [EkstraController::class, 'hapus_materi']);
+    Route::post('/get-ektra', [EkstraController::class, 'get_ektra']);
+    Route::post('/get-siswa-ektra', [EkstraController::class, 'get_siswa_ektra']);
+    Route::post('/add-nilai-ektra', [EkstraController::class, 'add_nilai_ektra']);
+    Route::post('/add-absen-ektra', [EkstraController::class, 'add_absen_ektra']);
   });
   Route::group(['prefix' => 'modul'], function () {
     Route::get('/', [ModulController::class, 'index']);
