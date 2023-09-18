@@ -6,21 +6,19 @@
         <strong>Loading...</strong>
       </div>
       <div v-else>
-        <datatable :loading="loading" :isBusy="isBusy" :items="items" :fields="fields" :meta="meta" @per_page="handlePerPage" @pagination="handlePagination" @search="handleSearch" @sort="handleSort" @aksi="handleAksi" />
+        <datatable :isBusy="isBusy" :loading="loading" :items="items" :fields="fields" :meta="meta" @per_page="handlePerPage" @pagination="handlePagination" @search="handleSearch" @sort="handleSort" @aksi="handleAksi" />
       </div>
     </b-card-body>
     <add-modal @reload="handleReload"></add-modal>
     <edit-modal @reload="handleReload"></edit-modal>
-    <anggota-modal @reload="handleReload"></anggota-modal>
   </b-card>
 </template>
 
 <script>
 import { BCard, BCardBody, BSpinner } from 'bootstrap-vue'
 import Datatable from './Datatable.vue' //IMPORT COMPONENT DATATABLENYA
-import AddModal from './../../components/modal/referensi/ekstrakurikuler/AddModal.vue'
-import EditModal from './../../components/modal/referensi/ekstrakurikuler/EditModal.vue'
-import AnggotaModal from './../../components/modal/referensi/ekstrakurikuler/AnggotaModal.vue'
+import AddModal from './../../components/modal/penilaian/ekstrakurikuler/AddModal.vue'
+import EditModal from './../../components/modal/penilaian/ekstrakurikuler/EditModal.vue'
 import eventBus from '@core/utils/eventBus'
 export default {
   components: {
@@ -30,45 +28,30 @@ export default {
     Datatable,
     AddModal,
     EditModal,
-    AnggotaModal,
   },
   data() {
     return {
-      loading: false,
       isBusy: true,
+      loading: false,
       fields: [
         {
-          key: 'nama',
-          label: 'Nama',
-          sortable: true,
-          thClass: 'text-center',
-        },
-        {
-          key: 'status',
-          label: 'Status',
-          sortable: false,
-          thClass: 'text-center',
-          tdClass: 'text-center'
-        },
-        {
-          key: 'wali_kelas',
-          label: 'Pembina',
+          key: 'deskripsi',
+          label: 'Materi',
           sortable: false,
           thClass: 'text-center',
         },
         {
-          key: 'anggota_rombel_count',
-          label: 'Jml Anggota',
-          sortable: true,
+          key: 'ekstra',
+          label: 'Esktrakurikuler',
+          sortable: false,
           thClass: 'text-center',
-          tdClass: 'text-center'
         },
         {
           key: 'actions',
           label: 'Aksi',
           sortable: false,
           thClass: 'text-center',
-          tdClass: 'text-center'
+          tdClass: 'text-center',
         },
       ],
       items: [],
@@ -76,32 +59,31 @@ export default {
       current_page: 1, //DEFAULT PAGE YANG AKTIF ADA PAGE 1
       per_page: 10, //DEFAULT LOAD PERPAGE ADALAH 10
       search: '',
-      sortBy: 'nama', //DEFAULT SORTNYA ADALAH CREATED_AT
-      sortByDesc: false, //ASCEDING
+      sortBy: 'updated_at', //DEFAULT SORTNYA ADALAH CREATED_AT
+      sortByDesc: true, //ASCEDING
     }
   },
   created() {
-    eventBus.$on('add-ekskul', this.handleEvent);
+    eventBus.$on('add-materi-ekstra', this.handleEvent);
     this.loadPostsData()
   },
   methods: {
     handleEvent(){
-      eventBus.$emit('open-modal-add-ekskul');
+      eventBus.$emit('open-modal-add-materi-ekstra', {
+        guru_id: this.user.guru_id,
+        semester_id: this.user.semester.semester_id,
+      });
     },
     handleReload(){
       this.loadPostsData()
     },
     loadPostsData() {
       this.loading = true
-      //let current_page = this.search == '' ? this.current_page : this.current_page != 1 ? 1 : this.current_page
-      let current_page = this.current_page//this.search == '' ? this.current_page : 1
-      //LAKUKAN REQUEST KE API UNTUK MENGAMBIL DATA POSTINGAN
-      this.$http.get('/referensi/ekstrakurikuler', {
+      let current_page = this.current_page
+      this.$http.get('/nilai/materi-ekstra', {
         params: {
-          user_id: this.user.user_id,
-          sekolah_id: this.user.sekolah_id,
+          guru_id: this.user.guru_id,
           semester_id: this.user.semester.semester_id,
-          periode_aktif: this.user.semester.nama,
           page: current_page,
           per_page: this.per_page,
           q: this.search,
@@ -136,8 +118,8 @@ export default {
     },
     //JIKA ADA DATA PENCARIAN
     handleSearch(val) {
-      this.search = val //SET VALUE PENCARIAN KE VARIABLE SEARCH
-      this.loadPostsData() //REQUEST DATA BARU
+      this.search = val
+      this.loadPostsData()
     },
     //JIKA ADA EMIT SORT
     handleSort(val) {
@@ -148,8 +130,6 @@ export default {
       }
     },
     handleAksi(val){
-      console.log(val);
-      this.loading = true
       if(val.aksi === 'hapus'){
         this.$swal({
           title: 'Apakah Anda yakin?',
@@ -165,12 +145,11 @@ export default {
           allowOutsideClick: () => false,
         }).then(result => {
           if (result.value) {
-            this.loading_form = true
-            this.$http.post('/referensi/hapus-data', {
-              data: 'ekskul',
-              id: val.item.rombongan_belajar_id,
+            this.loading = true
+            this.$http.post('/nilai/hapus-materi', {
+              id: val.item.materi_id,
             }).then(response => {
-              this.loading_form = false
+              this.loading = false
               let getData = response.data
               this.$swal({
                 icon: getData.icon,
@@ -186,8 +165,7 @@ export default {
           }
         })
       } else {
-        eventBus.$emit(`open-modal-${val.aksi}-ekskul`, val.item);
-        this.loading = false
+        eventBus.$emit(`open-modal-${val.aksi}-ekstra`, val.item);
       }
     },
   },

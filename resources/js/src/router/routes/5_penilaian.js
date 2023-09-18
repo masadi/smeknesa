@@ -145,6 +145,69 @@ export default [
     },
   },
   {
+    path: '/ekskul/materi',
+    name: 'ekskul-materi',
+    component: () => import('@/views/penilaian/ekstrakurikuler/Index.vue'),
+    meta: {
+      pageTitle: 'Materi',
+      action: 'read',
+      resource: 'Instruktur',
+      breadcrumb: [
+        {
+          text: 'Ekstrakurikuler',
+        },
+        {
+          text: 'Materi',
+          active: true,
+        },
+      ],
+      tombol_add: {
+        action: 'add-materi-ekstra',
+        link: '',
+        variant: 'primary',
+        text: 'Tambah Data'
+      },
+    },
+  },
+  {
+    path: '/ekskul/entri-nilai',
+    name: 'ekskul-entri-nilai',
+    component: () => import('@/views/pages/Blank.vue'),
+    meta: {
+      pageTitle: 'Nilai',
+      action: 'read',
+      resource: 'Instruktur',
+      breadcrumb: [
+        {
+          text: 'Ekstrakurikuler',
+        },
+        {
+          text: 'Entri Nilai',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/ekskul/entri-absensi',
+    name: 'ekskul-entri-absensi',
+    component: () => import('@/views/pages/Blank.vue'),
+    meta: {
+      pageTitle: 'Absensi',
+      action: 'read',
+      resource: 'Instruktur',
+      breadcrumb: [
+        {
+          text: 'Ekstrakurikuler',
+        },
+        {
+          text: 'Entri Absensi',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
     path: '/perizinan',
     name: 'perizinan',
     component: () => import('@/views/presensi/perijinan/Index.vue'),

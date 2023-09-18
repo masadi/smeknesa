@@ -15,6 +15,7 @@ use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\WhatsappController;
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\RekapController;
+use App\Http\Controllers\EkstraController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -143,6 +144,12 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/reset-deskripsi', [NilaiController::class, 'reset_deskripsi']);
     Route::post('/detil-data', [NilaiController::class, 'detil_data']);
     Route::post('/peserta-didik', [NilaiController::class, 'peserta_didik']);
+    Route::get('/materi-ekstra', [EkstraController::class, 'index']);
+    Route::post('/get-ekskul', [EkstraController::class, 'ekskul']);
+    Route::post('/add-materi-ekstra', [EkstraController::class, 'add_materi_ekstra']);
+    Route::post('/detil-materi', [EkstraController::class, 'detil_materi']);
+    Route::post('/update-materi', [EkstraController::class, 'update_materi']);
+    Route::post('/hapus-materi', [EkstraController::class, 'hapus_materi']);
   });
   Route::group(['prefix' => 'modul'], function () {
     Route::get('/', [ModulController::class, 'index']);

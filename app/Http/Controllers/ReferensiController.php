@@ -510,6 +510,7 @@ class ReferensiController extends Controller
                 'kurikulum' => '-',
                 'nama' => request()->nama,
                 'tingkat' => 0,
+                'status' => request()->status,
             ]);
         }
         if(request()->data == 'bk'){
@@ -1558,10 +1559,12 @@ class ReferensiController extends Controller
             [
                 'nama' => ['required'],
                 'guru_id' => ['required'],
+                'status' => ['required'],
             ],
             [
                 'nama.required' => 'Nama Ekstrakurikuler tidak boleh kosong',
                 'guru_id.required' => 'Guru Pembina tidak boleh kosong',
+                'status.required' => 'Status tidak boleh kosong',
             ]
         );
 
@@ -1574,6 +1577,7 @@ class ReferensiController extends Controller
         $data = Rombongan_belajar::find(request()->rombongan_belajar_id);
         $data->guru_id = request()->guru_id;
         $data->nama = request()->nama;
+        $data->status = request()->status;
         if($data->save()){
             $data = [
                 'success' => TRUE,

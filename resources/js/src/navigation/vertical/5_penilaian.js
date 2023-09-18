@@ -55,6 +55,33 @@ export default [
     ]
   },
   {
+    icon: 'zoom-check-icon',
+    title: 'Penilaian Ekstra',
+    children: [
+      {
+        icon: 'hand-click-icon',
+        title: 'Materi Ekstra',
+        route: 'ekskul-materi',
+        resource: 'Instruktur',
+        action: 'read',
+      },
+      {
+        icon: 'hand-click-icon',
+        title: 'Entri Nilai',
+        route: 'ekskul-entri-nilai',
+        resource: 'Instruktur',
+        action: 'read',
+      },
+      {
+        icon: 'hand-click-icon',
+        title: 'Entri Absensi',
+        route: 'ekskul-entri-absensi',
+        resource: 'Instruktur',
+        action: 'read',
+      },
+    ],
+  },
+  {
     icon: 'hand-click-icon',
     title: 'Perizinan',
     route: 'perizinan',

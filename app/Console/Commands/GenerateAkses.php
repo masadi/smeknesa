@@ -31,73 +31,100 @@ class GenerateAkses extends Command
         $abilities = [
             [
                 'role' => 'administrator',
+                'display_name' => 'Administrator',
                 'akses' => ['Web', 'Beranda', 'Profile', 'Ref_Periodik', 'Ref_Sekolah', 'Ref_Guru', 'Ref_Mapel', 'Ref_Jurusan', 'Ref_Kelas', 'Ref_Pd', 'Ref_Pd_Keluar', 'System', 'Akun', 'Jadwal', 'Magang_Dudi', 'Magang_Pembimbing', 'Magang_Permohonan', 'Magang_Absensi', 'Magang_Monitoring', 'Magang_Nilai', 'Magang_Sertifikat', 'Tatib_Sekolah', 'Tatib_Pelanggaran', 'Tatib_Rekap', 'Tatib_Bukti', 'Tatib_Ortu', 'Tatib_Pernyataan', 'Tatib_Peringatan', 'Tatib_Mundur', 'Whatsapp', 'Hak_Akses', 'Guru_BK'],
                 'action' => 'read',
             ],
             [
                 'role' => 'guru',
+                'display_name' => 'Guru',
                 'akses' => ['Web', 'Beranda', 'Profile'],
                 'action' => 'read',
             ],
             [
                 'role' => 'kepsek',
+                'display_name' => 'Kepala Sekolah',
                 'akses' => ['Ref_Sekolah', 'Ref_Guru', 'Ref_Mapel', 'Magang_Dudi'],
                 'action' => 'read',
             ],
             [
                 'role' => 'pengajar',
+                'display_name' => 'Guru Mata Pelajaran',
                 'akses' => ['Perencanaan', 'Penilaian', 'Rekap_Nilai', 'Modul'],
                 'action' => 'read',
             ],
             [
                 'role' => 'pd',
+                'display_name' => 'Peserta Didik',
                 'akses' => ['Profile_Pd'],
                 'action' => 'read',
             ],
             [
                 'role' => 'piket',
+                'display_name' => 'Guru Piket',
                 'akses' => ['Ref_Mapel', 'Presensi_Guru', 'Presensi_Pd', 'Jadwal', 'Rekap_Absen_Siswa'],
                 'action' => 'read',
             ],
             [
                 'role' => 'wakakur',
+                'display_name' => 'Waka Kurikulum',
                 'akses' => ['Ref_Mapel', 'Ref_Jurusan', 'Ref_Kelas', 'Remedial', 'Ref_Pd', 'Ref_Guru', 'Rekap_Absen_Guru', 'Jadwal', 'Perencanaan', 'Penilaian', 'Rekap_Nilai', 'Modul', 'Magang_Nilai'],
                 'action' => 'read',
             ],
             [
                 'role' => 'walas',
+                'display_name' => 'Wali Kelas',
                 'akses' => ['Ref_Mapel', 'Ref_Pd', 'Rekap_Absen_Siswa', 'Jadwal', 'Kenaikan', 'Wali'],
                 'action' => 'read',
             ],
             [
                 'role' => 'kajur',
+                'display_name' => 'Ketua Jurusan',
                 'akses' => ['Ref_Sekolah', 'Ref_Mapel', 'Ref_Pd', 'Jadwal', 'Magang_Dudi', 'Magang_Pembimbing', 'Magang_Permohonan', 'Magang_Absensi', 'Magang_Nilai', 'Magang_Sertifikat', 'Tatib_Pelanggaran', 'Tatib_Rekap', 'Tatib_Bukti', 'Tatib_Ortu', 'Tatib_Pernyataan', 'Tatib_Peringatan', 'Tatib_Mundur'],
                 'action' => 'read',
             ],
             [
                 'role' => 'wakahumas',
+                'display_name' => 'Waka Humas',
                 'akses' => ['Ref_Mapel', 'Ref_Guru', 'Jadwal', 'Magang_Dudi', 'Magang_Pembimbing', 'Magang_Permohonan', 'Magang_Absensi', 'Magang_Nilai', 'Magang_Sertifikat'],
                 'action' => 'read',
             ],
             [
                 'role' => 'wakasiswa',
+                'display_name' => 'Waka Kesiswaan',
                 'akses' => ['Ref_Sekolah', 'Ref_Mapel', 'Ref_Pd', 'Ref_Guru', 'Rekap_Absen_Siswa', 'Rekap_Absen_Guru', 'Jadwal', 'Tatib_Sekolah', 'Tatib_Pelanggaran', 'Tatib_Rekap', 'Tatib_Bukti', 'Tatib_Ortu', 'Tatib_Pernyataan', 'Tatib_Peringatan', 'Tatib_Mundur'],
                 'action' => 'read',
             ],
             [
                 'role' => 'bk',
+                'display_name' => 'Guru BP/BK',
                 'akses' => ['Rekap_Absen_Siswa', 'Jadwal', 'Tatib_Sekolah', 'Tatib_Pelanggaran', 'Tatib_Rekap', 'Tatib_Bukti', 'Tatib_Ortu', 'Tatib_Pernyataan', 'Tatib_Peringatan', 'Tatib_Mundur', 'Penilaian_Sikap', 'Perijinan'],
                 'action' => 'read',
             ],
             [
+                'role' => 'instruktur',
+                'display_name' => 'Instruktur Ekskul',
+                'akses' => ['Instruktur'],
+                'action' => 'read',
+            ],
+            [
                 'role' => 'super',
+                'display_name' => 'Super Admin',
                 'akses' => ['manage'],
                 'action' => 'all',
             ],
         ];
         Permission::truncate();
         foreach($abilities as $ab){
-            $r = Role::where('name', $ab['role'])->first();
+            $r = Role::firstOrCreate(
+                [
+                    'name' => $ab['role'],
+                ],
+                [
+                    'display_name' => $ab['display_name'],
+                    'description' => $ab['display_name'],
+                ]
+            );
             foreach($ab['akses'] as $perm){
                 $permission = Permission::updateOrCreate([
                     'name' => $perm,

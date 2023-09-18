@@ -236,7 +236,7 @@ class AuthController extends Controller
         return response()->json($data);
     }
     public function generate(){
-        $all_role = ['guru', 'pengajar', 'pd', 'walas'];
+        $all_role = ['guru', 'pengajar', 'pd', 'walas', 'instruktur'];
         if(request()->jenis == 'ptk'){
             User::whereRoleIs('guru')->whereDoesntHave('guru')->delete();
             Guru::orderBy('guru_id')->chunk(200, function ($data) use ($all_role){
@@ -267,6 +267,10 @@ class AuthController extends Controller
                     $find = Pembelajaran::where('guru_id', $d->guru_id)->where('semester_id', request()->semester_id)->first();
                     if($find){
                         $user->attachRole('pengajar', request()->periode_aktif);
+                    }
+                    $find = Rombongan_belajar::where('guru_id', $d->guru_id)->where('semester_id', request()->semester_id)->where('tingkat', 0)->first();
+                    if($find){
+                        $user->attachRole('instruktur', request()->periode_aktif);
                     }
                 }
             });
@@ -341,7 +345,7 @@ class AuthController extends Controller
             $query->whereRoleIs(request()->role_id, request()->periode_aktif);
         })
         ->paginate(request()->per_page);
-        $roles = Role::select('name', 'display_name')->whereNotIn('name', ['administrator', 'guru'])->get();
+        $roles = Role::select('name', 'display_name')->whereNotIn('name', ['administrator', 'guru', 'super'])->get();
         return response()->json(['status' => 'success', 'data' => $data, 'roles' => $roles]);
     }
     public function detil(){

@@ -9,6 +9,15 @@
             </b-form-group>  
           </b-col>
           <b-col cols="12">
+            <b-form-group label="Status" label-for="status" label-cols-md="3" :invalid-feedback="feedback.status" :state="state.status">
+              <v-select id="status" v-model="form.status" :options="['Wajib', 'Pilihan']" placeholder="== Pilih Status ==" :state="state.status" :searchable="false">
+                <template #no-options="{ search, searching, loading }">
+                  Tidak ada data untuk ditampilkan
+                </template>
+              </v-select>
+            </b-form-group>
+          </b-col>
+          <b-col cols="12">
             <b-form-group label="Pembina" label-for="guru_id" label-cols-md="3" :invalid-feedback="feedback.guru_id" :state="state.guru_id">
               <v-select id="guru_id" v-model="form.guru_id" :reduce="nama => nama.guru_id" label="nama" :options="data_guru" placeholder="== Pilih Pembina ==" :state="state.guru_id">
                 <template #no-options="{ search, searching, loading }">
@@ -54,14 +63,17 @@ export default {
         nama: '',
         tingkat: 0,
         guru_id: '',
+        status: '',
       },
       feedback: {
         nama: '',
         guru_id: '',
+        status: '',
       },
       state: {
         nama: null,
         guru_id: null,
+        status: null,
       },
       data_guru: [],
     }
@@ -93,10 +105,13 @@ export default {
     resetForm(){
       this.form.nama = ''
       this.form.guru_id = ''
+      this.form.status = ''
       this.feedback.nama = ''
       this.feedback.guru_id = ''
+      this.feedback.status = ''
       this.state.nama = null
       this.state.guru_id = null
+      this.state.status = null
     },
     handleOk(bvModalEvent){
       bvModalEvent.preventDefault()
@@ -110,8 +125,10 @@ export default {
         if(getData.errors){
           this.state.nama = (getData.errors.nama) ? false : null
           this.state.guru_id = (getData.errors.guru_id) ? false : null
+          this.state.status = (getData.errors.status) ? false : null
           this.feedback.nama = (getData.errors.nama) ? getData.errors.nama.join(', ') : ''
           this.feedback.guru_id = (getData.errors.guru_id) ? getData.errors.guru_id.join(', ') : ''
+          this.feedback.status = (getData.errors.status) ? getData.errors.status.join(', ') : ''
         } else {
           this.$swal({
             icon: getData.icon,
