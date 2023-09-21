@@ -33,12 +33,7 @@ class KirimEmail extends Mailable
     {
         return new Envelope(
             from: new Address('smeknesa@gmail.com', 'smkn1sampang.sch.id'),
-            subject: 'Tes Kirim Email',
-        );
-        return $this->subject('smkn1sampang.sch.id')
-        ->view('emails.kirim-email');
-        return new Envelope(
-            subject: 'Kirim Email',
+            subject: 'Laporan Absensi',
         );
     }
 
