@@ -11,8 +11,8 @@ class MailController extends Controller
     public function index()
     {
         $mailData = [
-            'title' => 'Mail from ItSolutionStuff.com',
-            'body' => 'This is for testing email using smtp.'
+            'title' => 'Judul Email',
+            'body' => 'Body Email.'
         ]; 
         Mail::to('masadi.com@gmail.com')->send(new KirimMail($mailData));
     }
