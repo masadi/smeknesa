@@ -206,7 +206,7 @@
 							<div class="proton-margin"></div>
 							<center>
 								<h1>SMEKNESA</h1>
-								<img src="https://proton.me/images/social/proton-mail-og.png" alt="Image" />
+								<img src="{{ asset('img/banner/proton-mail-og.png') }}" alt="Image" />
 							</center>
 							<h4>Assalamualaiakum Bpk/Ibu <strong>{{$mailData['nama_guru']}}</strong></h4>
 							<p>
