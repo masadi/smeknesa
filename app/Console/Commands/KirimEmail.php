@@ -81,7 +81,7 @@ class KirimEmail extends Command
                 'data_siswa' => ($d->pd),
                 'tanggal' => now()->translatedFormat('l, j F Y')
             ];
-            Mail::to('masadi.com@gmail.com')->send(new SendEmail($mailWalas));
+            Mail::to('chuzmukadar@gmail.com')->send(new SendEmail($mailWalas));
         }
         return Command::SUCCESS;
     }
