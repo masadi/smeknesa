@@ -215,11 +215,11 @@
 							<table>
                 @foreach ($mailData['data_siswa'] as $item)
 								<tr>
-								<td>{{$item->nama}}	</td>
-								<td>A = {{$item->alpa}} Jam</td>
-                <td>I = {{$item->ijin}} Jam</td>
-                <td>S = {{$item->sakit}} Jam</td>
-                <td>D = {{$item->dadah}} Jam</td>
+								  <td>{{$item->nama}}	</td>
+                  <td>A = {{$item->alpa}} Jam</td>
+                  <td>I = {{$item->ijin}} Jam</td>
+                  <td>S = {{$item->sakit}} Jam</td>
+                  <td>D = {{$item->dadah}} Jam</td>
 								</tr>
                 @endforeach
 							</table>
