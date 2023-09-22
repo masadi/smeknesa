@@ -69,11 +69,14 @@ class KirimEmail extends Command
                 if($mail_bk == $mail_walas){
                     $this->mailBk($d);
                 } else {
-                    $this->mailWalas($d);
-                    $this->mailBk($d);
+                    $mailWalas = $this->mailWalas($d);
+                    $mailBk = $this->mailBk($d);
+                    Mail::to($mail_walas)->send(new SendEmail($mailWalas));
+                    Mail::to($mail_bk)->send(new SendEmail($mailBk));
                 }
             } else {
-                $this->mailWalas($d);
+                $mailWalas = $this->mailWalas($d);
+                Mail::to($mail_walas)->send(new SendEmail($mailWalas));
             }
             $mailWalas = [
                 'nama_kelas' => $d->nama,
