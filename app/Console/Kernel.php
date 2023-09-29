@@ -4,7 +4,9 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use App\Console\Commands\KirimEmail;
+use App\Console\Commands\KirimWaka;
+use App\Console\Commands\KirimWalas;
+use App\Console\Commands\KirimBk;
 
 class Kernel extends ConsoleKernel
 {
@@ -16,7 +18,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command(KirimEmail::class)->dailyAt('17:00');
+        $schedule->command(KirimWaka::class)->dailyAt('17:00');
+        $schedule->command(KirimWalas::class)->dailyAt('17:00');
+        $schedule->command(KirimBk::class)->weekly()->mondays()->at('17:00');
+        //dailyAt('17:00');
         // $schedule->command('inspire')->hourly();
     }
 

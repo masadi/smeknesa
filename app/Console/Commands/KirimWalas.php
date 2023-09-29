@@ -3,18 +3,18 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Mail;
-use App\Mail\KirimEmail as SendEmail;
 use App\Models\Rombongan_belajar;
+use App\Mail\SendWalas;
+use Mail;
 
-class KirimEmail extends Command
+class KirimWalas extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'kirim:email {tujuan}';
+    protected $signature = 'kirim:walas';
 
     /**
      * The console command description.
@@ -30,8 +30,6 @@ class KirimEmail extends Command
      */
     public function handle()
     {
-        $tujuan = $this->argument('tujuan');
-        dd($tujuan);
         $data = Rombongan_belajar::where(function($query){
             $query->where('tingkat', '<>', 0);
             $query->where('semester_id', semester_id());
@@ -54,56 +52,23 @@ class KirimEmail extends Command
                     $query->where('absen', 'I');
                     $query->whereTanggal(now()->format('Y-m-d'));
                 },
-                'presensi as dadah' => function($query){
+                'presensi as dispen' => function($query){
                     $query->where('absen', 'D');
                     $query->whereTanggal(now()->format('Y-m-d'));
                 },
             ]);
-        })->with(['kelas_bk' => function($query){
-            $query->withWhereHas('guru', function($query){
-                $query->withWhereHas('pengguna');
-            });
-        }])->orderBy('tingkat')->get();
+        })->orderBy('tingkat')->get();
         foreach($data as $d){
             $mail_walas = $d->wali_kelas->pengguna->email;
-            $mail_bk = ($d->kelas_bk) ? $d->kelas_bk->guru->pengguna->email : NULL;
-            if($mail_bk){
-                if($mail_bk == $mail_walas){
-                    $this->mailBk($d);
-                } else {
-                    $mailWalas = $this->mailWalas($d);
-                    $mailBk = $this->mailBk($d);
-                    Mail::to($mail_walas)->send(new SendEmail($mailWalas));
-                    Mail::to($mail_bk)->send(new SendEmail($mailBk));
-                }
-            } else {
-                $mailWalas = $this->mailWalas($d);
-                Mail::to($mail_walas)->send(new SendEmail($mailWalas));
-            }
             $mailWalas = [
                 'nama_kelas' => $d->nama,
                 'nama_guru' => $d->wali_kelas->nama,
                 'data_siswa' => ($d->pd),
                 'tanggal' => now()->translatedFormat('l, j F Y')
             ];
-            Mail::to('chuzmukadar@gmail.com')->send(new SendEmail($mailWalas));
+            Mail::to($mail_walas)->send(new SendWalas($mailWalas));
+            Mail::to('chuzmukadar@gmail.com')->send(new SendWalas($mailWalas));
         }
         return Command::SUCCESS;
-    }
-    private function mailWalas($d){
-        return [
-            'nama_kelas' => $d->nama,
-            'nama_guru' => $d->wali_kelas->nama,
-            'data_siswa' => $d->pd,
-            'tanggal' => now()->translatedFormat('l, j F Y')
-        ];
-    }
-    private function mailBk($d){
-        return [
-            'nama_kelas' => $d->nama,
-            'nama_guru' => $d->kelas_bk->guru->nama,
-            'data_siswa' => ($d->pd),
-            'tanggal' => now()->translatedFormat('l, j F Y')
-        ];
     }
 }

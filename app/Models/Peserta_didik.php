@@ -133,4 +133,48 @@ class Peserta_didik extends Model
 	public function pekerjaan_ibu(){
 		return $this->hasOne(Pekerjaan::class, 'pekerjaan_id', 'kerja_ibu');
 	}
+	public function alpa()
+	{
+		return $this->hasManyThrough(
+            Presensi::class,
+			Anggota_rombel::class,
+			'peserta_didik_id',
+			'anggota_rombel_id',
+			'peserta_didik_id',
+			'anggota_rombel_id'
+        )->where('absen', 'A');
+	}
+	public function ijin()
+	{
+		return $this->hasManyThrough(
+            Presensi::class,
+			Anggota_rombel::class,
+			'peserta_didik_id',
+			'anggota_rombel_id',
+			'peserta_didik_id',
+			'anggota_rombel_id'
+        )->where('absen', 'I');
+	}
+	public function sakit()
+	{
+		return $this->hasManyThrough(
+            Presensi::class,
+			Anggota_rombel::class,
+			'peserta_didik_id',
+			'anggota_rombel_id',
+			'peserta_didik_id',
+			'anggota_rombel_id'
+        )->where('absen', 'S');
+	}
+	public function dispen()
+	{
+		return $this->hasManyThrough(
+            Presensi::class,
+			Anggota_rombel::class,
+			'peserta_didik_id',
+			'anggota_rombel_id',
+			'peserta_didik_id',
+			'anggota_rombel_id'
+        )->where('absen', 'D');
+	}
 }
