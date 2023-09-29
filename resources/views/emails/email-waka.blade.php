@@ -13,12 +13,14 @@
 Berikut kami laporkan rekap presensi Guru pada Hari <strong style="color: red;">{{$mailData['tanggal']}}</strong></p>
 <hr>
 <p style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;"></p>
-<pre>
-@foreach ($mailData['data_guru'] as $item)
-{{$item->nama}}		[A={{$item->alpa}}jam, I={{$item->ijin}}jam, S={{$item->sakit}}jam]
-@endforeach
-</pre>
-</p>
+<table>
+  @foreach ($mailData['data_guru'] as $item)
+  <tr>
+    <td>{{$item->nama}}	</td>
+    <td>[A={{$item->alpa}}jam, I={{$item->izin}}jam, S={{$item->sakit}}jam]</td>
+  </tr>
+  @endforeach
+</table>
 <hr>
 <p style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding-left: 10px; padding-right: 10px;">Untuk rekap absensi lengkap bisa di download di sistem akademik dengan menggunakan akun masing-masing di link berikut :</p>
 <br><center><a href="https://smkn1sampang.sch.id" style="border: 1px solid rgb(255, 0, 149); font: white; background-color: rgb(255, 115, 0); padding: 7px 15px 13px 15px; border-radius: 8px; color: azure; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-decoration: none; "><strong>Download Rekap Absensi</strong></a></center>

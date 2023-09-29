@@ -13,12 +13,14 @@
 Berikut kami laporkan rekap absensi di kelas {{$mailData['nama_kelas']}} pada Hari {{$mailData['tanggal']}}</p>
 <hr>
 <p style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;"></p>
-<pre>
+<table>
     @foreach ($mailData['data_siswa'] as $item)
-	{{$item->nama}}		[A={{$item->alpa}}, I={{$item->ijin}}, S={{$item->sakit}}, D={{$item->dispen}}]
+    <tr>
+        <td>{{$item->nama}}</td>
+        <td>[A={{$item->alpa}}jam, I={{$item->izin}}jam, S={{$item->sakit}}jam, D={{$item->dispen}}jam]</td>
+    </tr>
     @endforeach
-</pre>
-</p>
+</table>
 <hr>
 <p style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding-left: 10px; padding-right: 10px;">Untuk rekap absensi lengkap bisa di download di sistem akademik dengan menggunakan akun masing-masing di link berikut :</p>
 <br><center><a href="https://smkn1sampang.sch.id" style="border: 1px solid rgb(10, 166, 233); font: white; background-color: rgb(0, 4, 255); padding: 7px 15px 13px 15px; border-radius: 8px; color: azure; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-decoration: none; "><strong>Download Rekap Absensi</strong></a></center>

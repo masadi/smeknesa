@@ -13,12 +13,15 @@
 Berikut kami laporkan rekap absensi siswa dengan <strong style="color: red;"> Alpha (A) lebih dari 3 Hari </strong> sampai pada tanggal {{$mailData['tanggal']}}</p>
 <hr>
 <p style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;"></p>
-<pre>
-	@foreach ($mailData['data_siswa'] as $item)
-    {{$item['nama']}}	{{$mailData['nama_kelas']}}	[A={{$item['alpa']}}, I={{$item['ijin']}}, S={{$item['sakit']}}, D={{$item['dispen']}}]
+<table>
+    @foreach ($mailData['data_siswa'] as $item)
+    <tr>
+      <td>{{$item['nama']}}	</td>
+      <td>{{$mailData['nama_kelas']}}	</td>
+      <td>[A={{$item['alpa']}}jam, I={{$item['ijin']}}jam, S={{$item['sakit']}}jam, D={{$item['dispen']}}]</td>
+    </tr>
     @endforeach
-</pre>
-</p>
+</table>
 <hr>
 <p style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding-left: 10px; padding-right: 10px;">Untuk rekap absensi lengkap bisa di download di sistem akademik dengan menggunakan akun masing-masing di link berikut :</p>
 <br><center><a href="https://smkn1sampang.sch.id" style="border: 1px solid rgb(255, 0, 149); font: white; background-color: rgb(255, 0, 149); padding: 7px 15px 13px 15px; border-radius: 8px; color: azure; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-decoration: none; "><strong>Download Rekap Absensi</strong></a></center>
