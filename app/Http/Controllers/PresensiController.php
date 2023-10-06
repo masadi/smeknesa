@@ -470,7 +470,7 @@ class PresensiController extends Controller
             $izin = 0;
             $sakit = 0;
             foreach($jurusan->pembelajaran as $pembelajaran){
-                $alpha += $pembelajaran->guru->alpha;
+                $alpha += $pembelajaran->guru->alpa;
                 $izin += $pembelajaran->guru->izin;
                 $sakit += $pembelajaran->guru->sakit;
             }
@@ -494,6 +494,7 @@ class PresensiController extends Controller
                 ],
             ],
             'categories' => $data_jurusan->pluck('alias'),
+            'data_jurusan' => $data_jurusan,
         ];
         return response()->json($data);
     }

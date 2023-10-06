@@ -1,7 +1,7 @@
 export default [
   {
     icon: 'zoom-check-icon',
-    title: 'Penilaian',
+    title: 'Nilai Akademik',
     children: [
       {
         icon: 'hand-click-icon',
@@ -56,7 +56,7 @@ export default [
   },
   {
     icon: 'zoom-check-icon',
-    title: 'Penilaian Ekstra',
+    title: 'Nilai Ekstra',
     children: [
       {
         icon: 'hand-click-icon',
@@ -77,6 +77,67 @@ export default [
         title: 'Entri Absensi',
         route: 'ekskul-entri-absensi',
         resource: 'Instruktur',
+        action: 'read',
+      },
+    ],
+  },
+  {
+    icon: 'file-search-icon',
+    title: 'Nilai Projek',
+    children: [
+      {
+        icon: 'hand-click-icon',
+        title: 'Perencanaan',
+        route: 'projek-perencanaan',
+        resource: 'Projek',
+        action: 'read',
+      },
+      {
+        icon: 'hand-click-icon',
+        title: 'Penilaian',
+        route: 'projek-penilaian',
+        resource: 'Projek',
+        action: 'read',
+      },
+    ],
+  },
+  {
+    icon: 'clipboard-icon',
+    title: 'Nilai PKL',
+    children: [
+      {
+        icon: 'hand-click-icon',
+        title: 'CP & TP',
+        route: 'prakerin-cp-tp',
+        resource: 'Prakerin',
+        action: 'read',
+      },
+      {
+        icon: 'hand-click-icon',
+        title: 'Perencanaan',
+        route: 'prakerin-perencanaan',
+        resource: 'Prakerin',
+        action: 'read',
+      },
+      {
+        icon: 'hand-click-icon',
+        title: 'Penilaian',
+        route: 'prakerin-entri-nilai',
+        resource: 'Prakerin',
+        action: 'read',
+      },
+      {
+        icon: 'hand-click-icon',
+        title: 'Absensi',
+        route: 'prakerin-entri-absensi',
+        resource: 'Prakerin',
+        action: 'read',
+      },
+      {
+        icon: 'hand-click-icon',
+        title: 'Cetak Rapor',
+        route: 'prakerin-cetak-rapor',
+        resource: 'Prakerin',
         action: 'read',
       },
     ],

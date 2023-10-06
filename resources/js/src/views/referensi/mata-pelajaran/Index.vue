@@ -43,6 +43,13 @@ export default {
           thClass: 'text-center',
         },
         {
+          key: 'jenis',
+          label: 'Jenis Mapel',
+          sortable: true,
+          thClass: 'text-center',
+          tdClass: 'text-center'
+        },
+        {
           key: 'guru',
           label: 'guru pengajar',
           sortable: false,
@@ -62,6 +69,13 @@ export default {
           label: 'Nama',
           sortable: true,
           thClass: 'text-center',
+        },
+        {
+          key: 'jenis',
+          label: 'Jenis Mapel',
+          sortable: true,
+          thClass: 'text-center',
+          tdClass: 'text-center'
         },
         {
           key: 'mapel_tingkat',

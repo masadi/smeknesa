@@ -26,6 +26,11 @@
               </v-select>
             </b-form-group>
           </b-col>
+          <b-col cols="12">
+            <b-form-group label="Jenis Mapel" label-for="jenis" label-cols-md="3" :invalid-feedback="feedback.jenis" :state="state.jenis">
+              <v-select id="jenis" v-model="form.jenis" :options="['Umum', 'P5', 'PKL']" placeholder="== Pilih Jenis Mapel ==" :state="state.jenis"></v-select>
+            </b-form-group>
+          </b-col>
         </b-row>
       </b-form>
     </b-overlay>
@@ -63,16 +68,19 @@ export default {
         nama: '',
         jurusan_sp_id: [],
         tingkat: [],
+        jenis: '',
       },
       feedback: {
         nama: '',
         jurusan_sp_id: '',
         tingkat: '',
+        jenis: '',
       },
       state: {
         nama: null,
         jurusan_sp_id: null,
         tingkat: null,
+        jenis: null,
       },
       data_tingkat: [
         {
@@ -120,12 +128,15 @@ export default {
       this.form.nama = ''
       this.form.jurusan_sp_id = []
       this.form.tingkat = []
+      this.form.jenis = ''
       this.feedback.nama = ''
       this.state.nama = null
       this.feedback.jurusan_sp_id = ''
       this.state.jurusan_sp_id = null
       this.feedback.tingkat = ''
       this.state.tingkat = null
+      this.feedback.jenis = ''
+      this.state.jenis = null
     },
     handleOk(bvModalEvent){
       bvModalEvent.preventDefault()
@@ -140,9 +151,11 @@ export default {
           this.state.nama = (getData.errors.nama) ? false : null
           this.state.jurusan_sp_id = (getData.errors.jurusan_sp_id) ? false : null
           this.state.tingkat = (getData.errors.tingkat) ? false : null
+          this.state.jenis = (getData.errors.jenis) ? false : null
           this.feedback.nama = (getData.errors.nama) ? getData.errors.nama.join(', ') : ''
           this.feedback.jurusan_sp_id = (getData.errors.jurusan_sp_id) ? getData.errors.jurusan_sp_id.join(', ') : ''
           this.feedback.tingkat = (getData.errors.tingkat) ? getData.errors.tingkat.join(', ') : ''
+          this.feedback.jenis = (getData.errors.jenis) ? getData.errors.jenis.join(', ') : ''
         } else {
           this.$swal({
             icon: getData.icon,

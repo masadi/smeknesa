@@ -75,7 +75,9 @@ export default {
   },
   methods: {
     handleEvent(data){
-      this.$http.post('/referensi/get-group-mapel').then(response => {
+      this.$http.post('/referensi/get-group-mapel', {
+        data: data,
+      }).then(response => {
         this.data_pembelajaran = response.data
         this.addModalShow = true
       });

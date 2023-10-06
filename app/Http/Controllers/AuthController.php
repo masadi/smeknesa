@@ -236,7 +236,7 @@ class AuthController extends Controller
         return response()->json($data);
     }
     public function generate(){
-        $all_role = ['guru', 'pengajar', 'pd', 'walas', 'instruktur'];
+        $all_role = ['guru', 'pengajar', 'pd', 'walas', 'instruktur', 'guru-5', 'pembimbing'];
         if(request()->jenis == 'ptk'){
             User::whereRoleIs('guru')->whereDoesntHave('guru')->delete();
             Guru::orderBy('guru_id')->chunk(200, function ($data) use ($all_role){
@@ -264,9 +264,23 @@ class AuthController extends Controller
                     if($find){
                         $user->attachRole('walas', request()->periode_aktif);
                     }
-                    $find = Pembelajaran::where('guru_id', $d->guru_id)->where('semester_id', request()->semester_id)->first();
+                    $find = Pembelajaran::whereHas('mata_pelajaran', function($query){
+                        $query->where('jenis', 'Umum');
+                    })->where('guru_id', $d->guru_id)->where('semester_id', request()->semester_id)->first();
                     if($find){
                         $user->attachRole('pengajar', request()->periode_aktif);
+                    }
+                    $find = Pembelajaran::whereHas('mata_pelajaran', function($query){
+                        $query->where('jenis', 'P5');
+                    })->where('guru_id', $d->guru_id)->where('semester_id', request()->semester_id)->first();
+                    if($find){
+                        $user->attachRole('projek', request()->periode_aktif);
+                    }
+                    $find = Pembelajaran::whereHas('mata_pelajaran', function($query){
+                        $query->where('jenis', 'PKL');
+                    })->where('guru_id', $d->guru_id)->where('semester_id', request()->semester_id)->first();
+                    if($find){
+                        $user->attachRole('pembimbing', request()->periode_aktif);
                     }
                     $find = Rombongan_belajar::where('guru_id', $d->guru_id)->where('semester_id', request()->semester_id)->where('tingkat', 0)->first();
                     if($find){
@@ -360,7 +374,7 @@ class AuthController extends Controller
                 if($user->hasRole('pd', periode_aktif())){
                     $query->whereIn('name', ['pd']);
                 } else {
-                    $query->whereNotIn('name', ['administrator', 'guru', 'pd', 'walas']);
+                    $query->whereNotIn('name', ['administrator', 'guru', 'pd', 'walas', 'instruktur', 'projek', 'pembimbing']);
                 }
             })->get(),
             'akses' => $user->hasRole('guru', periode_aktif()),

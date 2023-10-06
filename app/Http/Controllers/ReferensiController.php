@@ -32,6 +32,7 @@ use App\Models\Jadwal;
 use App\Models\Jam;
 use App\Models\Kelas_bk;
 use App\Models\Ijin;
+use App\Models\Dudi;
 use Carbon\Carbon;
 use Indonesia;
 
@@ -429,11 +430,13 @@ class ReferensiController extends Controller
                     'nama' => ['required'],
                     'tingkat' => ['required'],
                     'jurusan_sp_id' => ['required'],
+                    'jenis' => ['required'],
                 ],
                 [
                     'nama.required' => 'Nama Mata Pelajaran tidak boleh kosong',
                     'tingkat.required' => 'Tingkat Kelas tidak boleh kosong',
                     'jurusan_sp_id.required' => 'Jurusan tidak boleh kosong',
+                    'jenis.required' => 'Jenis Mapel tidak boleh kosong',
                 ]
             );
     
@@ -446,6 +449,7 @@ class ReferensiController extends Controller
             $insert = Mata_pelajaran::create([
                 'nama' => request()->nama,
                 'tingkat' => array_filter(array_values(request()->tingkat)),
+                'jenis' => request()->jenis,
             ]);
             foreach(array_filter(array_values(request()->tingkat)) as $tingkat){
                 foreach(array_filter(array_values(request()->jurusan_sp_id)) as $jurusan_sp_id){
@@ -548,6 +552,38 @@ class ReferensiController extends Controller
                     $insert++;    
                 }
             }
+        }
+        if(request()->data == 'dudi'){
+            $text = 'DUDI';
+            $validator = Validator::make(request()->all(), 
+                [
+                    'nama' => ['required'],
+                    'pimpinan' => ['required'],
+                    'nama_bidang_usaha' => ['required'],
+                    'alamat_jalan' => ['required'],
+                ],
+                [
+                    'nama.required' => 'Nama DUDI tidak boleh kosong',
+                    'pimpinan.required' => 'Nama Pimpinan DUDI tidak boleh kosong',
+                    'nama_bidang_usaha.required' => 'Nama Bidang Usaha tidak boleh kosong',
+                    'alamat_jalan.required' => 'Alamat tidak boleh kosong',
+                    
+                ]
+            );
+    
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => FALSE,
+                    'errors' => $validator->errors(),
+                ]);
+            }
+            $insert = Dudi::create([
+                'sekolah_id' => sekolah_id(),
+                'nama' => request()->nama,
+                'pimpinan' => request()->pimpinan,
+                'nama_bidang_usaha' => request()->nama_bidang_usaha,
+                'alamat_jalan' => request()->alamat_jalan,
+            ]);
         }
         if($insert){
             $data = [
@@ -866,8 +902,16 @@ class ReferensiController extends Controller
     }
     public function get_group_mapel(){
         $data = Pembelajaran::where(function($query){
-            $query->whereNotNull('kelompok_id');
-            $query->whereNotNull('no_urut');
+            if(request()->data){
+                if(request()->data == 'pkl'){
+                    $query->whereHas('mata_pelajaran', function($query){
+                        $query->where('jenis', 'PKL');
+                    });
+                }
+            } else {
+                $query->whereNotNull('kelompok_id');
+                $query->whereNotNull('no_urut');
+            }
             $query->where('guru_id', $this->loggedUser()->guru_id);
             $query->where('semester_id', semester_id());
         })->groupBy('nama_mata_pelajaran')->groupBy('mata_pelajaran_id')
@@ -1394,6 +1438,9 @@ class ReferensiController extends Controller
         if(request()->data == 'ekskul'){
             return $this->updateEkskul();
         }
+        if(request()->data == 'dudi'){
+            return $this->updateDudi();
+        }
         return response()->json([
             'success' => FALSE,
             'errors' => 'Query tidak ditemukan',
@@ -1433,11 +1480,13 @@ class ReferensiController extends Controller
                 'nama' => ['required'],
                 'tingkat' => ['required'],
                 'jurusan_sp_id' => ['required'],
+                'jenis' => ['required'],
             ],
             [
                 'nama.required' => 'Nama Mata Pelajaran tidak boleh kosong',
                 'tingkat.required' => 'Tingkat Kelas tidak boleh kosong',
                 'jurusan_sp_id.required' => 'Jurusan tidak boleh kosong',
+                'jenis.required' => 'Jenis Mapel tidak boleh kosong',
             ]
         );
         if ($validator->fails()) {
@@ -1449,6 +1498,7 @@ class ReferensiController extends Controller
         $data = Mata_pelajaran::find(request()->mata_pelajaran_id);
         $data->nama = request()->nama;
         $data->tingkat = array_filter(array_values(request()->tingkat));
+        $data->jenis = request()->jenis;
         if($data->save()){
             Pembelajaran::where('mata_pelajaran_id', request()->mata_pelajaran_id)->update(['nama_mata_pelajaran' => request()->nama]);
             foreach(array_filter(array_values(request()->tingkat)) as $tingkat){
@@ -1592,6 +1642,52 @@ class ReferensiController extends Controller
                 'errors' => NULL,
                 'icon' => 'error',
                 'text' => 'Data Ekstrakurikuler gagal diperbaharui. Silahkan coba beberapa saat lagi!',
+                'title' => 'Gagal',
+            ];
+        }
+        return response()->json($data);
+    }
+    private function updateDudi(){
+        $validator = Validator::make(request()->all(), 
+            [
+                'nama' => ['required'],
+                'pimpinan' => ['required'],
+                'nama_bidang_usaha' => ['required'],
+                'alamat_jalan' => ['required'],
+            ],
+            [
+                'nama.required' => 'Nama DUDI tidak boleh kosong',
+                'pimpinan.required' => 'Nama Pimpinan DUDI tidak boleh kosong',
+                'nama_bidang_usaha.required' => 'Nama Bidang Usaha tidak boleh kosong',
+                'alamat_jalan.required' => 'Alamat tidak boleh kosong',
+                
+            ]        
+        );
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => FALSE,
+                'errors' => $validator->errors(),
+            ]);
+        }
+        $data = Dudi::find(request()->dudi_id);
+        $data->nama = request()->nama;
+        $data->pimpinan = request()->pimpinan;
+        $data->nama_bidang_usaha = request()->nama_bidang_usaha;
+        $data->alamat_jalan = request()->alamat_jalan;
+        if($data->save()){
+            $data = [
+                'success' => TRUE,
+                'errors' => NULL,
+                'icon' => 'success',
+                'text' => 'Data DUDI berhasil diperbaharui',
+                'title' => 'Berhasil',
+            ];
+        } else {
+            $data = [
+                'success' => TRUE,
+                'errors' => NULL,
+                'icon' => 'error',
+                'text' => 'Data DUDI gagal diperbaharui. Silahkan coba beberapa saat lagi!',
                 'title' => 'Gagal',
             ];
         }

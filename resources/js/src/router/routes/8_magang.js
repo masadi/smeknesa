@@ -1,8 +1,34 @@
 export default [
+  /*{
+    path: '/referensi/dudi',
+    name: 'referensi-dudi',
+    component: () => import('@/views/referensi/dudi/Index.vue'),
+    meta: {
+      resource: 'Ref_Dudi',
+      action: 'read',
+      pageTitle: 'DUDI',
+      breadcrumb: [
+        {
+          text: 'Referensi',
+        },
+        {
+          text: 'DUDI',
+          active: true,
+        },
+      ],
+      tombol_add: {
+        action: 'add-dudi',
+        link: '',
+        variant: 'primary',
+        text: 'Tambah Data',
+        role: ['administrator'],
+      },
+    },
+  },*/
   {
     path: '/magang/dudi',
     name: 'magang-dudi',
-    component: () => import('@/views/pages/Blank.vue'),
+    component: () => import('@/views/magang/dudi/Index.vue'),
     meta: {
       resource: 'Magang_Dudi',
       action: 'read',
@@ -16,12 +42,19 @@ export default [
           active: true,
         },
       ],
+      tombol_add: {
+        action: 'add-dudi',
+        link: '',
+        variant: 'primary',
+        text: 'Tambah Data',
+        role: ['administrator'],
+      },
     },
   },
   {
     path: '/magang/pembimbing',
     name: 'magang-pembimbing',
-    component: () => import('@/views/pages/Blank.vue'),
+    component: () => import('@/views/magang/pembimbing/Index.vue'),
     meta: {
       resource: 'Magang_Pembimbing',
       action: 'read',
@@ -35,6 +68,13 @@ export default [
           active: true,
         },
       ],
+      tombol_add: {
+        action: 'add-pembimbing',
+        link: '',
+        variant: 'primary',
+        text: 'Tambah Data',
+        role: ['administrator'],
+      },
     },
   },
   {

@@ -32,7 +32,7 @@ class GenerateAkses extends Command
             [
                 'role' => 'administrator',
                 'display_name' => 'Administrator',
-                'akses' => ['Web', 'Beranda', 'Profile', 'Ref_Periodik', 'Ref_Sekolah', 'Ref_Guru', 'Ref_Mapel', 'Ref_Jurusan', 'Ref_Kelas', 'Ref_Pd', 'Ref_Pd_Keluar', 'System', 'Akun', 'Jadwal', 'Magang_Dudi', 'Magang_Pembimbing', 'Magang_Permohonan', 'Magang_Absensi', 'Magang_Monitoring', 'Magang_Nilai', 'Magang_Sertifikat', 'Tatib_Sekolah', 'Tatib_Pelanggaran', 'Tatib_Rekap', 'Tatib_Bukti', 'Tatib_Ortu', 'Tatib_Pernyataan', 'Tatib_Peringatan', 'Tatib_Mundur', 'Whatsapp', 'Hak_Akses', 'Guru_BK'],
+                'akses' => ['Web', 'Beranda', 'Profile', 'Ref_Periodik', 'Ref_Sekolah', 'Ref_Guru', 'Ref_Mapel', 'Ref_Jurusan', 'Ref_Kelas', 'Ref_Pd', 'Ref_Pd_Keluar', 'System', 'Akun', 'Jadwal', 'Magang_Dudi', 'Magang_Pembimbing', 'Magang_Permohonan', 'Magang_Monitoring', 'Tatib_Sekolah', 'Tatib_Pelanggaran', 'Tatib_Rekap', 'Tatib_Bukti', 'Tatib_Ortu', 'Tatib_Pernyataan', 'Tatib_Peringatan', 'Tatib_Mundur', 'Whatsapp', 'Hak_Akses', 'Guru_BK', 'Ref_Dudi'],
                 'action' => 'read',
             ],
             [
@@ -112,6 +112,18 @@ class GenerateAkses extends Command
                 'display_name' => 'Super Admin',
                 'akses' => ['manage'],
                 'action' => 'all',
+            ],
+            [
+                'role' => 'projek',
+                'display_name' => 'Koord P5',
+                'akses' => ['Projek'],
+                'action' => 'read',
+            ],
+            [
+                'role' => 'pembimbing',
+                'display_name' => 'Pembimbing PKL',
+                'akses' => ['Magang_Absensi', 'Magang_Nilai', 'Magang_Sertifikat'],
+                'action' => 'read',
             ],
         ];
         Permission::truncate();

@@ -9,7 +9,7 @@ export default [
       pageTitle: 'Data CP & TP',
       breadcrumb: [
         {
-          text: 'Penilaian',
+          text: 'Nilai Akademik',
         },
         {
           text: 'Data CP & TP',
@@ -34,7 +34,7 @@ export default [
       action: 'read',
       breadcrumb: [
         {
-          text: 'Penilaian',
+          text: 'Nilai Akademik',
         },
         {
           text: 'Input Nilai',
@@ -59,7 +59,7 @@ export default [
       action: 'read',
       breadcrumb: [
         {
-          text: 'Penilaian',
+          text: 'Nilai Akademik',
         },
         {
           text: 'Input Deskripsi',
@@ -78,7 +78,7 @@ export default [
       action: 'read',
       breadcrumb: [
         {
-          text: 'Penilaian',
+          text: 'Nilai Akademik',
         },
         {
           text: 'Rekap Nilai',
@@ -97,7 +97,7 @@ export default [
       resource: 'Modul',
       breadcrumb: [
         {
-          text: 'Penilaian',
+          text: 'Nilai Akademik',
         },
         {
           text: 'Modul',
@@ -116,7 +116,7 @@ export default [
       resource: 'Penilaian_Sikap',
       breadcrumb: [
         {
-          text: 'Penilaian',
+          text: 'Nilai Akademik',
         },
         {
           text: 'Penilaian Sikap',
@@ -135,7 +135,7 @@ export default [
       resource: 'Remedial',
       breadcrumb: [
         {
-          text: 'Penilaian',
+          text: 'Nilai Akademik',
         },
         {
           text: 'Remedial',
@@ -227,6 +227,145 @@ export default [
         variant: 'primary',
         text: 'Tambah Data'
       },
+    },
+  },
+  {
+    path: '/projek/perencanaan',
+    name: 'projek-perencanaan',
+    component: () => import('@/views/penilaian/projek/Index.vue'),
+    meta: {
+      pageTitle: 'Perencanaan',
+      action: 'read',
+      resource: 'Projek',
+      breadcrumb: [
+        {
+          text: 'Penilaian Projek',
+        },
+        {
+          text: 'Perencanaan',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/projek/penilaian',
+    name: 'projek-penilaian',
+    component: () => import('@/views/penilaian/projek/EntriNilai.vue'),
+    meta: {
+      pageTitle: 'Entri Nilai',
+      action: 'read',
+      resource: 'Projek',
+      breadcrumb: [
+        {
+          text: 'Penilaian Projek',
+        },
+        {
+          text: 'Entri Nilai',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/prakerin/cp-tp',
+    name: 'prakerin-cp-tp',
+    component: () => import('@/views/penilaian/prakerin/Cp.vue'),
+    meta: {
+      resource: 'Prakerin',
+      action: 'read',
+      pageTitle: 'Data CP & TP',
+      breadcrumb: [
+        {
+          text: 'Penilaian Projek',
+        },
+        {
+          text: 'Data CP & TP',
+          active: true,
+        },
+      ],
+      tombol_add: {
+        action: 'add-cp',
+        link: '',
+        variant: 'primary',
+        text: 'Tambah Data'
+      },
+    },
+  },
+  {
+    path: '/prakerin/perencanaan',
+    name: 'prakerin-perencanaan',
+    component: () => import('@/views/penilaian/prakerin/Index.vue'),
+    meta: {
+      pageTitle: 'Perencanaan',
+      action: 'read',
+      resource: 'Prakerin',
+      breadcrumb: [
+        {
+          text: 'Praktik Kerja Lapangan',
+        },
+        {
+          text: 'Perencanaan',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/prakerin/penilaian',
+    name: 'prakerin-penilaian',
+    component: () => import('@/views/penilaian/prakerin/EntriNilai.vue'),
+    meta: {
+      pageTitle: 'Entri Nilai',
+      action: 'read',
+      resource: 'Prakerin',
+      breadcrumb: [
+        {
+          text: 'Praktik Kerja Lapangan',
+        },
+        {
+          text: 'Entri Nilai',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/prakerin/entri-absensi',
+    name: 'prakerin-entri-absensi',
+    component: () => import('@/views/penilaian/prakerin/EntriAbsensi.vue'),
+    meta: {
+      pageTitle: 'Absensi',
+      action: 'read',
+      resource: 'Prakerin',
+      breadcrumb: [
+        {
+          text: 'Praktik Kerja Lapangan',
+        },
+        {
+          text: 'Entri Absensi',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/projek/cetak-rapor',
+    name: 'prakerin-cetak-rapor',
+    component: () => import('@/views/penilaian/prakerin/EntriAbsensi.vue'),
+    meta: {
+      pageTitle: 'Cetak Rapor',
+      action: 'read',
+      resource: 'Prakerin',
+      breadcrumb: [
+        {
+          text: 'Praktik Kerja Lapangan',
+        },
+        {
+          text: 'Cetak Rapor',
+          active: true,
+        },
+      ],
     },
   },
 ]

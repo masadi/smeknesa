@@ -177,4 +177,8 @@ class Peserta_didik extends Model
 			'anggota_rombel_id'
         )->where('absen', 'D');
 	}
+	public function pd_pkl()
+	{
+		return $this->hasOne(Pd_pkl::class, 'peserta_didik_id', 'peserta_didik_id');
+	}
 }

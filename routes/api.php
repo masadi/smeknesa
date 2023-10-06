@@ -16,6 +16,7 @@ use App\Http\Controllers\WhatsappController;
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\RekapController;
 use App\Http\Controllers\EkstraController;
+use App\Http\Controllers\PrakerinController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -119,6 +120,17 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/anggota-ekskul', [ReferensiController::class, 'anggota_ekskul']);
     Route::post('/non-anggota-ekskul', [ReferensiController::class, 'non_anggota_ekskul']);
   });
+  Route::group(['prefix' => 'magang'], function () {
+    Route::get('/dudi', [PrakerinController::class, 'dudi']);
+    Route::get('/pembimbing', [PrakerinController::class, 'pembimbing']);
+    Route::post('/get-guru', [PrakerinController::class, 'get_guru']);
+    Route::get('/get-dudi', [PrakerinController::class, 'get_dudi']);
+    Route::post('/get-rombel', [PrakerinController::class, 'get_rombel']);
+    Route::post('/get-siswa', [PrakerinController::class, 'get_siswa']);
+    Route::post('/simpan-data', [PrakerinController::class, 'simpan_data']);
+    Route::post('/detil', [PrakerinController::class, 'detil']);
+    Route::post('/update-data', [PrakerinController::class, 'update_data']);
+  });
   Route::group(['prefix' => 'jadwal'], function () {
     Route::get('/', [JadwalController::class, 'index']);
     Route::post('/tambah', [JadwalController::class, 'tambah']);
@@ -201,5 +213,9 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/remedial', [RekapController::class, 'remedial']);
     Route::get('/remed', [RekapController::class, 'remed']);
     Route::get('/absen-guru', [RekapController::class, 'absen_guru']);
+  });
+  Route::group(['prefix' => 'prakerin'], function () {
+    Route::get('/', [PrakerinController::class, 'index']);
+    Route::get('/list-cp', [PrakerinController::class, 'list_cp']);
   });
 });
