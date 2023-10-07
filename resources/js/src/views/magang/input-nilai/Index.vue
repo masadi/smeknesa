@@ -10,7 +10,6 @@
       </div>
     </b-card-body>
     <add-modal @reload="handleReload"></add-modal>
-    <edit-modal @reload="handleReload" @stop_loading="handleLoading"></edit-modal>
     <detil-modal @stop_loading="handleLoading"></detil-modal>
   </b-card>
 </template>
@@ -18,9 +17,8 @@
 <script>
 import { BCard, BCardBody, BSpinner } from 'bootstrap-vue'
 import Datatable from './Datatable.vue' //IMPORT COMPONENT DATATABLENYA
-import AddModal from './../../components/modal/magang/pembimbing/AddModal.vue'
-import EditModal from './../../components/modal/magang/pembimbing/EditModal.vue'
-import DetilModal from './../../components/modal/magang/pembimbing/DetilModal.vue'
+import AddModal from './../../components/modal/magang/input-nilai/AddModal.vue'
+import DetilModal from './../../components/modal/magang/input-nilai/DetilModal.vue'
 import eventBus from '@core/utils/eventBus'
 export default {
   components: {
@@ -29,7 +27,6 @@ export default {
     BSpinner,
     Datatable,
     AddModal,
-    EditModal,
     DetilModal,
   },
   data() {
@@ -88,12 +85,12 @@ export default {
     }
   },
   created() {
-    eventBus.$on('add-pembimbing', this.handleEvent);
+    eventBus.$on('add-nilai-pkl', this.handleEvent);
     this.loadPostsData()
   },
   methods: {
     handleEvent(){
-      eventBus.$emit('open-modal-add-pembimbing');
+      eventBus.$emit('open-modal-add-nilai-pkl');
     },
     handleReload(){
       this.loadPostsData()
@@ -103,9 +100,10 @@ export default {
       //let current_page = this.search == '' ? this.current_page : this.current_page != 1 ? 1 : this.current_page
       let current_page = this.current_page//this.search == '' ? this.current_page : 1
       //LAKUKAN REQUEST KE API UNTUK MENGAMBIL DATA POSTINGAN
-      this.$http.get('/magang/pembimbing', {
+      this.$http.get('/magang', {
         params: {
           user_id: this.user.user_id,
+          guru_id: this.user.guru_id,
           sekolah_id: this.user.sekolah_id,
           semester_id: this.user.semester.semester_id,
           periode_aktif: this.user.semester.nama,
@@ -155,45 +153,8 @@ export default {
       }
     },
     handleAksi(val){
-      console.log(val);
       this.loading = true
-      if(val.aksi === 'hapus'){
-        this.$swal({
-          title: 'Apakah Anda yakin?',
-          text: 'Tindakan ini tidak dapat dikembalikan!',
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonText: 'Yakin!',
-          customClass: {
-            confirmButton: 'btn btn-primary',
-            cancelButton: 'btn btn-outline-danger ml-1',
-          },
-          buttonsStyling: false,
-          allowOutsideClick: () => false,
-        }).then(result => {
-          if (result.value) {
-            this.loading_form = true
-            this.$http.post('/magang/hapus-data', {
-              id: val.item.pkl_id,
-            }).then(response => {
-              this.loading_form = false
-              let getData = response.data
-              this.$swal({
-                icon: getData.icon,
-                title: getData.title,
-                text: getData.text,
-                customClass: {
-                  confirmButton: 'btn btn-success',
-                },
-              }).then(result => {
-                this.loadPostsData()
-              })
-            });
-          }
-        })
-      } else {
-        eventBus.$emit(`open-modal-${val.aksi}-pembimbing`, val.item);
-      }
+      eventBus.$emit(`open-modal-${val.aksi}-nilai-pkl`, val.item);
     },
     handleLoading(){
       this.loading = false

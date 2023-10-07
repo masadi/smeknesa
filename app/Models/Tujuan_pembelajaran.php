@@ -23,4 +23,8 @@ class Tujuan_pembelajaran extends Model
 	{
 		return $this->hasOne(Nilai::class, 'tp_id', 'tp_id');
 	}
+	public function tp_pkl()
+	{
+		return $this->hasOne(Tp_pkl::class, 'tp_id', 'tp_id');
+	}
 }

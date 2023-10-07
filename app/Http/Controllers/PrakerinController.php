@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Capaian_pembelajaran;
+use App\Models\Tujuan_pembelajaran;
 use App\Models\Praktik_kerja_lapangan;
 use App\Models\Pd_pkl;
+use App\Models\Nilai_pkl;
 use App\Models\Dudi;
 use App\Models\Rombongan_belajar;
 use App\Models\Peserta_didik;
@@ -18,9 +21,11 @@ class PrakerinController extends Controller
         $data = Praktik_kerja_lapangan::where(function($query){
             $query->where('guru_id', request()->guru_id);
             $query->where('semester_id', request()->semester_id);
+            $query->has('nilai_pkl');
         })->with([
             'rombongan_belajar',
-            'dudi'
+            'dudi',
+            'guru'
         ])->withCount('pd_pkl')->orderBy(request()->sortby, request()->sortbydesc)
         ->when(request()->q, function($query){
             $query->whereHas('rombongan_belajar', function($query){
@@ -41,6 +46,34 @@ class PrakerinController extends Controller
             });
         })->paginate(request()->per_page);
         return response()->json(['status' => 'success', 'data' => $data]);
+    }
+    public function get_pkl(){
+        $data = Praktik_kerja_lapangan::where(function($query){
+            $query->where('guru_id', request()->guru_id);
+            $query->where('semester_id', request()->semester_id);
+        })->orderBy('nama')->get();
+        return response()->json($data);
+    }
+    public function get_pd_pkl(){
+        $pkl = Praktik_kerja_lapangan::find(request()->pkl_id);
+        $data = [
+            'data_siswa' => Peserta_didik::orderBy('nama')->withWhereHas('pd_pkl', function($query){
+                $query->where('pkl_id', request()->pkl_id);
+            })->with(['nilai_pkl' => function($query){
+                $query->where('pkl_id', request()->pkl_id);
+            }])->get(),
+            'data_tp' => Tujuan_pembelajaran::whereHas('cp', function($query) use ($pkl){
+                $query->withWhereHas('pembelajaran', function($query) use ($pkl){
+                    $query->where('rombongan_belajar_id', $pkl->rombongan_belajar_id);
+                    $query->where('semester_id', request()->semester_id);
+                    $query->where('guru_id', request()->guru_id);
+                    $query->whereHas('mata_pelajaran', function($query){
+                        $query->where('jenis', 'PKL');
+                    });
+                });
+            })->orderBy('deskripsi')->get(),
+        ];
+        return response()->json($data);
     }
     public function list_cp(){
         $data = Capaian_pembelajaran::withCount(['tp'])->withWhereHas('pembelajaran', function($query){
@@ -123,6 +156,7 @@ class PrakerinController extends Controller
         $insert = 0;
         $validator = Validator::make(request()->all(), 
             [
+                'nama' => ['required'],
                 'guru_id' => ['required'],
                 'dudi_id' => ['required'],
                 'instruktur' => ['required'],
@@ -131,6 +165,7 @@ class PrakerinController extends Controller
                 'rombongan_belajar_id' => ['required'],
             ],
             [
+                'nama.required' => 'Judul Magang tidak boleh kosong',
                 'guru_id.required' => 'Pembimbing tidak boleh kosong',
                 'dudi_id.required' => 'DUDI tidak boleh kosong',
                 'instruktur.required' => 'Nama Instruktur tidak boleh kosong',
@@ -146,13 +181,14 @@ class PrakerinController extends Controller
             ]);
         }
         $pkl = Praktik_kerja_lapangan::create([
-           'guru_id' => request()->guru_id,
-           'dudi_id' => request()->dudi_id,
-           'instruktur' => request()->instruktur,
-           'rombongan_belajar_id' => request()->rombongan_belajar_id,
-           'tanggal_mulai' => request()->tanggal_mulai,
-           'tanggal_selesai' => request()->tanggal_selesai,
-           'semester_id' => request()->semester_id,
+            'nama' => request()->nama,
+            'guru_id' => request()->guru_id,
+            'dudi_id' => request()->dudi_id,
+            'instruktur' => request()->instruktur,
+            'rombongan_belajar_id' => request()->rombongan_belajar_id,
+            'tanggal_mulai' => request()->tanggal_mulai,
+            'tanggal_selesai' => request()->tanggal_selesai,
+            'semester_id' => request()->semester_id,
         ]);
         foreach(request()->peserta_didik_id as $peserta_didik_id){
             Pd_pkl::create([
@@ -182,6 +218,7 @@ class PrakerinController extends Controller
         $insert = 0;
         $validator = Validator::make(request()->all(), 
             [
+                'nama' => ['required'],
                 'guru_id' => ['required'],
                 'dudi_id' => ['required'],
                 'instruktur' => ['required'],
@@ -190,6 +227,7 @@ class PrakerinController extends Controller
                 'rombongan_belajar_id' => ['required'],
             ],
             [
+                'nama.required' => 'Judul Magang tidak boleh kosong',
                 'guru_id.required' => 'Pembimbing tidak boleh kosong',
                 'dudi_id.required' => 'DUDI tidak boleh kosong',
                 'instruktur.required' => 'Nama Instruktur tidak boleh kosong',
@@ -205,6 +243,7 @@ class PrakerinController extends Controller
             ]);
         }
         $pkl = Praktik_kerja_lapangan::find(request()->pkl_id);
+        $pkl->nama = request()->nama;
         $pkl->guru_id = request()->guru_id;
         $pkl->dudi_id = request()->dudi_id;
         $pkl->instruktur = request()->instruktur;
@@ -232,6 +271,43 @@ class PrakerinController extends Controller
                 'success' => FALSE,
                 'icon' => 'error',
                 'text' => 'Data Pembimbing gagal diperbaharui. Silahkan coba beberapa saat lagi!',
+                'title' => 'Gagal',
+            ];
+        }
+        return response()->json($data);
+    }
+    public function simpan_nilai(){
+        $insert = 0;
+        foreach(request()->peserta_didik_id as $key => $nilai){
+            $collection = Str::of($key)->explode('#');
+            $tp_id = $collection->first();
+            $peserta_didik_id = $collection->last();
+            Nilai_pkl::updateOrCreate(
+                [
+                    'peserta_didik_id' => $peserta_didik_id,
+                    'pkl_id' => request()->pkl_id,
+                    'tp_id' => $tp_id,
+                ],
+                [
+                    'nilai' => $nilai,
+                    'deskripsi' => request()->deskripsi[$tp_id.'#'.$peserta_didik_id],
+                ]
+            );
+            Pd_pkl::where(['peserta_didik_id' => $peserta_didik_id, 'pkl_id' => request()->pkl_id])->update(['catatan' => request()->catatan[$peserta_didik_id]]);
+            $insert++;
+        }
+        if($insert){
+            $data = [
+                'success' => TRUE,
+                'icon' => 'success',
+                'text' => 'Data Nilai Magang berhasil disimpan',
+                'title' => 'Berhasil',
+            ];
+        } else {
+            $data = [
+                'success' => FALSE,
+                'icon' => 'error',
+                'text' => 'Data Nilai Magang gagal disimpan. Silahkan coba beberapa saat lagi!',
                 'title' => 'Gagal',
             ];
         }
@@ -286,6 +362,28 @@ class PrakerinController extends Controller
                     $query->where('jenis', 'PKL');
                 });
             })->where('semester_id', request()->semester_id)->where('tingkat', 12)->orderBy('nama')->get(),
+        ];
+        return response()->json($data);
+    }
+    public function detil_nilai(){
+        $pkl = Praktik_kerja_lapangan::find(request()->pkl_id);
+        $data = [
+            'pkl' => $pkl,
+            'data_siswa' => Peserta_didik::orderBy('nama')->withWhereHas('pd_pkl', function($query){
+                $query->where('pkl_id', request()->pkl_id);
+            })->with(['nilai_pkl' => function($query){
+                $query->where('pkl_id', request()->pkl_id);
+            }])->get(),
+            'data_tp' => Tujuan_pembelajaran::whereHas('cp', function($query) use ($pkl){
+                $query->withWhereHas('pembelajaran', function($query) use ($pkl){
+                    $query->where('rombongan_belajar_id', $pkl->rombongan_belajar_id);
+                    $query->where('semester_id', $pkl->semester_id);
+                    $query->where('guru_id', $pkl->guru_id);
+                    $query->whereHas('mata_pelajaran', function($query){
+                        $query->where('jenis', 'PKL');
+                    });
+                });
+            })->orderBy('deskripsi')->get(),
         ];
         return response()->json($data);
     }

@@ -130,6 +130,12 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/simpan-data', [PrakerinController::class, 'simpan_data']);
     Route::post('/detil', [PrakerinController::class, 'detil']);
     Route::post('/update-data', [PrakerinController::class, 'update_data']);
+    Route::get('/list-cp', [PrakerinController::class, 'list_cp']);
+    Route::get('/', [PrakerinController::class, 'index']);
+    Route::post('/get-pkl', [PrakerinController::class, 'get_pkl']);
+    Route::post('/get-pd-pkl', [PrakerinController::class, 'get_pd_pkl']);
+    Route::post('/simpan-nilai', [PrakerinController::class, 'simpan_nilai']);
+    Route::post('/detil-nilai', [PrakerinController::class, 'detil_nilai']);
   });
   Route::group(['prefix' => 'jadwal'], function () {
     Route::get('/', [JadwalController::class, 'index']);

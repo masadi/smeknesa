@@ -1,30 +1,4 @@
 export default [
-  /*{
-    path: '/referensi/dudi',
-    name: 'referensi-dudi',
-    component: () => import('@/views/referensi/dudi/Index.vue'),
-    meta: {
-      resource: 'Ref_Dudi',
-      action: 'read',
-      pageTitle: 'DUDI',
-      breadcrumb: [
-        {
-          text: 'Referensi',
-        },
-        {
-          text: 'DUDI',
-          active: true,
-        },
-      ],
-      tombol_add: {
-        action: 'add-dudi',
-        link: '',
-        variant: 'primary',
-        text: 'Tambah Data',
-        role: ['administrator'],
-      },
-    },
-  },*/
   {
     path: '/magang/dudi',
     name: 'magang-dudi',
@@ -97,6 +71,57 @@ export default [
     },
   },
   {
+    path: '/magang/cp-tp',
+    name: 'magang-cp-tp',
+    component: () => import('@/views/magang/capaian-pembelajaran/Index.vue'),
+    meta: {
+      resource: 'Web',
+      action: 'read',
+      pageTitle: 'Data CP & TP',
+      breadcrumb: [
+        {
+          text: 'Magang',
+        },
+        {
+          text: 'Data CP & TP',
+          active: true,
+        },
+      ],
+      tombol_add: {
+        action: 'add-cp',
+        link: '',
+        variant: 'primary',
+        text: 'Tambah Data'
+      },
+    },
+  },
+  {
+    path: '/magang/nilai',
+    name: 'magang-nilai',
+    component: () => import('@/views/magang/input-nilai/Index.vue'),
+    meta: {
+      resource: 'Magang_Nilai',
+      action: 'read',
+      pageTitle: 'Nilai',
+      breadcrumb: [
+        {
+          text: 'Magang',
+        },
+        {
+          text: 'Nilai',
+          active: true,
+        },
+      ],
+      tombol_add: {
+        action: 'add-nilai-pkl',
+        link: '',
+        variant: 'primary',
+        text: 'Tambah Data',
+        role: ['pembimbing'],
+      },
+    },
+  },
+  {
     path: '/magang/absensi',
     name: 'magang-absensi',
     component: () => import('@/views/pages/Blank.vue'),
@@ -129,25 +154,6 @@ export default [
         },
         {
           text: 'Monitoring',
-          active: true,
-        },
-      ],
-    },
-  },
-  {
-    path: '/magang/nilai',
-    name: 'magang-nilai',
-    component: () => import('@/views/pages/Blank.vue'),
-    meta: {
-      resource: 'Magang_Nilai',
-      action: 'read',
-      pageTitle: 'Nilai',
-      breadcrumb: [
-        {
-          text: 'Magang',
-        },
-        {
-          text: 'Nilai',
           active: true,
         },
       ],

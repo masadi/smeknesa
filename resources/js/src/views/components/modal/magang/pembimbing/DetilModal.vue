@@ -3,6 +3,10 @@
     <b-table-simple bordered striped v-if="detil_data">
       <b-tbody>
         <b-tr>
+          <b-td>Judul Magang</b-td>
+          <b-td>{{ detil_data.nama }}</b-td>
+        </b-tr>
+        <b-tr>
           <b-td>Nama Pembimbing</b-td>
           <b-td>{{ detil_data.guru.nama }}</b-td>
         </b-tr>

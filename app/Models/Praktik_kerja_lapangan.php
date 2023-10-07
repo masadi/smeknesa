@@ -24,6 +24,9 @@ class Praktik_kerja_lapangan extends Model
 	public function pd_pkl(){
 		return $this->hasMany(Pd_pkl::class, 'pkl_id', 'pkl_id');
 	}
+	public function nilai_pkl(){
+		return $this->hasMany(Nilai_pkl::class, 'pkl_id', 'pkl_id');
+	}
 	public function tp_pkl(){
 		return $this->hasMany(Tp_pkl::class, 'pkl_id', 'pkl_id');
 	}

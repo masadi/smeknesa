@@ -6,21 +6,19 @@
         <strong>Loading...</strong>
       </div>
       <div v-else>
-        <datatable :loading="loading" :isBusy="isBusy" :items="items" :fields="fields" :meta="meta" @per_page="handlePerPage" @pagination="handlePagination" @search="handleSearch" @sort="handleSort" @aksi="handleAksi" />
+        <datatable :isBusy="isBusy" :loading="loading" :items="items" :fields="fields" :meta="meta" :data_jurusan="data_jurusan" :data_rombel="data_rombel" @per_page="handlePerPage" @pagination="handlePagination" @search="handleSearch" @sort="handleSort" @aksi="handleAksi" @tingkat="handleTingkat" @jurusan="handleJurusan" @kelas="handleKelas" />
       </div>
     </b-card-body>
     <add-modal @reload="handleReload"></add-modal>
-    <edit-modal @reload="handleReload" @stop_loading="handleLoading"></edit-modal>
-    <detil-modal @stop_loading="handleLoading"></detil-modal>
+    <detil-modal></detil-modal>
   </b-card>
 </template>
 
 <script>
 import { BCard, BCardBody, BSpinner } from 'bootstrap-vue'
 import Datatable from './Datatable.vue' //IMPORT COMPONENT DATATABLENYA
-import AddModal from './../../components/modal/magang/pembimbing/AddModal.vue'
-import EditModal from './../../components/modal/magang/pembimbing/EditModal.vue'
-import DetilModal from './../../components/modal/magang/pembimbing/DetilModal.vue'
+import AddModal from './../../components/modal/penilaian/capaian-pembelajaran/AddModal.vue'
+import DetilModal from './../../components/modal/penilaian/capaian-pembelajaran/DetilModal.vue'
 import eventBus from '@core/utils/eventBus'
 export default {
   components: {
@@ -29,53 +27,38 @@ export default {
     BSpinner,
     Datatable,
     AddModal,
-    EditModal,
     DetilModal,
   },
   data() {
     return {
-      loading: false,
       isBusy: true,
+      loading: false,
       fields: [
         {
-          key: 'nama',
-          label: 'Judul Magang',
-          sortable: true,
-          thClass: 'text-center',
-        },
-        {
-          key: 'guru',
-          label: 'Nama Pembimbing',
-          sortable: true,
-          thClass: 'text-center',
-        },
-        {
-          key: 'dudi',
-          label: 'DUDI',
+          key: 'mapel',
+          label: 'Mata Pelajaran',
           sortable: false,
           thClass: 'text-center',
-          tdClass: 'text-center'
         },
         {
-          key: 'rombongan_belajar',
-          label: 'Kelas',
+          key: 'deskripsi',
+          label: 'Tujuan Pembelajaran',
           sortable: false,
           thClass: 'text-center',
-          tdClass: 'text-center'
         },
         {
-          key: 'pd_pkl_count',
-          label: 'Jml Siswa',
+          key: 'tp_count',
+          label: 'Jumlah TP',
           sortable: false,
           thClass: 'text-center',
-          tdClass: 'text-center'
+          tdClass: 'text-center',
         },
         {
           key: 'actions',
           label: 'Aksi',
           sortable: false,
           thClass: 'text-center',
-          tdClass: 'text-center'
+          tdClass: 'text-center',
         },
       ],
       items: [],
@@ -83,32 +66,33 @@ export default {
       current_page: 1, //DEFAULT PAGE YANG AKTIF ADA PAGE 1
       per_page: 10, //DEFAULT LOAD PERPAGE ADALAH 10
       search: '',
-      sortBy: 'nama', //DEFAULT SORTNYA ADALAH CREATED_AT
-      sortByDesc: false, //ASCEDING
+      sortBy: 'updated_at', //DEFAULT SORTNYA ADALAH CREATED_AT
+      sortByDesc: true, //ASCEDING
+      tingkat: '',
+      jurusan_sp_id: '',
+      rombongan_belajar_id: '',
+      data_jurusan: [],
+      data_rombel: [],
     }
   },
   created() {
-    eventBus.$on('add-pembimbing', this.handleEvent);
+    eventBus.$on('add-cp', this.handleEvent);
     this.loadPostsData()
   },
   methods: {
     handleEvent(){
-      eventBus.$emit('open-modal-add-pembimbing');
+      eventBus.$emit('open-modal-add-cp');
     },
     handleReload(){
       this.loadPostsData()
     },
     loadPostsData() {
-      this.loading = true
-      //let current_page = this.search == '' ? this.current_page : this.current_page != 1 ? 1 : this.current_page
-      let current_page = this.current_page//this.search == '' ? this.current_page : 1
-      //LAKUKAN REQUEST KE API UNTUK MENGAMBIL DATA POSTINGAN
-      this.$http.get('/magang/pembimbing', {
+      let current_page = this.current_page
+      this.$http.get('/magang/list-cp', {
         params: {
-          user_id: this.user.user_id,
-          sekolah_id: this.user.sekolah_id,
-          semester_id: this.user.semester.semester_id,
-          periode_aktif: this.user.semester.nama,
+          tingkat: this.tingkat,
+          jurusan_sp_id: this.jurusan_sp_id,
+          rombongan_belajar_id: this.rombongan_belajar_id,
           page: current_page,
           per_page: this.per_page,
           q: this.search,
@@ -128,6 +112,9 @@ export default {
           per_page: getData.per_page,
           from: getData.from,
           to: getData.to,
+          tingkat: this.tingkat,
+          jurusan_sp_id: this.jurusan_sp_id,
+          rombongan_belajar_id: this.rombongan_belajar_id,
         }
       })
     },
@@ -143,8 +130,8 @@ export default {
     },
     //JIKA ADA DATA PENCARIAN
     handleSearch(val) {
-      this.search = val //SET VALUE PENCARIAN KE VARIABLE SEARCH
-      this.loadPostsData() //REQUEST DATA BARU
+      this.search = val
+      this.loadPostsData()
     },
     //JIKA ADA EMIT SORT
     handleSort(val) {
@@ -155,8 +142,6 @@ export default {
       }
     },
     handleAksi(val){
-      console.log(val);
-      this.loading = true
       if(val.aksi === 'hapus'){
         this.$swal({
           title: 'Apakah Anda yakin?',
@@ -173,8 +158,9 @@ export default {
         }).then(result => {
           if (result.value) {
             this.loading_form = true
-            this.$http.post('/magang/hapus-data', {
-              id: val.item.pkl_id,
+            this.$http.post('/referensi/hapus-data', {
+              data: 'cp',
+              id: val.item.cp_id,
             }).then(response => {
               this.loading_form = false
               let getData = response.data
@@ -192,12 +178,33 @@ export default {
           }
         })
       } else {
-        eventBus.$emit(`open-modal-${val.aksi}-pembimbing`, val.item);
+        eventBus.$emit(`open-modal-${val.aksi}-cp`, val.item);
       }
     },
-    handleLoading(){
-      this.loading = false
-    }
+    handleTingkat(val){
+      this.tingkat = val
+      this.loading = true
+      this.$http.post('/referensi/get-jurusan', {
+        tingkat: val,
+      }).then(response => {
+        this.data_jurusan = response.data
+      })
+      this.loadPostsData()
+    },
+    handleJurusan(val){
+      this.jurusan_sp_id = val
+      this.loading = true
+      this.$http.post('/referensi/get-rombel', {
+        jurusan_sp_id: val,
+      }).then(response => {
+        this.data_rombel = response.data
+      })
+      this.loadPostsData()
+    },
+    handleKelas(val){
+      this.rombongan_belajar_id = val
+      this.loadPostsData()
+    },
   },
 }
 </script>

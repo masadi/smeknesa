@@ -26,6 +26,20 @@ export default [
             },
             {
                 icon: 'hand-click-icon',
+                title: 'CP & TP',
+                route: 'magang-cp-tp',
+                resource: 'Magang_Nilai',
+                action: 'read',
+              },
+            {
+                icon: 'hand-click-icon',
+                title: 'Nilai',
+                route: 'magang-nilai',
+                action: 'read',
+                resource: 'Magang_Nilai',
+            },
+            {
+                icon: 'hand-click-icon',
                 title: 'Absensi',
                 route: 'magang-absensi',
                 action: 'read',
@@ -37,13 +51,6 @@ export default [
                 route: 'magang-monitoring',
                 action: 'read',
                 resource: 'Magang_Monitoring',
-            },
-            {
-                icon: 'hand-click-icon',
-                title: 'Nilai',
-                route: 'magang-nilai',
-                action: 'read',
-                resource: 'Magang_Nilai',
             },
             {
                 icon: 'hand-click-icon',

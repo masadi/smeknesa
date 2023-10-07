@@ -4,6 +4,11 @@
       <b-form ref="form" @submit.stop.prevent="handleSubmit">
         <b-row>
           <b-col cols="12">
+            <b-form-group label="Judul Magang" label-for="nama" label-cols-md="3" :invalid-feedback="feedback.nama" :state="state.nama">
+              <b-form-input id="nama" v-model="form.nama" :state="state.nama" placeholder="Judul Magang"></b-form-input>
+            </b-form-group>  
+          </b-col>
+          <b-col cols="12">
             <b-form-group label="Pembimbing" label-for="guru_id" label-cols-md="3" :invalid-feedback="feedback.guru_id" :state="state.guru_id">
               <v-select id="guru_id" v-model="form.guru_id" :reduce="nama => nama.guru_id" label="nama" :options="data_guru" placeholder="== Pilih Pembimbing ==" :state="state.guru_id" @input="changeGuru">
                 <template #no-options="{ search, searching, loading }">
@@ -116,6 +121,7 @@ export default {
       data_siswa: [],
       form: {
         data: 'pembimbing',
+        nama: '',
         guru_id: '',
         rombongan_belajar_id: '',
         dudi_id: '',
@@ -126,6 +132,7 @@ export default {
       },
       selected: [],
       feedback: {
+        nama: '',
         guru_id: '',
         rombongan_belajar_id: '',
         dudi_id: '',
@@ -134,6 +141,7 @@ export default {
         tanggal_selesai: '',
       },
       state: {
+        nama: null,
         guru_id: null,
         rombongan_belajar_id: null,
         dudi_id: null,
@@ -224,6 +232,7 @@ export default {
       this.data_dudi = []
       this.data_siswa = []
       this.selected = []
+      this.form.nama = ''
       this.form.guru_id = ''
       this.form.rombongan_belajar_id = ''
       this.form.dudi_id = ''
@@ -253,12 +262,14 @@ export default {
         this.loading_form = false
         let getData = response.data
         if(getData.errors){
+          this.state.nama = (getData.errors.nama) ? false : null
           this.state.guru_id = (getData.errors.guru_id) ? false : null
           this.state.rombongan_belajar_id = (getData.errors.rombongan_belajar_id) ? false : null
           this.state.dudi_id = (getData.errors.dudi_id) ? false : null
           this.state.instruktur = (getData.errors.instruktur) ? false : null
           this.state.tanggal_mulai = (getData.errors.tanggal_mulai) ? false : null
           this.state.tanggal_selesai = (getData.errors.tanggal_selesai) ? false : null
+          this.feedback.nama = (getData.errors.nama) ? getData.errors.nama.join(', ') : ''
           this.feedback.guru_id = (getData.errors.guru_id) ? getData.errors.guru_id.join(', ') : ''
           this.feedback.rombongan_belajar_id = (getData.errors.rombongan_belajar_id) ? getData.errors.rombongan_belajar_id.join(', ') : ''
           this.feedback.dudi_id = (getData.errors.dudi_id) ? getData.errors.dudi_id.join(', ') : ''
