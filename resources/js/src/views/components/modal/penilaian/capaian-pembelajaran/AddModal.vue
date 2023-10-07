@@ -75,6 +75,7 @@ export default {
   },
   methods: {
     handleEvent(data){
+      console.log(data);
       this.$http.post('/referensi/get-group-mapel', {
         data: data,
       }).then(response => {

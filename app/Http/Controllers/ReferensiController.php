@@ -33,6 +33,8 @@ use App\Models\Jam;
 use App\Models\Kelas_bk;
 use App\Models\Ijin;
 use App\Models\Dudi;
+use App\Models\Capaian_pembelajaran;
+use App\Models\Tujuan_pembelajaran;
 use Carbon\Carbon;
 use Indonesia;
 
@@ -638,6 +640,10 @@ class ReferensiController extends Controller
             $get = Kelas_bk::where('guru_id', request()->id)->where('semester_id', semester_id())->get();
         } elseif(request()->data == 'perijinan'){
             $get = Ijin::find(request()->id);
+        } elseif(request()->data == 'cp'){
+            $get = Capaian_pembelajaran::find(request()->id);
+        } elseif(request()->data == 'tp'){
+            $get = Tujuan_pembelajaran::find(request()->id);
         }
         
         if($get){

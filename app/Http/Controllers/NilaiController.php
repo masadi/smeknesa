@@ -142,6 +142,60 @@ class NilaiController extends Controller
         ];
         return response()->json($data);
     }
+    public function update_cp(){
+        request()->validate(
+            [
+                'desk_cp' => 'required',
+            ],
+            [
+                'desk_cp.required' => 'Capaian Pembelajaran tidak boleh kosong!',
+            ]
+        );
+        $cp = Capaian_pembelajaran::find(request()->cp_id);
+        $cp->deskripsi = request()->desk_cp;
+        if($cp->save()){
+            $data = [
+                'icon' => 'success',
+                'text' => 'Data CP berhasil diperbaharui',
+                'title' => 'Berhasil',
+            ];
+        } else {
+            $data = [
+                'icon' => 'error',
+                'text' => 'Data CP gagal diperbaharui. Silahkan coba beberapa saat lagi',
+                'title' => 'Gagal',
+            ];
+        }
+        return response()->json($data);
+    }
+    public function update_tp(){
+        request()->validate(
+            [
+                'deskripsi' => 'required',
+            ],
+            [
+                'deskripsi.required' => 'Deskripsi Tujuan Pembelajaran tidak boleh kosong!',
+            ]
+        );
+        $tp = Tujuan_pembelajaran::find(request()->tp_id);
+        $tp->deskripsi = request()->deskripsi;
+        if($tp->save()){
+            $data = [
+                'icon' => 'success',
+                'text' => 'Data TP berhasil diperbaharui',
+                'title' => 'Berhasil',
+                'cp' => Capaian_pembelajaran::find(request()->cp_id),
+            ];
+        } else {
+            $data = [
+                'icon' => 'error',
+                'text' => 'Data TP gagal diperbaharui. Silahkan coba beberapa saat lagi',
+                'title' => 'Gagal',
+                'cp' => Capaian_pembelajaran::find(request()->cp_id),
+            ];
+        }
+        return response()->json($data);
+    }
     public function simpan(){
         request()->validate(
             [

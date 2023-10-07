@@ -10,7 +10,9 @@
       </div>
     </b-card-body>
     <add-modal @reload="handleReload"></add-modal>
-    <detil-modal></detil-modal>
+    <edit-modal @reload="handleReload" @stop_loading="handleLoading"></edit-modal>
+    <edit-modal-tp @reload_cp="handleReloadCp" @stop_loading="handleLoading"></edit-modal-tp>
+    <detil-modal @aksi-tp="handleAksiTp"></detil-modal>
   </b-card>
 </template>
 
@@ -18,7 +20,9 @@
 import { BCard, BCardBody, BSpinner } from 'bootstrap-vue'
 import Datatable from './Datatable.vue' //IMPORT COMPONENT DATATABLENYA
 import AddModal from './../../components/modal/penilaian/capaian-pembelajaran/AddModal.vue'
+import EditModal from './../../components/modal/penilaian/capaian-pembelajaran/EditModal.vue'
 import DetilModal from './../../components/modal/penilaian/capaian-pembelajaran/DetilModal.vue'
+import EditModalTp from './../../components/modal/penilaian/capaian-pembelajaran/EditModalTp.vue'
 import eventBus from '@core/utils/eventBus'
 export default {
   components: {
@@ -27,7 +31,9 @@ export default {
     BSpinner,
     Datatable,
     AddModal,
+    EditModal,
     DetilModal,
+    EditModalTp,
   },
   data() {
     return {
@@ -141,45 +147,72 @@ export default {
         this.loadPostsData() //DAN LOAD DATA BARU BERDASARKAN SORT
       }
     },
+    handleAksiTp(val){
+      if(val.aksi === 'hapus'){
+        this.hapusData({
+          text: 'Tindakan ini dapat menghapus seluruh nilai dibawahnya!',
+          data: 'tp',
+          id: val.item.tp_id,
+          item: val.item
+        })
+      } else {
+        eventBus.$emit(`open-modal-${val.aksi}-tp`, val.item);
+      }
+    },
     handleAksi(val){
       if(val.aksi === 'hapus'){
-        this.$swal({
-          title: 'Apakah Anda yakin?',
-          text: 'Tindakan ini tidak dapat dikembalikan!',
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonText: 'Yakin!',
-          customClass: {
-            confirmButton: 'btn btn-primary',
-            cancelButton: 'btn btn-outline-danger ml-1',
-          },
-          buttonsStyling: false,
-          allowOutsideClick: () => false,
-        }).then(result => {
-          if (result.value) {
-            this.loading_form = true
-            this.$http.post('/referensi/hapus-data', {
-              data: 'cp',
-              id: val.item.cp_id,
-            }).then(response => {
-              this.loading_form = false
-              let getData = response.data
-              this.$swal({
-                icon: getData.icon,
-                title: getData.title,
-                text: getData.text,
-                customClass: {
-                  confirmButton: 'btn btn-success',
-                },
-              }).then(result => {
-                this.loadPostsData()
-              })
-            });
-          }
+        this.hapusData({
+          text: 'Tindakan ini dapat menghapus seluruh TP dibawahnya!',
+          data: 'cp',
+          id: val.item.cp_id,
+          item: val.item
         })
       } else {
         eventBus.$emit(`open-modal-${val.aksi}-cp`, val.item);
       }
+    },
+    hapusData(val){
+      this.$swal({
+        title: 'Apakah Anda yakin?',
+        text: val.text,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yakin!',
+        customClass: {
+          confirmButton: 'btn btn-primary',
+          cancelButton: 'btn btn-outline-danger ml-1',
+        },
+        buttonsStyling: false,
+        allowOutsideClick: false,
+      }).then(result => {
+        if (result.value) {
+          this.loading_form = true
+          this.$http.post('/referensi/hapus-data', {
+            data: val.data,
+            id: val.id,
+          }).then(response => {
+            this.loading_form = false
+            let getData = response.data
+            this.$swal({
+              icon: getData.icon,
+              title: getData.title,
+              text: getData.text,
+              customClass: {
+                confirmButton: 'btn btn-success',
+              },
+            }).then(result => {
+              if(val.data == 'cp'){
+                this.loadPostsData()
+              } else {
+                eventBus.$emit(`open-modal-detil-cp`, val.item);
+              }
+            })
+          });
+        }
+      })
+    },
+    handleReloadCp(item){
+      eventBus.$emit(`open-modal-detil-cp`, item);
     },
     handleTingkat(val){
       this.tingkat = val
@@ -204,6 +237,9 @@ export default {
     handleKelas(val){
       this.rombongan_belajar_id = val
       this.loadPostsData()
+    },
+    handleLoading(){
+      this.loading = false
     },
   },
 }

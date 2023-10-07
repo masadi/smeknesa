@@ -136,6 +136,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/get-pd-pkl', [PrakerinController::class, 'get_pd_pkl']);
     Route::post('/simpan-nilai', [PrakerinController::class, 'simpan_nilai']);
     Route::post('/detil-nilai', [PrakerinController::class, 'detil_nilai']);
+    //Route::post('/update-cp', [NilaiController::class, 'update_cp']);
+    //Route::post('/update-tp', [NilaiController::class, 'update_tp']);
   });
   Route::group(['prefix' => 'jadwal'], function () {
     Route::get('/', [JadwalController::class, 'index']);
@@ -150,6 +152,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/get-cp', [NilaiController::class, 'get_cp']);
     Route::post('/get-tp', [NilaiController::class, 'get_tp']);
     Route::post('/add-cp', [NilaiController::class, 'add_cp']);
+    Route::post('/update-cp', [NilaiController::class, 'update_cp']);
+    Route::post('/update-tp', [NilaiController::class, 'update_tp']);
     Route::post('/get-siswa', [NilaiController::class, 'get_siswa']);
     Route::post('/simpan', [NilaiController::class, 'simpan']);
     Route::post('/rekap', [NilaiController::class, 'rekap']);
