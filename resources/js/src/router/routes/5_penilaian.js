@@ -246,6 +246,12 @@ export default [
           active: true,
         },
       ],
+      tombol_add: {
+        action: 'add-projek',
+        link: '',
+        variant: 'primary',
+        text: 'Tambah Data'
+      },
     },
   },
   {

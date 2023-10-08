@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use App\Traits\Uuid;
+
+class Elemen_rencana_projek extends Model
+{
+    use HasFactory, Uuid;
+    public $incrementing = false;
+	public $keyType = 'string';
+	protected $table = 'elemen_rencana_projek';
+	protected $primaryKey = 'elemen_rencana_id';
+	protected $guarded = [];
+    public function dimensi_projek()
+    {
+        return $this->belongsTo(Dimensi_projek::class, 'dimensi_id', 'id');
+    }
+    public function elemen_projek()
+    {
+        return $this->belongsTo(Elemen_projek::class, 'elemen_id', 'id');
+    }
+}

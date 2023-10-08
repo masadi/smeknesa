@@ -17,6 +17,7 @@ use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\RekapController;
 use App\Http\Controllers\EkstraController;
 use App\Http\Controllers\PrakerinController;
+use App\Http\Controllers\ProjekController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -223,6 +224,16 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/remedial', [RekapController::class, 'remedial']);
     Route::get('/remed', [RekapController::class, 'remed']);
     Route::get('/absen-guru', [RekapController::class, 'absen_guru']);
+  });
+  Route::group(['prefix' => 'projek'], function () {
+    Route::get('/', [ProjekController::class, 'index']);
+    Route::post('/get-rombel', [ProjekController::class, 'get_rombel']);
+    Route::post('/get-mapel', [ProjekController::class, 'get_mapel']);
+    Route::post('/get-tema', [ProjekController::class, 'get_tema']);
+    Route::post('/get-elemen', [ProjekController::class, 'get_elemen']);
+    Route::post('/simpan-projek', [ProjekController::class, 'simpan_projek']);
+    Route::post('/update-projek', [ProjekController::class, 'update_projek']);
+    Route::post('/hapus-rencana', [ProjekController::class, 'hapus_rencana']);
   });
   Route::group(['prefix' => 'prakerin'], function () {
     Route::get('/', [PrakerinController::class, 'index']);

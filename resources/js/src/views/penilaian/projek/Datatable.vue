@@ -19,8 +19,14 @@
             <strong>Loading...</strong>
           </div>
         </template>
-        <template v-slot:cell(ekstra)="row">
+        <template v-slot:cell(rombongan_belajar)="row">
           {{row.item.rombongan_belajar.nama}}
+        </template>
+        <template v-slot:cell(tema)="row">
+          {{row.item.tema.nama}}
+        </template>
+        <template v-slot:cell(elemen_rencana_projek)="row">
+          {{row.item.elemen_rencana_projek.length}}
         </template>
         <template v-slot:cell(actions)="row">
           <template>
