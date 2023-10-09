@@ -6,44 +6,45 @@
         <strong>Loading...</strong>
       </div>
       <div v-else>
-        <b-overlay :show="loading" rounded opacity="0.6" size="lg" spinner-variant="danger">
+        <!--b-overlay :show="loading" rounded opacity="0.6" size="lg" spinner-variant="danger">
           <b-form @submit="onSubmit">
-            <b-table-simple bordered>
-              <b-thead>
-                <b-tr>
-                  <b-th class="text-center">No</b-th>
-                  <b-th class="text-center">Nama Siswa</b-th>
-                  <b-th class="text-center">NISN</b-th>
-                  <b-th class="text-center">Ekstrakurikuler</b-th>
-                  <b-th class="text-center">Nilai</b-th>
-                  <b-th class="text-center">Deskripsi</b-th>
-                </b-tr>
-              </b-thead>
-              <b-tbody>
-                <template v-for="(siswa, index) in data_siswa">
-                  <b-tr>
-                    <b-td class="text-center" :rowspan="siswa.anggota_ekskul.length + 1">{{index + 1}}</b-td>
-                    <b-td :rowspan="siswa.anggota_ekskul.length + 1">{{siswa.nama}}</b-td>
-                    <b-td :rowspan="siswa.anggota_ekskul.length + 1" class="text-center">{{siswa.nisn}}</b-td>
-                    <template v-if="!siswa.anggota_ekskul.length">
-                      <b-td class="text-center" colspan="34">Tidak mengikuti ekskul</b-td>
-                    </template>
-                  </b-tr>
-                  <template v-if="siswa.anggota_ekskul.length">
-                    <template v-for="anggota_ekskul in siswa.anggota_ekskul">
-                      <b-tr>
-                        <b-td class="text-center">{{anggota_ekskul.rombongan_belajar.nama}}</b-td>
-                        <b-td class="text-center">{{(anggota_ekskul.nilai_ekskul) ? anggota_ekskul.nilai_ekskul.nilai : '-'}}</b-td>
-                        <b-td>{{(anggota_ekskul.nilai_ekskul) ? anggota_ekskul.nilai_ekskul.deskripsi : '-'}}</b-td>
-                      </b-tr>
-                    </template>
-                  </template>
-                </template>
-              </b-tbody>
-            </b-table-simple>
+            
             <b-button type="submit" variant="primary" class="mt-1">Simpan</b-button>
           </b-form>
-        </b-overlay>
+        </b-overlay-->
+        <b-table-simple bordered>
+          <b-thead>
+            <b-tr>
+              <b-th class="text-center">No</b-th>
+              <b-th class="text-center">Nama Siswa</b-th>
+              <b-th class="text-center">NISN</b-th>
+              <b-th class="text-center">Ekstrakurikuler</b-th>
+              <b-th class="text-center">Nilai</b-th>
+              <b-th class="text-center">Deskripsi</b-th>
+            </b-tr>
+          </b-thead>
+          <b-tbody>
+            <template v-for="(siswa, index) in data_siswa">
+              <b-tr>
+                <b-td class="text-center" :rowspan="siswa.anggota_ekskul.length + 1">{{index + 1}}</b-td>
+                <b-td :rowspan="siswa.anggota_ekskul.length + 1">{{siswa.nama}}</b-td>
+                <b-td :rowspan="siswa.anggota_ekskul.length + 1" class="text-center">{{siswa.nisn}}</b-td>
+                <template v-if="!siswa.anggota_ekskul.length">
+                  <b-td class="text-center" colspan="34">Tidak mengikuti ekskul</b-td>
+                </template>
+              </b-tr>
+              <template v-if="siswa.anggota_ekskul.length">
+                <template v-for="anggota_ekskul in siswa.anggota_ekskul">
+                  <b-tr>
+                    <b-td class="text-center">{{anggota_ekskul.rombongan_belajar.nama}}</b-td>
+                    <b-td class="text-center">{{(anggota_ekskul.nilai_ekskul) ? anggota_ekskul.nilai_ekskul.nilai : '-'}}</b-td>
+                    <b-td>{{(anggota_ekskul.nilai_ekskul) ? anggota_ekskul.nilai_ekskul.deskripsi : '-'}}</b-td>
+                  </b-tr>
+                </template>
+              </template>
+            </template>
+          </b-tbody>
+        </b-table-simple>
       </div>
     </b-card-body>
     <import-nilai @reload="handleReload"></import-nilai>

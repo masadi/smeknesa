@@ -5,6 +5,11 @@ namespace App\Http\Controllers;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Http\Request;
 use App\Models\Peserta_didik;
+use App\Models\Anggota_rombel;
+use App\Models\Semester;
+use App\Models\Rencana_projek;
+use App\Models\Opsi_projek;
+use App\Models\Dimensi_projek;
 use App\Models\Ijin;
 use App\Models\User;
 use PDF;
@@ -25,8 +30,55 @@ class CetakController extends Controller
     public function rapor_semester(){
         return $this->rapor_cover();
     }
-    public function rapor_p5(){
-        return $this->rapor_cover();
+    public function rapor_projek(){
+        $anggota_rombel_id = request()->route('anggota_rombel_id');
+        $semester_id = request()->route('semester_id');
+        $get_siswa = Anggota_rombel::with([
+			'peserta_didik', 
+			'nilai_projek',
+			'rombongan_belajar.sekolah',
+		])->find($anggota_rombel_id);
+		$params = array(
+			'semester' => Semester::find(request()->route('semester_id')),
+			'get_siswa'	=> $get_siswa,
+			'rencana_projek' => Rencana_projek::where('rombongan_belajar_id', $get_siswa->rombongan_belajar_id)
+			->with([
+				'elemen_rencana_projek' => function($query) use ($anggota_rombel_id){
+					$query->with([
+						'nilai_projek' => function($query) use ($anggota_rombel_id){
+							$query->where('anggota_rombel_id', $anggota_rombel_id);
+                            $query->with([
+                                'opsi_projek', 
+                                'elemen_projek.parent',
+                                'dimensi_projek',
+                            ]);
+						},
+					]);
+				},
+				'catatan_projek' => function($query) use ($anggota_rombel_id){
+					$query->where('anggota_rombel_id', $anggota_rombel_id);
+				},
+			])->orderBy('no_urut')->get(),
+			'opsi_projek' => Opsi_projek::orderBy('id')->get(),
+			'dimensi_projek' => Dimensi_projek::orderBy('id')->get(),
+		);
+		$pdf = PDF::loadView('cetak.blank', $params, [], [
+			'format' => 'A4',
+			'margin_left' => 15,
+			'margin_right' => 15,
+			'margin_top' => 15,
+			'margin_bottom' => 15,
+			'margin_header' => 5,
+			'margin_footer' => 5,
+		]);
+		$pdf->getMpdf()->defaultfooterfontsize=7;
+		$pdf->getMpdf()->defaultfooterline=0;
+		$general_title = strtoupper($get_siswa->peserta_didik->nama).' - '.$get_siswa->rombongan_belajar->nama;
+		$pdf->getMpdf()->SetFooter($general_title.'|{PAGENO}|Dicetak dari '.config('app.name').' v.'.get_setting('app_version'));
+		$rapor_p5bk = view('cetak.rapor_projek', $params);
+		$pdf->getMpdf()->WriteHTML($rapor_p5bk);
+		$pdf->getMpdf()->showImageErrors = true;
+		return $pdf->stream($general_title.'-RAPOR-P5.pdf');
     }
     public function rapor_pelengkap(){
         return $this->rapor_cover();

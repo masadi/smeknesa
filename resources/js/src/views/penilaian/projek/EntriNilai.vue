@@ -33,10 +33,7 @@
               <b-table-simple bordered responsive>
                 <b-thead>
                   <b-tr>
-                    <b-th class="text-center" rowspan="3">Nama Peserta Didik</b-th>
-                    <b-th class="text-center" :colspan="jumlah_elemen">Sub Elemen</b-th>
-                  </b-tr>
-                  <b-tr>
+                    <b-th class="text-center" rowspan="2">Nama Peserta Didik</b-th>
                     <template v-for="rencana in rencana_projek" v-if="rencana.elemen_rencana_projek.length">
                       <b-th class="text-center" :colspan="rencana.elemen_rencana_projek.length">
                         {{`${rencana.nama} (${rencana.pembelajaran.nama_mata_pelajaran})`}}

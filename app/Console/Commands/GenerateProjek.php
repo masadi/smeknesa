@@ -33,41 +33,31 @@ class GenerateProjek extends Command
     {
         $data = [
             [
-                'id' => 1,
-                'kode' => 'BB',
-                'nama' => 'Belum Berkembang',
-                'deskripsi' => 'Peserta Didik masih membutuhkan bimbingan dalam mengembangkan kemampuan',
-                'warna' => 'yellow',
-            ],
-            [
-                'id' => 2,
                 'kode' => 'MB',
                 'nama' => 'Mulai Berkembang',
                 'deskripsi' => 'Peserta Didik masih membutuhkan bimbingan dalam mengembangkan kemampuan',
                 'warna' => 'yellow',
             ],
             [
-                'id' => 3,
                 'kode' => 'BSH',
                 'nama' => 'Berkembang Sesuai Harapan',
                 'deskripsi' => 'Peserta Didik masih membutuhkan bimbingan dalam mengembangkan kemampuan',
                 'warna' => 'red',
             ],
             [
-                'id' => 4,
                 'kode' => 'SB',
                 'nama' => 'Sedang Berkembang',
                 'deskripsi' => 'Peserta Didik masih membutuhkan bimbingan dalam mengembangkan kemampuan',
                 'warna' => 'blue',
             ],
             [
-                'id' => 5,
                 'kode' => 'SAB',
                 'nama' => 'Sangat Berkembang',
                 'deskripsi' => 'Peserta Didik masih membutuhkan bimbingan dalam mengembangkan kemampuan',
                 'warna' => 'green',
             ],
         ];
+        Opsi_projek::truncate();
         foreach($data as $d){
             Opsi_projek::updateOrCreate(
                 [

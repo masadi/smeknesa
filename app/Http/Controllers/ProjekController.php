@@ -177,7 +177,7 @@ class ProjekController extends Controller
                     $query->with(['dimensi_projek', 'elemen_projek.parent']);
                 }, 
                 'tema',
-            ])->get(),
+            ])->orderBy('no_urut')->get(),
             'jumlah_elemen' => Elemen_rencana_projek::whereHas('rencana_projek', function($query){
                 $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
             })->count(),
@@ -210,26 +210,34 @@ class ProjekController extends Controller
             $elemen_rencana_id = $segments->last();
             $elemen_rencana = Elemen_rencana_projek::find($elemen_rencana_id);
             $segment = Str::of($nilai)->split('/[\s#]+/');
-            Nilai_projek::create([
-                'sekolah_id' => request()->sekolah_id,
-                'anggota_rombel_id' => $anggota_rombel_id,
-                'elemen_rencana_id' => $elemen_rencana_id,
-                'dimensi_id' => $elemen_rencana->dimensi_id,
-                'elemen_id' => $elemen_rencana->elemen_id,
-                'opsi_id' => $segment->first(),
-            ]);
+            Nilai_projek::updateOrcreate(
+                [
+                    'sekolah_id' => request()->sekolah_id,
+                    'anggota_rombel_id' => $anggota_rombel_id,
+                    'elemen_rencana_id' => $elemen_rencana_id,
+                    'dimensi_id' => $elemen_rencana->dimensi_id,
+                    'elemen_id' => $elemen_rencana->elemen_id,
+                ],
+                [
+                    'opsi_id' => $segment->first(),
+                ]
+            );
             $insert++;
         }
         foreach(request()->deskripsi as $string => $catatan){
             $segments = Str::of($string)->split('/[\s#]+/');
             $anggota_rombel_id = $segments->last();
             $rencana_projek_id = $segments->first();
-            Catatan_projek::create([
-                'sekolah_id' => request()->sekolah_id,
-                'anggota_rombel_id' => $anggota_rombel_id,
-                'rencana_projek_id' => $rencana_projek_id,
-                'catatan' => $catatan,
-            ]);
+            Catatan_projek::updateOrCreate(
+                [
+                    'sekolah_id' => request()->sekolah_id,
+                    'anggota_rombel_id' => $anggota_rombel_id,
+                    'rencana_projek_id' => $rencana_projek_id,
+                ],
+                [
+                    'catatan' => $catatan,
+                ]
+            );
             $insert++;
         }
         if($insert){

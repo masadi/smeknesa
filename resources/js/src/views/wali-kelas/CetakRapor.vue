@@ -34,7 +34,7 @@
                   </b-button>
                 </b-td>
                 <b-td class="text-center">
-                  <b-button variant="info" :href="`/cetak/rapor-p5/${siswa.anggota_rombel.anggota_rombel_id}/${user.semester.semester_id}`" target="_blank" size="sm">
+                  <b-button variant="info" :href="`/cetak/rapor-projek/${siswa.anggota_rombel.anggota_rombel_id}/${user.semester.semester_id}`" target="_blank" size="sm">
                     <b-icon icon="file-pdf" aria-hidden="true"></b-icon>
                   </b-button>
                 </b-td>

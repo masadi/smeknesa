@@ -41,12 +41,12 @@ export default [
           active: true,
         },
       ],
-      tombol_add: {
+      /*tombol_add: {
         action: 'upload-nilai-ekskul',
         link: '',
         variant: 'primary',
         text: 'Upload Nilai Ekskul'
-      },
+      },*/
     },
   },
   {

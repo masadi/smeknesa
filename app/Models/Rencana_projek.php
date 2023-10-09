@@ -30,4 +30,8 @@ class Rencana_projek extends Model
 	{
 		return $this->hasMany(Elemen_rencana_projek::class, 'rencana_projek_id', 'rencana_projek_id');
 	}
+	public function catatan_projek()
+	{
+		return $this->hasOne(Catatan_projek::class, 'rencana_projek_id', 'rencana_projek_id');
+	}
 }

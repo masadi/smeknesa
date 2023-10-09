@@ -26,4 +26,8 @@ class Elemen_rencana_projek extends Model
     {
         return $this->belongsTo(Rencana_projek::class, 'rencana_projek_id', 'rencana_projek_id');
     }
+    public function nilai_projek()
+    {
+        return $this->hasOne(Nilai_projek::class, 'elemen_rencana_id', 'elemen_rencana_id');
+    }
 }
