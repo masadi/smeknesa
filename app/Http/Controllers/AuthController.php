@@ -238,7 +238,8 @@ class AuthController extends Controller
     public function generate(){
         $all_role = ['guru', 'pengajar', 'pd', 'walas', 'instruktur', 'projek', 'pembimbing'];
         if(request()->jenis == 'ptk'){
-            User::whereRoleIs('guru')->whereDoesntHave('guru')->delete();
+            User::whereRoleIs('guru', request()->periode_aktif)->whereDoesntHave('guru')->delete();
+            //$query->whereRoleIs(['guru', 'pd'], request()->periode_aktif);
             Guru::orderBy('guru_id')->chunk(200, function ($data) use ($all_role){
                 foreach ($data as $d) {
                     $new_password = strtolower(Str::random(8));
@@ -294,7 +295,7 @@ class AuthController extends Controller
                 'title' => 'Berhasil',
             ];
         } else {
-            User::whereRoleIs('pd')->whereDoesntHave('pd')->delete();
+            User::whereRoleIs('pd', request()->periode_aktif)->whereDoesntHave('pd')->delete();
             Peserta_didik::doesntHave('pengguna')->whereHas('anggota_rombel', function($query){
                 $query->where('semester_id', semester_id());
             })->orderBy('peserta_didik_id')->chunk(200, function ($data){

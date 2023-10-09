@@ -37,7 +37,7 @@ export default {
     if(this.hasRole('pd')){
       this.$router.replace(getHomeRouteForLoggedInUser(this.user.roles))
     }
-    if(!this.hasRole(['administrator', 'kepsek', 'piket', 'wakakur', 'walas', 'kajur', 'wakahumas', 'wakasiswa'])){
+    if(!this.hasRole(['administrator', 'kepsek', 'piket', 'wakakur', 'walas', 'kajur', 'wakahumas', 'wakasiswa', 'guru'])){
       this.$router.replace('/profile')
     }
   },

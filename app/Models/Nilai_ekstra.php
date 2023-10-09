@@ -14,4 +14,12 @@ class Nilai_ekstra extends Model
 	protected $table = 'nilai_ekstra';
 	protected $primaryKey = 'nilai_id';
 	protected $guarded = [];
+	public function anggota_rombel()
+	{
+		return $this->belongsTo(Anggota_rombel::class, 'anggota_rombel_id', 'anggota_rombel_id');
+	}
+	public function materi_ekstra()
+	{
+		return $this->belongsTo(Materi_ekstra::class, 'materi_id', 'materi_id');
+	}
 }

@@ -66,4 +66,8 @@ class Anggota_rombel extends Model
 	{
 		return $this->hasMany(Catatan_projek::class, 'anggota_rombel_id', 'anggota_rombel_id');
 	}
+	public function kenaikan_kelas()
+	{
+		return $this->hasOne(Kenaikan_kelas::class, 'anggota_rombel_id', 'anggota_rombel_id');
+	}
 }

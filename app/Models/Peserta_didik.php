@@ -92,6 +92,30 @@ class Peserta_didik extends Model
 			'anggota_rombel_id'
         );
     }
+	public function deskripsi_tercapai()
+	{
+		return $this->hasOneThrough(
+            Deskripsi_mapel::class,
+			Anggota_rombel::class,
+			'peserta_didik_id',
+			'anggota_rombel_id',
+			'peserta_didik_id',
+			'anggota_rombel_id'
+        )->where('tercapai', 1);
+		return $this->hasOne(Deskripsi_mapel::class, 'anggota_rombel_id', 'anggota_rombel_id')->where('tercapai', 1);
+	}
+	public function deskripsi_belum_tercapai()
+	{
+		return $this->hasOneThrough(
+            Deskripsi_mapel::class,
+			Anggota_rombel::class,
+			'peserta_didik_id',
+			'anggota_rombel_id',
+			'peserta_didik_id',
+			'anggota_rombel_id'
+        )->where('tercapai', 0);
+		return $this->hasOne(Deskripsi_mapel::class, 'anggota_rombel_id', 'anggota_rombel_id')->where('tercapai', 0);
+	}
 	public function presensi()
 	{
 		return $this->hasManyThrough(
@@ -184,5 +208,9 @@ class Peserta_didik extends Model
 	public function nilai_pkl()
 	{
 		return $this->hasMany(Nilai_pkl::class, 'peserta_didik_id', 'peserta_didik_id');
+	}
+	public function sekolah()
+	{
+		return $this->belongsTo(Sekolah::class, 'sekolah_id', 'sekolah_id');
 	}
 }

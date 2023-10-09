@@ -869,6 +869,9 @@ class ReferensiController extends Controller
             $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
             $query->whereNotNull('kelompok_id');
             $query->whereNotNull('no_urut');
+            $query->whereHas('mata_pelajaran', function($query){
+                $query->where('jenis', 'Umum');
+            });
             if(request()->nilai){
                 if($this->loggedUser()->hasRole('pengajar', periode_aktif())){
                     if(request()->penilaian){
@@ -917,6 +920,9 @@ class ReferensiController extends Controller
             } else {
                 $query->whereNotNull('kelompok_id');
                 $query->whereNotNull('no_urut');
+                $query->whereHas('mata_pelajaran', function($query){
+                    $query->where('jenis', 'Umum');
+                });
             }
             $query->where('guru_id', $this->loggedUser()->guru_id);
             $query->where('semester_id', semester_id());

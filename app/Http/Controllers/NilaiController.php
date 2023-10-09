@@ -63,6 +63,9 @@ class NilaiController extends Controller
     }
     public function list_cp(){
         $data = Capaian_pembelajaran::withCount(['tp'])->withWhereHas('pembelajaran', function($query){
+            $query->whereHas('mata_pelajaran', function($query){
+                $query->where('jenis', 'Umum');
+            });
             $query->where('semester_id', semester_id());
             if(loggedUser()->hasRole('pengajar', periode_aktif())){
                 $query->where('guru_id', loggedUser()->guru_id);
