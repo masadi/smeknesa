@@ -11,8 +11,10 @@ use App\Models\Rencana_projek;
 use App\Models\Opsi_projek;
 use App\Models\Elemen_rencana_projek;
 use App\Models\Nilai_projek;
+use App\Models\Catatan_projek;
 use App\Models\Rombongan_belajar;
 use App\Models\Pembelajaran;
+use App\Models\Peserta_didik;
 
 class ProjekController extends Controller
 {
@@ -158,6 +160,89 @@ class ProjekController extends Controller
                 'icon' => 'error',
                 'title' => 'Gagal!',
                 'text' => 'Rencana Projek gagal dihapus. Silahkan coba beberapa saat lagi!',
+            ];
+        }
+        return response()->json($data);
+    }
+    public function get_rencana(){
+        $data = [
+            'rencana_projek' => Rencana_projek::withWhereHas('pembelajaran', function($query){
+                $query->where('guru_id', request()->guru_id);
+                $query->where('semester_id', request()->semester_id);
+                $query->whereHas('mata_pelajaran', function($query){
+                    $query->where('jenis', 'P5');
+                });
+            })->where('rombongan_belajar_id', request()->rombongan_belajar_id)->with([
+                'elemen_rencana_projek' => function($query){
+                    $query->with(['dimensi_projek', 'elemen_projek.parent']);
+                }, 
+                'tema',
+            ])->get(),
+            'jumlah_elemen' => Elemen_rencana_projek::whereHas('rencana_projek', function($query){
+                $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
+            })->count(),
+            'data_siswa' => Peserta_didik::withWhereHas('anggota_rombel', function($query){
+                $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
+                $query->with([
+                    'nilai_projek' => function($query){
+                        $query->whereHas('elemen_rencana_projek', function($query){
+                            $query->whereHas('rencana_projek', function($query){
+                                $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
+                            });
+                        });
+                    },
+                    'catatan_projek' => function($query){
+                        $query->whereHas('rencana_projek', function($query){
+                            $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
+                        });
+                    }
+                ]);
+            })->orderBy('nama')->get(),
+            'data_opsi' => Opsi_projek::orderBy('id')->get(),
+        ];
+        return response()->json($data);
+    }
+    public function simpan_nilai(){
+        $insert = 0;
+        foreach(request()->nilai as $string => $nilai){
+            $segments = Str::of($string)->split('/[\s#]+/');
+            $anggota_rombel_id = $segments->first();
+            $elemen_rencana_id = $segments->last();
+            $elemen_rencana = Elemen_rencana_projek::find($elemen_rencana_id);
+            $segment = Str::of($nilai)->split('/[\s#]+/');
+            Nilai_projek::create([
+                'sekolah_id' => request()->sekolah_id,
+                'anggota_rombel_id' => $anggota_rombel_id,
+                'elemen_rencana_id' => $elemen_rencana_id,
+                'dimensi_id' => $elemen_rencana->dimensi_id,
+                'elemen_id' => $elemen_rencana->elemen_id,
+                'opsi_id' => $segment->first(),
+            ]);
+            $insert++;
+        }
+        foreach(request()->deskripsi as $string => $catatan){
+            $segments = Str::of($string)->split('/[\s#]+/');
+            $anggota_rombel_id = $segments->last();
+            $rencana_projek_id = $segments->first();
+            Catatan_projek::create([
+                'sekolah_id' => request()->sekolah_id,
+                'anggota_rombel_id' => $anggota_rombel_id,
+                'rencana_projek_id' => $rencana_projek_id,
+                'catatan' => $catatan,
+            ]);
+            $insert++;
+        }
+        if($insert){
+            $data = [
+                'icon' => 'success',
+                'title' => 'Berhasil!',
+                'text' => 'Nilai Projek berhasil disimpan',
+            ];
+        } else {
+            $data = [
+                'icon' => 'error',
+                'title' => 'Gagal!',
+                'text' => 'Nilai Projek gagal disimpan. Silahkan coba beberapa saat lagi!',
             ];
         }
         return response()->json($data);

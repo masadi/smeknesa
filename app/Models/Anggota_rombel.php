@@ -58,4 +58,12 @@ class Anggota_rombel extends Model
 	{
 		return $this->hasOne(Absensi_ekstra::class, 'anggota_rombel_id', 'anggota_rombel_id');
 	}
+	public function nilai_projek()
+	{
+		return $this->hasMany(Nilai_projek::class, 'anggota_rombel_id', 'anggota_rombel_id');
+	}
+	public function catatan_projek()
+	{
+		return $this->hasMany(Catatan_projek::class, 'anggota_rombel_id', 'anggota_rombel_id');
+	}
 }

@@ -14,4 +14,8 @@ class Nilai_projek extends Model
 	protected $table = 'nilai_projek';
 	protected $primaryKey = 'nilai_projek_id';
 	protected $guarded = [];
+	public function elemen_rencana_projek()
+    {
+        return $this->belongsTo(Elemen_rencana_projek::class, 'elemen_rencana_id', 'elemen_rencana_id');
+    }
 }

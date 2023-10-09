@@ -234,6 +234,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/simpan-projek', [ProjekController::class, 'simpan_projek']);
     Route::post('/update-projek', [ProjekController::class, 'update_projek']);
     Route::post('/hapus-rencana', [ProjekController::class, 'hapus_rencana']);
+    Route::post('/get-rencana', [ProjekController::class, 'get_rencana']);
+    Route::post('/simpan-nilai', [ProjekController::class, 'simpan_nilai']);
   });
   Route::group(['prefix' => 'prakerin'], function () {
     Route::get('/', [PrakerinController::class, 'index']);

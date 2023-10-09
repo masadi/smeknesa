@@ -22,4 +22,8 @@ class Elemen_rencana_projek extends Model
     {
         return $this->belongsTo(Elemen_projek::class, 'elemen_id', 'id');
     }
+    public function rencana_projek()
+    {
+        return $this->belongsTo(Rencana_projek::class, 'rencana_projek_id', 'rencana_projek_id');
+    }
 }
