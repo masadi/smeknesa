@@ -236,7 +236,7 @@ class AuthController extends Controller
         return response()->json($data);
     }
     public function generate(){
-        $all_role = ['guru', 'pengajar', 'pd', 'walas', 'instruktur', 'guru-5', 'pembimbing'];
+        $all_role = ['guru', 'pengajar', 'pd', 'walas', 'instruktur', 'projek', 'pembimbing'];
         if(request()->jenis == 'ptk'){
             User::whereRoleIs('guru')->whereDoesntHave('guru')->delete();
             Guru::orderBy('guru_id')->chunk(200, function ($data) use ($all_role){
