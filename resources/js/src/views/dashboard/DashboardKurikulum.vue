@@ -121,6 +121,7 @@ export default {
   methods: {
     loadStatistics(){
       this.$http.post('/dashboard', {
+        guru_id: this.user.guru_id,
         sekolah_id: this.user.sekolah_id,
         semester_id: this.user.semester.semester_id,
         periode_aktif: this.user.semester.nama,

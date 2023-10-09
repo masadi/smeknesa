@@ -56,6 +56,8 @@ class DashboardController extends Controller
                         'color' => 'success',
                     ],
                 ],
+                'pembelajaran' => $this->get_pembelajaran('Umum'),
+                'tambahan' => $this->get_pembelajaran(['P5', 'PKL']),
             ];
         } elseif($this->loggedUser()->hasRole('guru', periode_aktif())){
             $data = [
@@ -111,6 +113,8 @@ class DashboardController extends Controller
                         'color' => 'success',
                     ],
                 ],
+                'pembelajaran' => $this->get_pembelajaran('Umum'),
+                'tambahan' => $this->get_pembelajaran(['P5', 'PKL']),
             ];
         } else {
             $data = [
@@ -119,6 +123,20 @@ class DashboardController extends Controller
             ];
         }
         return response()->json($data);
+    }
+    private function get_pembelajaran($jenis){
+        return Pembelajaran::withWhereHas('mata_pelajaran', function($query) use ($jenis){
+            if(is_array($jenis)){
+                $query->whereIn('jenis', $jenis);
+            } else {
+                $query->where('jenis', $jenis);
+            }
+        })->withWhereHas('rombongan_belajar', function($query){
+            $query->where('sekolah_id', request()->sekolah_id);
+            $query->where('semester_id', request()->semester_id);
+            $query->with('wali_kelas');
+            $query->withCount('anggota_rombel');
+        })->where('guru_id', request()->guru_id)->orderBy('mata_pelajaran_id')->get();
     }
     public function aplikasi(){
         $data = [
