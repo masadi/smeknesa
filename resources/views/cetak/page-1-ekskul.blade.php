@@ -6,15 +6,27 @@
     &nbsp;&nbsp;NISN-{{$pd->nisn}}
   </div>
   <div class="top">&nbsp;</div>
-  <div class="nomor_surat">NOMOR: {{$pd->ekskul->nomor_sertifikat}}</div>
+  <div class="nomor_surat">NOMOR: {{$ekskul->nomor_sertifikat}}</div>
   <br>
   <br>
   <div class="baris_1">SERTIFIKAT INI DIBERIKAN KEPADA</div>
   <div class="nama">{{ucwords(strtolower($pd->nama))}}</div>
   <div class="kelas">SISWA KELAS {{$pd->kelas->nama}}</div>
   <div class="deskripsi">
-    Telah mengikuti ekstrakurikuler <b>{{$pd->ekskul->nama}}</b>
-    <br>dengan predikat <b>Sangat Baik</b> yang dilaksanakan di SMK Negeri 1 Sampang
+    <?php
+    $nilai = round($ekskul->rerata);
+    if($nilai > 90){
+      $predikat = 'Amat Baik';
+    } elseif($nilai >= 81 && $nilai <= 90){
+      $predikat = 'Baik';
+    } elseif($nilai >= 71 && $nilai <= 80){
+      $predikat = 'Cukup';
+    } else {
+      $predikat = 'Kurang';
+    }
+    ?>
+    Telah mengikuti ekstrakurikuler <b>{{$ekskul->nama}}</b>
+    <br>dengan predikat <b>{{$predikat}}</b> yang dilaksanakan di SMK Negeri 1 Sampang
     <br><b>{{($pd->kelas->semester->semester == 1) ? 'Semester Ganjil' : 'Semester Genap'}} - Tahun Pelajaran {{$pd->kelas->semester->tahun_ajaran_id}}-{{$pd->kelas->semester->tahun_ajaran_id + 1}}</b>
     <br>
     <br>

@@ -315,21 +315,25 @@ class CetakController extends Controller
                 $query->with('semester');
             }
         ])->find(request()->route('peserta_didik_id'));
-        //dd($pd);
         $semester = Semester::find($pd->kelas->semester_id);
         $qrcode = base64_encode(QrCode::format('svg')->size(150)->errorCorrection('H')->generate($pd->peserta_didik_id??'string'));
         $kepala_sekolah = User::with('guru')->whereRoleIs('kepsek', $semester->nama)->first();
         $tanggal = Carbon::now()->translatedFormat('d F Y');
         $pagecount = $pdf->getMpdf()->setSourceFile('templates/ekskul.pdf');
-        $tplIdx = $pdf->getMpdf()->importPage(1);
-        $pdf->getMpdf()->useTemplate($tplIdx);
-        $page_1 = view('cetak.page-1-ekskul', compact('pd', 'qrcode', 'tanggal', 'kepala_sekolah'));
-        $pdf->getMpdf()->WriteHTML($page_1);
-        $pdf->getMpdf()->AddPage();
-        $tplIdx = $pdf->getMpdf()->importPage(2);
-        $pdf->getMpdf()->useTemplate($tplIdx);
-        $page_2 = view('cetak.page-2-ekskul', compact('pd', 'qrcode', 'tanggal', 'kepala_sekolah'));
-        $pdf->getMpdf()->WriteHTML($page_2);
+        foreach($pd->ekskul as $index => $ekskul){
+            if($index > 0){
+                $pdf->getMpdf()->AddPage();
+            }
+            $tplIdx = $pdf->getMpdf()->importPage(1);
+            $pdf->getMpdf()->useTemplate($tplIdx);
+            $page_1 = view('cetak.page-1-ekskul', compact('pd', 'ekskul', 'qrcode', 'tanggal', 'kepala_sekolah'));
+            $pdf->getMpdf()->WriteHTML($page_1);
+            $pdf->getMpdf()->AddPage();
+            $tplIdx = $pdf->getMpdf()->importPage(2);
+            $pdf->getMpdf()->useTemplate($tplIdx);
+            $page_2 = view('cetak.page-2-ekskul', compact('pd', 'ekskul', 'qrcode', 'tanggal', 'kepala_sekolah'));
+            $pdf->getMpdf()->WriteHTML($page_2);
+        }
         $title = 'nama siswa';
         $converted = Str::title('sertifikat ekstrakurikuler '.$title);
         return $pdf->stream($converted.'.pdf');

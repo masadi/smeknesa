@@ -33,7 +33,7 @@ class Peserta_didik extends Model
         )->where('tingkat', '<>', 0);
 	}
 	public function ekskul(){
-		return $this->hasOneThrough(
+		return $this->hasManyThrough(
             Rombongan_belajar::class,
             Anggota_rombel::class,
             'peserta_didik_id', // Foreign key on the cars table...

@@ -6,19 +6,19 @@
 <table class="table">
   <tr>
     <td style="width: 90%">
-      @foreach ($pd->ekskul->materi_ekstra as $item)
+      @foreach ($ekskul->materi_ekstra as $item)
         {{$loop->iteration}}. {{$item->deskripsi}}<br>
       @endforeach
     </td>
     <td style="width: 10%" class="center">
-      @foreach ($pd->ekskul->materi_ekstra as $item)
+      @foreach ($ekskul->materi_ekstra as $item)
         {{($item->nilai_ekstra) ? $item->nilai_ekstra->angka : ''}}<br>
       @endforeach
     </td>
   </tr>
   <tr>
     <td class="center bold">Rata-rata Nilai</td>
-    <td class="center bold">{{round($pd->ekskul->rerata)}}</td>
+    <td class="center bold">{{round($ekskul->rerata)}}</td>
   </tr>
 </table>
 <br>
@@ -35,7 +35,7 @@
       <br>
       <br>
       <br>
-      <b><u>{{$pd->ekskul->wali_kelas->nama}}</u></b>
+      <b><u>{{$ekskul->wali_kelas->nama}}</u></b>
     </td>
   </tr>
 </table>
