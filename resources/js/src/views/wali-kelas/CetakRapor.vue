@@ -16,6 +16,7 @@
               <b-th class="text-center">Rapor Akademik</b-th>
               <b-th class="text-center">Rapor P5</b-th>
               <b-th class="text-center">Dokumen Pendukung</b-th>
+              <b-th class="text-center">Ekstra</b-th>
             </b-tr>
           </b-thead>
           <b-tbody>
@@ -40,6 +41,11 @@
                 </b-td>
                 <b-td class="text-center">
                   <b-button variant="danger" :href="`/cetak/rapor-pelengkap/${siswa.anggota_rombel.anggota_rombel_id}/${siswa.kelas.rombongan_belajar_id}`" target="_blank" size="sm">
+                    <b-icon icon="file-pdf-fill" aria-hidden="true"></b-icon>
+                  </b-button>
+                </b-td>
+                <b-td class="text-center">
+                  <b-button variant="primary" :href="`/cetak/sertifikat/ekskul/${siswa.peserta_didik_id}`" target="_blank" size="sm">
                     <b-icon icon="file-pdf-fill" aria-hidden="true"></b-icon>
                   </b-button>
                 </b-td>

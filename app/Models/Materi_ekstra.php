@@ -19,4 +19,8 @@ class Materi_ekstra extends Model
 	{
 		return $this->belongsTo(Rombongan_belajar::class, 'rombongan_belajar_id', 'rombongan_belajar_id');
 	}
+	public function nilai_ekstra()
+	{
+		return $this->hasOne(Nilai_ekstra::class, 'materi_id', 'materi_id');
+	}
 }

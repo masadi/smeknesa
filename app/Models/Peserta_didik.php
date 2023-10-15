@@ -30,7 +30,17 @@ class Peserta_didik extends Model
             'rombongan_belajar_id', // Foreign key on the owners table...
             'peserta_didik_id', // Local key on the mechanics table...
             'rombongan_belajar_id' // Local key on the cars table...
-        );
+        )->where('tingkat', '<>', 0);
+	}
+	public function ekskul(){
+		return $this->hasOneThrough(
+            Rombongan_belajar::class,
+            Anggota_rombel::class,
+            'peserta_didik_id', // Foreign key on the cars table...
+            'rombongan_belajar_id', // Foreign key on the owners table...
+            'peserta_didik_id', // Local key on the mechanics table...
+            'rombongan_belajar_id' // Local key on the cars table...
+        )->where('tingkat', 0);
 	}
 	public function anggota_ekskul(){
 		return $this->hasMany(Anggota_rombel::class, 'peserta_didik_id', 'peserta_didik_id')->whereHas('rombongan_belajar', function($query){
@@ -212,5 +222,16 @@ class Peserta_didik extends Model
 	public function sekolah()
 	{
 		return $this->belongsTo(Sekolah::class, 'sekolah_id', 'sekolah_id');
+	}
+	public function nilai_ekstra()
+	{
+		return $this->hasManyThrough(
+            Nilai_ekstra::class,
+			Anggota_rombel::class,
+			'peserta_didik_id',
+			'anggota_rombel_id',
+			'peserta_didik_id',
+			'anggota_rombel_id'
+        );
 	}
 }

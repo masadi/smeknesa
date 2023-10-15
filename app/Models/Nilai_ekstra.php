@@ -22,4 +22,8 @@ class Nilai_ekstra extends Model
 	{
 		return $this->belongsTo(Materi_ekstra::class, 'materi_id', 'materi_id');
 	}
+	public function rombongan_belajar()
+	{
+		return $this->belongsTo(Rombongan_belajar::class, 'rombongan_belajar_id', 'rombongan_belajar_id');
+	}
 }

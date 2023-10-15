@@ -2,10 +2,13 @@
 
 namespace App\Console\Commands;
 
+use Rap2hpoutre\FastExcel\FastExcel;
 use Illuminate\Console\Command;
 use App\Models\Jenis_keluar;
 use App\Models\Pekerjaan;
 use App\Models\Cita;
+use App\Models\Capaian_pembelajaran;
+use App\Models\Pembelajaran;
 
 class GenerateRef extends Command
 {
@@ -145,6 +148,18 @@ class GenerateRef extends Command
                 'nama' => $jenis
             ]);
         }
+        (new FastExcel)->import(public_path('templates/ref_cp_1.xlsx'), function ($line) {
+          $pembelajaran = Pembelajaran::whereHas('rombongan_belajar', function($query) use ($line){
+            $query->where('tingkat', $line['kelas']);
+          })->where('mata_pelajaran_id', $line['mata_pelajaran_id'])->first();
+          Capaian_pembelajaran::create([
+            'mata_pelajaran_id' => $line['mata_pelajaran_id'],
+            'deskripsi' => $line['deskripsi'],
+            'guru_id' => ($pembelajaran) ? $pembelajaran()->guru_id : NULL,
+          ]);
+        });
+        (new FastExcel)->import(public_path('templates/ref_cp_2.xlsx'), function ($line) {
+        });
         return Command::SUCCESS;
     }
 }

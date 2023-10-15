@@ -83,6 +83,10 @@ class Rombongan_belajar extends Model
 	{
 		return $this->hasOne(Rombel_trigger::class, 'id_rombel_lama', 'rombongan_belajar_id');
 	}
+	public function materi_ekstra()
+	{
+		return $this->hasMany(Materi_ekstra::class, 'rombongan_belajar_id', 'rombongan_belajar_id');
+	}
 	public function nilai_ekstra()
 	{
 		return $this->hasMany(Nilai_ekstra::class, 'rombongan_belajar_id', 'rombongan_belajar_id');

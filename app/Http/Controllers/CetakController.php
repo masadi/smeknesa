@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use App\Models\Rombongan_belajar;
 use App\Models\Peserta_didik;
 use App\Models\Anggota_rombel;
@@ -248,5 +249,89 @@ class CetakController extends Controller
         } else {
             return view('cetak.cetak-perijinan', $data);
         }      
+    }
+    public function ekskul(){
+        $params = [];
+        /*$pdf = PDF::loadView('sertifikat.blank', $blank, [], [
+            'orientation' => 'L',
+            'default_font_size'    => '16',
+            'custom_font_dir' => public_path('template-sertifikat/fonts/'), // don't forget the trailing slash!
+            'custom_font_data' => $fonts,
+            'default_font'         => 'myriadpro',
+            'margin_top' => $sertifikat->margin_top,
+            'margin_left' => $sertifikat->margin_left,
+            'margin_right' => $sertifikat->margin_right,
+            'format' => 'B4',
+        ]);*/
+        $fonts = [
+            'chocolates' => [
+                'R'  => 'chocolates-regular.ttf',    // regular font
+                'B'  => 'chocolates-bold.ttf',       // optional: bold font
+                'I'  => 'chocolates-italic.ttf',     // optional: italic font
+                'BI' => 'chocolates-bold-italic.ttf' // optional: bold-italic font
+                        ],
+            'pinyonscript' => [
+                'R'  => 'pinyonscript-regular.ttf',    // regular font
+                'B'  => 'pinyonscript-regular.ttf',       // optional: bold font
+                'I'  => 'pinyonscript-regular.ttf',     // optional: italic font
+                'BI' => 'pinyonscript-regular.ttf' // optional: bold-italic font
+            ],
+        ];
+        $pdf = PDF::loadView('cetak.blank', $params, [], [
+			'format' => 'A4',
+            'orientation' => 'L',
+            'default_font_size'    => '12',
+            'custom_font_dir' => public_path('fonts/'), // don't forget the trailing slash!
+            'custom_font_data' => $fonts,
+            'default_font'         => 'chocolates',
+			'margin_left' => 15,
+			'margin_right' => 15,
+			'margin_top' => 15,
+			'margin_bottom' => 15,
+			'margin_header' => 5,
+			'margin_footer' => 5,
+		]);
+        $pd = Peserta_didik::with([
+            'ekskul' => function($query){
+                $query->withWhereHas('materi_ekstra', function($query){
+                    $query->with(['nilai_ekstra' => function($query){
+                        $query->whereHas('anggota_rombel', function($query){
+                            $query->where('peserta_didik_id', request()->route('peserta_didik_id'));
+                        });
+                    }]);
+                });
+                $query->withAvg([
+                    'nilai_ekstra as rerata' => function($query){
+                        $query->whereHas('anggota_rombel', function($query){
+                            $query->where('peserta_didik_id', request()->route('peserta_didik_id'));
+                        });
+                    },
+                ], 'angka');
+                $query->with('wali_kelas');
+                $query->where('rombongan_belajar.semester_id', semester_id());
+            },
+            'kelas' => function($query){
+                $query->where('rombongan_belajar.semester_id', semester_id());
+                $query->with('semester');
+            }
+        ])->find(request()->route('peserta_didik_id'));
+        //dd($pd);
+        $semester = Semester::find($pd->kelas->semester_id);
+        $qrcode = base64_encode(QrCode::format('svg')->size(150)->errorCorrection('H')->generate($pd->peserta_didik_id??'string'));
+        $kepala_sekolah = User::with('guru')->whereRoleIs('kepsek', $semester->nama)->first();
+        $tanggal = Carbon::now()->translatedFormat('d F Y');
+        $pagecount = $pdf->getMpdf()->setSourceFile('templates/ekskul.pdf');
+        $tplIdx = $pdf->getMpdf()->importPage(1);
+        $pdf->getMpdf()->useTemplate($tplIdx);
+        $page_1 = view('cetak.page-1-ekskul', compact('pd', 'qrcode', 'tanggal', 'kepala_sekolah'));
+        $pdf->getMpdf()->WriteHTML($page_1);
+        $pdf->getMpdf()->AddPage();
+        $tplIdx = $pdf->getMpdf()->importPage(2);
+        $pdf->getMpdf()->useTemplate($tplIdx);
+        $page_2 = view('cetak.page-2-ekskul', compact('pd', 'qrcode', 'tanggal', 'kepala_sekolah'));
+        $pdf->getMpdf()->WriteHTML($page_2);
+        $title = 'nama siswa';
+        $converted = Str::title('sertifikat ekstrakurikuler '.$title);
+        return $pdf->stream($converted.'.pdf');
     }
 }
