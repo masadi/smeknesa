@@ -9,6 +9,11 @@
             </b-form-group>  
           </b-col>
           <b-col cols="12">
+            <b-form-group label="Nomor Sertifikat" label-for="nomor_sertifikat" label-cols-md="3" :invalid-feedback="feedback.nomor_sertifikat" :state="state.nomor_sertifikat">
+              <b-form-input id="nomor_sertifikat" v-model="form.nomor_sertifikat" :state="state.nomor_sertifikat" placeholder="Nomor Sertifikat"></b-form-input>
+            </b-form-group>  
+          </b-col>
+          <b-col cols="12">
             <b-form-group label="Status" label-for="status" label-cols-md="3" :invalid-feedback="feedback.status" :state="state.status">
               <v-select id="status" v-model="form.status" :options="['Wajib', 'Pilihan']" placeholder="== Pilih Status ==" :state="state.status" :searchable="false">
                 <template #no-options="{ search, searching, loading }">
@@ -61,17 +66,20 @@ export default {
       loading_form: false,
       form: {
         nama: '',
+        nomor_sertifikat: '',
         tingkat: 0,
         guru_id: '',
         status: '',
       },
       feedback: {
         nama: '',
+        nomor_sertifikat: '',
         guru_id: '',
         status: '',
       },
       state: {
         nama: null,
+        nomor_sertifikat: null,
         guru_id: null,
         status: null,
       },
@@ -142,12 +150,15 @@ export default {
     },
     resetForm(){
       this.form.nama = ''
+      this.form.nomor_sertifikat = ''
       this.form.guru_id = ''
       this.form.status = ''
       this.feedback.nama = ''
+      this.feedback.nomor_sertifikat = ''
       this.feedback.guru_id = ''
       this.feedback.status = ''
       this.state.nama = null
+      this.state.nomor_sertifikat = null
       this.state.guru_id = null
       this.state.status = null
     },
@@ -162,9 +173,11 @@ export default {
         let getData = response.data
         if(getData.errors){
           this.state.nama = (getData.errors.nama) ? false : null
+          this.state.nomor_sertifikat = (getData.errors.nomor_sertifikat) ? false : null
           this.state.guru_id = (getData.errors.guru_id) ? false : null
           this.state.status = (getData.errors.status) ? false : null
           this.feedback.nama = (getData.errors.nama) ? getData.errors.nama.join(', ') : ''
+          this.feedback.nomor_sertifikat = (getData.errors.nomor_sertifikat) ? getData.errors.nomor_sertifikat.join(', ') : ''
           this.feedback.guru_id = (getData.errors.guru_id) ? getData.errors.guru_id.join(', ') : ''
           this.feedback.status = (getData.errors.status) ? getData.errors.status.join(', ') : ''
         } else {

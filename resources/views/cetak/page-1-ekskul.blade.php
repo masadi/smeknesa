@@ -6,7 +6,7 @@
     &nbsp;&nbsp;NISN-{{$pd->nisn}}
   </div>
   <div class="top">&nbsp;</div>
-  <div class="nomor_surat">NOMOR: {{$pd->kelas->nomor_sertifikat}}</div>
+  <div class="nomor_surat">NOMOR: {{$pd->ekskul->nomor_sertifikat}}</div>
   <br>
   <br>
   <div class="baris_1">SERTIFIKAT INI DIBERIKAN KEPADA</div>

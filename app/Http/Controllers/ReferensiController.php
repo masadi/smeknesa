@@ -517,6 +517,7 @@ class ReferensiController extends Controller
                 'nama' => request()->nama,
                 'tingkat' => 0,
                 'status' => request()->status,
+                'nomor_sertifikat' => request()->nomor_sertifikat,
             ]);
         }
         if(request()->data == 'bk'){
@@ -1640,6 +1641,7 @@ class ReferensiController extends Controller
         $data->guru_id = request()->guru_id;
         $data->nama = request()->nama;
         $data->status = request()->status;
+        $data->nomor_sertifikat = request()->nomor_sertifikat;
         if($data->save()){
             $data = [
                 'success' => TRUE,
