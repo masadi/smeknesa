@@ -42,7 +42,7 @@ class PrakerinController extends Controller
             });
             $query->orWhereHas('dudi', function($query){
                 $query->where('nama', 'ILIKE', '%' . request()->q . '%');
-                $query->orwWhere('pimpinan', 'ILIKE', '%' . request()->q . '%');
+                $query->orWhere('pimpinan', 'ILIKE', '%' . request()->q . '%');
             });
         })->paginate(request()->per_page);
         return response()->json(['status' => 'success', 'data' => $data]);
@@ -120,7 +120,7 @@ class PrakerinController extends Controller
         $data = Dudi::orderBy(request()->sortby, request()->sortbydesc)
         ->when(request()->q, function($query){
             $query->where('nama', 'ILIKE', '%' . request()->q . '%');
-            $query->orwWhere('pimpinan', 'ILIKE', '%' . request()->q . '%');
+            $query->orWhere('pimpinan', 'ILIKE', '%' . request()->q . '%');
         })->paginate(request()->per_page);
         return response()->json(['status' => 'success', 'data' => $data]);
     }
@@ -337,7 +337,7 @@ class PrakerinController extends Controller
             });
             $query->orWhereHas('dudi', function($query){
                 $query->where('nama', 'ILIKE', '%' . request()->q . '%');
-                $query->orwWhere('pimpinan', 'ILIKE', '%' . request()->q . '%');
+                $query->orWhere('pimpinan', 'ILIKE', '%' . request()->q . '%');
             });
         })->paginate(request()->per_page);
         return response()->json(['status' => 'success', 'data' => $data]);
