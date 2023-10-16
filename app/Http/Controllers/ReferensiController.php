@@ -645,6 +645,8 @@ class ReferensiController extends Controller
             $get = Capaian_pembelajaran::find(request()->id);
         } elseif(request()->data == 'tp'){
             $get = Tujuan_pembelajaran::find(request()->id);
+        } elseif(request()->data == 'dudi'){
+            $get = Dudi::find(request()->id);
         }
         
         if($get){
