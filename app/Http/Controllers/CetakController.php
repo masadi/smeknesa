@@ -21,14 +21,42 @@ class CetakController extends Controller
 {
     public function rapor_cover()
     {
-        $data = [
+        /*$data = [
             'foo' => 'bar'
         ];
         $pdf = PDF::loadView('cetak.document', $data);
         $pdf->getMpdf()->defaultfooterfontsize=7;
 		$pdf->getMpdf()->defaultfooterline=1;
 		$pdf->getMpdf()->SetFooter('Nama Siswa - Nama Kelas |{PAGENO}|Dicetak dari '.config('app.name').' v.'.get_setting('app_version'));
-        return $pdf->stream('document.pdf');
+        return $pdf->stream('document.pdf');*/
+        $get_siswa = Anggota_rombel::find(request()->route('anggota_rombel_id'));
+        $semester = Semester::find($get_siswa->semester_id);
+        $params = array(
+            'get_siswa'	=> $get_siswa,
+            'kepala_sekolah' => User::with('guru')->whereRoleIs('kepsek', $semester->nama)->first(),
+        );
+        $pdf = PDF::loadView('cetak.blank', $params, [], [
+            'format' => 'A4',
+            'margin_left' => 15,
+            'margin_right' => 15,
+            'margin_top' => 15,
+            'margin_bottom' => 15,
+            'margin_header' => 5,
+            'margin_footer' => 5,
+        ]);
+        $pdf->getMpdf()->defaultfooterfontsize=7;
+        $pdf->getMpdf()->defaultfooterline=0;
+        $general_title = $get_siswa->peserta_didik->nama.' - '.$get_siswa->rombongan_belajar->nama;
+        $pdf->getMpdf()->SetFooter($general_title.'|{PAGENO}|Dicetak dari '.config('app.name').' v.'.get_setting('app_version'));
+        $rapor_top = view('cetak.rapor_top', $params);
+        $identitas_sekolah = view('cetak.identitas_sekolah', $params);
+        $identitas_peserta_didik = view('cetak.identitas_peserta_didik', $params);
+        $pdf->getMpdf()->WriteHTML($rapor_top);
+        $pdf->getMpdf()->WriteHTML($identitas_sekolah);
+        $pdf->getMpdf()->WriteHTML('<pagebreak />');
+        $pdf->getMpdf()->WriteHTML($identitas_peserta_didik);
+        $general_title = clean($general_title);
+        return $pdf->stream($general_title.'-IDENTITAS.pdf');
     }
     public function rapor_semester(){
         $semester = Semester::find(request()->route('semester_id'));
