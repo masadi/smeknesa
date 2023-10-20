@@ -113,7 +113,12 @@ export default {
             },
           })
         } else {
-          this.form = getData.mapel
+          //this.form = getData.mapel
+          this.form.mata_pelajaran_id = getData.mapel.mata_pelajaran_id
+          this.form.nama = getData.mapel.nama
+          //this.form.jurusan_sp_id = []
+          this.form.tingkat = getData.mapel.tingkat
+          this.form.jenis = getData.mapel.jenis
           this.form.jurusan_sp_id = this.getJurusan(getData.mapel.mapel_tingkat);
           this.form.data = 'mapel'
           this.data_jurusan = getData.jurusan
@@ -127,6 +132,7 @@ export default {
       this.resetForm()
     },
     resetForm(){
+      this.form.mata_pelajaran_id = ''
       this.form.nama = ''
       this.form.jurusan_sp_id = []
       this.form.tingkat = []
