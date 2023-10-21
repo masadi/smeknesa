@@ -113,9 +113,11 @@ export default {
   },
   methods: {
     handleEvent(){
+      eventBus.$emit('loading', true);
       this.$http.post('/referensi/get-data', {
         data: 'jurusan'
       }).then(response => {
+        eventBus.$emit('loading', false);
         this.data_jurusan = response.data
         this.addModalShow = true
       })

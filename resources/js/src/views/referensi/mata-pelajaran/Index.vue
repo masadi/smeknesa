@@ -6,12 +6,12 @@
         <strong>Loading...</strong>
       </div>
       <div v-else>
-        <datatable :isBusy="isBusy" :items="items" :fields="fields" :meta="meta" @per_page="handlePerPage" @pagination="handlePagination" @search="handleSearch" @sort="handleSort" @aksi="handleAksi" />
+        <datatable :loading="loading" :isBusy="isBusy" :items="items" :fields="fields" :meta="meta" @per_page="handlePerPage" @pagination="handlePagination" @search="handleSearch" @sort="handleSort" @aksi="handleAksi" />
       </div>
     </b-card-body>
-    <add-modal @reload="handleReload"></add-modal>
-    <edit-modal @reload="handleReload"></edit-modal>
-    <kktp-modal @reload="handleReload"></kktp-modal>
+    <add-modal @reload="handleReload" @loading="handleLoading"></add-modal>
+    <edit-modal @reload="handleReload" @loading="handleLoading"></edit-modal>
+    <kktp-modal @reload="handleReload" @loading="handleLoading"></kktp-modal>
   </b-card>
 </template>
 
@@ -35,6 +35,7 @@ export default {
   data() {
     return {
       isBusy: true,
+      loading: true,
       fields_walas: [
         {
           key: 'nama',
@@ -128,7 +129,7 @@ export default {
       this.loadPostsData()
     },
     loadPostsData() {
-      this.isBusy = true
+      this.loading = true
       //let current_page = this.search == '' ? this.current_page : this.current_page != 1 ? 1 : this.current_page
       let current_page = this.current_page//this.search == '' ? this.current_page : 1
       //LAKUKAN REQUEST KE API UNTUK MENGAMBIL DATA POSTINGAN
@@ -148,6 +149,7 @@ export default {
         //this.items = response.data.all_pd
         let getData = response.data.data
         this.isBusy = false
+        this.loading = false
         this.items = getData.data//MAKA ASSIGN DATA POSTINGAN KE DALAM VARIABLE ITEMS
         //DAN ASSIGN INFORMASI LAINNYA KE DALAM VARIABLE META
         this.meta = {
@@ -200,12 +202,10 @@ export default {
           allowOutsideClick: () => false,
         }).then(result => {
           if (result.value) {
-            this.loading_form = true
             this.$http.post('/referensi/hapus-data', {
               data: 'mapel',
               id: val.item.mata_pelajaran_id,
             }).then(response => {
-              this.loading_form = false
               let getData = response.data
               this.$swal({
                 icon: getData.icon,
@@ -227,6 +227,9 @@ export default {
       //console.log(val);
       //eventBus.$emit('open-modal-detil-guru', val);
     },
+    handleLoading(val){
+      this.loading = val
+    }
   },
 }
 </script>

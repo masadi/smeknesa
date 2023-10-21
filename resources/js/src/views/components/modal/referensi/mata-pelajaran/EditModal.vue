@@ -10,7 +10,7 @@
           </b-col>
           <b-col cols="12">
             <b-form-group label="Jurusan" label-for="jurusan_sp_id" label-cols-md="3" :invalid-feedback="feedback.jurusan_sp_id" :state="state.jurusan_sp_id">
-              <v-select id="jurusan_sp_id" v-model="form.jurusan_sp_id" :reduce="alias => alias.jurusan_sp_id" label="alias" :options="data_jurusan" placeholder="== Pilih Jurusan ==" :state="state.jurusan_sp_id" multiple>
+              <v-select id="jurusan_sp_id" v-model="form.jurusan_sp_id" :reduce="alias => alias.jurusan_sp_id" label="alias" :options="data_jurusan" placeholder="== Pilih Jurusan ==" :state="state.jurusan_sp_id" :clearable="true" multiple>
                 <template #no-options="{ search, searching, loading }">
                   Tidak ada data untuk ditampilkan
                 </template>
@@ -19,7 +19,7 @@
           </b-col>
           <b-col cols="12">
             <b-form-group label="Tingkat Kelas" label-for="tingkat" label-cols-md="3" :invalid-feedback="feedback.tingkat" :state="state.tingkat">
-              <v-select id="tingkat" v-model="form.tingkat" :reduce="nama => nama.id" label="nama" :options="data_tingkat" placeholder="== Pilih Tingkat Kelas ==" :state="state.tingkat" multiple>
+              <v-select id="tingkat" v-model="form.tingkat" :reduce="nama => nama.id" label="nama" :options="data_tingkat" placeholder="== Pilih Tingkat Kelas ==" :state="state.tingkat" :clearable="true" multiple>
                 <template #no-options="{ search, searching, loading }">
                   Tidak ada data untuk ditampilkan
                 </template>
@@ -28,7 +28,7 @@
           </b-col>
           <b-col cols="12">
             <b-form-group label="Jenis Mapel" label-for="jenis" label-cols-md="3" :invalid-feedback="feedback.jenis" :state="state.jenis">
-              <v-select id="jenis" v-model="form.jenis" :options="['Umum', 'P5', 'PKL']" placeholder="== Pilih Jenis Mapel ==" :state="state.jenis"></v-select>
+              <v-select id="jenis" v-model="form.jenis" :clearable="true" :options="['Umum', 'P5', 'PKL']" placeholder="== Pilih Jenis Mapel ==" :state="state.jenis"></v-select>
             </b-form-group>
           </b-col>
         </b-row>
@@ -64,7 +64,13 @@ export default {
     return {
       editModalShow: false,
       loading_form: false,
-      form: {},
+      form: {
+        mata_pelajaran_id: '',
+        nama: '',
+        jurusan_sp_id: [],
+        tingkat: [],
+        jenis: '',
+      },
       feedback: {},
       state: {},
       data_tingkat: [
@@ -98,10 +104,12 @@ export default {
   },
   methods: {
     handleEvent(data){
+      this.$emit('loading', true)
       this.$http.post('/referensi/detil-data', {
         id: data.mata_pelajaran_id,
         data: 'mapel',
       }).then(response => {
+        this.$emit('loading', false)
         var getData = response.data
         if(getData.errors){
           this.$swal({
