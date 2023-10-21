@@ -343,12 +343,15 @@ class PrakerinController extends Controller
         return response()->json(['status' => 'success', 'data' => $data]);
     }
     public function detil(){
-        $data = [
-            'data_siswa' => Peserta_didik::orderBy('nama')->whereHas('anggota_rombel', function($query){
+        /*
+        ->whereHas('anggota_rombel', function($query){
                 $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
-            })->with(['pd_pkl' => function($query){
+            })
+        */
+        $data = [
+            'data_siswa' => Peserta_didik::orderBy('nama')->withWhereHas('pd_pkl', function($query){
                 $query->where('pkl_id', request()->pkl_id);
-            }])->get(),
+            })->get(),
             'data_dudi' => Dudi::orderBy('nama')->get(),
             'data_guru' => Guru::whereHas('pembelajaran', function($query){
                 $query->where('semester_id', request()->semester_id);
