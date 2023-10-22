@@ -120,6 +120,10 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/ekstrakurikuler', [ReferensiController::class, 'ekstrakurikuler']);
     Route::post('/anggota-ekskul', [ReferensiController::class, 'anggota_ekskul']);
     Route::post('/non-anggota-ekskul', [ReferensiController::class, 'non_anggota_ekskul']);
+    Route::get('/capaian-pembelajaran', [ReferensiController::class, 'capaian_pembelajaran']);
+    Route::post('/get-pembelajaran', [ReferensiController::class, 'get_pembelajaran']);
+    Route::post('/add-cp', [ReferensiController::class, 'add_cp']);
+    Route::post('/update-cp', [ReferensiController::class, 'update_cp']);
   });
   Route::group(['prefix' => 'magang'], function () {
     Route::get('/dudi', [PrakerinController::class, 'dudi']);

@@ -270,4 +270,30 @@ export default [
       },
     },
   },
+  {
+    path: '/referensi/capaian-pembelajaran',
+    name: 'referensi-capaian-pembelajaran',
+    component: () => import('@/views/referensi/capaian-pembelajaran/Index.vue'),
+    meta: {
+      resource: 'System',
+      action: 'read',
+      pageTitle: 'Capaian Pembelajaran',
+      breadcrumb: [
+        {
+          text: 'Referensi',
+        },
+        {
+          text: 'Capaian Pembelajaran',
+          active: true,
+        },
+      ],
+      tombol_add: {
+        action: 'add-ref-cp',
+        link: '',
+        variant: 'primary',
+        text: 'Tambah Data',
+        role: ['administrator'],
+      },
+    },
+  },
 ]

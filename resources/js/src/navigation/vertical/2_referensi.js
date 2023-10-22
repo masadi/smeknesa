@@ -73,6 +73,13 @@ export default [
         resource: 'Guru_BK',
         action: 'read',
       },
+      {
+        icon: 'hand-click-icon',
+        title: 'Capaian Pembelajaran',
+        route: 'referensi-capaian-pembelajaran',
+        resource: 'System',
+        action: 'read',
+      },
     ],
   },
 ]

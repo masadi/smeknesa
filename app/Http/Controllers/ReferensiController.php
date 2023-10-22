@@ -2242,4 +2242,107 @@ class ReferensiController extends Controller
         ->paginate(request()->per_page);
         return response()->json(['status' => 'success', 'data' => $data, 'semester_id' => semester_id()]);
     }
+    public function capaian_pembelajaran(){
+        $data = Capaian_pembelajaran::withWhereHas('pembelajaran', function($query){
+            $query->where('semester_id', request()->semester_id);
+        })->withCount('tp')->orderBy(request()->sortby, request()->sortbydesc)
+        ->when(request()->q, function($query) {
+            $query->where('deskripsi', 'ilike', '%'.request()->q.'%');
+            $query->orWhereHas('pembelajaran', function($query){
+                $query->where('semester_id', request()->semester_id);
+                $query->where('nama_mata_pelajaran', 'ilike', '%'.request()->q.'%');
+            });
+        })
+        ->paginate(request()->per_page);
+        return response()->json(['status' => 'success', 'data' => $data]);
+    }
+    public function get_pembelajaran(){
+        $data = Mata_pelajaran::whereHas('mapel_tingkat', function($query){
+            $query->where('tingkat', request()->tingkat);
+        })->whereHas('pembelajaran', function($query){
+            $query->where('semester_id', request()->semester_id);
+        })->orderBy('mata_pelajaran_id')->get();
+        return response()->json($data);
+    }
+    public function add_cp(){
+        $insert = NULL;
+        $validator = Validator::make(request()->all(), 
+            [
+                'tingkat' => ['required'],
+                'mata_pelajaran_id' => ['required'],
+                'deskripsi' => ['required'],
+            ],
+            [
+                'tingkat.required' => 'Tingkat Kelas tidak boleh kosong',
+                'mata_pelajaran_id.required' => 'Mata Pelajaran tidak boleh kosong',
+                'deskripsi.required' => 'Deskripsi Capaian Pembelajaran tidak boleh kosong',
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => FALSE,
+                'errors' => $validator->errors(),
+            ]);
+        }
+        $pembelajaran = Pembelajaran::where('mata_pelajaran_id', request()->mata_pelajaran_id)->whereHas('rombongan_belajar', function($query){
+            $query->where('semester_id', request()->semester_id);
+            $query->where('tingkat', request()->tingkat);
+        })->get();
+        foreach($pembelajaran as $mapel){
+            $insert = Capaian_pembelajaran::create([
+                'deskripsi' => request()->deskripsi,
+                'guru_id' => $mapel->guru_id,
+                'mata_pelajaran_id' => request()->mata_pelajaran_id,
+            ]);
+        }
+        if($insert){
+            $data = [
+                'icon' => 'success',
+                'text' => 'Capaian Pembelajaran berhasil disimpan',
+                'title' => 'Berhasil',
+            ];
+        } else {
+            $data = [
+                'icon' => 'error',
+                'text' => 'Capaian Pembelajaran gagal disimpan. Silahkan coba beberapa saat lagi!',
+                'title' => 'Gagal',
+            ];
+        }
+        return response()->json($data);
+    }
+    public function update_cp(){
+        $insert = NULL;
+        $validator = Validator::make(request()->all(), 
+            [
+                'cp_id' => ['required'],
+                'deskripsi' => ['required'],
+            ],
+            [
+                'cp_id.required' => 'ID Capaian Pembelajaran tidak ditemukan',
+                'deskripsi.required' => 'Deskripsi Capaian Pembelajaran tidak boleh kosong',
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => FALSE,
+                'errors' => $validator->errors(),
+            ]);
+        }
+        $cp = Capaian_pembelajaran::find(request()->cp_id);
+        $cp->deskripsi = request()->deskripsi;
+        if($cp->save()){
+            $data = [
+                'icon' => 'success',
+                'text' => 'Capaian Pembelajaran berhasil diperbaharui',
+                'title' => 'Berhasil',
+            ];
+        } else {
+            $data = [
+                'icon' => 'error',
+                'text' => 'Capaian Pembelajaran gagal diperbaharui. Silahkan coba beberapa saat lagi!',
+                'title' => 'Gagal',
+            ];
+        }
+        return response()->json($data);
+    }
 }
