@@ -56,4 +56,23 @@ export default [
       ],
     },
   },
+  {
+    path: '/program-keahlian/rapor-pkl',
+    name: 'progli-rapor-pkl',
+    component: () => import('@/views/program-keahlian/RaporPkl.vue'),
+    meta: {
+      pageTitle: 'Rapor PKL',
+      resource: 'Kajur',
+      action: 'read',
+      breadcrumb: [
+        {
+          text: 'Program Keahlian',
+        },
+        {
+          text: 'Rapor PKL',
+          active: true,
+        },
+      ],
+    },
+  },
 ]

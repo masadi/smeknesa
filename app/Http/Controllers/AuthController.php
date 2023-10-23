@@ -18,6 +18,7 @@ use App\Models\Pembelajaran;
 use App\Models\Agama;
 use App\Models\Pekerjaan;
 use App\Models\Cita;
+use App\Models\Jurusan_sp;
 use Indonesia;
 use Validator;
 
@@ -236,7 +237,7 @@ class AuthController extends Controller
         return response()->json($data);
     }
     public function generate(){
-        $all_role = ['guru', 'pengajar', 'pd', 'walas', 'instruktur', 'projek', 'pembimbing'];
+        $all_role = ['guru', 'pengajar', 'pd', 'walas', 'instruktur', 'projek', 'pembimbing', 'kajur'];
         if(request()->jenis == 'ptk'){
             User::whereRoleIs('guru', request()->periode_aktif)->whereDoesntHave('guru')->delete();
             //$query->whereRoleIs(['guru', 'pd'], request()->periode_aktif);
@@ -286,6 +287,12 @@ class AuthController extends Controller
                     $find = Rombongan_belajar::where('guru_id', $d->guru_id)->where('semester_id', request()->semester_id)->where('tingkat', 0)->first();
                     if($find){
                         $user->attachRole('instruktur', request()->periode_aktif);
+                    }
+                    $find = Jurusan_sp::whereHas('rombongan_belajar', function($query){
+                        $query->where('semester_id', request()->semester_id);
+                    })->where('guru_id', $d->guru_id)->first();
+                    if($find){
+                        $user->attachRole('kajur', request()->periode_aktif);
                     }
                 }
             });

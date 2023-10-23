@@ -96,17 +96,19 @@ class ReferensiController extends Controller
         return response()->json(['status' => 'success', 'data' => $data]);
     }
     public function jurusan(){
-        $data = Jurusan_sp::with(['kajur', 'rombongan_belajar'])->withCount(['rombongan_belajar as jml_kelas' => function($query){
-            $query->where('semester_id', semester_id());
+        $data = Jurusan_sp::with(['kajur', 'rombongan_belajar' => function($query){
+            $query->where('semester_id', request()->semester_id);
+        }])->withCount(['rombongan_belajar as jml_kelas' => function($query){
+            $query->where('semester_id', request()->semester_id);
         }])->orderBy(request()->sortby, request()->sortbydesc)
         ->when(request()->q, function($query) {
-            $query->whereHas('rombongan_belajar', function($query){
-                $query->where('semester_id', semester_id());
-            });
             $query->where('nama_jurusan_sp', 'ilike', '%'.request()->q.'%');
+            $query->orWhereHas('kajur', function($query){
+                $query->where('nama', 'ilike', '%'.request()->q.'%');
+            });
         })
         ->paginate(request()->per_page);
-        return response()->json(['status' => 'success', 'data' => $data, 'semester_id' => semester_id(), 'order' => request()->sortby]);
+        return response()->json(['status' => 'success', 'data' => $data, 'semester_id' => request()->semester_id, 'order' => request()->sortby]);
     }
     public function rombongan_belajar(){
         $data = Rombongan_belajar::with(['wali_kelas', 'jurusan_sp', 'semester'])->where(function($query){
@@ -1002,6 +1004,21 @@ class ReferensiController extends Controller
                         },
                     ])->orderBy('nama')->get(),
                 ];
+            }
+            if(request()->data == 'pkl'){
+                $data = [
+                    'pd' => Peserta_didik::whereHas('pd_pkl')->withWhereHas('kelas', function ($query) {
+                        $query->where('rombongan_belajar.semester_id', request()->semester_id);
+                    })->withWhereHas('anggota_rombel', function ($query) {
+                        $query->whereHas('rombongan_belajar', function($query){
+                            $query->where('semester_id', request()->semester_id);
+                            $query->whereHas('jurusan_sp', function($query){
+                                $query->where('guru_id', request()->guru_id);
+                            });
+                        });
+                    })->orderBy('nama')->get(),
+                    'semester' => Semester::find(request()->semester_id),
+                ];        
             }
         } else {
             $data = Peserta_didik::withWhereHas('anggota_rombel', function ($query) {

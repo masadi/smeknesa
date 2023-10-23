@@ -366,4 +366,37 @@ class CetakController extends Controller
         $converted = Str::title('sertifikat ekstrakurikuler '.$title);
         return $pdf->stream($converted.'.pdf');
     }
+    public function pkl(){
+        $pd = Peserta_didik::with([
+			'sekolah' => function($query){
+				$query->select('sekolah_id', 'nama', 'kabupaten_id');
+                $query->with(['kabupaten']);
+			},
+			'kelas' => function($query){
+				$query->where('rombongan_belajar.semester_id', semester_id());
+			},
+			'pd_pkl' => function($query){
+                $query->with(['praktik_kerja_lapangan']);
+				/*$query->withWhereHas('praktik_kerja_lapangan', function($query){
+					$query->where('pkl_id', request()->route('pkl_id'));
+				});*/
+			},
+			'nilai_pkl' => function($query){
+				$query->with(['tp']);
+				$query->where('pkl_id', request()->route('pkl_id'));
+			},
+			'absensi_pkl' => function($query){
+				$query->where('pkl_id', request()->route('pkl_id'));
+			}
+		])->find(request()->route('peserta_didik_id'));
+        $data = [
+        	'pd' => $pd,
+        ];
+		$pdf = PDF::loadView('cetak.rapor-pkl', $data);
+        $pdf->getMpdf()->defaultfooterfontsize=7;
+		$pdf->getMpdf()->defaultfooterline=1;
+		$pdf->getMpdf()->SetFooter($pd->nama.' - '. $pd->kelas->nama .' |{PAGENO}|Dicetak dari '.config('app.name').' v.'.get_setting('app_version'));
+        return $pdf->stream('document.pdf');
+        dd(request()->route('peserta_didik_id'));
+    }
 }

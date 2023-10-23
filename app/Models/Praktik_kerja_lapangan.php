@@ -14,7 +14,7 @@ class Praktik_kerja_lapangan extends Model
 	protected $table = 'praktik_kerja_lapangan';
 	protected $primaryKey = 'pkl_id';
 	protected $guarded = [];
-	protected $appends = ['tgl_mulai', 'tgl_selesai'];
+	protected $appends = ['tgl_mulai', 'tgl_selesai', 'nama_dudi'];
 	public function guru(){
 		return $this->belongsTo(Guru::class, 'guru_id', 'guru_id');
 	}
@@ -32,6 +32,10 @@ class Praktik_kerja_lapangan extends Model
 	}
 	public function dudi(){
 		return $this->belongsTo(Dudi::class, 'dudi_id', 'dudi_id');
+	}
+	public function getNamaDudiAttribute()
+	{
+		return ($this->dudi) ? $this->dudi->nama : '';
 	}
 	public function getTglMulaiAttribute(){
 		return Carbon::parse($this->attributes['tanggal_mulai'])->translatedFormat('d F Y');

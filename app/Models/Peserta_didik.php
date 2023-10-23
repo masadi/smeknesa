@@ -234,4 +234,8 @@ class Peserta_didik extends Model
 			'anggota_rombel_id'
         );
 	}
+	public function absensi_pkl()
+	{
+		return $this->hasOne(Absensi_pkl::class, 'peserta_didik_id', 'peserta_didik_id');
+	}
 }

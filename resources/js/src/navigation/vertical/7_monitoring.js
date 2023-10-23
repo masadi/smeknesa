@@ -26,5 +26,18 @@ export default [
       },
     ]
   },
+  {
+    icon: 'address-book-icon',
+    title: 'Program Keahlian',
+    children: [
+      {
+        icon: 'hand-click-icon',
+        title: 'Rapor PKL',
+        route: 'progli-rapor-pkl',
+        resource: 'Kajur',
+        action: 'read',
+      },
+    ]
+  },
 ]
   

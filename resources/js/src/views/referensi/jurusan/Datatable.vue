@@ -74,6 +74,10 @@ export default {
       type: Boolean,
       default: () => true,
     },
+    loading: {
+      type: Boolean,
+      default: () => false,
+    },
     isAsesor: {
       type: Boolean,
       default: () => false,
@@ -81,7 +85,6 @@ export default {
   },
   data() {
     return {
-      loading: false,
       loading_modal: false,
       sortBy: null,
       sortDesc: false,
