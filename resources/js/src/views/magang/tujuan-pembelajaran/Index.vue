@@ -19,10 +19,10 @@
 <script>
 import { BCard, BCardBody, BSpinner } from 'bootstrap-vue'
 import Datatable from './Datatable.vue' //IMPORT COMPONENT DATATABLENYA
-import AddModal from './../../components/modal/penilaian/capaian-pembelajaran/AddModal.vue'
-import EditModal from './../../components/modal/penilaian/capaian-pembelajaran/EditModal.vue'
-import DetilModal from './../../components/modal/penilaian/capaian-pembelajaran/DetilModal.vue'
-import EditModalTp from './../../components/modal/penilaian/capaian-pembelajaran/EditModalTp.vue'
+import AddModal from './../../components/modal/penilaian/tujuan-pembelajaran/AddModal.vue'
+import EditModal from './../../components/modal/penilaian/tujuan-pembelajaran/EditModal.vue'
+import DetilModal from './../../components/modal/penilaian/tujuan-pembelajaran/DetilModal.vue'
+import EditModalTp from './../../components/modal/penilaian/tujuan-pembelajaran/EditModalTp.vue'
 import eventBus from '@core/utils/eventBus'
 export default {
   components: {
@@ -82,12 +82,12 @@ export default {
     }
   },
   created() {
-    eventBus.$on('add-cp', this.handleEvent);
+    eventBus.$on('add-tp', this.handleEvent);
     this.loadPostsData()
   },
   methods: {
     handleEvent(){
-      eventBus.$emit('open-modal-add-cp', 'pkl');
+      eventBus.$emit('open-modal-add-tp', 'pkl');
     },
     handleReload(){
       this.loadPostsData()

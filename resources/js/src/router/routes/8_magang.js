@@ -71,9 +71,9 @@ export default [
     },
   },
   {
-    path: '/magang/cp-tp',
-    name: 'magang-cp-tp',
-    component: () => import('@/views/magang/capaian-pembelajaran/Index.vue'),
+    path: '/magang/tujuan-pembelajaran',
+    name: 'magang-tujuan-pembelajaran',
+    component: () => import('@/views/magang/tujuan-pembelajaran/Index.vue'),
     meta: {
       resource: 'Web',
       action: 'read',
@@ -88,7 +88,7 @@ export default [
         },
       ],
       tombol_add: {
-        action: 'add-cp',
+        action: 'add-tp',
         link: '',
         variant: 'primary',
         text: 'Tambah Data'

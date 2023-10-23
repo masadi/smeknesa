@@ -114,33 +114,41 @@ class NilaiController extends Controller
             }
         };
     }
-    public function add_cp(){
-        request()->validate(
+    public function add_cp(Request $request){
+        $request['desk_tp'] = json_decode($request['desk_tp'], true);
+        $request->validate(
             [
                 'mata_pelajaran_id' => 'required',
-                'desk_cp' => 'required',
+                'cp_id' => 'required',
+                'desk_tp.*'=> 'required',
+            ],
+            [
+                'mata_pelajaran_id.required' => 'Mata Pelajaran tidak boleh kosong!',
+                'cp_id.required' => 'Capaian Pembelajaran tidak boleh kosong!',
+                'desk_tp.*.required' => 'Tujuan Pembelajaran tidak boleh kosong!',
+            ]
+        );
+        /*request()->validate(
+            [
+                'mata_pelajaran_id' => 'required',
+                'cp_id' => 'required',
                 'desk_tp.*' => 'required',
             ],
             [
                 'mata_pelajaran_id.required' => 'Mata Pelajaran tidak boleh kosong!',
-                'desk_cp.required' => 'Capaian Pembelajaran tidak boleh kosong!',
+                'cp_id.required' => 'Capaian Pembelajaran tidak boleh kosong!',
                 'desk_tp.*.required' => 'Tujuan Pembelajaran tidak boleh kosong!',
             ]
-        );
-        $cp = Capaian_pembelajaran::create([
-            'mata_pelajaran_id' => request()->mata_pelajaran_id,
-            'deskripsi' => request()->desk_cp,
-            'guru_id' => loggedUser()->guru_id,
-        ]);
-        foreach(array_filter(json_decode(request()->desk_tp)) as $tp){
+        );*/
+        foreach(array_filter($request['desk_tp']) as $tp){
             Tujuan_pembelajaran::create([
-                'cp_id' => $cp->cp_id,
+                'cp_id' => request()->cp_id,
                 'deskripsi' => $tp,
             ]);
         }
         $data = [
             'icon' => 'success',
-            'text' => 'Data CP & TP berhasil disimpan',
+            'text' => 'Data Tujuan Pembelajaran berhasil disimpan',
             'title' => 'Berhasil',
         ];
         return response()->json($data);

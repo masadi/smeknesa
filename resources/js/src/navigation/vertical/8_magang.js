@@ -27,7 +27,7 @@ export default [
             {
                 icon: 'hand-click-icon',
                 title: 'CP & TP',
-                route: 'magang-cp-tp',
+                route: 'magang-tujuan-pembelajaran',
                 resource: 'Magang_Nilai',
                 action: 'read',
               },

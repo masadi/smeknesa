@@ -906,6 +906,10 @@ class ReferensiController extends Controller
         }
         return response()->json($data);
     }
+    public function get_cp(){
+        $data = Capaian_pembelajaran::where('mata_pelajaran_id', request()->mata_pelajaran_id)->orderBy('deskripsi')->get();
+        return response()->json($data);
+    }
     private function dataKajur(){
         return Kajur::select('jurusan_sp_id')->where(function($query){
             $query->where('guru_id', loggedUser()->guru_id);
@@ -913,7 +917,26 @@ class ReferensiController extends Controller
         })->get();
     }
     public function get_group_mapel(){
-        $data = Pembelajaran::where(function($query){
+        $data = Mata_pelajaran::where(function($query){
+            if(request()->data){
+                if(request()->data == 'pkl'){
+                    $query->where('jenis', 'PKL');
+                    $query->whereHas('pembelajaran', function($query){
+                        $query->where('guru_id', request()->guru_id);
+                        $query->where('semester_id', request()->semester_id);
+                    });
+                }
+            } else {
+                $query->where('jenis', 'Umum');
+                $query->whereHas('pembelajaran', function($query){
+                    $query->whereNotNull('kelompok_id');
+                    $query->whereNotNull('no_urut');
+                    $query->where('guru_id', request()->guru_id);
+                    $query->where('semester_id', request()->semester_id);
+                });
+            }
+        })->orderBy('mata_pelajaran_id')->get();
+        /*Pembelajaran::where(function($query){
             if(request()->data){
                 if(request()->data == 'pkl'){
                     $query->whereHas('mata_pelajaran', function($query){
@@ -930,7 +953,7 @@ class ReferensiController extends Controller
             $query->where('guru_id', $this->loggedUser()->guru_id);
             $query->where('semester_id', semester_id());
         })->groupBy('nama_mata_pelajaran')->groupBy('mata_pelajaran_id')
-        ->select('nama_mata_pelajaran', 'mata_pelajaran_id')->orderBy('mata_pelajaran_id')->get();
+        ->select('nama_mata_pelajaran', 'mata_pelajaran_id')->orderBy('mata_pelajaran_id')->get();*/
         return response()->json($data);
     }
     public function get_siswa(){

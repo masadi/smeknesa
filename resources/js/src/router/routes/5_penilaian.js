@@ -1,8 +1,8 @@
 export default [
   {
-    path: '/penilaian/cp-tp',
-    name: 'penilaian-cp-tp',
-    component: () => import('@/views/penilaian/capaian-pembelajaran/Index.vue'),
+    path: '/penilaian/tujuan-pembelajaran',
+    name: 'penilaian-tujuan-pembelajaran',
+    component: () => import('@/views/penilaian/tujuan-pembelajaran/Index.vue'),
     meta: {
       resource: 'Web',
       action: 'read',
@@ -17,7 +17,7 @@ export default [
         },
       ],
       tombol_add: {
-        action: 'add-cp',
+        action: 'add-tp',
         link: '',
         variant: 'primary',
         text: 'Tambah Data'
@@ -274,8 +274,8 @@ export default [
     },
   },
   {
-    path: '/prakerin/cp-tp',
-    name: 'prakerin-cp-tp',
+    path: '/prakerin/tujuan-pembelajaran',
+    name: 'prakerin-tujuan-pembelajaran',
     component: () => import('@/views/penilaian/prakerin/Cp.vue'),
     meta: {
       resource: 'Prakerin',

@@ -124,6 +124,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/get-pembelajaran', [ReferensiController::class, 'get_pembelajaran']);
     Route::post('/add-cp', [ReferensiController::class, 'add_cp']);
     Route::post('/update-cp', [ReferensiController::class, 'update_cp']);
+    Route::post('/get-cp', [ReferensiController::class, 'get_cp']);
   });
   Route::group(['prefix' => 'magang'], function () {
     Route::get('/dudi', [PrakerinController::class, 'dudi']);

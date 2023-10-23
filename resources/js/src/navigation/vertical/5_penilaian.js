@@ -5,8 +5,8 @@ export default [
     children: [
       {
         icon: 'hand-click-icon',
-        title: 'CP & TP',
-        route: 'penilaian-cp-tp',
+        title: 'Tujuan Pembelajaran',
+        route: 'penilaian-tujuan-pembelajaran',
         resource: 'Penilaian',
         action: 'read',
       },
@@ -108,7 +108,7 @@ export default [
       {
         icon: 'hand-click-icon',
         title: 'CP & TP',
-        route: 'prakerin-cp-tp',
+        route: 'prakerin-tujuan-pembelajaran',
         resource: 'Prakerin',
         action: 'read',
       },
