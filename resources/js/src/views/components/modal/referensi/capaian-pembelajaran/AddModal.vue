@@ -15,7 +15,7 @@
           <b-col cols="12">
             <b-form-group label="Mata Pelajaran" label-for="mata_pelajaran_id" label-cols-md="3" :invalid-feedback="feedback.mata_pelajaran_id" :state="state.mata_pelajaran_id">
               <b-overlay :show="loading_mapel" rounded opacity="0.6" spinner-variant="secondary">
-                <v-select id="mata_pelajaran_id" v-model="form.mata_pelajaran_id" :reduce="nama => nama.mata_pelajaran_id" label="alias" :options="data_mapel" placeholder="== Pilih Mata Pelajaran ==" :state="state.mata_pelajaran_id" @input="changeMapel">
+                <v-select id="mata_pelajaran_id" v-model="form.mata_pelajaran_id" :reduce="nama => nama.mata_pelajaran_id" label="nama" :options="data_mapel" placeholder="== Pilih Mata Pelajaran ==" :state="state.mata_pelajaran_id" @input="changeMapel">
                   <template #no-options="{ search, searching, loading }">
                     Tidak ada data untuk ditampilkan
                   </template>

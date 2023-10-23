@@ -36,9 +36,6 @@ class PrakerinController extends Controller
                 $query->orWhereHas('jurusan_sp', function($query){
                     $query->where('nama_jurusan_sp', 'ILIKE', '%' . request()->q . '%');
                 });
-                $query->orWhereHas('kurikulum', function($query){
-                    $query->where('nama_kurikulum', 'ILIKE', '%' . request()->q . '%');
-                });
             });
             $query->orWhereHas('dudi', function($query){
                 $query->where('nama', 'ILIKE', '%' . request()->q . '%');
@@ -331,13 +328,14 @@ class PrakerinController extends Controller
                 $query->orWhereHas('jurusan_sp', function($query){
                     $query->where('nama_jurusan_sp', 'ILIKE', '%' . request()->q . '%');
                 });
-                $query->orWhereHas('kurikulum', function($query){
-                    $query->where('nama_kurikulum', 'ILIKE', '%' . request()->q . '%');
-                });
             });
             $query->orWhereHas('dudi', function($query){
                 $query->where('nama', 'ILIKE', '%' . request()->q . '%');
                 $query->orWhere('pimpinan', 'ILIKE', '%' . request()->q . '%');
+            });
+            $query->orWhereHas('guru', function($query){
+                $query->where('nama', 'ILIKE', '%' . request()->q . '%');
+                $query->orWhere('nik', 'ILIKE', '%' . request()->q . '%');
             });
         })->paginate(request()->per_page);
         return response()->json(['status' => 'success', 'data' => $data]);
