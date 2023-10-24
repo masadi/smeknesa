@@ -24,7 +24,7 @@
       </tr>
       <tr>
         <td>Konsentrasi Keahlian</td>
-        <td>:	{{ $pd->kelas->jurusan_sp->nama_jurusan_sp }}</td>
+        <td>:	{{ $pd->kelas->jurusan_sp->nama_konsentrasi }}</td>
       </tr>
       <tr>
         <td>Tempat PKL</td>

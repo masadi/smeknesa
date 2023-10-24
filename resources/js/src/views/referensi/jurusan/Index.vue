@@ -36,8 +36,14 @@ export default {
       loading: false,
       fields: [
         {
+          key: 'nama_konsentrasi',
+          label: 'Konsentrasi Keahlian',
+          sortable: true,
+          thClass: 'text-center',
+        },
+        {
           key: 'nama_jurusan_sp',
-          label: 'Nama',
+          label: 'Program Keahlian',
           sortable: true,
           thClass: 'text-center',
         },

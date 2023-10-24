@@ -4,8 +4,13 @@
       <b-form ref="form" @submit.stop.prevent="handleSubmit">
         <b-row>
           <b-col cols="12">
-            <b-form-group label="Nama Jurusan" label-for="nama_jurusan_sp" label-cols-md="3" :invalid-feedback="feedback.nama_jurusan_sp" :state="state.nama_jurusan_sp">
-              <b-form-input id="nama_jurusan_sp" v-model="form.nama_jurusan_sp" :state="state.nama_jurusan_sp" placeholder="Nama Jurusan"></b-form-input>
+            <b-form-group label="Konsentrasi Keahlian" label-for="nama_konsentrasi" label-cols-md="3" :invalid-feedback="feedback.nama_konsentrasi" :state="state.nama_konsentrasi">
+              <b-form-input id="nama_konsentrasi" v-model="form.nama_konsentrasi" :state="state.nama_konsentrasi" placeholder="Konsentrasi Keahlian"></b-form-input>
+            </b-form-group>  
+          </b-col>
+          <b-col cols="12">
+            <b-form-group label="Program Keahlian" label-for="nama_jurusan_sp" label-cols-md="3" :invalid-feedback="feedback.nama_jurusan_sp" :state="state.nama_jurusan_sp">
+              <b-form-input id="nama_jurusan_sp" v-model="form.nama_jurusan_sp" :state="state.nama_jurusan_sp" placeholder="Program Keahlian"></b-form-input>
             </b-form-group>  
           </b-col>
           <b-col cols="12">
@@ -56,16 +61,19 @@ export default {
       addModalShow: false,
       loading_form: false,
       form: {
+        nama_konsentrasi: '',
         nama_jurusan_sp: '',
         alias: '',
         guru_id: '',
       },
       feedback: {
+        nama_konsentrasi: '',
         nama_jurusan_sp: '',
         alias: '',
         guru_id: '',
       },
       state: {
+        nama_konsentrasi: null,
         nama_jurusan_sp: null,
         alias: null,
         guru_id: null,
@@ -94,6 +102,7 @@ export default {
       this.resetForm()
     },
     resetForm(){
+      this.form.nama_konsentrasi = ''
       this.form.nama_jurusan_sp = ''
       this.form.alias = ''
       this.form.guru_id = ''
@@ -114,9 +123,11 @@ export default {
         this.loading_form = false
         let getData = response.data
         if(getData.errors){
+          this.state.nama_konsentrasi = (getData.errors.nama_konsentrasi) ? false : null
           this.state.nama_jurusan_sp = (getData.errors.nama_jurusan_sp) ? false : null
           this.state.alias = (getData.errors.alias) ? false : null
           this.state.guru_id = (getData.errors.guru_id) ? false : null
+          this.feedback.nama_konsentrasi = (getData.errors.nama_konsentrasi) ? getData.errors.nama_konsentrasi.join(', ') : ''
           this.feedback.nama_jurusan_sp = (getData.errors.nama_jurusan_sp) ? getData.errors.nama_jurusan_sp.join(', ') : ''
           this.feedback.alias = (getData.errors.alias) ? getData.errors.alias.join(', ') : ''
           this.feedback.guru_id = (getData.errors.guru_id) ? getData.errors.guru_id.join(', ') : ''

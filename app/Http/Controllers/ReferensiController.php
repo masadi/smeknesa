@@ -386,6 +386,7 @@ class ReferensiController extends Controller
                 'sekolah_id' => sekolah_id(),
                 'guru_id' => request()->guru_id,
                 'semester_id' => semester_id(),
+                'nama_konsentrasi' => request()->nama_konsentrasi,
                 'nama_jurusan_sp' => request()->nama_jurusan_sp,
                 'alias' => request()->alias,
             ]);
@@ -1825,6 +1826,7 @@ class ReferensiController extends Controller
             ]);
         }
         $find = Jurusan_sp::find(request()->jurusan_sp_id);
+        $find->nama_konsentrasi = request()->nama_konsentrasi;
         $find->nama_jurusan_sp = request()->nama_jurusan_sp;
         $find->alias = request()->alias;
         $find->guru_id = request()->guru_id;
