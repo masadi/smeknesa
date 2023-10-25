@@ -45,7 +45,7 @@ export default [
                 action: 'read',
                 resource: 'Magang_Absensi',
             },
-            {
+            /*{
                 icon: 'hand-click-icon',
                 title: 'Monitoring',
                 route: 'magang-monitoring',
@@ -58,7 +58,7 @@ export default [
                 route: 'magang-sertifikat',
                 action: 'read',
                 resource: 'Magang_Sertifikat',
-            },
+            },*/
         ]
     },
 ]

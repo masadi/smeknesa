@@ -124,7 +124,7 @@ export default [
   {
     path: '/magang/absensi',
     name: 'magang-absensi',
-    component: () => import('@/views/pages/Blank.vue'),
+    component: () => import('@/views/magang/absensi/Index.vue'),
     meta: {
       resource: 'Magang_Absensi',
       action: 'read',
@@ -138,6 +138,12 @@ export default [
           active: true,
         },
       ],
+      tombol_add: {
+        action: 'add-absensi-pkl',
+        link: '',
+        variant: 'primary',
+        text: 'Tambah Data'
+      },
     },
   },
   {

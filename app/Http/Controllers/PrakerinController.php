@@ -10,6 +10,7 @@ use App\Models\Tujuan_pembelajaran;
 use App\Models\Praktik_kerja_lapangan;
 use App\Models\Pd_pkl;
 use App\Models\Nilai_pkl;
+use App\Models\Absensi_pkl;
 use App\Models\Dudi;
 use App\Models\Rombongan_belajar;
 use App\Models\Peserta_didik;
@@ -57,6 +58,8 @@ class PrakerinController extends Controller
             'data_siswa' => Peserta_didik::orderBy('nama')->withWhereHas('pd_pkl', function($query){
                 $query->where('pkl_id', request()->pkl_id);
             })->with(['nilai_pkl' => function($query){
+                $query->where('pkl_id', request()->pkl_id);
+            }])->with(['absensi_pkl' => function($query){
                 $query->where('pkl_id', request()->pkl_id);
             }])->get(),
             'data_tp' => Tujuan_pembelajaran::whereHas('cp', function($query) use ($pkl){
@@ -386,6 +389,78 @@ class PrakerinController extends Controller
                 });
             })->orderBy('deskripsi')->get(),
         ];
+        return response()->json($data);
+    }
+    public function absensi(){
+        $data = Peserta_didik::withWhereHas('absensi_pkl', function($query){
+            $query->whereHas('pkl', function($query){
+                $query->where('guru_id', request()->guru_id);
+                $query->whereHas('rombongan_belajar', function($query){
+                    $query->where('semester_id', request()->semester_id);
+                });
+            });
+        })->withWhereHas('kelas', function($query){
+            $query->where('rombongan_belajar.semester_id', request()->semester_id);
+        })->orderBy(request()->sortby, request()->sortbydesc)
+        ->when(request()->q, function($query){
+            $query->where('nama', 'ILIKE', '%' . request()->q . '%');
+            $query->orWhereHas('kelas', function($query){
+                $query->where('nama', 'ILIKE', '%' . request()->q . '%');
+                $query->where('rombongan_belajar.semester_id', request()->semester_id);
+            });
+        })->paginate(request()->per_page);
+        return response()->json(['status' => 'success', 'data' => $data]);
+    }
+    public function simpan_absensi(){
+        $insert = 0;
+        foreach(request()->sakit as $key => $sakit){
+            Absensi_pkl::updateOrCreate(
+                [
+                    'peserta_didik_id' => $key,
+                    'pkl_id' => request()->pkl_id,
+                ],
+                [
+                    'sakit' => $sakit,
+                    'izin' => request()->izin[$key],
+                    'alpa' => request()->alpa[$key],
+                ]
+            );
+            $insert++;
+        }
+        if($insert){
+            $data = [
+                'success' => TRUE,
+                'icon' => 'success',
+                'text' => 'Data Absensi Magang berhasil disimpan',
+                'title' => 'Berhasil',
+            ];
+        } else {
+            $data = [
+                'success' => FALSE,
+                'icon' => 'error',
+                'text' => 'Data Absensi Magang gagal disimpan. Silahkan coba beberapa saat lagi!',
+                'title' => 'Gagal',
+            ];
+        }
+        return response()->json($data);
+    }
+    public function hapus_absensi(){
+        $find = Absensi_pkl::find(request()->id);
+        if($find->delete()){
+            $data = [
+                'success' => TRUE,
+                'icon' => 'success',
+                'text' => 'Data Absensi Magang berhasil dihapus',
+                'title' => 'Berhasil',
+            ];
+        } else {
+            $data = [
+                'success' => FALSE,
+                'icon' => 'error',
+                'text' => 'Data Absensi Magang gagal dihapus. Silahkan coba beberapa saat lagi!',
+                'title' => 'Gagal',
+            ];
+        }
         return response()->json($data);
     }
 }

@@ -80,13 +80,13 @@ class GenerateAkses extends Command
             [
                 'role' => 'kajur',
                 'display_name' => 'Ketua Jurusan',
-                'akses' => ['Ref_Sekolah', 'Ref_Mapel', 'Ref_Pd', 'Jadwal', 'Magang_Dudi', 'Magang_Pembimbing', 'Magang_Permohonan', 'Magang_Absensi', 'Magang_Nilai', 'Magang_Sertifikat', 'Tatib_Pelanggaran', 'Tatib_Rekap', 'Tatib_Bukti', 'Tatib_Ortu', 'Tatib_Pernyataan', 'Tatib_Peringatan', 'Tatib_Mundur', 'Kajur'],
+                'akses' => ['Ref_Sekolah', 'Ref_Mapel', 'Ref_Pd', 'Jadwal', 'Magang_Absensi', 'Magang_Nilai', 'Tatib_Pelanggaran', 'Tatib_Rekap', 'Tatib_Bukti', 'Tatib_Ortu', 'Tatib_Pernyataan', 'Tatib_Peringatan', 'Tatib_Mundur', 'Kajur'],
                 'action' => 'read',
             ],
             [
                 'role' => 'wakahumas',
                 'display_name' => 'Waka Humas',
-                'akses' => ['Ref_Mapel', 'Ref_Guru', 'Jadwal', 'Magang_Dudi', 'Magang_Pembimbing', 'Magang_Permohonan', 'Magang_Absensi', 'Magang_Nilai', 'Magang_Sertifikat'],
+                'akses' => ['Ref_Mapel', 'Ref_Guru', 'Jadwal', 'Magang_Absensi', 'Magang_Nilai'],
                 'action' => 'read',
             ],
             [
@@ -122,7 +122,7 @@ class GenerateAkses extends Command
             [
                 'role' => 'pembimbing',
                 'display_name' => 'Pembimbing PKL',
-                'akses' => ['Magang_Absensi', 'Magang_Nilai', 'Magang_Sertifikat'],
+                'akses' => ['Magang_Absensi', 'Magang_Nilai'],
                 'action' => 'read',
             ],
         ];

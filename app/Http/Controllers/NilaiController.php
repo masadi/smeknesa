@@ -120,12 +120,12 @@ class NilaiController extends Controller
             [
                 'mata_pelajaran_id' => 'required',
                 'cp_id' => 'required',
-                'desk_tp.*'=> 'required',
+                //'desk_tp.*'=> 'required',
             ],
             [
                 'mata_pelajaran_id.required' => 'Mata Pelajaran tidak boleh kosong!',
                 'cp_id.required' => 'Capaian Pembelajaran tidak boleh kosong!',
-                'desk_tp.*.required' => 'Tujuan Pembelajaran tidak boleh kosong!',
+                //'desk_tp.*.required' => 'Tujuan Pembelajaran tidak boleh kosong!',
             ]
         );
         /*request()->validate(
