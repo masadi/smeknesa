@@ -1852,8 +1852,13 @@ class ReferensiController extends Controller
     private function update_pd(){
         $validator = Validator::make(request()->all(), 
             [
+                'email' => [
+                    'required',
+                    'email',
+                    Rule::unique('users')->ignore(request()->peserta_didik_id, 'peserta_didik_id'),
+                ],
                 'peserta_didik_id' => ['required'],
-                'nama' => ['required'],
+                /*'nama' => ['required'],
                 'nik' => [Rule::unique('peserta_didik')->ignore(request()->peserta_didik_id, 'peserta_didik_id'),],
                 'tempat_lahir' => ['required'],
                 'tanggal_lahir' => 'required|date',
@@ -1861,11 +1866,6 @@ class ReferensiController extends Controller
                 'alamat_jalan' => ['required'],
                 //'rt' => ['required'],
                 //'rw' => ['required'],
-                'email' => [
-                    'required',
-                    'email',
-                    Rule::unique('users')->ignore(request()->peserta_didik_id, 'peserta_didik_id'),
-                ],
                 //'jenis_kelamin' => ['required'],
                 //'provinsi_id' => ['required'],
                 //'kabupaten_id' => ['required'],
@@ -1878,13 +1878,16 @@ class ReferensiController extends Controller
                 //'nama_ayah' => ['required'],
                 //'nama_ibu' => ['required'],
                 //'kerja_ayah' => ['required'],
-                //'kerja_ibu' => ['required'],
+                //'kerja_ibu' => ['required'],*/
                 'cita' => ['required'],
             ],
             [
                 'peserta_didik_id.required' => 'ID Peserta Didik tidak boleh kosong',
                 'nama.required' => 'Nama Lengkap tidak boleh kosong',
-                'nik.required' => 'NIK tidak boleh kosong',
+                'email.required' => 'Email tidak boleh kosong',
+                'email.email' => 'Email tidak valid',
+                'email.unique' => 'Email telah terdaftar',
+                /*'nik.required' => 'NIK tidak boleh kosong',
                 'nik.unique' => 'NIK terdektsi existing',
                 'tempat_lahir.required' => 'Tempat Lahir tidak boleh kosong',
                 'tanggal_lahir.required' => 'Tanggal Lahir tidak boleh kosong',
@@ -1893,9 +1896,6 @@ class ReferensiController extends Controller
                 'alamat_jalan.required' => 'Alamat tidak boleh kosong',
                 'rt.required' => 'RT tidak boleh kosong',
                 'rw.required' => 'RW tidak boleh kosong',
-                'email.required' => 'Email tidak boleh kosong',
-                'email.email' => 'Email tidak valid',
-                'email.unique' => 'Email telah terdaftar',
                 'jenis_kelamin.required' => 'Jenis Kelamin tidak boleh kosong',
                 'provinsi_id.required' => 'Provinsi tidak boleh kosong',
                 'kabupaten_id.required' => 'Kabupaten/Kota tidak boleh kosong',
@@ -1909,7 +1909,7 @@ class ReferensiController extends Controller
                 'nama_ayah.required' => 'Nama Ayah tidak boleh kosong',
                 'nama_ibu.required' => 'Nama Ibu tidak boleh kosong',
                 'kerja_ayah.required' => 'Pekerjaan Ayah tidak boleh kosong',
-                'kerja_ibu.required' => 'Pekerjaan Ibu tidak boleh kosong',
+                'kerja_ibu.required' => 'Pekerjaan Ibu tidak boleh kosong',*/
                 'cita.required' => 'Cita-cita tidak boleh kosong',
             ]
         );
