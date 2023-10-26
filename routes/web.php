@@ -26,7 +26,7 @@ Route::group(['prefix' => 'cetak'], function () {
     Route::get('/perijinan/{aksi}/{ijin_id}/{user_id}', [CetakController::class, 'perijinan']);
     Route::group(['prefix' => 'sertifikat'], function () {
         Route::get('/ekskul/{peserta_didik_id?}', [CetakController::class, 'ekskul']);
-        Route::get('/pkl/{peserta_didik_id?}', [CetakController::class, 'pkl']);
+        Route::get('/pkl/{peserta_didik_id?}/{pkl_id?}', [CetakController::class, 'pkl']);
     });
 });
 Route::group(['prefix' => 'export'], function () {
