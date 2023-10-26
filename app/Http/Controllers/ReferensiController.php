@@ -1008,7 +1008,7 @@ class ReferensiController extends Controller
             }
             if(request()->data == 'pkl'){
                 $data = [
-                    'pd' => Peserta_didik::whereHas('pd_pkl')->withWhereHas('kelas', function ($query) {
+                    'pd' => Peserta_didik::withWhereHas('pd_pkl')->withWhereHas('kelas', function ($query) {
                         $query->where('rombongan_belajar.semester_id', request()->semester_id);
                     })->withWhereHas('anggota_rombel', function ($query) {
                         $query->whereHas('rombongan_belajar', function($query){
