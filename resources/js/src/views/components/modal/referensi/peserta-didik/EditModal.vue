@@ -325,31 +325,31 @@ export default {
       data.append('data', this.form.data);
       data.append('peserta_didik_id', this.form.peserta_didik_id)
       data.append('nama', this.form.nama);
-      data.append('nik', this.form.nik);
-      data.append('no_induk', this.form.no_induk);
-      data.append('nisn', this.form.nisn);
-      data.append('jenis_kelamin', this.form.jenis_kelamin);
-      data.append('tempat_lahir', this.form.tempat_lahir);
-      data.append('tanggal_lahir', this.form.tanggal_lahir);
-      data.append('agama_id', this.form.agama_id);
-      data.append('alamat_jalan', this.form.alamat_jalan);
-      data.append('rt', this.form.rt);
-      data.append('rw', this.form.rw);
-      data.append('provinsi_id', this.form.provinsi_id);
-      data.append('kabupaten_id', this.form.kabupaten_id);
-      data.append('kecamatan_id', this.form.kecamatan_id);
-      data.append('desa_id', this.form.desa_id);
-      data.append('cita', this.form.cita);
-      data.append('no_hp', this.form.no_hp);
-      data.append('sekolah_asal', this.form.sekolah_asal);
-      data.append('diterima', this.form.diterima);
-      data.append('diterima_kelas', this.form.diterima_kelas);
-      data.append('email', this.form.email);
-      data.append('nama_ayah', this.form.nama_ayah);
-      data.append('nama_ibu', this.form.nama_ibu);
-      data.append('kerja_ayah', this.form.kerja_ayah);
-      data.append('kerja_ibu', this.form.kerja_ibu);
-      data.append('photo', this.form.image);
+      data.append('nik', this.form.nik??'');
+      data.append('no_induk', this.form.no_induk??'');
+      data.append('nisn', this.form.nisn??'');
+      data.append('jenis_kelamin', this.form.jenis_kelamin??'');
+      data.append('tempat_lahir', this.form.tempat_lahir??'');
+      data.append('tanggal_lahir', this.form.tanggal_lahir??'');
+      data.append('agama_id', this.form.agama_id??'');
+      data.append('alamat_jalan', this.form.alamat_jalan??'');
+      data.append('rt', this.form.rt??'');
+      data.append('rw', this.form.rw??'');
+      data.append('provinsi_id', this.form.provinsi_id??'');
+      data.append('kabupaten_id', this.form.kabupaten_id??'');
+      data.append('kecamatan_id', this.form.kecamatan_id??'');
+      data.append('desa_id', this.form.desa_id??'');
+      data.append('cita', this.form.cita??'');
+      data.append('no_hp', this.form.no_hp??'');
+      data.append('sekolah_asal', this.form.sekolah_asal??'');
+      data.append('diterima', this.form.diterima??'');
+      data.append('diterima_kelas', this.form.diterima_kelas??'');
+      data.append('email', this.form.email??'');
+      data.append('nama_ayah', this.form.nama_ayah??'');
+      data.append('nama_ibu', this.form.nama_ibu??'');
+      data.append('kerja_ayah', this.form.kerja_ayah??'');
+      data.append('kerja_ibu', this.form.kerja_ibu??'');
+      data.append('photo', this.form.image??'');
       this.$http.post('/referensi/update-data', data).then(response => {
         this.loading_form = false
         let getData = response.data

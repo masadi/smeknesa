@@ -1951,11 +1951,13 @@ class ReferensiController extends Controller
             $find->photo = basename($photo);
         }*/
         if($find->save()){
-            $user = User::find(request()->user_id);
-            $user->name = request()->nama;
-            $user->email = request()->email;
-            $user->whatsapp = request()->no_hp;
-            $user->save();
+            $user = User::where('peserta_didik_id', request()->peserta_didik_id)->first();
+            if($user){
+                $user->name = request()->nama;
+                $user->email = request()->email;
+                $user->whatsapp = request()->no_hp;
+                $user->save();
+            }
             $data = [
                 'success' => TRUE,
                 'errors' => NULL,
