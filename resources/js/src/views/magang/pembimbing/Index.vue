@@ -38,10 +38,11 @@ export default {
       isBusy: true,
       fields: [
         {
-          key: 'nama',
-          label: 'Judul Magang',
-          sortable: true,
+          key: 'dudi',
+          label: 'DUDI',
+          sortable: false,
           thClass: 'text-center',
+          tdClass: 'text-center'
         },
         {
           key: 'guru',
@@ -50,11 +51,10 @@ export default {
           thClass: 'text-center',
         },
         {
-          key: 'dudi',
-          label: 'DUDI',
-          sortable: false,
+          key: 'instruktur',
+          label: 'Instruktur',
+          sortable: true,
           thClass: 'text-center',
-          tdClass: 'text-center'
         },
         {
           key: 'rombongan_belajar',
