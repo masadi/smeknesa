@@ -39,7 +39,13 @@
           </b-col>
           <b-col cols="12">
             <b-form-group label="Tanggal Lahir*" label-for="tanggal_lahir" label-cols-md="3" :invalid-feedback="feedback.tanggal_lahir" :state="state.tanggal_lahir">
-              <b-form-datepicker v-model="form.tanggal_lahir" show-decade-nav button-variant="outline-secondary" left locale="id" aria-controls="tanggal_lahir" @context="onContext" placeholder="== Pilih Tanggal Lahir ==" :state="state.tanggal_lahir" />
+              <!--b-form-datepicker v-model="form.tanggal_lahir" show-decade-nav button-variant="outline-secondary" left locale="id" aria-controls="tanggal_lahir" @context="onContext" placeholder="== Pilih Tanggal Lahir ==" :state="state.tanggal_lahir" /-->
+              <b-input-group>
+                <b-form-input id="tanggal_lahir" v-model="form.tanggal_lahir" type="text" placeholder="YYYY-MM-DD" autocomplete="off" show-decade-nav></b-form-input>
+                <b-input-group-append>
+                  <b-form-datepicker v-model="form.tanggal_lahir" show-decade-nav button-only right locale="id" aria-controls="tanggal_lahir" @context="onContext"></b-form-datepicker>
+                </b-input-group-append>
+              </b-input-group>
             </b-form-group>
           </b-col>
           <b-col cols="12">
@@ -193,7 +199,7 @@
 </template>
 
 <script>
-import { BOverlay, BForm, BFormInput, BInputGroup, BRow, BCol, BFormGroup, BFormFile, BButton, BFormDatepicker, BImg } from 'bootstrap-vue'
+import { BOverlay, BForm, BFormInput, BInputGroup, BRow, BCol, BFormGroup, BFormFile, BButton, BFormDatepicker, BImg, BInputGroupAppend } from 'bootstrap-vue'
 import eventBus from '@core/utils/eventBus'
 import vSelect from 'vue-select'
 export default {
@@ -209,6 +215,7 @@ export default {
     BButton,
     BFormDatepicker,
     BImg,
+    BInputGroupAppend,
     vSelect,
   },
   data() {
