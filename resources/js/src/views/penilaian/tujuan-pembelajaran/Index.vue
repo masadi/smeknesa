@@ -48,7 +48,7 @@ export default {
         },
         {
           key: 'deskripsi',
-          label: 'Tujuan Pembelajaran',
+          label: 'Capaian Pembelajaran',
           sortable: false,
           thClass: 'text-center',
         },
