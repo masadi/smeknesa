@@ -42,7 +42,6 @@ export default {
           label: 'DUDI',
           sortable: false,
           thClass: 'text-center',
-          tdClass: 'text-center'
         },
         {
           key: 'guru',
