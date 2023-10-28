@@ -40,7 +40,7 @@
       </tr>
       <tr>
         <td>Nama Pembimbing</td>
-        <td>:	{{ $pd->pd_pkl->praktik_kerja_lapangan->guru->nama_lengkap }}</td>
+        <td>:	{{ $pd->pd_pkl->praktik_kerja_lapangan->guru->nama }}</td>
       </tr>
     </tbody>
   </table>
@@ -98,7 +98,7 @@
     <br>
     <br>
     <p>
-    <u>{{$pd->pd_pkl->praktik_kerja_lapangan->guru->nama_lengkap }}</u><br />
+    <u>{{$pd->pd_pkl->praktik_kerja_lapangan->guru->nama }}</u><br />
     NIP. {{$pd->pd_pkl->praktik_kerja_lapangan->guru->nip}}
     </p>
     </td>
