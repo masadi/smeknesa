@@ -55,6 +55,7 @@ class PrakerinController extends Controller
     public function get_pd_pkl(){
         $pkl = Praktik_kerja_lapangan::find(request()->pkl_id);
         $data = [
+            'pkl' => $pkl,
             'data_siswa' => Peserta_didik::orderBy('nama')->withWhereHas('pd_pkl', function($query){
                 $query->where('pkl_id', request()->pkl_id);
             })->with(['nilai_pkl' => function($query){
