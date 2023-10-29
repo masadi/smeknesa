@@ -273,6 +273,7 @@ class PrakerinController extends Controller
         $pkl->dudi_id = request()->dudi_id;
         $pkl->instruktur = request()->instruktur;
         $pkl->rombongan_belajar_id = request()->rombongan_belajar_id;
+        $pkl->pembelajaran_id = request()->pembelajaran_id;
         $pkl->tanggal_mulai = request()->tanggal_mulai;
         $pkl->tanggal_selesai = request()->tanggal_selesai;
         $pkl->save();
