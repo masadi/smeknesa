@@ -63,7 +63,7 @@ class PrakerinController extends Controller
             }])->with(['absensi_pkl' => function($query){
                 $query->where('pkl_id', request()->pkl_id);
             }])->get(),
-            'data_tp' => Tujuan_pembelajaran::whereHas('cp', function($query) use ($pkl){
+            'data_tp' => Tujuan_pembelajaran::withWhereHas('cp', function($query) use ($pkl){
                 $query->withWhereHas('pembelajaran', function($query) use ($pkl){
                     $query->where('rombongan_belajar_id', $pkl->rombongan_belajar_id);
                     $query->where('semester_id', request()->semester_id);
