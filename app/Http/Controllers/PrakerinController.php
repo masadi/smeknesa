@@ -390,6 +390,13 @@ class PrakerinController extends Controller
                     $query->where('jenis', 'PKL');
                 });
             })->where('semester_id', request()->semester_id)->where('tingkat', 12)->orderBy('nama')->get(),
+            'data_pembelajaran' => Pembelajaran::where(function($query){
+                $query->where('guru_id', request()->guru_id);
+                $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
+                $query->whereHas('mata_pelajaran', function($query){
+                    $query->where('jenis', 'PKL');
+                });
+            })->orderBy('mata_pelajaran_id')->get(),
         ];
         return response()->json($data);
     }
