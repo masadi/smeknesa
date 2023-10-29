@@ -132,6 +132,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/get-guru', [PrakerinController::class, 'get_guru']);
     Route::get('/get-dudi', [PrakerinController::class, 'get_dudi']);
     Route::post('/get-rombel', [PrakerinController::class, 'get_rombel']);
+    Route::post('/get-mapel', [PrakerinController::class, 'get_mapel']);
     Route::post('/get-siswa', [PrakerinController::class, 'get_siswa']);
     Route::post('/simpan-data', [PrakerinController::class, 'simpan_data']);
     Route::post('/detil', [PrakerinController::class, 'detil']);

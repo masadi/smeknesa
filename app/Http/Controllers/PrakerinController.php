@@ -13,6 +13,7 @@ use App\Models\Nilai_pkl;
 use App\Models\Absensi_pkl;
 use App\Models\Dudi;
 use App\Models\Rombongan_belajar;
+use App\Models\Pembelajaran;
 use App\Models\Peserta_didik;
 use App\Models\Guru;
 
@@ -155,6 +156,15 @@ class PrakerinController extends Controller
         })->where('semester_id', request()->semester_id)->where('tingkat', 12)->orderBy('nama')->get();
         return response()->json($data);
     }
+    public function get_mapel(){
+        $data = Pembelajaran::where(function($query){
+            $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
+            $query->whereHas('mata_pelajaran', function($query){
+                $query->where('jenis', 'PKL');
+            });
+        })->orderBy('mata_pelajaran_id')->get();
+        return response()->json($data);
+    }
     public function get_siswa(){
         $data = Peserta_didik::orderBy('nama')->whereHas('anggota_rombel', function($query){
             $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
@@ -172,6 +182,7 @@ class PrakerinController extends Controller
                 'tanggal_mulai' => ['required'],
                 'tanggal_selesai' => ['required'],
                 'rombongan_belajar_id' => ['required'],
+                'pembelajaran_id' => ['required'],
             ],
             [
                 'nama.required' => 'Judul Magang tidak boleh kosong',
@@ -181,6 +192,7 @@ class PrakerinController extends Controller
                 'tanggal_mulai.required' => 'Tanggal Mulai tidak boleh kosong',
                 'tanggal_selesai.required' => 'Tanggal Selesai tidak boleh kosong',
                 'rombongan_belajar_id.required' => 'Kelas tidak boleh kosong',
+                'pembelajaran_id.required' => 'Mata Pelajaran tidak boleh kosong',
             ]
         );
         if ($validator->fails()) {
@@ -195,6 +207,7 @@ class PrakerinController extends Controller
             'dudi_id' => request()->dudi_id,
             'instruktur' => request()->instruktur,
             'rombongan_belajar_id' => request()->rombongan_belajar_id,
+            'pembelajaran_id' => request()->pembelajaran_id,
             'tanggal_mulai' => request()->tanggal_mulai,
             'tanggal_selesai' => request()->tanggal_selesai,
             'semester_id' => request()->semester_id,
@@ -234,6 +247,7 @@ class PrakerinController extends Controller
                 'tanggal_mulai' => ['required'],
                 'tanggal_selesai' => ['required'],
                 'rombongan_belajar_id' => ['required'],
+                'pembelajaran_id' => ['required'],
             ],
             [
                 'nama.required' => 'Judul Magang tidak boleh kosong',
@@ -243,6 +257,7 @@ class PrakerinController extends Controller
                 'tanggal_mulai.required' => 'Tanggal Mulai tidak boleh kosong',
                 'tanggal_selesai.required' => 'Tanggal Selesai tidak boleh kosong',
                 'rombongan_belajar_id.required' => 'Kelas tidak boleh kosong',
+                'pembelajaran_id.required' => 'Mata Pelajaran tidak boleh kosong',
             ]
         );
         if ($validator->fails()) {
@@ -389,12 +404,12 @@ class PrakerinController extends Controller
             }])->get(),
             'data_tp' => Tujuan_pembelajaran::whereHas('cp', function($query) use ($pkl){
                 $query->withWhereHas('pembelajaran', function($query) use ($pkl){
-                    $query->where('rombongan_belajar_id', $pkl->rombongan_belajar_id);
-                    $query->where('semester_id', $pkl->semester_id);
+                    $query->where('pembelajaran_id', $pkl->pembelajaran_id);
+                    /*$query->where('semester_id', $pkl->semester_id);
                     $query->where('guru_id', $pkl->guru_id);
                     $query->whereHas('mata_pelajaran', function($query){
                         $query->where('jenis', 'PKL');
-                    });
+                    });*/
                 });
             })->orderBy('deskripsi')->get(),
         ];

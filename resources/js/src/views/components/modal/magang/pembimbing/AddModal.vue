@@ -52,6 +52,17 @@
               </v-select>
             </b-form-group> 
           </b-col>
+          <b-col cols="12">
+            <b-form-group label="Mata Pelajaran" label-for="pembelajaran_id" label-cols-md="3" :invalid-feedback="feedback.pembelajaran_id" :state="state.pembelajaran_id">
+              <b-overlay :show="loading_mapel" rounded opacity="0.6" spinner-small spinner-variant="secondary">
+                <v-select id="pembelajaran_id" v-model="form.pembelajaran_id" :reduce="nama_mata_pelajaran => nama_mata_pelajaran.pembelajaran_id" label="nama_mata_pelajaran" :options="data_pembelajaran" placeholder="== Pilih Kelas ==" :state="state.pembelajaran_id" @input="changeMapel">
+                  <template #no-options="{ search, searching, loading }">
+                    Tidak ada data untuk ditampilkan
+                  </template>
+                </v-select>
+              </b-overlay>
+            </b-form-group> 
+          </b-col>
           <b-col cols="12" v-if="data_siswa.length">
             <b-form-group label="Peserta Magang" label-cols-md="3">
               <b-table-simple>
@@ -115,8 +126,10 @@ export default {
       addModalShow: false,
       loading_form: false,
       loading_dudi: false,
+      loading_mapel: false,
       data_guru: [],
       data_rombel: [],
+      data_pembelajaran: [],
       data_dudi: [],
       data_siswa: [],
       form: {
@@ -124,6 +137,7 @@ export default {
         nama: '',
         guru_id: '',
         rombongan_belajar_id: '',
+        pembelajaran_id: '',
         dudi_id: '',
         instruktur: '',
         tanggal_mulai: '',
@@ -135,6 +149,7 @@ export default {
         nama: '',
         guru_id: '',
         rombongan_belajar_id: '',
+        pembelajaran_id: '',
         dudi_id: '',
         instruktur: '',
         tanggal_mulai: '',
@@ -144,6 +159,7 @@ export default {
         nama: null,
         guru_id: null,
         rombongan_belajar_id: null,
+        pembelajaran_id: null,
         dudi_id: null,
         instruktur: null,
         tanggal_mulai: null,
@@ -217,6 +233,18 @@ export default {
       }
     },
     changeRombel(val){
+      this.data_pembelajaran = []
+      this.form.pembelajaran_id = ''
+      if(val){
+        this.loading_mapel = true
+        this.$http.post('/magang/get-mapel', this.form).then(response => {
+          this.loading_mapel = false
+          this.data_pembelajaran = response.data
+        })
+      }
+    },
+    changeMapel(val){
+      this.data_siswa = []
       if(val){
         this.$http.post('/magang/get-siswa', this.form).then(response => {
           this.data_siswa = response.data
@@ -235,6 +263,7 @@ export default {
       this.form.nama = ''
       this.form.guru_id = ''
       this.form.rombongan_belajar_id = ''
+      this.form.pembelajaran_id = ''
       this.form.dudi_id = ''
       this.form.instruktur = ''
       this.form.tanggal_mulai = ''
@@ -265,6 +294,7 @@ export default {
           this.state.nama = (getData.errors.nama) ? false : null
           this.state.guru_id = (getData.errors.guru_id) ? false : null
           this.state.rombongan_belajar_id = (getData.errors.rombongan_belajar_id) ? false : null
+          this.state.pembelajaran_id = (getData.errors.pembelajaran_id) ? false : null
           this.state.dudi_id = (getData.errors.dudi_id) ? false : null
           this.state.instruktur = (getData.errors.instruktur) ? false : null
           this.state.tanggal_mulai = (getData.errors.tanggal_mulai) ? false : null
@@ -272,6 +302,7 @@ export default {
           this.feedback.nama = (getData.errors.nama) ? getData.errors.nama.join(', ') : ''
           this.feedback.guru_id = (getData.errors.guru_id) ? getData.errors.guru_id.join(', ') : ''
           this.feedback.rombongan_belajar_id = (getData.errors.rombongan_belajar_id) ? getData.errors.rombongan_belajar_id.join(', ') : ''
+          this.feedback.pembelajaran_id = (getData.errors.pembelajaran_id) ? getData.errors.pembelajaran_id.join(', ') : ''
           this.feedback.dudi_id = (getData.errors.dudi_id) ? getData.errors.dudi_id.join(', ') : ''
           this.feedback.instruktur = (getData.errors.instruktur) ? getData.errors.instruktur.join(', ') : ''
           this.feedback.tanggal_mulai = (getData.errors.tanggal_mulai) ? getData.errors.tanggal_mulai.join(', ') : ''
