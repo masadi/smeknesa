@@ -116,6 +116,14 @@ class PrakerinController extends Controller
         ->paginate(request()->per_page);
         return response()->json(['status' => 'success', 'data' => $data, 'semester_id' => semester_id()]);
     }
+    private function kondisiCp(){
+        return function($query){
+            $query->whereHas('pembelajaran', function($query){
+                $query->where('semester_id', semester_id());
+                $query->where('guru_id', loggedUser()->guru_id);
+            });
+        };
+    }
     public function dudi(){
         $data = Dudi::orderBy(request()->sortby, request()->sortbydesc)
         ->when(request()->q, function($query){
@@ -458,6 +466,25 @@ class PrakerinController extends Controller
                 'success' => FALSE,
                 'icon' => 'error',
                 'text' => 'Data Absensi Magang gagal dihapus. Silahkan coba beberapa saat lagi!',
+                'title' => 'Gagal',
+            ];
+        }
+        return response()->json($data);
+    }
+    public function hapus_data(){
+        $find = Praktik_kerja_lapangan::find(request()->id);
+        if($find->delete()){
+            $data = [
+                'success' => TRUE,
+                'icon' => 'success',
+                'text' => 'Data Magang berhasil dihapus',
+                'title' => 'Berhasil',
+            ];
+        } else {
+            $data = [
+                'success' => FALSE,
+                'icon' => 'error',
+                'text' => 'Data Magang gagal dihapus. Silahkan coba beberapa saat lagi!',
                 'title' => 'Gagal',
             ];
         }

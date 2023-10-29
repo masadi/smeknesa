@@ -145,6 +145,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/absensi', [PrakerinController::class, 'absensi']);
     Route::post('/simpan-absensi', [PrakerinController::class, 'simpan_absensi']);
     Route::post('/hapus-absensi', [PrakerinController::class, 'hapus_absensi']);
+    Route::post('/hapus-data', [PrakerinController::class, 'hapus_data']);
     //Route::post('/update-cp', [NilaiController::class, 'update_cp']);
     //Route::post('/update-tp', [NilaiController::class, 'update_tp']);
   });
