@@ -587,6 +587,7 @@ class ReferensiController extends Controller
                 'sekolah_id' => sekolah_id(),
                 'nama' => request()->nama,
                 'pimpinan' => request()->pimpinan,
+                'nip_pimpinan' => request()->nip_pimpinan,
                 'nama_bidang_usaha' => request()->nama_bidang_usaha,
                 'alamat_jalan' => request()->alamat_jalan,
             ]);
@@ -1730,6 +1731,7 @@ class ReferensiController extends Controller
         $data = Dudi::find(request()->dudi_id);
         $data->nama = request()->nama;
         $data->pimpinan = request()->pimpinan;
+        $data->nip_pimpinan = request()->nip_pimpinan;
         $data->nama_bidang_usaha = request()->nama_bidang_usaha;
         $data->alamat_jalan = request()->alamat_jalan;
         if($data->save()){

@@ -14,6 +14,11 @@
             </b-form-group>  
           </b-col>
           <b-col cols="12">
+            <b-form-group label="NIP Pimpinan" label-for="nip_pimpinan" label-cols-md="3" :invalid-feedback="feedback.nip_pimpinan" :state="state.nip_pimpinan">
+              <b-form-input id="nip_pimpinan" v-model="form.nip_pimpinan" :state="state.nip_pimpinan" placeholder="NIP Pimpinan"></b-form-input>
+            </b-form-group>  
+          </b-col>
+          <b-col cols="12">
             <b-form-group label="Nama Bidang Usaha" label-for="nama_bidang_usaha" label-cols-md="3" :invalid-feedback="feedback.nama_bidang_usaha" :state="state.nama_bidang_usaha">
               <b-form-input id="nama_bidang_usaha" v-model="form.nama_bidang_usaha" :state="state.nama_bidang_usaha" placeholder="Nama Nama Bidang Usaha"></b-form-input>
             </b-form-group>  
@@ -60,18 +65,21 @@ export default {
         data: 'dudi',
         nama: '',
         pimpinan: '',
+        nip_pimpinan: '',
         nama_bidang_usaha: '',
         alamat_jalan: '',
       },
       feedback: {
         nama: '',
         pimpinan: '',
+        nip_pimpinan: '',
         nama_bidang_usaha: '',
         alamat_jalan: ''
       },
       state: {
         nama: null,
         pimpinan: null,
+        nip_pimpinan: null,
         nama_bidang_usaha: null,
         alamat_jalan: null,
       },
@@ -95,6 +103,7 @@ export default {
     resetForm(){
       this.form.nama = ''
       this.form.pimpinan = ''
+      this.form.nip_pimpinan = ''
       this.form.nama_bidang_usaha = ''
       this.form.alamat_jalan = ''
       this.feedback.nama = ''

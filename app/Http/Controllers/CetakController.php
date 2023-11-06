@@ -389,14 +389,19 @@ class CetakController extends Controller
 				$query->where('pkl_id', request()->route('pkl_id'));
 			}
 		])->find(request()->route('peserta_didik_id'));
+        $tanggal_rapor = get_setting('tanggal_rapor', semester_id(), sekolah_id());
+        if($tanggal_rapor) {
+            $tanggal_rapor = Carbon::parse($tanggal_rapor)->translatedFormat('d F Y');
+        }
         $data = [
         	'pd' => $pd,
+            'tanggal_rapor' => $tanggal_rapor,
         ];
 		$pdf = PDF::loadView('cetak.rapor-pkl', $data);
         $pdf->getMpdf()->defaultfooterfontsize=7;
 		$pdf->getMpdf()->defaultfooterline=1;
 		$pdf->getMpdf()->SetFooter($pd->nama.' - '. $pd->kelas->nama .' |{PAGENO}|Dicetak dari '.config('app.name').' v.'.get_setting('app_version'));
-        return $pdf->stream('document.pdf');
-        dd(request()->route('peserta_didik_id'));
+        $general_title = $pd->nama.' - '.$pd->kelas->nama;
+        return $pdf->stream($general_title.'.pdf');
     }
 }
