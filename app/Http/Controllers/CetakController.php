@@ -389,10 +389,8 @@ class CetakController extends Controller
 				$query->where('pkl_id', request()->route('pkl_id'));
 			}
 		])->find(request()->route('peserta_didik_id'));
-        $tanggal_rapor = get_setting('tanggal_rapor', semester_id(), sekolah_id());
-        if($tanggal_rapor) {
-            $tanggal_rapor = Carbon::parse($tanggal_rapor)->translatedFormat('d F Y');
-        }
+        $semester = Semester::find(semester_id());
+        $tanggal_rapor = Carbon::parse($semester->tanggal_cetak)->translatedFormat('d F Y');
         $data = [
         	'pd' => $pd,
             'tanggal_rapor' => $tanggal_rapor,
