@@ -103,7 +103,7 @@
     </p>
     </td>
       <td style="width:20%"></td>
-      <td style="width:40%"><p>{{str_replace('KABUPATEN ','',$pd->sekolah->kabupaten->name)}}, {{$pd->pd_pkl->praktik_kerja_lapangan->tgl_selesai}}<br>Pembimbing Dunia Kerja</p><br>
+      <td style="width:40%"><p>{{str_replace('KABUPATEN ','',$pd->sekolah->kabupaten->name)}}, {{$tanggal_rapor??$pd->pd_pkl->praktik_kerja_lapangan->tgl_selesai}}<br>Pembimbing Dunia Kerja</p><br>
     <br>
     <br>
     <br>
