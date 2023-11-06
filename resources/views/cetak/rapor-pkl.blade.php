@@ -112,7 +112,7 @@
       <p>
       <u>{{$pd->pd_pkl->praktik_kerja_lapangan->dudi->pimpinan}}</u>
       <br>
-      NIP. {{$pd->pd_pkl->praktik_kerja_lapangan->dudi->nip_pimpinan}}
+      {{$pd->pd_pkl->praktik_kerja_lapangan->dudi->nip_pimpinan}}
       </p>
     </td>
     </tr>
