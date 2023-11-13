@@ -2338,15 +2338,11 @@ class ReferensiController extends Controller
             $query->where('tingkat', request()->tingkat);
         })->get();
         foreach($pembelajaran as $mapel){
-            $insert = Capaian_pembelajaran::firstOrCreate(
-                [
-                    'guru_id' => $mapel->guru_id,
-                    'mata_pelajaran_id' => request()->mata_pelajaran_id,
-                ],
-                [
-                    'deskripsi' => request()->deskripsi,
-                ]
-            );
+            $insert = Capaian_pembelajaran::firstOrCreate([
+                'guru_id' => $mapel->guru_id,
+                'mata_pelajaran_id' => request()->mata_pelajaran_id,
+                'deskripsi' => request()->deskripsi,
+            ]);
         }
         if($insert){
             $data = [
