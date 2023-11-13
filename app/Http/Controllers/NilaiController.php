@@ -62,7 +62,9 @@ class NilaiController extends Controller
         };
     }
     public function list_cp(){
-        $data = Capaian_pembelajaran::withCount(['tp'])->withWhereHas('pembelajaran', function($query){
+        $data = Capaian_pembelajaran::where(function($query){
+            $query->where('guru_id', loggedUser()->guru_id);
+        })->withCount(['tp'])->withWhereHas('pembelajaran', function($query){
             $query->whereHas('mata_pelajaran', function($query){
                 $query->where('jenis', 'Umum');
             });
