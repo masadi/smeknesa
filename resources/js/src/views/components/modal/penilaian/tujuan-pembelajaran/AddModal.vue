@@ -106,15 +106,9 @@ export default {
       this.resetForm()
     },
     resetForm(){
-      this.form = {
-        desk_tp: []
-      }
-      this.feedback = {
-        desk_tp: {}
-      }
-      this.state = {
-        desk_tp: {}
-      }
+      this.form.desk_tp = []
+      this.feedback.desk_tp = {}
+      this.state.desk_tp = {}
     },
     resetTp(){
       for (let i = 1; i < 5; i++) {
