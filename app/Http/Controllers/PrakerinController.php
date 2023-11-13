@@ -79,7 +79,9 @@ class PrakerinController extends Controller
         return response()->json($data);
     }
     public function list_cp(){
-        $data = Capaian_pembelajaran::withCount(['tp'])->withWhereHas('pembelajaran', function($query){
+        $data = Capaian_pembelajaran::where(function($query){
+            $query->where('guru_id', loggedUser()->guru_id);
+        })->withCount(['tp'])->withWhereHas('pembelajaran', function($query){
             $query->where('semester_id', semester_id());
             $query->where('guru_id', loggedUser()->guru_id);
             $query->whereHas('mata_pelajaran', function($query){
