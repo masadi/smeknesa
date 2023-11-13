@@ -911,7 +911,10 @@ class ReferensiController extends Controller
         return response()->json($data);
     }
     public function get_cp(){
-        $data = Capaian_pembelajaran::where('mata_pelajaran_id', request()->mata_pelajaran_id)->orderBy('deskripsi')->get();
+        $data = Capaian_pembelajaran::where(function($query){
+            $query->where('mata_pelajaran_id', request()->mata_pelajaran_id);
+            $query->where('guru_id', request()->guru_id);
+        })->orderBy('deskripsi')->get();
         return response()->json($data);
     }
     private function dataKajur(){
