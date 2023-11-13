@@ -19,14 +19,11 @@
             <strong>Loading...</strong>
           </div>
         </template>
-        <template v-slot:cell(pembelajaran)="row">
-          {{row.item.pembelajaran.nama_mata_pelajaran}}
+        <template v-slot:cell(mata_pelajaran)="row">
+          {{row.item.mata_pelajaran.nama}}
         </template>
-        <template v-slot:cell(mapel_tingkat)="row">
-          {{getJurusan(row.item.mapel_tingkat)}}
-        </template>
-        <template v-slot:cell(tingkat)="row">
-          {{getTingkat(row.item.mapel_tingkat)}}
+        <template v-slot:cell(guru)="row">
+          {{row.item.guru.nama}}
         </template>
         <template v-slot:cell(actions)="row">
           <b-dropdown id="dropdown-dropleft" dropleft text="Detil" variant="primary" size="sm" v-if="hasRole('administrator')">
@@ -114,13 +111,6 @@ export default {
   methods: {
     uniqueChars(arr){
       return [...new Set(arr)];
-    },
-    getJurusan(array){
-      var set_data_jurusan = [];
-      array.forEach(element => {
-        set_data_jurusan.push(element.jurusan_sp.alias)
-      });
-      return this.uniqueChars(set_data_jurusan).join(', ')
     },
     getTingkat(array){
       var set_data_tingkat = [];

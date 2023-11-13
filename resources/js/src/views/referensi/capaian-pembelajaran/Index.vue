@@ -35,8 +35,14 @@ export default {
       loading: true,
       fields: [
         {
-          key: 'pembelajaran',
+          key: 'mata_pelajaran',
           label: 'Mata Pelajaran',
+          sortable: true,
+          thClass: 'text-center',
+        },
+        {
+          key: 'guru',
+          label: 'Guru Mapel',
           sortable: true,
           thClass: 'text-center',
         },

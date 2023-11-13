@@ -2292,14 +2292,17 @@ class ReferensiController extends Controller
         return response()->json(['status' => 'success', 'data' => $data, 'semester_id' => semester_id()]);
     }
     public function capaian_pembelajaran(){
-        $data = Capaian_pembelajaran::withWhereHas('pembelajaran', function($query){
-            $query->where('semester_id', request()->semester_id);
+        $data = Capaian_pembelajaran::with(['mata_pelajaran'])->withWhereHas('guru', function($query){
+            $query->whereHas('pembelajaran', function($query){
+                $query->where('semester_id', request()->semester_id);
+            });
         })->withCount('tp')->orderBy(request()->sortby, request()->sortbydesc)
         ->when(request()->q, function($query) {
             $query->where('deskripsi', 'ilike', '%'.request()->q.'%');
-            $query->orWhereHas('pembelajaran', function($query){
-                $query->where('semester_id', request()->semester_id);
-                $query->where('nama_mata_pelajaran', 'ilike', '%'.request()->q.'%');
+            $query->orWhereHas('mata_pelajaran', function($query){
+                //$query->where('semester_id', request()->semester_id);
+                //$query->where('nama_mata_pelajaran', 'ilike', '%'.request()->q.'%');
+                $query->where('nama', 'ilike', '%'.request()->q.'%');
             });
         })
         ->paginate(request()->per_page);

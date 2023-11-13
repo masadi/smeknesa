@@ -19,6 +19,22 @@ class Capaian_pembelajaran extends Model
 	{
 		return $this->belongsTo(Pembelajaran::class, 'mata_pelajaran_id', 'mata_pelajaran_id');
 	}
+	public function mata_pelajaran()
+	{
+		return $this->belongsTo(Mata_pelajaran::class, 'mata_pelajaran_id', 'mata_pelajaran_id');
+	}
+	public function guru()
+	{
+		return $this->belongsTo(Guru::class, 'guru_id', 'guru_id');
+		return $this->hasOneThrough(
+            Guru::class,
+			Pembelajaran::class,
+			'mata_pelajaran_id',
+			'guru_id',
+			'mata_pelajaran_id',
+			'guru_id'
+        );
+	}
 	public function tp()
 	{
 		return $this->hasMany(Tujuan_pembelajaran::class, 'cp_id', 'cp_id');
