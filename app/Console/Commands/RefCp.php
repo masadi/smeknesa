@@ -28,10 +28,15 @@ class RefCp extends Command
     public function handle()
     {
         $data = Capaian_pembelajaran::doesntHave('nilai_tp')->orderBy('mata_pelajaran_id')->get();
-        $duplicates = $data->unique('deskripsi');
+        /*$duplicates = $data->unique('deskripsi');
         dump($duplicates->count());
         $cp_id = [];
-        foreach($duplicates as $ganda){
+        */
+        $cp_id = [];
+        $uniqueCollection = $data->unique(function ($item) {
+            return $item['guru_id'].$item['deskripsi'];
+        });
+        foreach($uniqueCollection as $ganda){
             $cp_id[] = $ganda->cp_id;
         }
         if($cp_id){
