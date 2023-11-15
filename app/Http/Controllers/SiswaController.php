@@ -58,10 +58,7 @@ class SiswaController extends Controller
                 $join->on('pembelajaran.pembelajaran_id', '=', 'nilai.pembelajaran_id');
                 $join->on('nilai.angka', '<', 'pembelajaran.kktp');
             })->orderBy('mata_pelajaran_id')->get();
-            $data = [];
-            foreach($pembelajaran as $mapel){
-                $data[$mapel->pembelajaran_id] = $mapel;
-            }
+            $data = $pembelajaran->unique('pembelajaran_id');
         }
         if(request()->aksi == 'presensi'){
             $semester = Semester::find(request()->semester_id);
