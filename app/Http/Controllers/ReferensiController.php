@@ -35,6 +35,7 @@ use App\Models\Ijin;
 use App\Models\Dudi;
 use App\Models\Capaian_pembelajaran;
 use App\Models\Tujuan_pembelajaran;
+use App\Models\Kajur;
 use Carbon\Carbon;
 use Indonesia;
 
@@ -836,13 +837,16 @@ class ReferensiController extends Controller
             }
             if(request()->nilai){
                 if(!$this->loggedUser()->hasRole('administrator', periode_aktif())){
-                    if($this->loggedUser()->hasRole('kajur', periode_aktif())){
+                    $query->whereHas('pembelajaran', function($query){
+                        $query->where('guru_id', $this->loggedUser()->guru_id);
+                    });
+                    /*if($this->loggedUser()->hasRole('kajur', periode_aktif())){
                         $query->whereIn('jurusan_sp_id', $this->dataKajur());
                     } else {
                         $query->whereHas('pembelajaran', function($query){
                             $query->where('guru_id', $this->loggedUser()->guru_id);
                         });
-                    }
+                    }*/
                 }
             }
             if(request()->aksi){
