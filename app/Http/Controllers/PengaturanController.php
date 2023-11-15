@@ -37,17 +37,21 @@ class PengaturanController extends Controller
         Setting::where('key', 'app_version')->update(['value' => request()->app_version]);
         Setting::where('key', 'semester_id')->update(['value' => request()->semester_id]);
         Setting::where('key', 'periode_aktif')->update(['value' => $semester->nama]);
-        Setting::updateOrCreate(
-            ['key' => 'tanggal_whatsapp'],
-            ['value' => request()->tanggal_whatsapp]
-        );
-        Setting::updateOrCreate(
-            ['key' => 'tanggal_penilaian'],
-            [
-                'semester_id' => request()->semester_id,
-                'value' => request()->tanggal_penilaian,
-            ]
-        );
+        if(request()->tanggal_whatsapp){
+            Setting::updateOrCreate(
+                ['key' => 'tanggal_whatsapp'],
+                ['value' => request()->tanggal_whatsapp]
+            );
+        }
+        if(request()->tanggal_penilaian){
+            Setting::updateOrCreate(
+                ['key' => 'tanggal_penilaian'],
+                [
+                    'semester_id' => request()->semester_id,
+                    'value' => request()->tanggal_penilaian,
+                ]
+            );
+        }
         $data = [
             'icon' => 'success',
             'text' => 'Pengaturan umum berhasil disimpan',
