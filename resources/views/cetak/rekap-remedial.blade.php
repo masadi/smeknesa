@@ -40,20 +40,22 @@
     <tbody>
       @foreach ($pd->kelas->pembelajaran as $item)
       <tr>
-        <td class="text-center" rowspan="{{$item->nilai->count()}}">{{$loop->iteration}}</td>
-        <td rowspan="{{$item->nilai->count()}}">{{$item->nama_mata_pelajaran}}</td>
+        <td class="text-center" rowspan="{{$item->nilai->count() + 1}}">{{$loop->iteration}}</td>
+        <td rowspan="{{$item->nilai->count() + 1}}">{{$item->nama_mata_pelajaran}}</td>
         @foreach ($item->nilai as $nilai)
-        <td>{{$nilai->tp->deskripsi}}</td>
+        <tr>
+        <td>{{($nilai->tp) ? $nilai->tp->deskripsi : '-'}}</td>
         <td class="text-center">{{$nilai->angka}}</td>
         <td></td>
         <td></td>
+        </tr>
         @endforeach
       </tr>
       @endforeach
     </tbody>
   </table>
   <p>Batas terakhir pengumpulan kertas remedial ini Tanggal {{get_setting('tanggal_remedial', $pd->kelas->semester->semester_id)}}</p>
-  <table class="table table-bordered">
+  <table class="table">
     <tr>
       <td colspan="2" class="text-right">Sampang, {{now()->translatedFormat('j F Y')}}</td>
     </tr>

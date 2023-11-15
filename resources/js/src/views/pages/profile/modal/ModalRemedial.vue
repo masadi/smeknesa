@@ -1,6 +1,7 @@
 <template>
   <b-modal v-model="modalShow" title="Mapel Remedial" ok-only ok-title="Tutup" ok-variant="secondary" button-size="sm" size="lg">
     <template v-if="data.data && data.data.length">
+      <b-button squared block variant="success" class="mb-2" @click="unduhRemedial">Unduh Formulir Remedial</b-button>
       <b-table-simple bordered striped v-if="data.data">
         <b-thead>
           <b-tr>
@@ -34,6 +35,7 @@ import {
   BTd,
   BTh,
   BAlert,
+  BButton,
 } from 'bootstrap-vue'
 import eventBus from '@core/utils/eventBus'
 export default {
@@ -45,6 +47,7 @@ export default {
     BTd,
     BTh,
     BAlert,
+    BButton,
   },
   props: {
     data: {
@@ -64,6 +67,10 @@ export default {
     handleEvent(){
       this.modalShow = true
     },
+    unduhRemedial(){
+      console.log(this.user);
+      window.open(`/cetak/rekap-remedial/${this.user.peserta_didik_id}`, '_blank');
+    }
   },
 }
 </script>
