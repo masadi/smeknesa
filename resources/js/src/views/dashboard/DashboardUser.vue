@@ -71,6 +71,7 @@
                   <b-tr>
                     <b-th class="text-center">Kelas</b-th>
                     <b-th class="text-center">Mata Pelajaran</b-th>
+                    <b-th class="text-center">KKTP</b-th>
                     <b-th class="text-center">Wali Kelas</b-th>
                     <b-th class="text-center">Jml Siswa</b-th>
                   </b-tr>
@@ -80,6 +81,7 @@
                     <b-tr v-for="pembelajaran in data_pembelajaran" :key="pembelajaran.pembelajaran_id">
                       <b-td class="text-center">{{ pembelajaran.rombongan_belajar.nama }}</b-td>
                       <b-td>{{ pembelajaran.nama_mata_pelajaran }}</b-td>
+                      <b-td class="text-center">{{ pembelajaran.kktp }}</b-td>
                       <b-td>{{ pembelajaran.rombongan_belajar.wali_kelas.nama }}</b-td>
                       <b-td class="text-center">{{ pembelajaran.rombongan_belajar.anggota_rombel_count }}</b-td>
                     </b-tr>
