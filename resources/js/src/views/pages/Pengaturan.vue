@@ -26,9 +26,9 @@
                 <b-form-group label="Batas Waktu Penilaian" label-for="tanggal_penilaian">
                   <b-form-datepicker v-model="form.tanggal_penilaian" show-decade-nav button-variant="outline-secondary" left locale="id" aria-controls="tanggal_penilaian" @context="onContext" placeholder="== Pilih Batas Waktu Penilaian ==" />
                 </b-form-group>
-                <b-form-group label="Tanggal Tampil Tombol Whatsapp" label-for="tanggal_whatsapp" :invalid-feedback="feedback.tanggal_whatsapp" :state="state.tanggal_whatsapp">
+                <!--b-form-group label="Tanggal Tampil Tombol Whatsapp" label-for="tanggal_whatsapp" :invalid-feedback="feedback.tanggal_whatsapp" :state="state.tanggal_whatsapp">
                   <b-form-input v-model="form.tanggal_whatsapp" placeholder="Tanggal Tampil Tombol Whatsapp"></b-form-input>
-                </b-form-group>
+                </b-form-group-->
               </b-col>
             </b-row>
             <b-row>
