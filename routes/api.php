@@ -187,6 +187,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/get-siswa-ektra', [EkstraController::class, 'get_siswa_ektra']);
     Route::post('/add-nilai-ektra', [EkstraController::class, 'add_nilai_ektra']);
     Route::post('/add-absen-ektra', [EkstraController::class, 'add_absen_ektra']);
+    Route::post('/hapus-penilaian', [NilaiController::class, 'hapus_penilaian']);
   });
   Route::group(['prefix' => 'modul'], function () {
     Route::get('/', [ModulController::class, 'index']);

@@ -80,7 +80,7 @@
                     <b-th class="text-center" :colspan="data_tp.length" v-if="data_tp.length">Tujuan Pembelajaran</b-th>
                     <b-th class="text-center" :colspan="jumlah_form" v-if="jumlah_form">Nama Asesmen</b-th>
                     <b-th class="text-center" style="width: 3rem; vertical-align:middle;" rowspan="2" v-if="jumlah_form">
-                      <b-button size="sm" @click="addForm" variant="success"><plus-icon size="12" /></b-button>
+                      <b-button size="sm" @click="addForm" variant="success"><plus-icon size="16" /></b-button>
                     </b-th>
                   </b-tr>
                   <b-tr>
@@ -89,7 +89,17 @@
                     </template>
                     <template v-for="index in jumlah_form" v-if="jumlah_form">
                       <b-th class="text-center">
-                        <b-form-input v-model="form.nama_asesmen[index]" :placeholder="`Nama Asesmen (${index})`"></b-form-input>
+                        <template v-if="form.nama_asesmen[index]">
+                          <b-input-group>
+                            <b-form-input v-model="form.nama_asesmen[index]" :placeholder="`Nama Asesmen (${index})`"></b-form-input>
+                            <b-input-group-append>
+                              <b-button @click="removeForm(index)" variant="danger"><trash-icon size="16" /></b-button>
+                            </b-input-group-append>
+                          </b-input-group>
+                        </template>
+                        <template v-else>
+                          <b-form-input v-model="form.nama_asesmen[index]" :placeholder="`Nama Asesmen (${index})`"></b-form-input>
+                        </template>
                       </b-th>
                     </template>
                   </b-tr>
@@ -133,7 +143,7 @@
 </template>
 
 <script>
-import { BOverlay, BForm, BFormGroup, BFormInput, BRow, BCol, BFormTextarea, BButton, BTableSimple, BThead, BTbody, BTr, BTh, BTd } from 'bootstrap-vue'
+import { BOverlay, BForm, BFormGroup, BFormInput, BInputGroup, BInputGroupAppend, BRow, BCol, BFormTextarea, BButton, BTableSimple, BThead, BTbody, BTr, BTh, BTd } from 'bootstrap-vue'
 import MediaSiswa from './../../../MediaSiswa.vue'
 import AppTimeline from '@core/components/app-timeline/AppTimeline.vue'
 import AppTimelineItem from '@core/components/app-timeline/AppTimelineItem.vue'
@@ -145,6 +155,8 @@ export default {
     BForm,
     BFormGroup,
     BFormInput,
+    BInputGroup, 
+    BInputGroupAppend,
     BRow,
     BCol,
     BFormTextarea,
@@ -219,6 +231,7 @@ export default {
         jenis_id: null,
         cp_id: null,
       },
+      data_penilaian: [],
     }
   },
   created() {
@@ -256,6 +269,7 @@ export default {
       this.state.pembelajaran_id = null
       this.state.jenis_id = null
       this.state.cp_id = null
+      this.data_penilaian = []
     },
     changeTingkat(val){
       this.loading_kelas = true
@@ -292,6 +306,7 @@ export default {
         this.data_tp = getData.data_tp
         var _this = this
         if(this.form.jenis_id !== 2){
+          this.data_penilaian = getData.penilaian
           if(getData.penilaian.length){
             this.jumlah_form = getData.penilaian.length
             this.data_siswa.forEach(item => {
@@ -377,7 +392,45 @@ export default {
     },
     addForm(){
       this.jumlah_form = this.jumlah_form + 1
-    }
+    },
+    removeForm(index){
+      var urut = index - 1;
+      var penilaian = this.data_penilaian[urut];
+      this.$swal({
+        title: 'Apakah Anda yakin?',
+        text: 'Tindakan ini tidak dapat dikembalikan!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yakin!',
+        customClass: {
+          confirmButton: 'btn btn-primary',
+          cancelButton: 'btn btn-outline-danger ml-1',
+        },
+        buttonsStyling: false,
+        allowOutsideClick: () => false,
+      }).then(result => {
+        if (result.value) {
+          if(penilaian){
+            this.$http.post('/nilai/hapus-penilaian', {
+              penilaian_id: penilaian.penilaian_id
+            }).then(response => {
+              let getData = response.data
+              this.$swal({
+                icon: getData.icon,
+                title: getData.title,
+                text: getData.text,
+                customClass: {
+                  confirmButton: 'btn btn-success',
+                },
+              }).then(result => {
+                this.$emit('reload')
+                this.hideModal()
+              })
+            });
+          }
+        }
+      });
+    },
   },
 }
 </script>

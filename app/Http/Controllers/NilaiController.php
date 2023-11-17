@@ -810,4 +810,29 @@ class NilaiController extends Controller
         })->orderBy('nama')->get();
         return response()->json(['pd' => $data, 'request' => request()->all()]);
     }
+    public function hapus_penilaian(){
+        $find = Penilaian::find(request()->penilaian_id);
+        if($find){
+            if($find->delete()){
+                $data = [
+                    'icon' => 'success',
+                    'text' => 'Penilaian berhasil dihapus',
+                    'title' => 'Berhasil',
+                ];
+            } else {
+                $data = [
+                    'icon' => 'error',
+                    'text' => 'Penilaian gagal dihapus. Silahkan coba beberapa saat lagi!',
+                    'title' => 'Gagal',
+                ];
+            }
+        } else {
+            $data = [
+                'icon' => 'error',
+                'text' => 'Penilaian tidak ditemukan. Silahkan coba beberapa saat lagi!',
+                'title' => 'Gagal',
+            ];
+        }
+        return response()->json($data);
+    }
 }
