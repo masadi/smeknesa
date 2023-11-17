@@ -11,7 +11,9 @@
         <datatable :isBusy="isBusy" :loading="loading" :items="items" :fields="fields" :meta="meta" :data_jurusan="data_jurusan" :data_rombel="data_rombel" @per_page="handlePerPage" @pagination="handlePagination" @search="handleSearch" @sort="handleSort" @aksi="handleAksi" @tingkat="handleTingkat" @jurusan="handleJurusan" @kelas="handleKelas" />
       </div>
     </b-card-body>
-    <add-modal @reload="handleReload"></add-modal>
+    <add-modal @reload="handleReload" @loading="handleLoading"></add-modal>
+    <edit-modal @reload="handleReload" @loading="handleLoading"></edit-modal>
+    <detil-modal @reload="handleReload" @loading="handleLoading"></detil-modal>
   </b-card>
 </template>
 
@@ -20,6 +22,8 @@ import moment from 'moment'
 import { BCard, BCardBody, BSpinner, BAlert } from 'bootstrap-vue'
 import Datatable from './Datatable.vue' //IMPORT COMPONENT DATATABLENYA
 import AddModal from './../../components/modal/penilaian/input-nilai/AddModal.vue'
+import EditModal from './../../components/modal/penilaian/input-nilai/EditModal.vue'
+import DetilModal from './../../components/modal/penilaian/input-nilai/DetilModal.vue'
 import Alert from './../../components/Alert.vue'
 import eventBus from '@core/utils/eventBus'
 export default {
@@ -30,6 +34,8 @@ export default {
     BAlert,
     Datatable,
     AddModal,
+    EditModal,
+    DetilModal,
     Alert,
   },
   data() {
@@ -40,21 +46,20 @@ export default {
       loading: false,
       fields: [
         {
+          key: 'nama',
+          label: 'Jenis Penilaian',
+          sortable: false,
+          thClass: 'text-center',
+        },
+        {
           key: 'nama_mata_pelajaran',
           label: 'Mata Pelajaran',
-          sortable: true,
+          sortable: false,
           thClass: 'text-center',
         },
         {
           key: 'rombongan_belajar',
           label: 'Kelas',
-          sortable: false,
-          thClass: 'text-center',
-          tdClass: 'text-center',
-        },
-        {
-          key: 'cp_count',
-          label: 'Jumlah CP',
           sortable: false,
           thClass: 'text-center',
           tdClass: 'text-center',
@@ -79,7 +84,7 @@ export default {
       current_page: 1, //DEFAULT PAGE YANG AKTIF ADA PAGE 1
       per_page: 10, //DEFAULT LOAD PERPAGE ADALAH 10
       search: '',
-      sortBy: 'updated_at', //DEFAULT SORTNYA ADALAH CREATED_AT
+      sortBy: 'nama', //DEFAULT SORTNYA ADALAH CREATED_AT
       sortByDesc: true, //ASCEDING
       tingkat: '',
       jurusan_sp_id: '',
@@ -134,6 +139,7 @@ export default {
       return num <= 0;
     },
     loadPostsData() {
+      this.loading = true
       let current_page = this.current_page
       this.$http.get('/nilai', {
         params: {
@@ -204,12 +210,11 @@ export default {
           allowOutsideClick: () => false,
         }).then(result => {
           if (result.value) {
-            this.loading_form = true
-            this.$http.post('/referensi/hapus-data', {
-              data: 'cp',
-              id: val.item.cp_id,
+            this.loading = true
+            this.$http.post('/nilai/hapus-penilaian', {
+              penilaian_id: val.item.penilaian_id,
             }).then(response => {
-              this.loading_form = false
+              this.loading = false
               let getData = response.data
               this.$swal({
                 icon: getData.icon,
@@ -225,7 +230,8 @@ export default {
           }
         })
       } else {
-        eventBus.$emit(`open-modal-${val.aksi}-cp`, val.item);
+        console.log(`open-modal-${val.aksi}-nilai`);
+        eventBus.$emit(`open-modal-${val.aksi}-nilai`, val.item);
       }
     },
     handleTingkat(val){
@@ -252,6 +258,9 @@ export default {
       this.rombongan_belajar_id = val
       this.loadPostsData()
     },
+    handleLoading(val){
+      this.loading = val
+    }
   },
 }
 </script>

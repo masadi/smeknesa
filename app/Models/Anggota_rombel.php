@@ -70,4 +70,8 @@ class Anggota_rombel extends Model
 	{
 		return $this->hasOne(Kenaikan_kelas::class, 'anggota_rombel_id', 'anggota_rombel_id');
 	}
+	public function nilai()
+	{
+		return $this->hasOne(Nilai::class, 'anggota_rombel_id', 'anggota_rombel_id');
+	}
 }

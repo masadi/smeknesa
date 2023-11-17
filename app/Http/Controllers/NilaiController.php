@@ -19,7 +19,7 @@ use Validator;
 class NilaiController extends Controller
 {
     public function index(){
-        $data = Pembelajaran::withCount([
+        /*$data = Pembelajaran::withCount([
             'cp' => function($query){
                 //$query->where('guru_id', loggedUser()->guru_id);
                 $query->has('nilai_tp');
@@ -50,7 +50,21 @@ class NilaiController extends Controller
         ->when(request()->rombongan_belajar_id, function($query) {
             $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
         })
-        ->paginate(request()->per_page);
+        ->paginate(request()->per_page);*/
+        $data = Penilaian::with('jenis_penilaian')->withCount('anggota_rombel')->withWhereHas('pembelajaran', function($query){
+            $query->where($this->kondisiMapel());
+            $query->with('rombongan_belajar');
+        })->orderBy(request()->sortby, request()->sortbydesc)
+        ->when(request()->q, function($query) {
+            $query->where('nama', 'ilike', '%'.request()->q.'%');
+            $query->whereHas('pembelajaran', function($query){
+                $query->where($this->kondisiMapel());
+            });
+            $query->orWhereHas('pembelajaran', function($query){
+                $query->where('nama_mata_pelajaran', 'ilike', '%'.request()->q.'%');
+                $query->where($this->kondisiMapel());
+            });
+        })->paginate(request()->per_page);
         return response()->json(['status' => 'success', 'data' => $data, 'semester_id' => semester_id()]);
     }
     private function kondisiCp(){
@@ -242,21 +256,29 @@ class NilaiController extends Controller
         }
         $asesmen = [];
         foreach(request()->nama_asesmen as $key => $nama_asesmen){
-            $asesmen[$key] = Penilaian::updateOrCreate([
-                'jenis_penilaian_id' => request()->jenis_id,
-                'pembelajaran_id' => request()->pembelajaran_id,
-                'nama' => $nama_asesmen,
-            ]);
+            if($nama_asesmen || request()->cp_id){
+                $asesmen[$key] = Penilaian::updateOrCreate([
+                    'jenis_penilaian_id' => request()->jenis_id,
+                    'pembelajaran_id' => request()->pembelajaran_id,
+                    'nama' => $nama_asesmen,
+                ]);
+            }
         }
+        $nama_penilaian = NULL;
         foreach($set_nilai as $anggota_rombel_id => $data_tp){
             foreach($data_tp as $tp_id => $nilai){
                 if($nilai){
                     if(request()->cp_id){
+                        $penilaian = Penilaian::updateOrCreate([
+                            'jenis_penilaian_id' => request()->jenis_id,
+                            'pembelajaran_id' => request()->pembelajaran_id,
+                            'nama' => $tp_id,
+                        ]);
                         Nilai::updateOrCreate(
                             [
                                 'anggota_rombel_id' => $anggota_rombel_id,
                                 'tp_id' => $tp_id,
-                                'penilaian_id' => NULL,
+                                'penilaian_id' => $penilaian->penilaian_id,
                                 'pembelajaran_id' => request()->pembelajaran_id,
                                 'jenis_penilaian_id' => request()->jenis_id,
                             ],
@@ -830,6 +852,46 @@ class NilaiController extends Controller
             $data = [
                 'icon' => 'error',
                 'text' => 'Penilaian tidak ditemukan. Silahkan coba beberapa saat lagi!',
+                'title' => 'Gagal',
+            ];
+        }
+        return response()->json($data);
+    }
+    public function detil_nilai(){
+        $penilaian = Penilaian::with('jenis_penilaian')->find(request()->id);
+        $data = [
+            'penilaian' => $penilaian,
+            'tp' => ($penilaian->jenis_penilaian_id == 2) ? Tujuan_pembelajaran::find($penilaian->nama) : NULL,
+            'data_siswa' => Peserta_didik::orderBy('nama')->withWhereHas('anggota_rombel', function($query){
+                $query->whereHas('rombongan_belajar', function($query){
+                    $query->whereHas('pembelajaran', function($query){
+                        $query->whereHas('penilaian', function($query){
+                            $query->where('penilaian_id', request()->id);
+                        });
+                    });
+                });
+                $query->withWhereHas('nilai', function($query){
+                    $query->where('penilaian_id', request()->id);
+                });
+            })->get(),
+        ];
+        return response()->json($data);
+    }
+    public function update(){
+        $insert = NULL;
+        foreach(request()->nilai as $anggota_rombel_id => $angka){
+            $insert = Nilai::where('anggota_rombel_id', $anggota_rombel_id)->where('penilaian_id', request()->penilaian_id)->update(['angka' => $angka]);
+        }
+        if($insert){
+            $data = [
+                'icon' => 'success',
+                'text' => 'Nilai berhasil diperbaharui!',
+                'title' => 'Berhasil',
+            ];
+        } else {
+            $data = [
+                'icon' => 'error',
+                'text' => 'Nilai gagal diperbaharui. Silahkan coba beberapa saat lagi!',
                 'title' => 'Gagal',
             ];
         }

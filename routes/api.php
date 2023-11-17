@@ -188,6 +188,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/add-nilai-ektra', [EkstraController::class, 'add_nilai_ektra']);
     Route::post('/add-absen-ektra', [EkstraController::class, 'add_absen_ektra']);
     Route::post('/hapus-penilaian', [NilaiController::class, 'hapus_penilaian']);
+    Route::post('/detil-nilai', [NilaiController::class, 'detil_nilai']);
+    Route::post('/update', [NilaiController::class, 'update']);
   });
   Route::group(['prefix' => 'modul'], function () {
     Route::get('/', [ModulController::class, 'index']);

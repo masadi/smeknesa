@@ -89,17 +89,7 @@
                     </template>
                     <template v-for="index in jumlah_form" v-if="jumlah_form">
                       <b-th class="text-center">
-                        <template v-if="form.nama_asesmen[index]">
-                          <b-input-group>
-                            <b-form-input v-model="form.nama_asesmen[index]" :placeholder="`Nama Asesmen (${index})`"></b-form-input>
-                            <b-input-group-append>
-                              <b-button @click="removeForm(index)" variant="danger"><trash-icon size="16" /></b-button>
-                            </b-input-group-append>
-                          </b-input-group>
-                        </template>
-                        <template v-else>
-                          <b-form-input v-model="form.nama_asesmen[index]" :placeholder="`Nama Asesmen (${index})`"></b-form-input>
-                        </template>
+                        <b-form-input v-model="form.nama_asesmen[index]" :placeholder="`Nama Asesmen (${index})`"></b-form-input>
                       </b-th>
                     </template>
                   </b-tr>
@@ -305,6 +295,7 @@ export default {
         this.data_siswa = getData.siswa
         this.data_tp = getData.data_tp
         var _this = this
+        this.form.nama_asesmen = []
         if(this.form.jenis_id !== 2){
           this.data_penilaian = getData.penilaian
           if(getData.penilaian.length){
@@ -383,6 +374,7 @@ export default {
             customClass: {
               confirmButton: 'btn btn-success',
             },
+            allowOutsideClick: () => false,
           }).then(result => {
             this.$emit('reload')
             this.hideModal()
@@ -392,44 +384,6 @@ export default {
     },
     addForm(){
       this.jumlah_form = this.jumlah_form + 1
-    },
-    removeForm(index){
-      var urut = index - 1;
-      var penilaian = this.data_penilaian[urut];
-      this.$swal({
-        title: 'Apakah Anda yakin?',
-        text: 'Tindakan ini tidak dapat dikembalikan!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yakin!',
-        customClass: {
-          confirmButton: 'btn btn-primary',
-          cancelButton: 'btn btn-outline-danger ml-1',
-        },
-        buttonsStyling: false,
-        allowOutsideClick: () => false,
-      }).then(result => {
-        if (result.value) {
-          if(penilaian){
-            this.$http.post('/nilai/hapus-penilaian', {
-              penilaian_id: penilaian.penilaian_id
-            }).then(response => {
-              let getData = response.data
-              this.$swal({
-                icon: getData.icon,
-                title: getData.title,
-                text: getData.text,
-                customClass: {
-                  confirmButton: 'btn btn-success',
-                },
-              }).then(result => {
-                this.$emit('reload')
-                this.hideModal()
-              })
-            });
-          }
-        }
-      });
     },
   },
 }

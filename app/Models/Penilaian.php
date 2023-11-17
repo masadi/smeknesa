@@ -26,4 +26,8 @@ class Penilaian extends Model
 	{
 		return $this->hasOne(Nilai::class, 'penilaian_id', 'penilaian_id');
 	}
+	public function anggota_rombel()
+	{
+		return $this->hasMany(Nilai::class, 'penilaian_id', 'penilaian_id');
+	}
 }

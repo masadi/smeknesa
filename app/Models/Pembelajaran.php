@@ -285,4 +285,8 @@ class Pembelajaran extends Model
 			'jadwal_id'
         );
     }
+	public function penilaian()
+	{
+		return $this->hasMany(Penilaian::class, 'pembelajaran_id', 'pembelajaran_id');
+	}
 }
