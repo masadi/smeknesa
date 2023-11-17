@@ -28,9 +28,9 @@ class HapusPenilaian extends Command
      */
     public function handle()
     {
-        $data = Penilaian::whereNull('nama')->withWhereHas(['nilai' => function($query){
+        $data = Penilaian::whereNull('nama')->withWhereHas('nilai', function($query){
             $query->has('tp');
-        }])->get();
+        })->get();
         foreach($data as $d){
             $d->nama = $d->nilai->tp_id;
             $d->save();
