@@ -371,7 +371,7 @@ class NilaiController extends Controller
                     $query->where('pembelajaran_id', request()->pembelajaran_id);
                     $query->where('guru_id', loggedUser()->guru_id);
                 });
-                //$query->where('guru_id', loggedUser()->guru_id);
+                $query->where('guru_id', loggedUser()->guru_id);
                 $query->has('tp');
             })->get(),
             'jenis' => Jenis_penilaian::get(),
