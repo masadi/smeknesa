@@ -23,6 +23,7 @@
                       <b-thead>
                         <b-tr>
                           <b-th class="text-center">Nama Siswa</b-th>
+                          <b-th class="text-center">Kelas</b-th>
                           <template v-for="(item, i) in data_materi">
                             <b-th class="text-center"><span v-b-tooltip.hover :title="item.deskripsi">{{`Materi ${i+1}`}}</span></b-th>
                           </template>
@@ -32,6 +33,7 @@
                         <template v-if="data_siswa.length">
                           <b-tr v-for="siswa in data_siswa" :key="siswa.peserta_didik_id">
                             <b-td><media-siswa :data="siswa" /></b-td>
+                            <b-td class="text-center">{{siswa.kelas.nama}}</b-td>
                             <template v-for="(item, i) in data_materi">
                               <b-td><b-form-input v-model="form.nilai[`${siswa.anggota_rombel.anggota_rombel_id}#${item.materi_id}`]"></b-form-input></b-td>
                             </template>

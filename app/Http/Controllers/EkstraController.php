@@ -142,6 +142,9 @@ class EkstraController extends Controller
                         $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
                     },
                 ]);
+            })->with('kelas', function($query){
+                $query->where('tingkat', '<>', 0);
+                $query->where('rombongan_belajar.semester_id', request()->semester_id);
             })->orderBy('nama')->get(),
             'materi' => Materi_ekstra::where('rombongan_belajar_id', request()->rombongan_belajar_id)->orderBy('created_at')->get(),
         ];
