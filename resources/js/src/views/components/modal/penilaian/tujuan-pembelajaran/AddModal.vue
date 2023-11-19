@@ -23,10 +23,10 @@
               </b-overlay>
             </b-form-group>
           </b-col>
-          <template v-for="tp in [0,1,2,3,4]">
+          <template v-for="tp in jumlah_form">
             <b-col cols="12">
-              <b-form-group :label="`Tujuan Pembelajaran (${tp + 1})`" :label-for="`desk-tp-${tp}`" label-cols-md="3" :invalid-feedback="feedback.desk_tp[tp]" :state="state.desk_tp[tp]">
-                <b-form-textarea :id="`desk-tp-${tp}`" v-model="form.desk_tp[tp]" :state="state.desk_tp[tp]" :placeholder="`Deskripsi Tujuan Pembelajaran (${tp + 1})`" rows="3" max-rows="8"></b-form-textarea>
+              <b-form-group :label="`Tujuan Pembelajaran (${tp})`" :label-for="`desk-tp-${tp}`" label-cols-md="3" :invalid-feedback="feedback.desk_tp[tp]" :state="state.desk_tp[tp]">
+                <b-form-textarea :id="`desk-tp-${tp}`" v-model="form.desk_tp[tp]" :state="state.desk_tp[tp]" :placeholder="`Deskripsi Tujuan Pembelajaran (${tp})`" rows="3" max-rows="8"></b-form-textarea>
               </b-form-group>  
             </b-col>
           </template>
@@ -36,6 +36,9 @@
     <template #modal-footer="{ ok, cancel }">
         <b-overlay :show="loading_form" rounded opacity="0.6" spinner-small spinner-variant="secondary" class="d-inline-block">
           <b-button @click="cancel()">Tutup</b-button>
+        </b-overlay>
+        <b-overlay :show="loading_form" rounded opacity="0.6" spinner-small spinner-variant="secondary" class="d-inline-block">
+          <b-button variant="info" @click="addForm()">Tambah Form</b-button>
         </b-overlay>
         <b-overlay :show="loading_form" rounded opacity="0.6" spinner-small spinner-variant="success" class="d-inline-block">
           <b-button variant="success" @click="ok()">Simpan</b-button>
@@ -81,6 +84,7 @@ export default {
         cp_id: null,
         desk_tp: {}
       },
+      jumlah_form: 5,
     }
   },
   created() {
@@ -90,6 +94,9 @@ export default {
     eventBus.$on('open-modal-add-tp', this.handleEvent);
   },
   methods: {
+    addForm(){
+      this.jumlah_form = this.jumlah_form + 1
+    },
     handleEvent(data){
       console.log(data);
       this.form.data = data
