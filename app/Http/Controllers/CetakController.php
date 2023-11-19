@@ -214,10 +214,10 @@ class CetakController extends Controller
                     $query->with(['wali_kelas', 'jurusan_sp', 'semester', 'pembelajaran' => function($query){
                         $query->orderBy('no_urut');
                         $query->whereNotNull('kktp');
-                        $query->with(['nilai' => function($query){
-                            //$query->where('jenis_penilaian_id', 2);
+                        $query->withWhereHas('nilai', function($query){
+                            $query->where('jenis_penilaian_id', 2);
                             //$query->where('angka', '<', 75);
-                            $query->whereIn('jenis_penilaian_id', [2, 3]);
+                            //$query->whereIn('jenis_penilaian_id', [2, 3]);
                             $query->join('pembelajaran', function ($join) {
                                 $join->on('nilai.pembelajaran_id', '=', 'pembelajaran.pembelajaran_id');
                                 $join->on('nilai.angka', '<', 'pembelajaran.kktp');
@@ -226,12 +226,12 @@ class CetakController extends Controller
                             $query->whereHas('pd', function($query){
                                 $query->where('peserta_didik.peserta_didik_id', request()->route('peserta_didik_id'));
                             });
-                        }]);
+                        });
                     }]);
                 },
                 'nilai' => function($query){
-                    //$query->where('jenis_penilaian_id', 2);
-                    $query->whereIn('jenis_penilaian_id', [2, 3]);
+                    $query->where('jenis_penilaian_id', 2);
+                    //$query->whereIn('jenis_penilaian_id', [2, 3]);
                     //$query->where('angka', '<', 75);
                     $query->with(['pembelajaran']);
                     $query->join('pembelajaran', function ($join) {

@@ -38,19 +38,22 @@
       </tr>
     </thead>
     <tbody>
-      @foreach ($pd->kelas->pembelajaran as $item)
-      <tr>
-        <td class="text-center" rowspan="{{$item->nilai->count() + 1}}">{{$loop->iteration}}</td>
-        <td rowspan="{{$item->nilai->count() + 1}}">{{$item->nama_mata_pelajaran}}</td>
-        @foreach ($item->nilai as $nilai)
+      <?php $i=1; ?>
+      @foreach ($pd->kelas->pembelajaran as $index => $item)
+        @if($item->nilai->count())
         <tr>
-        <td>{{($nilai->tp) ? $nilai->tp->deskripsi : '-'}}</td>
-        <td class="text-center">{{$nilai->angka}}</td>
-        <td></td>
-        <td></td>
+          <td class="text-center" rowspan="{{$item->nilai->count() + 1}}">{{$i++}}</td>
+          <td rowspan="{{$item->nilai->count() + 1}}">{{$item->nama_mata_pelajaran}}</td>
+          @foreach ($item->nilai as $nilai)
+          <tr>
+          <td>{{($nilai->tp) ? $nilai->tp->deskripsi : '-'}}</td>
+          <td class="text-center">{{$nilai->angka}}</td>
+          <td></td>
+          <td></td>
+          </tr>
+          @endforeach
         </tr>
-        @endforeach
-      </tr>
+        @endif
       @endforeach
     </tbody>
   </table>

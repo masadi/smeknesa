@@ -49,7 +49,8 @@ class SiswaController extends Controller
                     });
                 });
             })->withWhereHas('nilai', function($query){
-                $query->whereIn('jenis_penilaian_id', [2, 3]);
+                $query->where('jenis_penilaian_id', 2);
+                //$query->whereIn('jenis_penilaian_id', [2, 3]);
                 //$query->where('angka', '<', '75');
                 $query->wherehas('pd', function($query){
                     $query->where('anggota_rombel.peserta_didik_id', request()->peserta_didik_id);
