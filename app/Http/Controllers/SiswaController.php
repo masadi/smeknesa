@@ -48,19 +48,23 @@ class SiswaController extends Controller
                         $query->where('semester_id', request()->semester_id);
                     });
                 });
-                $query->whereHas('nilai', function($query){
-                    $query->whereIn('jenis_penilaian_id', [2, 3]);
-                    //$query->where('angka', '<', '75');
-                    $query->wherehas('pd', function($query){
-                        $query->where('anggota_rombel.peserta_didik_id', request()->peserta_didik_id);
-                    });
+            })->withWhereHas('nilai', function($query){
+                $query->whereIn('jenis_penilaian_id', [2, 3]);
+                //$query->where('angka', '<', '75');
+                $query->wherehas('pd', function($query){
+                    $query->where('anggota_rombel.peserta_didik_id', request()->peserta_didik_id);
                 });
-            })->join('nilai', function ($join) {
-                $join->on('pembelajaran.pembelajaran_id', '=', 'nilai.pembelajaran_id');
-                $join->on('nilai.angka', '<', 'pembelajaran.kktp');
+                $query->join('pembelajaran', function ($join) {
+                    $join->on('nilai.pembelajaran_id', '=', 'pembelajaran.pembelajaran_id');
+                    $join->on('nilai.angka', '<', 'pembelajaran.kktp');
+                });
             })->orderBy('no_urut')->get();
-            $unique = $pembelajaran->unique('pembelajaran_id');
-            $data = $unique->values()->all();
+            $data = [];
+            foreach($pembelajaran as $mapel){
+                if($mapel->nilai->count()){
+                    $data[] = $mapel;
+                }
+            }
         }
         if(request()->aksi == 'presensi'){
             $semester = Semester::find(request()->semester_id);

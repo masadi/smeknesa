@@ -209,25 +209,37 @@ class CetakController extends Controller
     }
     public function rekap_remedial(){
         $data = [
-            'pd' => Peserta_didik::with(['kelas' => function($query){
-                $query->with(['wali_kelas', 'jurusan_sp', 'semester', 'pembelajaran' => function($query){
-                    $query->orderBy('no_urut');
-                    $query->whereNotNull('kktp');
-                    $query->with(['nilai' => function($query){
-                        //$query->where('jenis_penilaian_id', 2);
-                        //$query->where('angka', '<', 75);
-                        $query->whereIn('jenis_penilaian_id', [2, 3]);
-                        $query->join('pembelajaran', function ($join) {
-                            $join->on('nilai.pembelajaran_id', '=', 'pembelajaran.pembelajaran_id');
-                            $join->on('nilai.angka', '<', 'pembelajaran.kktp');
-                        });
-                        $query->with('tp');
-                        $query->whereHas('pd', function($query){
-                            $query->where('peserta_didik.peserta_didik_id', request()->route('peserta_didik_id'));
-                        });
+            'pd' => Peserta_didik::with([
+                'kelas' => function($query){
+                    $query->with(['wali_kelas', 'jurusan_sp', 'semester', 'pembelajaran' => function($query){
+                        $query->orderBy('no_urut');
+                        $query->whereNotNull('kktp');
+                        $query->with(['nilai' => function($query){
+                            //$query->where('jenis_penilaian_id', 2);
+                            //$query->where('angka', '<', 75);
+                            $query->whereIn('jenis_penilaian_id', [2, 3]);
+                            $query->join('pembelajaran', function ($join) {
+                                $join->on('nilai.pembelajaran_id', '=', 'pembelajaran.pembelajaran_id');
+                                $join->on('nilai.angka', '<', 'pembelajaran.kktp');
+                            });
+                            $query->with('tp');
+                            $query->whereHas('pd', function($query){
+                                $query->where('peserta_didik.peserta_didik_id', request()->route('peserta_didik_id'));
+                            });
+                        }]);
                     }]);
-                }]);
-            }])->find(request()->route('peserta_didik_id')),
+                },
+                'nilai' => function($query){
+                    //$query->where('jenis_penilaian_id', 2);
+                    $query->whereIn('jenis_penilaian_id', [2, 3]);
+                    //$query->where('angka', '<', 75);
+                    $query->with(['pembelajaran']);
+                    $query->join('pembelajaran', function ($join) {
+                        $join->on('nilai.pembelajaran_id', '=', 'pembelajaran.pembelajaran_id');
+                        $join->on('nilai.angka', '<', 'pembelajaran.kktp');
+                    });
+                },
+            ])->find(request()->route('peserta_didik_id')),
         ];
         $pdf = PDF::loadView('cetak.rekap-remedial', $data);
         $pdf->getMpdf()->defaultfooterfontsize=7;
