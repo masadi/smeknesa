@@ -41,6 +41,7 @@ class SiswaController extends Controller
         }
         if(request()->aksi == 'remedial'){
             $pembelajaran = Pembelajaran::where(function($query){
+                $query->whereNotNull('kktp');
                 $query->whereHas('rombongan_belajar', function($query){
                     $query->whereHas('anggota_rombel', function($query){
                         $query->where('peserta_didik_id', request()->peserta_didik_id);
@@ -57,7 +58,7 @@ class SiswaController extends Controller
             })->join('nilai', function ($join) {
                 $join->on('pembelajaran.pembelajaran_id', '=', 'nilai.pembelajaran_id');
                 $join->on('nilai.angka', '<', 'pembelajaran.kktp');
-            })->orderBy('mata_pelajaran_id')->get();
+            })->orderBy('no_urut')->get();
             $unique = $pembelajaran->unique('pembelajaran_id');
             $data = $unique->values()->all();
         }
