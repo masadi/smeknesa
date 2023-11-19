@@ -212,6 +212,7 @@ class CetakController extends Controller
             'pd' => Peserta_didik::with(['kelas' => function($query){
                 $query->with(['wali_kelas', 'jurusan_sp', 'semester', 'pembelajaran' => function($query){
                     $query->orderBy('no_urut');
+                    $query->whereNotNull('kktp');
                     $query->with(['nilai' => function($query){
                         //$query->where('jenis_penilaian_id', 2);
                         //$query->where('angka', '<', 75);
