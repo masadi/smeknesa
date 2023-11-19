@@ -32,7 +32,8 @@ class RekapController extends Controller
     }
     public function remed(){
         $data = Peserta_didik::withWhereHas('nilai', function($query){
-            $query->where('jenis_penilaian_id', 2);
+            //$query->where('jenis_penilaian_id', 2);
+            $query->whereIn('jenis_penilaian_id', [2, 3]);
             //$query->where('angka', '<', 75);
             $query->with(['pembelajaran']);
             $query->join('pembelajaran', function ($join) {
