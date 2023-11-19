@@ -90,5 +90,4 @@
     <strong>NB.</strong><br>
     Dokumen ini disimpan di wali kelas sebagai lampiran rapor.
   </p>
-  {{dd($pd)}}
 @endsection
