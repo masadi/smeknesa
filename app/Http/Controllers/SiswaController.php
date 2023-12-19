@@ -92,10 +92,14 @@ class SiswaController extends Controller
 
         }
         if(request()->aksi == 'remedial'){
-
+            
         }
         if(request()->aksi == 'ekskul'){
-
+            $data = Peserta_didik::with(['anggota_ekskul' => function($query){
+                $query->where('semester_id', request()->semester_id);
+                $query->with(['rombongan_belajar']);
+                $query->withAvg('nilai_ekstra', 'angka');
+            }])->find(request()->peserta_didik_id);
         }
         return response()->json([
             'status' => 'success',

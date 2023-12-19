@@ -135,7 +135,6 @@ export default {
       this.form.nama_kelas[this.anggota_rombel_id] = this.rombel_tujuan.nama
     },
     onSubmit(event) {
-      console.log(this.form);
       event.preventDefault()
       this.loading = true
       this.$http.post('/referensi/simpan-data', this.form).then(response => {
@@ -157,9 +156,7 @@ export default {
       this.loadPostsData()
     },
     predikat_ekstra(angka){
-      console.log(angka);
       angka = parseInt(angka)
-      console.log(angka);
       var predikat = '';
       if(angka > 0 && angka < 70){
           predikat = 'Kurang';
@@ -174,7 +171,7 @@ export default {
           predikat = 'Sangat Baik';
       }
       return predikat;
-},
+    },
   },
 }
 </script>
