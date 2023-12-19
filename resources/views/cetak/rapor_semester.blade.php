@@ -112,7 +112,7 @@
 		<tr>
 			<td class="text-center">{{$loop->iteration}}</td>
 			<td>{{$item->nama}}</td>
-			<td>Melaksanakan kegiatan {{$item->nama}} dengan {{predikat_ekstra($item->nilai_ekstra->avg('angka'))}}</td>
+			<td>Melaksanakan kegiatan ekstrakurikuler {{$item->nama}} dengan {{predikat_ekstra($item->nilai_ekstra->avg('angka'))}}</td>
 		</tr>
 		@empty
 		<td colspan="3">&nbsp;</td>
