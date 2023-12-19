@@ -565,7 +565,7 @@ class NilaiController extends Controller
     public function nilai_pd(){
         $data = Pembelajaran::withAvg([
             'nilai as rerata' => function($query){
-                $query->where('jenis_penilaian_id', '<>', 1);
+                $query->where('jenis_penilaian_id', 3);
                 $query->whereHas('pd', function($query){
                     $query->where('anggota_rombel.anggota_rombel_id', request()->anggota_rombel_id);
                     $query->where('anggota_rombel.semester_id', semester_id());
@@ -646,7 +646,7 @@ class NilaiController extends Controller
             ]);
             $query->withAvg([
                 'all_nilai as rerata' => function($query){
-                    $query->where('jenis_penilaian_id', '<>', 1);
+                    $query->where('jenis_penilaian_id', 3);
                     $query->where('pembelajaran_id', request()->pembelajaran_id);
                 },
             ], 'angka');
@@ -654,7 +654,7 @@ class NilaiController extends Controller
         return response()->json($data);
         $data = Pembelajaran::withAvg([
             'nilai as rerata' => function($query){
-                $query->where('jenis_penilaian_id', '<>', 1);
+                $query->where('jenis_penilaian_id', 3);
                 $query->whereHas('pd', function($query){
                     //$query->where('anggota_rombel.anggota_rombel_id', request()->anggota_rombel_id);
                     $query->where('anggota_rombel.semester_id', semester_id());

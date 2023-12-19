@@ -83,7 +83,7 @@ class CetakController extends Controller
                         ]);
                         $query->withAvg([
                             'nilai as rerata' => function($query){
-                                $query->where('jenis_penilaian_id', 2);
+                                $query->where('jenis_penilaian_id', 3);
                                 $query->where('anggota_rombel_id', request()->route('anggota_rombel_id'));
                             },
                         ], 'angka');
