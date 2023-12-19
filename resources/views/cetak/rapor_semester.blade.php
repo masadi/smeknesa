@@ -102,9 +102,9 @@
 <table class="table table-bordered">
 	<thead>
 		<tr>
-			<th style="width: 2%; vertical-align: middle;" class="text-center">No</th>
-			<th style="width: 35%; vertical-align: middle;" class="text-center">Ekstrakurikuler</th>
-			<th style="width: 63%; vertical-align: middle;" class="text-center">Keterangan</th>
+			<th style="width: 2px; vertical-align: middle;" class="text-center">No</th>
+			<th style="width: 100px; vertical-align: middle;" class="text-center">Ekstrakurikuler</th>
+			<th style="width: 200px; vertical-align: middle;" class="text-center">Keterangan</th>
 		</tr>
 	</thead>
 	<tbody>
