@@ -17,6 +17,17 @@
                 </b-form-group>
               </b-col>
               <b-col cols="12">
+                <b-form-group label="Rombongan Belajar" label-for="kelas_id" label-cols-md="3" :invalid-feedback="feedback.kelas_id" :state="state.kelas_id">
+                  <b-overlay :show="loading_kelas" opacity="0.6" size="md" spinner-variant="secondary">
+                    <v-select id="kelas_id" v-model="form.kelas_id" :reduce="nama => nama.rombongan_belajar_id" label="nama" :options="data_kelas" placeholder="== Pilih Rombongan Belajar ==" :state="state.kelas_id" @input="changeKelas">
+                      <template #no-options="{ search, searching, loading }">
+                        Tidak ada data untuk ditampilkan
+                      </template>
+                    </v-select>
+                  </b-overlay>
+                </b-form-group>
+              </b-col>
+              <b-col cols="12">
                 <b-overlay :show="loading_table" rounded opacity="0.6" size="lg" spinner-variant="danger">
                   <template v-if="show">
                     <b-table-simple bordered class="mt-2">
@@ -88,19 +99,24 @@ export default {
     return {
       loading_form: false,
       loading_rombel: false,
+      loading_kelas: false,
       loading_table: false,
       show: false,
       form: {
         rombongan_belajar_id: '',
+        kelas_id: '',
         nilai: {},
       },
       feedback: {
         rombongan_belajar_id: '',
+        kelas_id: '',
       },
       state: {
         rombongan_belajar_id: null,
+        kelas_id: null,
       },
       data_rombel: [],
+      data_kelas: [],
       data_materi: [],
       data_siswa: [],
     }
@@ -148,12 +164,15 @@ export default {
     changeEkstra(val){
       this.show = false
       if(val){
+        this.loading_kelas = true
         this.loading_table = true
         this.$http.post('/nilai/get-siswa-ektra', this.form).then(response => {
+          this.loading_kelas = false
           this.loading_table = false;
           let getData = response.data
           this.data_materi = getData.materi
           this.data_siswa = getData.data
+          this.data_kelas = getData.kelas
           this.data_siswa.forEach(siswa => {
             siswa.anggota_rombel.nilai_ekstra.forEach(item => {
               this.form.nilai[`${item.anggota_rombel_id}#${item.materi_id}`] = item.angka
@@ -162,6 +181,23 @@ export default {
           this.show = true
         })
       }
+    },
+    changeKelas(val){
+      this.show = false
+      this.loading_table = true
+        this.$http.post('/nilai/get-siswa-ektra', this.form).then(response => {
+          this.loading_table = false;
+          let getData = response.data
+          this.data_materi = getData.materi
+          this.data_siswa = getData.data
+          this.data_kelas = getData.kelas
+          this.data_siswa.forEach(siswa => {
+            siswa.anggota_rombel.nilai_ekstra.forEach(item => {
+              this.form.nilai[`${item.anggota_rombel_id}#${item.materi_id}`] = item.angka
+            });  
+          });
+          this.show = true
+        })
     },
   },
 }

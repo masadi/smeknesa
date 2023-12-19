@@ -132,6 +132,14 @@ class EkstraController extends Controller
     }
     public function get_siswa_ektra(){
         $data = [
+            'kelas' => Rombongan_belajar::whereHas('pd', function($query){
+                $query->whereHas('ekskul', function($query){
+                    $query->where('rombongan_belajar.rombongan_belajar_id', request()->rombongan_belajar_id);
+                });
+            })->where(function($query){
+                $query->where('tingkat', '<>', 0);
+                $query->where('semester_id', request()->semester_id);
+            })->orderBy('tingkat')->orderBy('nama')->get(),
             'data' => Peserta_didik::withWhereHas('anggota_rombel', function($query){
                 $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
                 $query->with([
@@ -145,6 +153,9 @@ class EkstraController extends Controller
             })->withWhereHas('kelas', function($query){
                 $query->where('tingkat', '<>', 0);
                 $query->where('rombongan_belajar.semester_id', request()->semester_id);
+                if(request()->kelas_id){
+                    $query->where('rombongan_belajar.rombongan_belajar_id', request()->kelas_id);
+                }
             })->orderBy('nama')->get(),
             'materi' => Materi_ekstra::where('rombongan_belajar_id', request()->rombongan_belajar_id)->orderBy('created_at')->get(),
         ];
