@@ -103,8 +103,8 @@
 	<thead>
 		<tr>
 			<th style="width: 2px; vertical-align: middle;" class="text-center">No</th>
-			<th style="width: 100px; vertical-align: middle;" class="text-center">Ekstrakurikuler</th>
-			<th style="width: 200px; vertical-align: middle;" class="text-center">Keterangan</th>
+			<th style="width: 200px; vertical-align: middle;" class="text-center">Ekstrakurikuler</th>
+			<th style="vertical-align: middle;" class="text-center">Keterangan</th>
 		</tr>
 	</thead>
 	<tbody>
