@@ -112,7 +112,7 @@
 		<tr>
 			<td class="text-center">{{$loop->iteration}}</td>
 			<td>{{$item->nama}}</td>
-			<td>-</td>
+			<td>Melaksanakan kegiatan {{$item->nama}} dengan {{predikat_ekstra($item->nilai_ekstra->avg('angka'))}}</td>
 		</tr>
 		@empty
 		<td colspan="3">&nbsp;</td>
@@ -126,15 +126,15 @@
 	</tr>
 	<tr>
 		<td width="100">Sakit</td>
-		<td> : .... hari</td>
+		<td> : {{(jmlAbsen($get_siswa->peserta_didik->presensi, 'S')) ? jmlAbsen($get_siswa->peserta_didik->presensi, 'S') : 0}} hari</td>
 	</tr>
 	<tr>
 		<td>Izin</td>
-		<td width="100"> : .... hari</td>
+		<td width="100"> : {{(jmlAbsen($get_siswa->peserta_didik->presensi, 'I')) ? jmlAbsen($get_siswa->peserta_didik->presensi, 'I') : 0}} hari</td>
 	</tr>
 	<tr>
 		<td>Tanpa Keterangan</td>
-		<td> : .... hari</td>
+		<td> : {{(jmlAbsen($get_siswa->peserta_didik->presensi, 'A')) ? jmlAbsen($get_siswa->peserta_didik->presensi, 'A') : 0}} hari</td>
 	</tr>
 </table>
 <table width="100%">

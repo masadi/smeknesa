@@ -720,3 +720,19 @@ function nilaiAsesmen($data_nilai, $data_asesmen){
     }
     return $push_nilai;
 }
+function predikat_ekstra($angka){
+    $predikat = '';
+    if($angka > 0 && $angka < 70){
+        $predikat = 'Kurang';
+    }
+    if($angka >= 70 && $angka < 80){
+        $predikat = 'Cukup';
+    }
+    if($angka >= 80 && $angka < 90){
+        $predikat = 'Baik';
+    }
+    if($angka >= 90){
+        $predikat = 'Sangat Baik';
+    }
+    return $predikat;
+}

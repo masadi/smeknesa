@@ -61,9 +61,12 @@ class CetakController extends Controller
     public function rapor_semester(){
         $semester = Semester::find(request()->route('semester_id'));
         $get_siswa = Anggota_rombel::with([
-            'peserta_didik' => function($query){
+            'peserta_didik' => function($query) use ($semester){
                 $query->with(['agama', 'pekerjaan_ayah', 'pekerjaan_ibu', 'sekolah' => function($query){
                     $query->with('kabupaten');
+                }, 'presensi' => function($query) use ($semester){
+                    $query->orderBy('tanggal');
+                    $query->whereBetween('tanggal', [$semester->tanggal_mulai, $semester->tanggal_selesai]);
                 }]);
             },
             'rombongan_belajar' => function($query){
