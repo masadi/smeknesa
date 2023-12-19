@@ -54,7 +54,7 @@
 	?>
 	@foreach($get_pembelajaran as $pembelajaran)
 	<?php
-	$nilai_akhir = ($pembelajaran->rerata) ? number_format($pembelajaran->rerata,0) : 0;
+	$nilai_akhir = ($pembelajaran->rerata) ? ceil($pembelajaran->rerata,0) : 0;
 	$all_pembelajaran[$pembelajaran->kelompok->nama_kelompok][] = array(
 		'capaian_kompetensi' => array_filter([$pembelajaran->deskripsi_tercapai, $pembelajaran->deskripsi_belum_tercapai]),
 		'nama_mata_pelajaran'	=> $pembelajaran->nama_mata_pelajaran,
