@@ -21,7 +21,7 @@
 	</tr>
 	<tr>
 		<td style="padding-top:5px; padding-bottom:5px; padding-left:0px;">Alamat</td>
-		<td>: {{$get_siswa->peserta_didik->alamat}}</td>
+		<td>: {{$get_siswa->peserta_didik->sekolah->alamat_jalan}}</td>
 		<td style="padding-top:5px; padding-bottom:5px; padding-left:0px;">Tahun Pelajaran</td>
 		<td>: {{str_replace('/','-',substr($get_siswa->rombongan_belajar->semester->nama,0,9))}}</td>
 	</tr>
