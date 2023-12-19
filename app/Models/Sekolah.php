@@ -104,7 +104,16 @@ class Sekolah extends Model
         );
 		return $this->hasMany(Nilai::class, 'pembelajaran_id', 'pembelajaran_id');
 	}
+	public function provinsi(){
+		return $this->hasOne(Provinsi::class, 'code', 'provinsi_id');
+	}
 	public function kabupaten(){
 		return $this->hasOne(Kabupaten::class, 'code', 'kabupaten_id');
+	}
+	public function kecamatan(){
+		return $this->hasOne(Kecamatan::class, 'code', 'kecamatan_id');
+	}
+	public function kelurahan(){
+		return $this->hasOne(Kelurahan::class, 'code', 'desa_id');
 	}
 }

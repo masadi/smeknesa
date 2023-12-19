@@ -9,6 +9,7 @@ use App\Models\Semester;
 use App\Models\Guru;
 use App\Models\Team;
 use Validator;
+use File;
 
 class PengaturanController extends Controller
 {
@@ -24,6 +25,7 @@ class PengaturanController extends Controller
             'tanggal_whatsapp' => get_setting('tanggal_whatsapp'),
             'tanggal_penilaian' => $tanggal_penilaian,
             'deadline' => tanggalIndo($tanggal_penilaian),
+            'logo' => get_setting('logo') ? asset('storage/images/'.get_setting('logo')) : asset('img/logo/tutwuri.png')
         ];
         return response()->json($data);
     }
@@ -50,6 +52,16 @@ class PengaturanController extends Controller
                     'semester_id' => request()->semester_id,
                     'value' => request()->tanggal_penilaian,
                 ]
+            );
+        }
+        if(request()->logo){
+            if (!File::isDirectory(storage_path('app/public/images'))) {
+                File::makeDirectory(storage_path('app/public/images'));
+            }
+            $logo = request()->logo->store('public/images');
+            Setting::updateOrCreate(
+                ['key' => 'logo'],
+                ['value' => basename($logo)]
             );
         }
         $data = [

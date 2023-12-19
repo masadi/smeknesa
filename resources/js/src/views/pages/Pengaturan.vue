@@ -10,25 +10,35 @@
           <b-form @submit.prevent="handleSubmit">
             <b-row>
               <b-col cols="12">
-                <b-form-group label="Nama Aplikasi" label-for="app_name" :invalid-feedback="feedback.app_name" :state="state.app_name">
-                  <b-form-input v-model="form.app_name" placeholder="Nama Aplikasi"></b-form-input>
-                </b-form-group>
-                <b-form-group label="Versi Aplikasi" label-for="app_version" :invalid-feedback="feedback.app_version" :state="state.app_version">
-                  <b-form-input v-model="form.app_version" placeholder="Versi Aplikasi"></b-form-input>
-                </b-form-group>
-                <b-form-group label="Periode Aktif" label-for="semester_id" :invalid-feedback="feedback.semester_id" :state="state.semester_id">
-                  <v-select id="semester_id" v-model="form.semester_id" :options="semester" :reduce="nama => nama.semester_id" label="nama" placeholder="== Pilih Periode Aktif ==" :clearable="false">
-                    <template #no-options="{ search, searching, loading }">
-                      Tidak ada data untuk ditampilkan
-                    </template>
-                  </v-select>
-                </b-form-group>
-                <b-form-group label="Batas Waktu Penilaian" label-for="tanggal_penilaian">
-                  <b-form-datepicker v-model="form.tanggal_penilaian" show-decade-nav button-variant="outline-secondary" left locale="id" aria-controls="tanggal_penilaian" @context="onContext" placeholder="== Pilih Batas Waktu Penilaian ==" />
-                </b-form-group>
-                <!--b-form-group label="Tanggal Tampil Tombol Whatsapp" label-for="tanggal_whatsapp" :invalid-feedback="feedback.tanggal_whatsapp" :state="state.tanggal_whatsapp">
-                  <b-form-input v-model="form.tanggal_whatsapp" placeholder="Tanggal Tampil Tombol Whatsapp"></b-form-input>
-                </b-form-group-->
+                <b-row>
+                  <b-col cols="8">
+                    <b-form-group label="Nama Aplikasi" label-for="app_name" :invalid-feedback="feedback.app_name" :state="state.app_name">
+                      <b-form-input v-model="form.app_name" placeholder="Nama Aplikasi"></b-form-input>
+                    </b-form-group>
+                    <b-form-group label="Versi Aplikasi" label-for="app_version" :invalid-feedback="feedback.app_version" :state="state.app_version">
+                      <b-form-input v-model="form.app_version" placeholder="Versi Aplikasi"></b-form-input>
+                    </b-form-group>
+                    <b-form-group label="Periode Aktif" label-for="semester_id" :invalid-feedback="feedback.semester_id" :state="state.semester_id">
+                      <v-select id="semester_id" v-model="form.semester_id" :options="semester" :reduce="nama => nama.semester_id" label="nama" placeholder="== Pilih Periode Aktif ==" :clearable="false">
+                        <template #no-options="{ search, searching, loading }">
+                          Tidak ada data untuk ditampilkan
+                        </template>
+                      </v-select>
+                    </b-form-group>
+                    <b-form-group label="Batas Waktu Penilaian" label-for="tanggal_penilaian">
+                      <b-form-datepicker v-model="form.tanggal_penilaian" show-decade-nav button-variant="outline-secondary" left locale="id" aria-controls="tanggal_penilaian" @context="onContext" placeholder="== Pilih Batas Waktu Penilaian ==" />
+                    </b-form-group>
+                    <!--b-form-group label="Tanggal Tampil Tombol Whatsapp" label-for="tanggal_whatsapp" :invalid-feedback="feedback.tanggal_whatsapp" :state="state.tanggal_whatsapp">
+                      <b-form-input v-model="form.tanggal_whatsapp" placeholder="Tanggal Tampil Tombol Whatsapp"></b-form-input>
+                    </b-form-group-->
+                  </b-col>
+                  <b-col cols="4">
+                    <b-form-group label="Logo Sekolah" label-for="logo">
+                      <b-img thumbnail fluid :src="logo_sekolah" alt="Logo Sekolah" class="mb-1"></b-img>
+                      <b-form-file v-model="file" :state="Boolean(file)" placeholder="Choose a file or drop it here..." drop-placeholder="Drop file here..."></b-form-file>
+                    </b-form-group>
+                  </b-col>
+                </b-row>
               </b-col>
             </b-row>
             <b-row>
@@ -44,11 +54,11 @@
 </template>
 
 <script>
-import { BCard, BCardBody, BSpinner, BOverlay, BForm, BRow, BCol, BFormGroup, BInputGroup, BFormInput, BFormDatepicker, BButton } from 'bootstrap-vue'
+import { BCard, BCardBody, BSpinner, BOverlay, BForm, BRow, BCol, BFormGroup, BInputGroup, BFormInput, BFormDatepicker, BButton, BFormFile, BImg } from 'bootstrap-vue'
 import vSelect from 'vue-select'
 export default {
   components: {
-    BCard, BCardBody, BSpinner, BOverlay, BForm, BRow, BCol, BFormGroup, BInputGroup, BFormInput, BFormDatepicker, BButton, vSelect
+    BCard, BCardBody, BSpinner, BOverlay, BForm, BRow, BCol, BFormGroup, BInputGroup, BFormInput, BFormDatepicker, BButton, BFormFile, BImg, vSelect
   },
   data() {
     return {
@@ -76,6 +86,8 @@ export default {
         tanggal_penilaian: null,
         tanggal_whatsapp: null,
       },
+      file: null,
+      logo_sekolah: null,
     }
   },
   created() {
@@ -93,11 +105,19 @@ export default {
         this.form.tanggal_penilaian = getData.tanggal_penilaian
         this.form.tanggal_whatsapp = getData.tanggal_whatsapp
         this.semester = getData.semester
+        this.logo_sekolah = getData.logo
       })
     },
     handleSubmit(){
       this.loading = true
-      this.$http.post('/pengaturan/umum', this.form).then(response => {
+      const data = new FormData();
+      data.append('logo', (this.file) ? this.file : '')
+      data.append('app_name', (this.form.app_name) ? this.form.app_name : '')
+      data.append('app_version', (this.form.app_version) ? this.form.app_version : '')
+      data.append('semester_id', (this.form.semester_id) ? this.form.semester_id : '')
+      data.append('tanggal_penilaian', (this.form.tanggal_penilaian) ? this.form.tanggal_penilaian : '')
+      //data.append('tanggal_whatsapp tanggal_whatsapp: '')
+      this.$http.post('/pengaturan/umum', data).then(response => {
         this.loading = false
         let getData = response.data
         this.state.app_name = null

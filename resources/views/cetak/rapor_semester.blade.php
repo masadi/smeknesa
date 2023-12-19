@@ -69,6 +69,7 @@
 	</tr>
 	@foreach($data_pembelajaran as $pembelajaran)
 	<?php $pembelajaran = (object) $pembelajaran; ?>
+		{{--
 		<tr>
 			<td class="text-center" rowspan="{{count($pembelajaran->capaian_kompetensi) + 1}}">{{$i++}}</td>
 			<td rowspan="{{count($pembelajaran->capaian_kompetensi) + 1}}">{{$pembelajaran->nama_mata_pelajaran}}</td>
@@ -78,6 +79,20 @@
 			@foreach ($pembelajaran->capaian_kompetensi as $capaian_kompetensi)
 			<td>{{$capaian_kompetensi->deskripsi}}</td>
 			@endforeach
+		</tr>
+		--}}
+		<tr>
+			<td class="text-center">{{$i++}}</td>
+			<td>{{$pembelajaran->nama_mata_pelajaran}}</td>
+			<td class="text-center">{{$pembelajaran->nilai_akhir}}</td>
+			<td>
+			@foreach ($pembelajaran->capaian_kompetensi as $capaian_kompetensi)
+			{{$capaian_kompetensi->deskripsi}} 
+			@if(count($pembelajaran->capaian_kompetensi) > 1)
+			<br><br>
+			@endif
+			@endforeach
+			</td>
 		</tr>
 	@endforeach
 	@endforeach

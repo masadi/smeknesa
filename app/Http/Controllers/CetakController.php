@@ -100,16 +100,9 @@ class CetakController extends Controller
             'nilai_ekstra',
             'presensi',
         ])->find(request()->route('anggota_rombel_id'));
-			$tanggal_rapor = get_setting('tanggal_rapor', request()->route('semester_id'), request()->route('sekolah_id'));
-            //config('global.'.request()->route('sekolah_id').'.'.request()->route('semester_id').'.tanggal_rapor');
-			if($tanggal_rapor) {
-				$tanggal_rapor = Carbon::parse($tanggal_rapor)->translatedFormat('d F Y');
-			} else {
-				$tanggal_rapor = Carbon::now()->translatedFormat('d F Y');
-			}
 			$params = array(
 				'get_siswa'	=> $get_siswa,
-				'tanggal_rapor'	=> $tanggal_rapor,
+				'tanggal_rapor'	=> Carbon::parse($semester->tanggal_cetak)->translatedFormat('d F Y'),
 				'kepala_sekolah' => User::with('guru')->whereRoleIs('kepsek', $semester->nama)->first(),
                 'ekstrakurikuler' => Rombongan_belajar::where(function($query) use ($get_siswa){
                     $query->where('tingkat', 0);

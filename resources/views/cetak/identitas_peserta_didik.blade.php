@@ -52,7 +52,7 @@
 		<td style="width: 5%;">8.</td>
 		<td style="width: 35%;padding:5px;">Alamat Peserta Didik</td>
 		<td style="width: 1%;">:</td>
-		<td style="width: 58%">{{ucwords(strtolower($get_siswa->peserta_didik->alamat_jalan))}} RT {{$get_siswa->peserta_didik->rt}} / RW {{$get_siswa->peserta_didik->rw}}, {{($get_siswa->peserta_didik->desa) ? ucwords(strtolower($get_siswa->peserta_didik->desa->name)) : ''}} {{($get_siswa->peserta_didik->kecamatan) ? ucwords(strtolower($get_siswa->peserta_didik->kecamatan->name)) : ''}} {{($get_siswa->peserta_didik->kabupaten) ? $get_siswa->peserta_didik->kabupaten->name : ''}}  {{$get_siswa->peserta_didik->kode_pos}}</td>
+		<td style="width: 58%">{{ucwords(strtolower($get_siswa->peserta_didik->alamat_jalan))}} RT {{$get_siswa->peserta_didik->rt}} / RW {{$get_siswa->peserta_didik->rw}}, {{($get_siswa->peserta_didik->desa) ? ucwords(strtolower($get_siswa->peserta_didik->desa->name)) : ''}} {{($get_siswa->peserta_didik->kecamatan) ? 'Kecamatan '.ucwords(strtolower($get_siswa->peserta_didik->kecamatan->name)) : ''}} {{($get_siswa->peserta_didik->kabupaten) ? ucwords(strtolower($get_siswa->peserta_didik->kabupaten->name)) : ''}}  {{$get_siswa->peserta_didik->kode_pos}}</td>
 	</tr>
 	<tr>
 		<td style="width: 5%;">9.</td>
@@ -104,9 +104,9 @@
 	</tr>
 	<tr>
 		<td style="width: 5%;">12.</td>
-		<td style="width: 35%;padding:5px;">Alamat Orang Tua</td>
+		<td style="width: 35%;padding:5px;">Alamat Orang Tuaaa</td>
 		<td style="width: 1%;">:</td>
-		<td style="width: 58%">{{ucwords(strtolower($get_siswa->peserta_didik->alamat))}} Rt {{$get_siswa->peserta_didik->rt}} / Rw {{$get_siswa->peserta_didik->rw}}, {{ucwords(strtolower($get_siswa->peserta_didik->desa_kelurahan))}} {{ucwords(strtolower($get_siswa->peserta_didik->kecamatan))}} {{($get_siswa->peserta_didik->kabupaten) ? $get_siswa->peserta_didik->kabupaten->nama : ''}}  {{$get_siswa->peserta_didik->kode_pos}}</td>
+		<td style="width: 58%">{{ucwords(strtolower($get_siswa->peserta_didik->alamat_jalan))}} RT {{$get_siswa->peserta_didik->rt}} / RW {{$get_siswa->peserta_didik->rw}}, {{($get_siswa->peserta_didik->desa) ? ucwords(strtolower($get_siswa->peserta_didik->desa->name)) : ''}} {{($get_siswa->peserta_didik->kecamatan) ? 'Kecamatan '.ucwords(strtolower($get_siswa->peserta_didik->kecamatan->name)) : ''}} {{($get_siswa->peserta_didik->kabupaten) ? ucwords(strtolower($get_siswa->peserta_didik->kabupaten->name)) : ''}}  {{$get_siswa->peserta_didik->kode_pos}}</td>
 	</tr>
 	<tr>
 		<td style="width: 5%;">&nbsp;</td>
@@ -161,10 +161,14 @@
 	<tr>
 		<td style="width: 15%;padding:5px;" rowspan="5"></td>
 		<td style="width: 15%;padding:5px; border:1px solid #000000;" rowspan="5" align="center">
+			@if($get_siswa->peserta_didik->photo)
+			<img src="{{asset('storage/images/'.$get_siswa->peserta_didik->photo)}}" style="width:154px; height: 172px" />
+			@else
 			Pas Foto<br>3 x 4
+			@endif
 		</td>
 		<td style="width: 15%;padding:5px;" rowspan="5">&nbsp;</td>
-		<td style="width: 50%;padding:5px;">{{($get_siswa->peserta_didik->sekolah->kabupaten) ? str_replace('KABUPATEN ','',$get_siswa->peserta_didik->sekolah->kabupaten->name) : '-'}}, {{$get_siswa->peserta_didik->diterima}}<br />Kepala Sekolah</td>
+		<td style="width: 50%;padding:5px;">{{($get_siswa->peserta_didik->sekolah->kabupaten) ? str_replace('KABUPATEN ','',$get_siswa->peserta_didik->sekolah->kabupaten->name) : '-'}}, {{$get_siswa->peserta_didik->diterima_indo}}<br />Kepala Sekolah</td>
 	</tr>
 	<tr>
 		<td style="width: 50%;padding:5px;">&nbsp;</td>
@@ -178,7 +182,7 @@
 	<tr>
 		<td style="width: 50%;padding:5px;">
 			{{($kepala_sekolah) ? $kepala_sekolah->name : ''}}
-			<br />NIP. {{($kepala_sekolah) ? $kepala_sekolah->nip : ''}}
+			<br />NIP. {{($kepala_sekolah) ? $kepala_sekolah->guru->nip : ''}}
 		</td>
 	</tr>
 </table>
