@@ -19,8 +19,7 @@
               <b-th class="text-center">Nama Siswa</b-th>
               <b-th class="text-center">NISN</b-th>
               <b-th class="text-center">Ekstrakurikuler</b-th>
-              <b-th class="text-center">Nilai</b-th>
-              <b-th class="text-center">Deskripsi</b-th>
+              <b-th class="text-center">Predikat</b-th>
             </b-tr>
           </b-thead>
           <b-tbody>
@@ -37,8 +36,7 @@
                 <template v-for="anggota_ekskul in siswa.anggota_ekskul">
                   <b-tr>
                     <b-td class="text-center">{{anggota_ekskul.rombongan_belajar.nama}}</b-td>
-                    <b-td class="text-center">{{(anggota_ekskul.nilai_ekskul) ? anggota_ekskul.nilai_ekskul.nilai : '-'}}</b-td>
-                    <b-td>{{(anggota_ekskul.nilai_ekskul) ? anggota_ekskul.nilai_ekskul.deskripsi : '-'}}</b-td>
+                    <b-td class="text-center">{{predikat_ekstra(anggota_ekskul.nilai_ekstra_avg_angka)}}</b-td>
                   </b-tr>
                 </template>
               </template>
@@ -158,6 +156,25 @@ export default {
     handleReload(){
       this.loadPostsData()
     },
+    predikat_ekstra(angka){
+      console.log(angka);
+      angka = parseInt(angka)
+      console.log(angka);
+      var predikat = '';
+      if(angka > 0 && angka < 70){
+          predikat = 'Kurang';
+      }
+      if(angka >= 70 && angka < 80){
+          predikat = 'Cukup';
+      }
+      if(angka >= 80 && angka < 90){
+          predikat = 'Baik';
+      }
+      if(angka >= 90){
+          predikat = 'Sangat Baik';
+      }
+      return predikat;
+},
   },
 }
 </script>

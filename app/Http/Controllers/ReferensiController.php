@@ -997,6 +997,7 @@ class ReferensiController extends Controller
                     })->with(['anggota_ekskul' => function($query){
                         $query->where('semester_id', request()->semester_id);
                         $query->with(['rombongan_belajar', 'nilai_ekskul']);
+                        $query->withAvg('nilai_ekstra', 'angka');
                     }])->orderBy('nama')->get(),
                     'semester' => Semester::find(request()->semester_id),
                 ];        
