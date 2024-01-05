@@ -2099,6 +2099,7 @@ class ReferensiController extends Controller
             });
         })->when(request()->filter_nama, function($query) {
             $query->where('nama', 'ilike', '%'.request()->filter_nama.'%');
+            $query->orWhere('nisn', 'ilike', '%'.request()->filter_nama.'%');
         })->orderBy('nama')->get();
         return response()->json($data);
     }
@@ -2118,6 +2119,7 @@ class ReferensiController extends Controller
             $query->where('rombongan_belajar.semester_id', semester_id());
         })->when(request()->filter_nama, function($query) {
             $query->where('nama', 'ilike', '%'.request()->filter_nama.'%');
+            $query->orWhere('nisn', 'ilike', '%'.request()->filter_nama.'%');
         })->orderBy('nama')->get();
         return response()->json($data);
     }
