@@ -28,6 +28,11 @@
         </b-overlay>
       </b-col>
       <b-col cols="6">
+        <b-row>
+          <b-col cols="12" class="mb-2">
+            <b-form-input v-model="filter_nama" @input="cari_nama" placeholder="Cari data..."></b-form-input>
+          </b-col>
+        </b-row>
         <b-overlay :show="loading_non_anggota || loading_table" opacity="0.6" size="lg" spinner-variant="danger">
           <b-table-simple bordered responsive>
             <b-thead>
@@ -58,7 +63,7 @@
 </template>
 
 <script>
-import { BRow, BCol, BTableSimple, BThead, BTh, BTbody, BTr, BTd, BButton, BOverlay } from 'bootstrap-vue'
+import { BRow, BCol, BTableSimple, BThead, BTh, BTbody, BTr, BTd, BButton, BOverlay, BFormInput } from 'bootstrap-vue'
 import eventBus from '@core/utils/eventBus'
 export default {
   components: {
@@ -72,6 +77,7 @@ export default {
     BTd,
     BButton,
     BOverlay,
+    BFormInput,
   },
   data() {
     return {
@@ -82,6 +88,7 @@ export default {
       data_anggota: [],
       data_non_anggota: [],
       rombongan_belajar_id: '',
+      filter_nama: '',
     }
   },
   created() {
@@ -116,7 +123,10 @@ export default {
     },
     getNonAnggota(){
       this.loading_non_anggota = true
-      this.$http.get('/referensi/non-anggota').then(response => {
+      this.$http.post('/referensi/non-anggota', {
+        rombongan_belajar_id: this.rombongan_belajar_id,
+        filter_nama: this.filter_nama,
+      }).then(response => {
         this.loading_non_anggota = false
         var getData = response.data
         if(getData.errors){
@@ -159,7 +169,11 @@ export default {
         this.getAnggota()
         this.getNonAnggota()
       })
-    }
+    },
+    cari_nama: _.debounce(function (e) {
+      console.log(e);
+      this.getNonAnggota()
+    }, 500),
   },
 }
 </script>

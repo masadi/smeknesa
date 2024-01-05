@@ -33,14 +33,6 @@
             <b-form-input v-model="filter_nama" @input="cari_nama" placeholder="Cari data..."></b-form-input>
           </b-col>
         </b-row>
-        <!--b-row>
-          <b-col md="4" class="mb-2">
-            <v-select v-model="meta.per_page" :options="[10, 25, 50, 100]" @input="loadPerPage" :clearable="false" :searchable="false"></v-select>
-          </b-col>
-          <b-col md="4" offset-md="4" class="mb-2">
-            <b-form-input @input="search" placeholder="Cari data..."></b-form-input>
-          </b-col>
-        </b-row-->
         <b-overlay :show="loading_non_anggota || loading_table" opacity="0.6" size="lg" spinner-variant="danger">
           <b-table-simple bordered responsive>
             <b-thead>

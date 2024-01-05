@@ -110,7 +110,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/add-semester', [ReferensiController::class, 'add_semester']);
     Route::post('/update-semester', [ReferensiController::class, 'update_semester']);
     Route::post('/lanjutkan-data', [ReferensiController::class, 'lanjutkan']);
-    Route::get('/non-anggota', [ReferensiController::class, 'non_anggota']);
+    Route::post('/non-anggota', [ReferensiController::class, 'non_anggota']);
     Route::post('/set-anggota', [ReferensiController::class, 'set_anggota']);
     Route::post('/set-anggota', [ReferensiController::class, 'set_anggota']);
     Route::post('/proses-kelulusan', [ReferensiController::class, 'proses_kelulusan']);
