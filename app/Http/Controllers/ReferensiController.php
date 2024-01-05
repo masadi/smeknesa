@@ -1401,7 +1401,8 @@ class ReferensiController extends Controller
         if(request()->data == 'agama'){
             $data = Agama::get();
         } elseif(request()->data == 'jurusan'){
-            $data = Jurusan_sp::where('semester_id', semester_id())->orderBy('nama_jurusan_sp')->get();
+            $data = Jurusan_sp::orderBy('nama_jurusan_sp')->get();
+            //where('semester_id', semester_id())->
         } elseif(request()->data == 'kurikulum'){
             $data = Kurikulum::orderBy('kurikulum_id')->get();
         } elseif(request()->data == 'mapel'){
