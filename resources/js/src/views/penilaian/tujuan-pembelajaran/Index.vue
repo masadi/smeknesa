@@ -96,6 +96,9 @@ export default {
       let current_page = this.current_page
       this.$http.get('/nilai/list-cp', {
         params: {
+          guru_id: this.user.guru_id,
+          semester_id: this.user.semester.semester_id,
+          periode_aktif: this.user.semester.nama,
           tingkat: this.tingkat,
           jurusan_sp_id: this.jurusan_sp_id,
           rombongan_belajar_id: this.rombongan_belajar_id,
