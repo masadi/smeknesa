@@ -168,6 +168,7 @@ export default {
         params: {
           aksi: 'absen',
           tanggal: this.form.tanggal,
+          semester_id: this.user.semester.semester_id,
         }
       }).then(response => {
         eventBus.$emit('loading', false)

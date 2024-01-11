@@ -148,6 +148,7 @@ export default {
       form: {
         data: 'presensi',
         aksi: 'pd',
+        semester_id: '',
         tingkat: '',
         rombongan_belajar_id: '',
         tanggal: '',
@@ -190,6 +191,7 @@ export default {
   },
   created() {
     eventBus.$on('open-modal-presensi-pd', this.handleEvent);
+    this.form.semester_id = this.user.semester.semester_id
   },
   methods: {
     handleEvent(){
