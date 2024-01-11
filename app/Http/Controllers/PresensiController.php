@@ -734,6 +734,7 @@ class PresensiController extends Controller
                 $query->whereHas('jadwal', function($query) use ($tanggal){
                     $query->where('hari', $tanggal->translatedFormat('l'));
                 });
+                $query->where('semester_id', semester_id());
             })->orderBy('nama')->get(),
             'tanggal' => $tanggal->format('Y-m-d'),
             'tanggal_str' => $tanggal->translatedFormat('l, j F Y'),
