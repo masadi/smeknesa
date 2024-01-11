@@ -472,11 +472,24 @@ function get_fase($tingkat){
     }
     return $fase;
 }
-function semester_id(){
+/*function semester_id_salah(){
     return get_setting('semester_id');
     return request()->header('X-Semester-Id') ?? get_setting('semester_id');
     return request()->header('X-Semester-Id');
 }
+function tahun_ajaran_id(){
+    $data = Semester::find(semester_id_salah());
+    return ($data) ? $data->tahun_ajaran_id : NULL;
+}
+function tanggal_semester(){
+    $semester = Semester::find(semester_id_salah());
+    $data = [
+        'tanggal_mulai' => $semester->tanggal_mulai,
+        'tanggal_selesai' => $semester->tanggal_selesai,
+        'tanggal_cetak' => ($semester->tanggal_cetak) ? tanggalIndo($semester->tanggal_cetak) : tanggalIndo($semester->tanggal_selesai),
+    ];
+    return $data;
+}*/
 function periode_aktif(){
     return get_setting('periode_aktif');
     return request()->header('X-Periode-Aktif') ?? get_setting('periode_aktif');
@@ -485,19 +498,6 @@ function periode_aktif(){
 function sekolah_id(){
     $data = Sekolah::first();
     return $data->sekolah_id;
-}
-function tahun_ajaran_id(){
-    $data = Semester::find(semester_id());
-    return ($data) ? $data->tahun_ajaran_id : NULL;
-}
-function tanggal_semester(){
-    $semester = Semester::find(semester_id());
-    $data = [
-        'tanggal_mulai' => $semester->tanggal_mulai,
-        'tanggal_selesai' => $semester->tanggal_selesai,
-        'tanggal_cetak' => ($semester->tanggal_cetak) ? tanggalIndo($semester->tanggal_cetak) : tanggalIndo($semester->tanggal_selesai),
-    ];
-    return $data;
 }
 function tanggalIndo($tanggal){
     return ($tanggal) ? Carbon::createFromTimeStamp(strtotime($tanggal))->translatedFormat('j F Y') : NULL;

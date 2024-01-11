@@ -38,7 +38,7 @@ class ModulController extends Controller
             $query->where($this->kondisiModul());
         })
         ->paginate(request()->per_page);
-        return response()->json(['status' => 'success', 'data' => $data, 'semester_id' => semester_id()]);
+        return response()->json(['status' => 'success', 'data' => $data, 'semester_id' => request()->semester_id]);
     }
     private function kondisiModul(){
         return function($query){
@@ -151,7 +151,7 @@ class ModulController extends Controller
         }])->where(function($query){
             $query->where('guru_id', loggedUser()->guru_id);
             $query->whereNull('induk_pembelajaran_id');
-            $query->where('semester_id', semester_id());
+            $query->where('semester_id', request()->semester_id);
             $query->where('nama_mata_pelajaran', 'ilike', '%'.request()->q.'%');
         })->orderBy('mata_pelajaran_id')->get();
         return response()->json($data);

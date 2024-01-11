@@ -69,7 +69,7 @@ class DownloadController extends Controller
                         $query->where('jenis_penilaian_id', '<>', 1);
                         $query->whereHas('pd', function($query){
                             $query->where('anggota_rombel.anggota_rombel_id', request()->route('anggota_rombel_id'));
-                            $query->where('anggota_rombel.semester_id', semester_id());
+                            $query->where('anggota_rombel.semester_id', request()->route('semester_id'));
                         });
                     },
                 ], 'angka');

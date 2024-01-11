@@ -68,7 +68,7 @@ class GenerateAkses extends Command
             [
                 'role' => 'wakakur',
                 'display_name' => 'Waka Kurikulum',
-                'akses' => ['Ref_Mapel', 'Ref_Jurusan', 'Ref_Kelas', 'Remedial', 'Ref_Pd', 'Ref_Guru', 'Rekap_Absen_Guru', 'Jadwal', 'Perencanaan', 'Penilaian', 'Rekap_Nilai', 'Modul', 'Magang_Nilai'],
+                'akses' => ['Ref_Mapel', 'Ref_Jurusan', 'Ref_Kelas', 'Remedial', 'Ref_Pd', 'Ref_Guru', 'Rekap_Absen_Guru', 'Jadwal', 'Perencanaan', 'Penilaian', 'Rekap_Nilai', 'Modul', 'Magang_Nilai', 'Monitoring'],
                 'action' => 'read',
             ],
             [

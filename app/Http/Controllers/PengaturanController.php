@@ -14,7 +14,7 @@ use File;
 class PengaturanController extends Controller
 {
     public function index(){
-        $tanggal_penilaian = get_setting('tanggal_penilaian', semester_id());
+        $tanggal_penilaian = get_setting('tanggal_penilaian', request()->semester_id);
         $data = [
             'app_name' => get_setting('app_name'),
             'app_version' => get_setting('app_version'),
@@ -103,10 +103,10 @@ class PengaturanController extends Controller
             Guru::select('guru_id', 'nama', 'tanggal_lahir')->has('pengguna')->with([
                 'pengguna',
                 'rombongan_belajar' => function($query){
-                    $query->where('semester_id', semester_id());
+                    $query->where('semester_id', request()->semester_id);
                 },
                 'pembelajaran' => function($query){
-                    $query->where('semester_id', semester_id());
+                    $query->where('semester_id', request()->semester_id);
                 },
             ])->orderBy('guru_id')->chunk(200, function ($guru) {
                 foreach($guru as $g){

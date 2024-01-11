@@ -34,7 +34,7 @@ class DashboardController extends Controller
                     [
                         'title' => 'Peserta Didik',
                         'stats' => rupiah(Peserta_didik::whereHas('kelas', function($query){
-                            $query->where('rombongan_belajar.semester_id', semester_id());
+                            $query->where('rombongan_belajar.semester_id', request()->semester_id);
                         })->count()),
                         'icon' => 'users-icon',
                         'color' => 'primary',
@@ -42,7 +42,7 @@ class DashboardController extends Controller
                     [
                         'title' => 'Kelas',
                         'stats' => rupiah(Rombongan_belajar::where(function($query){
-                            $query->where('semester_id', semester_id());
+                            $query->where('semester_id', request()->semester_id);
                         })->count()),
                         'icon' => 'building-icon',
                         'color' => 'danger',
@@ -50,7 +50,7 @@ class DashboardController extends Controller
                     [
                         'title' => 'Mata Pelajaran',
                         'stats' => rupiah(Pembelajaran::whereHas('rombongan_belajar', function($query){
-                            $query->where('semester_id', semester_id());
+                            $query->where('semester_id', request()->semester_id);
                         })->count()),
                         'icon' => 'list-check-icon',
                         'color' => 'success',
@@ -65,7 +65,7 @@ class DashboardController extends Controller
                     [
                         'title' => 'Siswa (L)',
                         'stats' => rupiah(Peserta_didik::where('jenis_kelamin', 'L')->whereHas('kelas', function($query){
-                            $query->where('rombongan_belajar.semester_id', semester_id());
+                            $query->where('rombongan_belajar.semester_id', request()->semester_id);
                             $query->whereHas('pembelajaran', function($query){
                                 $query->where('guru_id', $this->loggedUser()->guru_id);
                             });
@@ -76,7 +76,7 @@ class DashboardController extends Controller
                     [
                         'title' => 'Siswa (P)',
                         'stats' => rupiah(Peserta_didik::where('jenis_kelamin', 'P')->whereHas('kelas', function($query){
-                            $query->where('rombongan_belajar.semester_id', semester_id());
+                            $query->where('rombongan_belajar.semester_id', request()->semester_id);
                             $query->whereHas('pembelajaran', function($query){
                                 $query->where('guru_id', $this->loggedUser()->guru_id);
                             });
@@ -87,7 +87,7 @@ class DashboardController extends Controller
                     [
                         'title' => 'Total Siswa',
                         'stats' => rupiah(Peserta_didik::whereHas('kelas', function($query){
-                            $query->where('rombongan_belajar.semester_id', semester_id());
+                            $query->where('rombongan_belajar.semester_id', request()->semester_id);
                             $query->whereHas('pembelajaran', function($query){
                                 $query->where('guru_id', $this->loggedUser()->guru_id);
                             });
@@ -98,14 +98,14 @@ class DashboardController extends Controller
                     [
                         'title' => 'Nilai Rendah',
                         'stats' => rupiah(Peserta_didik::whereHas('kelas', function($query){
-                            $query->where('rombongan_belajar.semester_id', semester_id());
+                            $query->where('rombongan_belajar.semester_id', request()->semester_id);
                             $query->whereHas('pembelajaran', function($query){
                                 $query->where('guru_id', $this->loggedUser()->guru_id);
                             });
                         })->whereHas('nilai', function($query){
                             $query->where('angka', '<', 70);
                             $query->whereHas('pembelajaran', function($query){
-                                $query->where('semester_id', semester_id());
+                                $query->where('semester_id', request()->semester_id);
                                 $query->where('guru_id', loggedUser()->guru_id);
                             });
                         })->count()),
@@ -161,30 +161,30 @@ class DashboardController extends Controller
     }
     public function grafik(){
         $data = Jurusan_sp::whereHas('rombongan_belajar', function($query){
-            $query->where('semester_id', semester_id());
+            $query->where('semester_id', request()->semester_id);
         })->withCount([
             'anggota_rombel as pria' => function($query){
-                $query->where('anggota_rombel.semester_id', semester_id());
+                $query->where('anggota_rombel.semester_id', request()->semester_id);
                 $query->whereHas('peserta_didik', function($query){
                     $query->where('jenis_kelamin', 'L');
                 });
             },
             'anggota_rombel as wanita' => function($query){
-                $query->where('anggota_rombel.semester_id', semester_id());
+                $query->where('anggota_rombel.semester_id', request()->semester_id);
                 $query->whereHas('peserta_didik', function($query){
                     $query->where('jenis_kelamin', 'P');
                 });
             },
             'anggota_rombel as kelas_10' => function($query){
-                $query->where('rombongan_belajar.semester_id', semester_id());
+                $query->where('rombongan_belajar.semester_id', request()->semester_id);
                 $query->where('tingkat', 10);
             },
             'anggota_rombel as kelas_11' => function($query){
-                $query->where('rombongan_belajar.semester_id', semester_id());
+                $query->where('rombongan_belajar.semester_id', request()->semester_id);
                 $query->where('tingkat', 11);
             },
             'anggota_rombel as kelas_12' => function($query){
-                $query->where('rombongan_belajar.semester_id', semester_id());
+                $query->where('rombongan_belajar.semester_id', request()->semester_id);
                 $query->where('tingkat', 12);
             },
         ])->get();
@@ -213,7 +213,7 @@ class DashboardController extends Controller
     }
     public function get_kelas(){
         $data = [
-            'rombel' => Rombongan_belajar::where('jurusan_sp_id', request()->jurusan_sp_id)->where('semester_id', semester_id())->orderBy('tingkat')->orderBy('nama')->get(),
+            'rombel' => Rombongan_belajar::where('jurusan_sp_id', request()->jurusan_sp_id)->where('semester_id', request()->semester_id)->orderBy('tingkat')->orderBy('nama')->get(),
             'series' => [
                 random_int(1, 100),
                 random_int(1, 100),
@@ -249,7 +249,7 @@ class DashboardController extends Controller
     public function get_chart(){
         $data = [
             'jurusan' => Jurusan_sp::whereHas('rombongan_belajar', function($query){
-                $query->where('semester_id', semester_id());
+                $query->where('semester_id', request()->semester_id);
             })->orderBy('nama_jurusan_sp')->get(),
             'series' => [
                 random_int(1, 100),
@@ -276,7 +276,7 @@ class DashboardController extends Controller
         $pembelajaran = Pembelajaran::with(['guru' => function($query){
             $query->select('guru_id', 'nama');
         }])->where(function($query){
-            $query->where('semester_id', semester_id());
+            $query->where('semester_id', request()->semester_id);
             $query->where('guru_id', loggedUser()->guru_id);
         })->get();
         $insert = 0;

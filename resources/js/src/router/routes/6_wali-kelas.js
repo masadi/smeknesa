@@ -106,4 +106,29 @@ export default [
       ],
     },
   },
+  {
+    path: '/wali-kelas/legger',
+    name: 'walas-legger',
+    component: () => import('@/views/wali-kelas/Legger.vue'),
+    meta: {
+      pageTitle: 'Legger Nilai',
+      resource: 'Wali',
+      action: 'read',
+      breadcrumb: [
+        {
+          text: 'Wali Kelas',
+        },
+        {
+          text: 'Legger Nilai',
+          active: true,
+        },
+      ],
+      tombol_add: {
+        action: 'download-legger',
+        link: '',
+        variant: 'primary',
+        text: 'Download Legger'
+      },
+    },
+  },
 ]

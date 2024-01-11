@@ -57,7 +57,15 @@
                   <small class="text-danger">{{ errors[0] }}</small>
                 </validation-provider>
               </b-form-group>
-
+              <b-form-group label="Tahun Pelajaran" label-for="semester_id">
+                <b-overlay :show="busy" opacity="0.6" size="md" spinner-variant="secondary">
+                  <v-select id="semester_id" v-model="semester_id" :reduce="nama => nama.semester_id" label="nama" :options="data_semester" placeholder="== Pilih Tahun Pelajaran ==" :searchable="false" :clearable="false">
+                    <template #no-options="{ search, searching, loading }">
+                      Tidak ada data untuk ditampilkan
+                    </template>
+                  </v-select>
+                </b-overlay>
+              </b-form-group>
               <!-- checkbox -->
               <b-form-group>
                 <b-form-checkbox id="remember-me" v-model="status" name="checkbox-1">
@@ -107,7 +115,7 @@ import { togglePasswordVisibility } from '@core/mixins/ui/forms'
 import store from '@/store/index'
 import { getHomeRouteForLoggedInUser } from '@/auth/utils'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
-
+import vSelect from 'vue-select'
 export default {
   directives: {
     'b-tooltip': VBTooltip,
@@ -131,14 +139,18 @@ export default {
     ValidationProvider,
     ValidationObserver,
     BOverlay,
+    vSelect
   },
   mixins: [togglePasswordVisibility],
   data() {
     return {
+      busy: true,
       loading: false,
       status: '',
       password: '',
       userEmail: '',
+      semester_id: '',
+      data_semester: [],
       sideImg: '/img/pages/login-Integrated-system.webp',
 
       // validation rules
@@ -162,6 +174,14 @@ export default {
       return app_name;
     }
   },
+  created() {
+    this.$http.get('/auth/semester').then(response => {
+      this.busy = false
+      let getData = response.data
+      this.semester_id = getData.aktif.semester_id
+      this.data_semester = getData.semester
+    })
+  },
   methods: {
     login() {
       this.loading = true
@@ -170,6 +190,7 @@ export default {
           this.$http.post('/auth/login', {
             email: this.userEmail,
             password: this.password,
+            semester_id: this.semester_id,
           }).then(response => {
             this.loading = false
             const { userData } = response.data

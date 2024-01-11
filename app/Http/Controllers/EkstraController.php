@@ -23,7 +23,7 @@ class EkstraController extends Controller
             $query->where('deskripsi', 'ilike', '%'.request()->q.'%');
         })
         ->paginate(request()->per_page);
-        return response()->json(['status' => 'success', 'data' => $data, 'semester_id' => semester_id()]);
+        return response()->json(['status' => 'success', 'data' => $data, 'semester_id' => request()->semester_id]);
     }
     public function ekskul(){
         $data = [

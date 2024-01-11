@@ -26,14 +26,14 @@ class SiswaController extends Controller
                     $query->where('jenis_penilaian_id', 2);
                     $query->whereHas('pd', function($query){
                         $query->where('anggota_rombel.peserta_didik_id', request()->peserta_didik_id);
-                        $query->where('semester_id', semester_id());
+                        $query->where('semester_id', request()->semester_id);
                     });
                 },
                 'all_nilai as nilai_sumatif' => function($query){
                     $query->where('jenis_penilaian_id', 3);
                     $query->whereHas('pd', function($query){
                         $query->where('anggota_rombel.peserta_didik_id', request()->peserta_didik_id);
-                        $query->where('semester_id', semester_id());
+                        $query->where('semester_id', request()->semester_id);
                     });
                 },
             ], 'angka')->orderBy('mata_pelajaran_id')->get();

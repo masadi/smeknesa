@@ -57,6 +57,25 @@ export default [
     },
   },
   {
+    path: '/monitoring/legger',
+    name: 'monitoring-legger',
+    component: () => import('@/views/monitoring/Legger.vue'),
+    meta: {
+      pageTitle: 'Legger Nilai',
+      resource: 'Monitoring',
+      action: 'read',
+      breadcrumb: [
+        {
+          text: 'Monitoring',
+        },
+        {
+          text: 'Legger Nilai',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
     path: '/program-keahlian/rapor-pkl',
     name: 'progli-rapor-pkl',
     component: () => import('@/views/program-keahlian/RaporPkl.vue'),

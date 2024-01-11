@@ -18,6 +18,7 @@ use App\Http\Controllers\RekapController;
 use App\Http\Controllers\EkstraController;
 use App\Http\Controllers\PrakerinController;
 use App\Http\Controllers\ProjekController;
+use App\Http\Controllers\MonitoringController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -253,5 +254,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
   Route::group(['prefix' => 'prakerin'], function () {
     Route::get('/', [PrakerinController::class, 'index']);
     Route::get('/list-cp', [PrakerinController::class, 'list_cp']);
+  });
+  Route::group(['prefix' => 'monitoring'], function () {
+    Route::post('/legger', [MonitoringController::class, 'legger']);
   });
 });

@@ -33,6 +33,7 @@ export default {
       loading_form: false,
       data_siswa: [],
       form: {
+        semester_id: '',
         nilai: true,
         penilaian: true,
         tingkat: '',
@@ -50,6 +51,9 @@ export default {
         pembelajaran_id: null,
       },
     }
+  },
+  created(){
+    this.form.semester_id = this.user.semester.semester_id
   },
   methods: {
     handleHideForm(){

@@ -24,6 +24,13 @@ export default [
         resource: 'Penilaian',
         action: 'read',
       },
+      {
+        icon: 'hand-click-icon',
+        title: 'Legger',
+        route: 'monitoring-legger',
+        resource: 'Monitoring',
+        action: 'read',
+      },
     ]
   },
   {

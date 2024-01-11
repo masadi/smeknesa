@@ -197,6 +197,7 @@ export default {
       data_tp: [],
       jumlah_form: 0,
       form: {
+        semester_id: '',
         tingkat: '',
         rombongan_belajar_id: '',
         pembelajaran_id: '',
@@ -226,6 +227,7 @@ export default {
   },
   created() {
     eventBus.$on('open-modal-input-nilai', this.handleEvent);
+    this.form.semester_id = this.user.semester.semester_id
   },
   methods: {
     handleEvent(data){

@@ -32,7 +32,7 @@ class KirimBk extends Command
     {
         $data = Rombongan_belajar::where(function($query){
             $query->where('tingkat', '<>', 0);
-            $query->where('semester_id', semester_id());
+            $query->where('semester_id', request()->semester_id);
         })->withWhereHas('kelas_bk', function($query){
             $query->withWhereHas('guru', function($query){
                 $query->withWhereHas('pengguna');

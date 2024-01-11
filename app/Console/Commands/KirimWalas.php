@@ -14,7 +14,7 @@ class KirimWalas extends Command
      *
      * @var string
      */
-    protected $signature = 'kirim:walas';
+    protected $signature = 'kirim:walas {semester_id}';
 
     /**
      * The console command description.
@@ -32,7 +32,7 @@ class KirimWalas extends Command
     {
         $data = Rombongan_belajar::where(function($query){
             $query->where('tingkat', '<>', 0);
-            $query->where('semester_id', semester_id());
+            $query->where('semester_id', $this->argument('semester_id'));
         })->withWhereHas('wali_kelas', function($query){
             $query->withWhereHas('pengguna');
         })->withWhereHas('pd', function($query){

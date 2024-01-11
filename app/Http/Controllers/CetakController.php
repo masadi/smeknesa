@@ -249,23 +249,23 @@ class CetakController extends Controller
             $query->withCount([
                 'presensi as A' => function($query){
                     $query->where('absen', 'A');
-                    $query->where('semester_id', semester_id());
+                    $query->where('semester_id', request()->route('semester_id'));
                 },
                 'presensi as I' => function($query){
                     $query->where('absen', 'I');
-                    $query->where('semester_id', semester_id());
+                    $query->where('semester_id', request()->route('semester_id'));
                 },
                 'presensi as S' => function($query){
                     $query->where('absen', 'S');
-                    $query->where('semester_id', semester_id());
+                    $query->where('semester_id', request()->route('semester_id'));
                 },
                 'presensi as D' => function($query){
                     $query->where('absen', 'D');
-                    $query->where('semester_id', semester_id());
+                    $query->where('semester_id', request()->route('semester_id'));
                 },
             ]);
             $query->with(['kelas' => function($query){
-                $query->where('rombongan_belajar.semester_id', semester_id());
+                $query->where('rombongan_belajar.semester_id', request()->route('semester_id'));
             }]);
         }])->with(['presensi'])->find(request()->route('ijin_id'));
         $data = [
@@ -347,10 +347,10 @@ class CetakController extends Controller
                     },
                 ], 'angka');
                 $query->with('wali_kelas');
-                $query->where('rombongan_belajar.semester_id', semester_id());
+                $query->where('rombongan_belajar.semester_id', request()->route('semester_id'));
             },
             'kelas' => function($query){
-                $query->where('rombongan_belajar.semester_id', semester_id());
+                $query->where('rombongan_belajar.semester_id', request()->route('semester_id'));
                 $query->with('semester');
             }
         ])->find(request()->route('peserta_didik_id'));
@@ -384,7 +384,7 @@ class CetakController extends Controller
                 $query->with(['kabupaten']);
 			},
 			'kelas' => function($query){
-				$query->where('rombongan_belajar.semester_id', semester_id());
+				$query->where('rombongan_belajar.semester_id', request()->route('semester_id'));
 			},
 			'pd_pkl' => function($query){
                 $query->with(['praktik_kerja_lapangan']);
@@ -400,7 +400,7 @@ class CetakController extends Controller
 				$query->where('pkl_id', request()->route('pkl_id'));
 			}
 		])->find(request()->route('peserta_didik_id'));
-        $semester = Semester::find(semester_id());
+        $semester = Semester::find(request()->route('semester_id'));
         $tanggal_rapor = Carbon::parse($semester->tanggal_cetak)->translatedFormat('d F Y');
         $data = [
         	'pd' => $pd,

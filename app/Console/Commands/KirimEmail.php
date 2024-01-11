@@ -34,7 +34,7 @@ class KirimEmail extends Command
         dd($tujuan);
         $data = Rombongan_belajar::where(function($query){
             $query->where('tingkat', '<>', 0);
-            $query->where('semester_id', semester_id());
+            $query->where('semester_id', semester_id_salah());
         })->withWhereHas('wali_kelas', function($query){
             $query->withWhereHas('pengguna');
         })->withWhereHas('pd', function($query){

@@ -49,7 +49,7 @@ class AuthController extends Controller
                 ]
             ],401);
         }
-        $semester = Semester::find(semester_id());
+        $semester = Semester::find(request()->semester_id);
         if(!$semester){
             $semester = Semester::where('periode_aktif', 1)->first();
         }
@@ -120,7 +120,7 @@ class AuthController extends Controller
         if($request->user()->hasRole(['guru', 'pd'], periode_aktif())){
             $jadwal = Jadwal::with([
                 'pembelajaran' => function($query){
-                    $query->where('semester_id', semester_id());
+                    $query->where('semester_id', request()->semester_id);
                 },
                 'guru',
                 'kelas',
@@ -139,7 +139,7 @@ class AuthController extends Controller
             ])->where(function($query) use ($request){
                 $query->has('jam');
                 $query->whereHas('pembelajaran', function($query) use ($request){
-                    $query->where('semester_id', semester_id());
+                    $query->where('semester_id', request()->semester_id);
                     if($request->user()->guru_id){
                         $query->where('guru_id', $request->user()->guru_id);
                     } else {
@@ -304,7 +304,7 @@ class AuthController extends Controller
         } else {
             User::whereRoleIs('pd', request()->periode_aktif)->whereDoesntHave('pd')->delete();
             Peserta_didik::doesntHave('pengguna')->whereHas('anggota_rombel', function($query){
-                $query->where('semester_id', semester_id());
+                $query->where('semester_id', request()->semester_id);
             })->orderBy('peserta_didik_id')->chunk(200, function ($data){
                 foreach ($data as $d) {
                     $new_password = strtolower(Str::random(8));

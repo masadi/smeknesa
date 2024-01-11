@@ -38,6 +38,13 @@ export default [
         resource: 'Wali',
         action: 'read',
       },
+      {
+        icon: 'hand-click-icon',
+        title: 'Legger',
+        route: 'walas-legger',
+        resource: 'Wali',
+        action: 'read',
+      },
     ]
   },
 ]

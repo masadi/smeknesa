@@ -57,7 +57,7 @@ class EditorController extends Controller
         }
         $kajur = Kajur::updateOrCreate(
             [
-                'semester_id' => semester_id(),
+                'semester_id' => request()->semester_id,
                 'jurusan_sp_id' => request()->jurusan_sp_id,
             ],
             [

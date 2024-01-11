@@ -18,7 +18,7 @@
 
     <!-- Notifications -->
     <vue-perfect-scrollbar :settings="perfectScrollbarSettings" class="scrollable-container media-list scroll-area" tagname="li">
-      <b-link v-for="notification in notifications" :key="notification.subtitle" @click="readNotif(notification.id, notification.route)">
+      <b-link v-for="notification in notifications" :key="notification.id" @click="readNotif(notification.id, notification.route)">
         <b-media>
           <p class="media-heading">
             <span class="font-weight-bolder">

@@ -143,6 +143,7 @@ export default {
       let current_page = this.current_page
       this.$http.get('/nilai', {
         params: {
+          semester_id: this.user.semester.semester_id,
           tingkat: this.tingkat,
           jurusan_sp_id: this.jurusan_sp_id,
           rombongan_belajar_id: this.rombongan_belajar_id,

@@ -82,7 +82,7 @@ class PrakerinController extends Controller
         $data = Capaian_pembelajaran::where(function($query){
             $query->where('guru_id', loggedUser()->guru_id);
         })->withCount(['tp'])->withWhereHas('pembelajaran', function($query){
-            $query->where('semester_id', semester_id());
+            $query->where('semester_id', request()->semester_id);
             $query->where('guru_id', loggedUser()->guru_id);
             $query->whereHas('mata_pelajaran', function($query){
                 $query->where('jenis', 'PKL');
@@ -119,12 +119,12 @@ class PrakerinController extends Controller
             $query->where($this->kondisiCp());
         })
         ->paginate(request()->per_page);
-        return response()->json(['status' => 'success', 'data' => $data, 'semester_id' => semester_id()]);
+        return response()->json(['status' => 'success', 'data' => $data, 'semester_id' => request()->semester_id]);
     }
     private function kondisiCp(){
         return function($query){
             $query->whereHas('pembelajaran', function($query){
-                $query->where('semester_id', semester_id());
+                $query->where('semester_id', request()->semester_id);
                 $query->where('guru_id', loggedUser()->guru_id);
             });
         };

@@ -109,6 +109,7 @@ export default {
       loading_table: false,
       data_siswa: [],
       form: {
+        semester_id: '',
         tingkat: '',
         rombongan_belajar_id: '',
         pembelajaran_id: '',
@@ -131,6 +132,9 @@ export default {
       data_tp: [],
       data_sumatif: [],
     }
+  },
+  created(){
+    this.form.semester_id = this.user.semester.semester_id
   },
   methods: {
     resetForm(){

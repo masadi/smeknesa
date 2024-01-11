@@ -104,7 +104,7 @@ export default {
     changeMapel(val){
       this.$emit('hide_form')
       if(val){
-        this.$emit('show_form')
+        this.$emit('show_form', val)
       }
     },
   },

@@ -13,7 +13,7 @@ class JadwalController extends Controller
     public function index(){
         $data = Jadwal::with([
             'pembelajaran' => function($query){
-                $query->where('semester_id', semester_id());
+                $query->where('semester_id', request()->semester_id);
             },
             'guru',
             'kelas',
@@ -47,12 +47,12 @@ class JadwalController extends Controller
             $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
         })
         ->paginate(request()->per_page);
-        return response()->json(['status' => 'success', 'data' => $data, 'semester_id' => semester_id()]);
+        return response()->json(['status' => 'success', 'data' => $data, 'semester_id' => request()->semester_id]);
     }
     private function kondisiMapel(){
         return function($query){
             $query->whereHas('pembelajaran', function($query){
-                $query->where('semester_id', semester_id());
+                $query->where('semester_id', request()->semester_id);
                 if(loggedUser()->hasRole('walas', periode_aktif())){
                     $query->whereHas('rombongan_belajar', function($query){
                         $query->where('guru_id', loggedUser()->guru_id);
@@ -99,7 +99,7 @@ class JadwalController extends Controller
             $jadwal = Jadwal::create([
                 'pembelajaran_id' => request()->pembelajaran_id,
                 'hari' => request()->hari,
-                'semester_id' => semester_id(),
+                'semester_id' => request()->semester_id,
                 'rombongan_belajar_id' => request()->rombongan_belajar_id,
             ]);    
         }
@@ -157,7 +157,7 @@ class JadwalController extends Controller
             $jadwal = Jadwal::updateorCreate([
                 'pembelajaran_id' => request()->pembelajaran_id,
                 'hari' => request()->hari,
-                'semester_id' => semester_id(),
+                'semester_id' => request()->semester_id,
                 'rombongan_belajar_id' => request()->rombongan_belajar_id,
             ]);    
         }
