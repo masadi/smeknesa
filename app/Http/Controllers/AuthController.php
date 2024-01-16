@@ -304,7 +304,9 @@ class AuthController extends Controller
             ];
         } else {
             User::whereRoleIs('pd', request()->periode_aktif)->whereDoesntHave('pd')->delete();
-            Peserta_didik::doesntHave('pengguna')->whereHas('anggota_rombel', function($query){
+            Peserta_didik::whereDoesntHave('pengguna', function($query){
+                $query->whereRoleIs('pd', request()->periode_aktif);
+            })->whereHas('anggota_rombel', function($query){
                 $query->where('semester_id', request()->semester_id);
             })->orderBy('peserta_didik_id')->chunk(200, function ($data){
                 foreach ($data as $d) {
