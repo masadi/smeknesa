@@ -96,6 +96,7 @@ class AuthController extends Controller
         }
         $user->detil = $detil;
         return response()->json([
+            'team' => $team,
             'userData' => $user,
         ]);
         return response()->json([
