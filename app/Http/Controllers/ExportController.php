@@ -12,6 +12,7 @@ use App\Exports\AbsensiSiswa;
 use App\Exports\RekapRemedial;
 use App\Exports\RekapNilai;
 use App\Exports\AbsensiGuru;
+use App\Exports\LeggerNilai;
 use App\Models\Peserta_didik;
 use App\Models\Tujuan_pembelajaran;
 use App\Models\Penilaian;
@@ -144,5 +145,11 @@ class ExportController extends Controller
             })->orderBy('created_at')->get(),
         ];
         return Excel::download(new RekapNilai($pembelajaran->pembelajaran_id, $pembelajaran->rombongan_belajar_id, $pembelajaran->guru_id, $data), $file);
+    }
+    public function legger(){
+        $rombongan_belajar_id = request()->route('rombongan_belajar_id');
+        $rombel = Rombongan_belajar::find($rombongan_belajar_id);
+        $file = 'LEGGER NILAI KELAS '.$rombel->nama.'.xlsx';
+        return Excel::download(new LeggerNilai(request()->route('rombongan_belajar_id')), $file);
     }
 }

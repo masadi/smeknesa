@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Pembelajaran;
 use App\Models\Semester;
 use App\Models\Peserta_didik;
+use App\Models\Anggota_rombel;
 use App\Models\Rombongan_belajar;
 use App\Models\Guru;
 
@@ -104,6 +105,10 @@ class SiswaController extends Controller
         return response()->json([
             'status' => 'success',
             'data' => $data,
+            'pd' => (request()->aksi == 'akademik') ? Anggota_rombel::whereHas('rombongan_belajar', function($query){
+                $query->where('semester_id', request()->semester_id);
+                $query->where('tingkat', '<>', 0);
+            })->where('peserta_didik_id', request()->peserta_didik_id)->first() : NULL,
         ]);
     }
     public function teman(){

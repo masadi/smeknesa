@@ -1,6 +1,7 @@
 <?php 
 use App\Models\Setting;
 use App\Models\Peserta_didik;
+use App\Models\Anggota_rombel;
 use App\Models\Agama;
 use App\Models\Pembelajaran;
 use App\Models\Sekolah;
@@ -735,4 +736,12 @@ function predikat_ekstra($angka){
         $predikat = 'Sangat Baik';
     }
     return $predikat;
+}
+function getNilai($all_nilai, $anggota_rombel_id){
+    $collection = collect($all_nilai);
+    $filtered = $collection->filter(function ($value, $key) use ($anggota_rombel_id){
+        return $value['anggota_rombel_id'] == $anggota_rombel_id;
+    });
+    $total = ceil($filtered->avg('angka'));
+    return $total;
 }

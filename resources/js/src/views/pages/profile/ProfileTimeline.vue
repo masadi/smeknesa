@@ -43,11 +43,11 @@
           </p>
         </app-timeline-body>
       </app-timeline>
-      <modal-akademik :data="data"></modal-akademik>
-      <modal-ekskul :data="data"></modal-ekskul>
-      <modal-remedial :data="data"></modal-remedial>
-      <modal-sikap :data="data"></modal-sikap>
-      <modal-presensi :data="data"></modal-presensi>
+      <modal-akademik></modal-akademik>
+      <modal-ekskul></modal-ekskul>
+      <modal-remedial></modal-remedial>
+      <modal-sikap></modal-sikap>
+      <modal-presensi></modal-presensi>
     </b-card>
   </b-overlay>
 </template>
@@ -81,7 +81,6 @@ export default {
     return {
       akademikShow: false,
       loading: false,
-      data: {},
     }
   },
   methods: {
@@ -93,8 +92,8 @@ export default {
         aksi: aksi,
       }).then(res => {
         this.loading = false
-        this.data = res.data
-        eventBus.$emit(`open-modal-${aksi}`)
+        //this.data = res.data
+        eventBus.$emit(`open-modal-${aksi}`, res.data)
       })
     },
   }

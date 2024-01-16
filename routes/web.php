@@ -36,5 +36,6 @@ Route::group(['prefix' => 'export'], function () {
     Route::get('/password-pd/{rombongan_belajar_id}', [ExportController::class, 'password_pd']);
     Route::get('/nilai-ekskul/{rombongan_belajar_id}', [ExportController::class, 'nilai_ekskul']);
     Route::get('/rekap-nilai/{pembelajaran_id}', [ExportController::class, 'rekap_nilai']);
+    Route::get('/legger/{rombongan_belajar_id}', [ExportController::class, 'legger']);
 });
 Route::get('/{any}', [ApplicationController::class, 'index'])->where('any', '.*');

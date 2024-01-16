@@ -85,6 +85,12 @@ export default [
           active: true,
         },
       ],
+      tombol_add: {
+        action: 'rangking',
+        link: '',
+        variant: 'primary',
+        text: 'Generate Rangking'
+      },
     },
   },
   {

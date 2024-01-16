@@ -14,6 +14,8 @@ use App\Models\Penilaian;
 use App\Models\Sekolah;
 use App\Models\Deskripsi_mapel;
 use App\Models\Jurusan_sp;
+use App\Models\Anggota_rombel;
+use App\Models\Rombongan_belajar;
 use Validator;
 
 class NilaiController extends Controller
@@ -896,6 +898,65 @@ class NilaiController extends Controller
                 'title' => 'Gagal',
             ];
         }
+        return response()->json($data);
+    }
+    public function rangking(){
+        $siswa = Anggota_rombel::withSum(['all_nilai as sumatif' => function($query){
+            $query->where('jenis_penilaian_id', 3);
+        }], 'angka')->withSum(['all_nilai as formatif' => function($query){
+            $query->where('jenis_penilaian_id', 2);
+        }], 'angka')->whereHas('rombongan_belajar', function($query){
+            $query->where('semester_id', request()->semester_id);
+            $query->where('guru_id', request()->guru_id);
+            $query->where('tingkat', '<>', 0);
+        })->get();
+        $nilai_sumatif = [];
+        $nilai_formatif = [];
+        foreach($siswa as $anggota){
+            $anggota->nilai_sumatif = $anggota->sumatif;
+            $anggota->nilai_formatif = $anggota->formatif;
+            $nilai_sumatif[] = [
+                'id' => $anggota->anggota_rombel_id,
+                'nilai' => $anggota->sumatif,
+            ];
+            $nilai_formatif[$anggota->anggota_rombel_id] = $anggota->formatif;
+            $anggota->save();
+        }
+        //rsort($nilai_sumatif);
+        /*$arrlength = count($nilai_sumatif);
+        $rank = 1;
+        $prev_rank = $rank;
+        for($x = 0; $x < $arrlength; $x++) {
+            if ($x==0) {
+                //echo $nilai_sumatif[$x]."- Rank".($rank);
+            }
+        elseif ($nilai_sumatif[$x] != $nilai_sumatif[$x-1]) {
+                $rank++;
+                $prev_rank = $rank;
+                //echo $nilai_sumatif[$x]."- Rank".($rank);
+        }
+        else{
+                $rank++;
+                //echo $nilai_sumatif[$x]."- Rank".($prev_rank);
+            }
+        }*/
+        $collection = collect($nilai_sumatif);       
+        $sorted = $collection->sortBy([
+            ['nilai', 'desc']
+        ]);
+        $rank = 1;
+        foreach($sorted->values()->all() as $a){
+            Anggota_rombel::where('anggota_rombel_id', $a['id'])->update(['rangking' => $rank]);
+            $rank++;
+        }
+        $data = [
+            'icon' => 'success',
+            'text' => 'Rangking Kelas berhasil diperbaharui!',
+            'title' => 'Berhasil',
+            'siswa' => $siswa,
+            'nilai_sumatif' => $nilai_sumatif,
+            'sorted' => $sorted->values()->all(),
+        ];
         return response()->json($data);
     }
 }

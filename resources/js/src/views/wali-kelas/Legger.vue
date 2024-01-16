@@ -39,6 +39,7 @@
 
 <script>
 import { BCard, BCardBody, BSpinner, BAlert, BForm, BOverlay, BTableSimple, BThead, BTbody, BTr, BTh, BTd, BBadge, BButton } from 'bootstrap-vue'
+import eventBus from '@core/utils/eventBus'
 export default {
   components: {
     BCard,
@@ -75,13 +76,18 @@ export default {
       data_rombel: [],
       anggota_rombel_id: '',
       rombel_tujuan: null,
+      rombongan_belajar_id: '',
       
     }
   },
   created() {
+    eventBus.$on('download-legger', this.handleEvent);
     this.loadPostsData()
   },
   methods: {
+    handleEvent(){
+      window.open(`/export/legger/${this.rombongan_belajar_id}`, '_blank')
+    },
     loadPostsData() {
       this.isBusy = true
       this.$http.post('/referensi/get-siswa', {
@@ -93,6 +99,7 @@ export default {
         let getData = response.data
         this.data_siswa = getData.pd
         this.data_pembelajaran = getData.pembelajaran
+        this.rombongan_belajar_id = getData.rombongan_belajar.rombongan_belajar_id
       })
     },
     getNilai(all_nilai, anggota_rombel_id){
@@ -101,7 +108,7 @@ export default {
       })
       const { length } = arr;
       return arr.reduce((acc, val) => {
-          return acc + (val.angka/length);
+        return acc + (val.angka/length);
       }, 0);
     }
   },

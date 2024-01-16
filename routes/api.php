@@ -191,6 +191,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/hapus-penilaian', [NilaiController::class, 'hapus_penilaian']);
     Route::post('/detil-nilai', [NilaiController::class, 'detil_nilai']);
     Route::post('/update', [NilaiController::class, 'update']);
+    Route::post('/rangking', [NilaiController::class, 'rangking']);
   });
   Route::group(['prefix' => 'modul'], function () {
     Route::get('/', [ModulController::class, 'index']);

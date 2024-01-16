@@ -15,22 +15,18 @@ export default {
     BAvatar,
     BButton,
   },
-  props: {
-    data: {
-      type: Object,
-      required: true,
-    },
-  },
   data(){
     return {
-      modalShow: false
+      modalShow: false,
+      data: [],
     }
   },
   created() {
     eventBus.$on('open-modal-sikap', this.handleEvent);
   },
   methods: {
-    handleEvent(){
+    handleEvent(data){
+      console.log(data);
       this.modalShow = true
     },
   },

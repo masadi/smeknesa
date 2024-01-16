@@ -20,7 +20,7 @@
             </b-overlay>
           </b-form-group>
           <b-form-group label="Unduh Legger" label-for="rombongan_belajar_id" label-cols-md="3" v-if="show">
-            <b-button variant="danger">Unduh Legger</b-button>
+            <b-button variant="danger" @click="unduhLegger">Unduh Legger</b-button>
           </b-form-group>
         </b-col>
         <b-col cols="12">
@@ -150,9 +150,12 @@ export default {
       })
       const { length } = arr;
       return arr.reduce((acc, val) => {
-          return acc + (val.angka/length);
+        return acc + (val.angka/length);
       }, 0);
-    }
+    },
+    unduhLegger(){
+      window.open(`/export/legger/${this.form.rombongan_belajar_id}`, '_blank')
+    },
   },
 }
 </script>
