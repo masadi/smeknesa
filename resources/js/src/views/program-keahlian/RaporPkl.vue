@@ -23,7 +23,7 @@
               <b-td class="text-center">{{siswa.nisn}}</b-td>
               <b-td class="text-center">{{ siswa.kelas.nama }}</b-td>
               <b-td class="text-center">
-                <b-button variant="primary" :href="`/cetak/sertifikat/pkl/${siswa.peserta_didik_id}/${siswa.pd_pkl.pkl_id}`" target="_blank" size="sm">
+                <b-button variant="primary" :href="`/cetak/sertifikat/pkl/${siswa.peserta_didik_id}/${siswa.pd_pkl.pkl_id}/${user.semester.semester_id}`" target="_blank" size="sm">
                   <b-icon icon="file-pdf-fill" aria-hidden="true"></b-icon>
                 </b-button>
               </b-td>                
