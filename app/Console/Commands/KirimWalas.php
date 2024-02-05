@@ -63,7 +63,6 @@ class KirimWalas extends Command
                 },
             ]);
         })->orderBy('tingkat')->get();
-        dd($data);
         foreach($data as $d){
             $mail_walas = $d->wali_kelas->pengguna->email;
             $mailWalas = [
@@ -72,8 +71,9 @@ class KirimWalas extends Command
                 'data_siswa' => $d->pd,
                 'tanggal' => now()->translatedFormat('l, j F Y')
             ];
-            Mail::to($mail_walas)->send(new SendWalas($mailWalas));
-            Mail::to('chuzmukadar@gmail.com')->send(new SendWalas($mailWalas));
+            Mail::to('masadi.com@gmail.com')->send(new SendWalas($mailWalas));
+            //Mail::to($mail_walas)->send(new SendWalas($mailWalas));
+            //Mail::to('chuzmukadar@gmail.com')->send(new SendWalas($mailWalas));
         }
         return Command::SUCCESS;
     }
