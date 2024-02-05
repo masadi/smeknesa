@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\Rombongan_belajar;
 use App\Mail\SendWalas;
+use Carbon\Carbon;
 use Mail;
 
 class KirimWalas extends Command
@@ -14,7 +15,7 @@ class KirimWalas extends Command
      *
      * @var string
      */
-    protected $signature = 'kirim:walas {semester_id}';
+    protected $signature = 'kirim:walas';
 
     /**
      * The console command description.
@@ -32,7 +33,7 @@ class KirimWalas extends Command
     {
         $data = Rombongan_belajar::where(function($query){
             $query->where('tingkat', '<>', 0);
-            $query->where('semester_id', $this->argument('semester_id'));
+            $query->where('semester_id', semester_id());
         })->withWhereHas('wali_kelas', function($query){
             $query->withWhereHas('pengguna');
         })->withWhereHas('pd', function($query){
@@ -42,28 +43,33 @@ class KirimWalas extends Command
             $query->withCount([
                 'presensi as alpa' => function($query){
                     $query->where('absen', 'A');
-                    $query->whereTanggal(now()->format('Y-m-d'));
+                    //$query->whereTanggal(now()->format('Y-m-d'));
+                    $query->where('tanggal', Carbon::today()->format('Y-m-d'));
                 },
                 'presensi as sakit' => function($query){
                     $query->where('absen', 'S');
-                    $query->whereTanggal(now()->format('Y-m-d'));
+                    //$query->whereTanggal(now()->format('Y-m-d'));
+                    $query->where('tanggal', Carbon::today()->format('Y-m-d'));
                 },
                 'presensi as ijin' => function($query){
                     $query->where('absen', 'I');
-                    $query->whereTanggal(now()->format('Y-m-d'));
+                    //$query->whereTanggal(now()->format('Y-m-d'));
+                    $query->where('tanggal', Carbon::today()->format('Y-m-d'));
                 },
                 'presensi as dispen' => function($query){
                     $query->where('absen', 'D');
-                    $query->whereTanggal(now()->format('Y-m-d'));
+                    //$query->whereTanggal(now()->format('Y-m-d'));
+                    $query->where('tanggal', Carbon::today()->format('Y-m-d'));
                 },
             ]);
         })->orderBy('tingkat')->get();
+        dd($data);
         foreach($data as $d){
             $mail_walas = $d->wali_kelas->pengguna->email;
             $mailWalas = [
                 'nama_kelas' => $d->nama,
                 'nama_guru' => $d->wali_kelas->nama,
-                'data_siswa' => ($d->pd),
+                'data_siswa' => $d->pd,
                 'tanggal' => now()->translatedFormat('l, j F Y')
             ];
             Mail::to($mail_walas)->send(new SendWalas($mailWalas));

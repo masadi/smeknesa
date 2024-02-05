@@ -491,6 +491,10 @@ function tanggal_semester(){
     ];
     return $data;
 }*/
+function semester_id(){
+    $data = Semester::where('periode_aktif', 1)->first();
+    return ($data) ? $data->semester_id : NULL;
+}
 function periode_aktif(){
     return get_setting('periode_aktif');
     return request()->header('X-Periode-Aktif') ?? get_setting('periode_aktif');
