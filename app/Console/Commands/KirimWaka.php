@@ -48,15 +48,17 @@ class KirimWaka extends Command
                 $query->where('tanggal', Carbon::today()->format('Y-m-d'));
             },
         ])->orderBy('nama')->get();
-        $users = User::whereRoleIs('wakakur', periode_aktif())->get();
-        foreach($users as $user){
-            $send_data = [
-                'nama_guru' => $user->name,
-                'data_guru' => $data,
-                'tanggal' => now()->translatedFormat('l, j F Y'),
-            ];
-            Mail::to($user->email)->send(new SendWaka($send_data));
-            Mail::to('chuzmukadar@gmail.com')->send(new SendWaka($send_data));
+        if($data->count()){
+            $users = User::whereRoleIs('wakakur', periode_aktif())->get();
+            foreach($users as $user){
+                $send_data = [
+                    'nama_guru' => $user->name,
+                    'data_guru' => $data,
+                    'tanggal' => now()->translatedFormat('l, j F Y'),
+                ];
+                Mail::to($user->email)->send(new SendWaka($send_data));
+                Mail::to('chuzmukadar@gmail.com')->send(new SendWaka($send_data));
+            }
         }
         return Command::SUCCESS;
     }
