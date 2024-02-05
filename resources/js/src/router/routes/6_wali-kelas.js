@@ -17,7 +17,7 @@ export default [
         },
       ],
       tombol_add: {
-        action: 'download-rekap',
+        action: 'download-rekap-siswa',
         link: '',
         variant: 'primary',
         text: 'Download Rekap'

@@ -36,7 +36,7 @@ export default [
         },
       ],
       tombol_add: {
-        action: 'download-rekap',
+        action: 'download-rekap-guru',
         link: '',
         variant: 'primary',
         text: 'Download Rekap'

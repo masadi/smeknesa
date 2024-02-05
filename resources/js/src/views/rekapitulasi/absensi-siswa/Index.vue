@@ -96,7 +96,7 @@ export default {
     }
   },
   created() {
-    eventBus.$on('download-rekap', this.handleEvent);
+    eventBus.$on('download-rekap-siswa', this.handleEvent);
     this.bulan = this.getBulan()
     this.loadPostsData()
   },

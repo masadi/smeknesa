@@ -13,7 +13,7 @@
       </b-thead>
       <b-tbody>
         <template v-if="data.length">
-          <b-tr v-for="(item, index) in data" :key="item.pembelajaran_id">
+          <b-tr v-for="item in data" :key="item.pembelajaran_id">
             <b-td>{{item.nama_mata_pelajaran}}</b-td>
             <b-td class="text-center">{{(item.nilai_formatif) ? parseInt(item.nilai_formatif) : ''}}</b-td>
             <b-td class="text-center">{{(item.nilai_sumatif) ? parseInt(item.nilai_sumatif) : ''}}</b-td>

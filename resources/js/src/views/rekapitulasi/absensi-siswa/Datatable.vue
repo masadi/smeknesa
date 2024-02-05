@@ -239,6 +239,7 @@ export default {
       if(search){
         this.$http.post('/referensi/get-rombel', {
           nama: search,
+          semester_id: this.user.semester.semester_id,
         }).then(response => {
           this.meta.data_rombel = response.data
           console.log(response.data);

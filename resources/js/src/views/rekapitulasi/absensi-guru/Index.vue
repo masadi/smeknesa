@@ -70,7 +70,7 @@ export default {
     moment.locale('id');
     console.log(moment.months());
     console.log(moment.monthsShort());
-    eventBus.$on('download-rekap', this.handleEvent);
+    eventBus.$on('download-rekap-guru', this.handleEvent);
     this.loadPostsData()
   },
   methods: {
