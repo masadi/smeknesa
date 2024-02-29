@@ -106,7 +106,11 @@ export default {
       this.loadPostsData()
     },
     loadPengaturan(){
-      this.$http.get('/pengaturan/umum').then(response => {
+      this.$http.get('/pengaturan/umum', {
+        params: {
+          semester_id: this.user.semester.semester_id
+        }
+      }).then(response => {
         let getData = response.data
         let selisih = this.dateDiff(getData.tanggal_penilaian)
         this.deadline = this.isNotGreaterThanZero(selisih)
