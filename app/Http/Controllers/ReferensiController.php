@@ -899,7 +899,7 @@ class ReferensiController extends Controller
                     }
                 }
             }
-        })->select('rombongan_belajar_id', 'pembelajaran_id', 'nama_mata_pelajaran', 'mata_pelajaran_id')->orderBy('mata_pelajaran_id')->get();
+        })->select('guru_id', 'rombongan_belajar_id', 'pembelajaran_id', 'nama_mata_pelajaran', 'mata_pelajaran_id')->orderBy('mata_pelajaran_id')->get();
         $jam = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
         if(request()->hari == 'Jumat'){
             $jam = [1, 2, 3, 4, 5, 6];
