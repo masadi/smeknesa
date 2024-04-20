@@ -149,5 +149,12 @@ export default [
     resource: 'Perijinan',
     action: 'read',
   },
+  {
+    icon: 'hand-off-icon',
+    title: 'Terlambat',
+    route: 'terlambat',
+    resource: 'Perijinan',
+    action: 'read',
+  },
 ]
   

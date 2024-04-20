@@ -36,6 +36,7 @@ use App\Models\Dudi;
 use App\Models\Capaian_pembelajaran;
 use App\Models\Tujuan_pembelajaran;
 use App\Models\Kajur;
+use App\Models\Terlambat;
 use Carbon\Carbon;
 use Indonesia;
 
@@ -652,6 +653,8 @@ class ReferensiController extends Controller
             $get = Tujuan_pembelajaran::find(request()->id);
         } elseif(request()->data == 'dudi'){
             $get = Dudi::find(request()->id);
+        } elseif(request()->data == 'terlambat'){
+            $get = Terlambat::find(request()->id);
         }
         
         if($get){

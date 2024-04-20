@@ -238,4 +238,15 @@ class Peserta_didik extends Model
 	{
 		return $this->hasOne(Absensi_pkl::class, 'peserta_didik_id', 'peserta_didik_id');
 	}
+	public function terlambat()
+	{
+		return $this->hasManyThrough(
+            Terlambat::class,
+			Anggota_rombel::class,
+			'peserta_didik_id',
+			'anggota_rombel_id',
+			'peserta_didik_id',
+			'anggota_rombel_id'
+        );
+	}
 }

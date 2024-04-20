@@ -14,6 +14,7 @@ use App\Models\Jurusan_sp;
 use App\Models\Rombongan_belajar;
 use App\Models\Sekolah;
 use App\Models\Ijin;
+use App\Models\Terlambat;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 
@@ -931,6 +932,106 @@ class PresensiController extends Controller
             $data = [];
         } else {
             $data = ($tanggal->dayOfWeek == Carbon::FRIDAY) ? [1,2,3,4,5,6] : [1,2,3,4,5,6,7,8,9,10,11];
+        }
+        return response()->json($data);
+    }
+    public function terlambat(){
+        $data = Terlambat::WithWhereHas('pd', function($query){
+            $query->withWhereHas('kelas', function($query){
+                $query->where('rombongan_belajar.semester_id', request()->semester_id);
+            });
+            $query->withWhereHas('anggota_rombel', function($query){
+                $query->where('semester_id', request()->semester_id);
+                $query->whereHas('rombongan_belajar', function($query){
+                    $query->where('tingkat', '<>', 0);
+                });
+            });
+        })->orderBy(request()->sortby, request()->sortbydesc)
+        ->when(request()->q, function($query) {
+            //$query->where($this->kondisiAbsen());
+            $query->where('nama', 'ilike', '%'.request()->q.'%');
+        })->paginate(request()->per_page);
+        return response()->json(['status' => 'success', 'data' => $data, 'semester_id' => request()->semester_id, 'data_bulan' => $this->bulan(), 'bulan' => ($this->get_bulan()) ?? date('m')]);                
+    }
+    public function add_terlambat(){
+        $validator = Validator::make(request()->all(), 
+            [
+                'anggota_rombel_id' => ['required'],
+                'keterangan' => ['required'],
+                'tanggal' => ['required'],
+            ],
+            [
+                'anggota_rombel_id.required' => 'Siswa tidak boleh kosong',
+                'keterangan.required' => 'Alasan tidak boleh kosong',
+                'tanggal.required' => 'Tanggal tidak boleh kosong',
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => FALSE,
+                'errors' => $validator->errors(),
+            ]);
+        }
+        $insert = terlambat::create([
+            'anggota_rombel_id' => request()->anggota_rombel_id,
+            'keterangan' => request()->keterangan,
+            'tanggal' => request()->tanggal,
+        ]);
+        if($insert){
+            $data = [
+                'success' => TRUE,
+                'icon' => 'success',
+                'text' => 'Data Terlambat berhasil disimpan',
+                'title' => 'Berhasil',
+                'terlambat' => $insert,
+            ];
+        } else {
+            $data = [
+                'success' => FALSE,
+                'icon' => 'error',
+                'text' => 'Data Terlambat gagal disimpan. Silahkan coba beberapa saat lagi!',
+                'title' => 'Gagal',
+                'terlambat' => $insert,
+            ];
+        }
+        return response()->json($data);
+    }
+    public function update_terlambat(){
+        $validator = Validator::make(request()->all(), 
+            [
+                'keterangan' => ['required'],
+                'tanggal' => ['required'],
+            ],
+            [
+                'keterangan.required' => 'Alasan tidak boleh kosong',
+                'tanggal.required' => 'Tanggal tidak boleh kosong',
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => FALSE,
+                'errors' => $validator->errors(),
+            ]);
+        }
+        $insert = terlambat::find(request()->terlambat_id);
+        $insert->keterangan = request()->keterangan;
+        $insert->tanggal = request()->tanggal;
+        if($insert->save()){
+            $data = [
+                'success' => TRUE,
+                'icon' => 'success',
+                'text' => 'Data Terlambat berhasil diperbaharui',
+                'title' => 'Berhasil',
+                'terlambat' => $insert,
+            ];
+        } else {
+            $data = [
+                'success' => FALSE,
+                'icon' => 'error',
+                'text' => 'Data Terlambat gagal diperbaharui. Silahkan coba beberapa saat lagi!',
+                'title' => 'Gagal',
+                'terlambat' => $insert,
+            ];
         }
         return response()->json($data);
     }

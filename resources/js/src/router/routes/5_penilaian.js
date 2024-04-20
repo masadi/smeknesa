@@ -208,28 +208,6 @@ export default [
     },
   },
   {
-    path: '/perizinan',
-    name: 'perizinan',
-    component: () => import('@/views/presensi/perijinan/Index.vue'),
-    meta: {
-      pageTitle: 'Perizinan',
-      resource: 'Perijinan',
-      action: 'read',
-      breadcrumb: [
-        {
-          text: 'Perizinan',
-          active: true,
-        },
-      ],
-      tombol_add: {
-        action: 'add-perijinan',
-        link: '',
-        variant: 'primary',
-        text: 'Tambah Data'
-      },
-    },
-  },
-  {
     path: '/projek/perencanaan',
     name: 'projek-perencanaan',
     component: () => import('@/views/penilaian/projek/Index.vue'),
@@ -372,6 +350,50 @@ export default [
           active: true,
         },
       ],
+    },
+  },
+  {
+    path: '/perizinan',
+    name: 'perizinan',
+    component: () => import('@/views/presensi/perijinan/Index.vue'),
+    meta: {
+      pageTitle: 'Perizinan',
+      resource: 'Perijinan',
+      action: 'read',
+      breadcrumb: [
+        {
+          text: 'Perizinan',
+          active: true,
+        },
+      ],
+      tombol_add: {
+        action: 'add-perijinan',
+        link: '',
+        variant: 'primary',
+        text: 'Tambah Data'
+      },
+    },
+  },
+  {
+    path: '/terlambat',
+    name: 'terlambat',
+    component: () => import('@/views/presensi/terlambat/Index.vue'),
+    meta: {
+      pageTitle: 'Terlambat',
+      resource: 'Perijinan',
+      action: 'read',
+      breadcrumb: [
+        {
+          text: 'Terlambat',
+          active: true,
+        },
+      ],
+      tombol_add: {
+        action: 'add-terlambat',
+        link: '',
+        variant: 'primary',
+        text: 'Tambah Data'
+      },
     },
   },
 ]

@@ -14,6 +14,7 @@ use App\Models\Opsi_projek;
 use App\Models\Dimensi_projek;
 use App\Models\Ijin;
 use App\Models\User;
+use App\Models\Terlambat;
 use Carbon\Carbon;
 use PDF;
 
@@ -412,5 +413,59 @@ class CetakController extends Controller
 		$pdf->getMpdf()->SetFooter($pd->nama.' - '. $pd->kelas->nama .' |{PAGENO}|Dicetak dari '.config('app.name').' v.'.get_setting('app_version'));
         $general_title = $pd->nama.' - '.$pd->kelas->nama;
         return $pdf->stream($general_title.'.pdf');
+    }
+    public function terlambat(){
+        /*$terlambat = Terlambat::with(['pd' => function($query){
+            $query->withCount(['terlambat' => function($query){
+            }]);
+        }])->find(request()->route('terlambat_id'));
+        dd($terlambat);*/
+        $terlambat = Terlambat::with(['pd' => function($query){
+            $query->withCount(['terlambat' => function($query){
+                $query->whereHas('pd', function($query){
+                    $query->whereHas('kelas', function($query){
+                        $query->where('rombongan_belajar.semester_id', request()->route('semester_id'));
+                        $query->where('tingkat', '<>', 0);
+                    });
+                });
+            }]);
+            $query->with('kelas', function($query){
+                $query->where('rombongan_belajar.semester_id', request()->route('semester_id'));
+                $query->where('tingkat', '<>', 0);
+            });
+            
+        }])->find(request()->route('terlambat_id'));
+        $semester = Semester::find(request()->route('semester_id'));
+        $data = [
+            'data' => $terlambat,
+            'qrcode' => base64_encode(QrCode::format('svg')->size(150)->errorCorrection('H')->generate($terlambat->pd->peserta_didik_id??'string')),
+            'semester' => $semester,
+        ];
+        $pdf = PDF::loadView('cetak.terlambat', $data);
+        $pdf->getMpdf()->defaultfooterfontsize=6;
+        $pdf->getMpdf()->defaultfooterline=0;
+        $pdf->getMpdf()->allow_charset_conversion=true;  // Set by default to TRUE
+        $pdf->getMpdf()->charset_in='UTF-8';
+        $pdf->getMpdf()->autoLangToFont = true;
+        //$pdf->getMpdf()->SetFooter('|Surat ini dicetak dari akun: ---|');
+        //$pdf->getMpdf()->SetFooter('Surat ini dicetak dari akun: '.auth()->user()->name);
+        $output = clean($terlambat->pd->nama . ' - ' . $terlambat->pd->kelas->nama) . '.pdf';
+            //$pdf->getMpdf()->Output("$output", 'F');
+        return $pdf->stream($output);
+        if(request()->aksi == 'preview'){
+            $pdf = PDF::loadView('cetak.perijinan', $data);
+            $pdf->getMpdf()->defaultfooterfontsize=6;
+            $pdf->getMpdf()->defaultfooterline=0;
+            $pdf->getMpdf()->allow_charset_conversion=true;  // Set by default to TRUE
+            $pdf->getMpdf()->charset_in='UTF-8';
+            $pdf->getMpdf()->autoLangToFont = true;
+            //$pdf->getMpdf()->SetFooter('|Surat ini dicetak dari akun: ---|');
+            //$pdf->getMpdf()->SetFooter('Surat ini dicetak dari akun: '.auth()->user()->name);
+            $output = clean($ijin->pd->nama . ' - ' . $ijin->pd->kelas->nama) . '.pdf';
+            //$pdf->getMpdf()->Output("$output", 'F');
+            $pdf->stream($output); 
+        } else {
+            return view('cetak.cetak-perijinan', $data);
+        }  
     }
 }
