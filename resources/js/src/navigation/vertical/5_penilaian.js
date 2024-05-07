@@ -150,7 +150,7 @@ export default [
     action: 'read',
   },
   {
-    icon: 'hand-off-icon',
+    icon: 'run-icon',
     title: 'Terlambat',
     route: 'terlambat',
     resource: 'Perijinan',

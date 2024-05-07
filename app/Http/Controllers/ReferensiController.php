@@ -931,25 +931,28 @@ class ReferensiController extends Controller
         })->get();
     }
     public function get_group_mapel(){
-        $data = Mata_pelajaran::where(function($query){
-            if(request()->data){
-                if(request()->data == 'pkl'){
-                    $query->where('jenis', 'PKL');
+        $data = [
+            'mata_pelajaran' => Mata_pelajaran::where(function($query){
+                if(request()->data){
+                    if(request()->data == 'pkl'){
+                        $query->where('jenis', 'PKL');
+                        $query->whereHas('pembelajaran', function($query){
+                            $query->where('guru_id', request()->guru_id);
+                            $query->where('semester_id', request()->semester_id);
+                        });
+                    }
+                } else {
+                    $query->where('jenis', 'Umum');
                     $query->whereHas('pembelajaran', function($query){
+                        $query->whereNotNull('kelompok_id');
+                        $query->whereNotNull('no_urut');
                         $query->where('guru_id', request()->guru_id);
                         $query->where('semester_id', request()->semester_id);
                     });
                 }
-            } else {
-                $query->where('jenis', 'Umum');
-                $query->whereHas('pembelajaran', function($query){
-                    $query->whereNotNull('kelompok_id');
-                    $query->whereNotNull('no_urut');
-                    $query->where('guru_id', request()->guru_id);
-                    $query->where('semester_id', request()->semester_id);
-                });
-            }
-        })->orderBy('mata_pelajaran_id')->get();
+            })->orderBy('mata_pelajaran_id')->get(),
+            'semester' => Semester::orderBy('semester_id')->get(),
+        ];
         /*Pembelajaran::where(function($query){
             if(request()->data){
                 if(request()->data == 'pkl'){

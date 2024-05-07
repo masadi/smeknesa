@@ -10,6 +10,7 @@
       <b-thead>
         <b-tr>
           <b-th class="text-center">Tujuan Pembelajaran</b-th>
+          <b-th class="text-center">Semester</b-th>
           <b-th class="text-center">Aksi</b-th>
         </b-tr>
       </b-thead>
@@ -17,6 +18,9 @@
         <template v-for="tp in detil.tp">
           <b-tr>
             <b-td>{{ tp.deskripsi }}</b-td>
+            <b-td class="text-center">
+              {{ (tp.semester) ? tp.semester.nama : '' }}
+            </b-td>
             <b-td class="text-center">
               <b-dropdown id="dropdown-dropleft" dropleft text="Aksi" variant="primary" size="sm">
                 <b-dropdown-item href="javascript:void(0)" @click="aksi(tp, 'edit')"><pencil-icon />Edit</b-dropdown-item>
@@ -58,6 +62,7 @@ export default {
       this.$http.post('/nilai/detil-data', {
         data: 'cp',
         id: data.cp_id,
+        semester_id: this.user.semester.semester_id,
       }).then(response => {
         let getData = response.data
         this.detil = getData.data

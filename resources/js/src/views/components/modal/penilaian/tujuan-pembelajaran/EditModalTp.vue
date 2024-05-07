@@ -4,6 +4,13 @@
       <b-form ref="form" @submit.stop.prevent="handleSubmit">
         <b-row>
           <b-col cols="12">
+            <b-form-group label="Semester" label-for="semester_id" label-cols-md="3" :invalid-feedback="feedback.semester_id" :state="state.semester_id">
+              <v-select id="semester_id" v-model="form.semester_id" :reduce="nama => nama.semester_id" label="nama" :options="data_semester" placeholder="== Pilih Semester ==" :state="state.semester_id">
+                <template #no-options="{ search, searching, loading }">
+                  Tidak ada data untuk ditampilkan
+                </template>
+              </v-select>
+            </b-form-group>  
             <b-form-group label="Tujuan Pembelajaran" label-for="deskripsi" label-cols-md="3" :invalid-feedback="feedback.deskripsi" :state="state.deskripsi">
               <b-form-textarea id="deskripsi" v-model="form.deskripsi" :state="state.deskripsi" placeholder="Deskripsi Tujuan Pembelajaran" rows="3" max-rows="8"></b-form-textarea>
             </b-form-group>  
@@ -25,6 +32,7 @@
 <script>
 import { BOverlay, BForm, BFormGroup, BRow, BCol, BFormTextarea, BButton } from 'bootstrap-vue'
 import eventBus from '@core/utils/eventBus'
+import vSelect from 'vue-select'
 export default {
   components: {
     BOverlay,
@@ -34,6 +42,7 @@ export default {
     BCol,
     BFormTextarea,
     BButton,
+    vSelect,
   },
   data() {
     return {
@@ -43,14 +52,18 @@ export default {
       form: {
         tp_id: '',
         cp_id: '',
+        semester_id: '',
         deskripsi: ''
       },
       feedback: {
+        semester_id: '',
         deskripsi: ''
       },
       state: {
+        semester_id: null,
         deskripsi: null,
       },
+      data_semester: [],
     }
   },
   created() {
@@ -58,18 +71,25 @@ export default {
   },
   methods: {
     handleEvent(data){
-      this.form.tp_id = data.tp_id
-      this.form.cp_id = data.cp_id
-      this.form.deskripsi = data.deskripsi
-      this.editTpModalShow = true
+      this.$http.get('/nilai/get-semester').then(response => {
+        let getData = response.data
+        this.data_semester = getData.data
+        this.form.tp_id = data.tp_id
+        this.form.cp_id = data.cp_id
+        this.form.deskripsi = data.deskripsi
+        this.editTpModalShow = true
+      });
     },
     hideModal(){
       this.editTpModalShow = false
       this.resetForm()
     },
     resetForm(){
-      this.form.deskripsi
+      this.form.semester_id = ''
+      this.form.deskripsi = ''
+      this.feedback.semester_id = ''
       this.feedback.deskripsi = ''
+      this.state.semester_id = null
       this.state.deskripsi = null
     },
     handleOk(bvModalEvent){
@@ -80,6 +100,8 @@ export default {
       this.$http.post('/nilai/update-tp', this.form).then(response => {
         let getData = response.data
         if(getData.errors){
+          this.feedback.semester_id = (getData.errors.semester_id) ? getData.errors.semester_id.join(', ') : ''
+          this.state.semester_id = (getData.errors.semester_id) ? false : null
           this.feedback.deskripsi = (getData.errors.deskripsi) ? getData.errors.deskripsi.join(', ') : ''
           this.state.deskripsi = (getData.errors.deskripsi) ? false : null
         } else {

@@ -16,6 +16,7 @@ use App\Models\Deskripsi_mapel;
 use App\Models\Jurusan_sp;
 use App\Models\Anggota_rombel;
 use App\Models\Rombongan_belajar;
+use App\Models\Semester;
 use Validator;
 
 class NilaiController extends Controller
@@ -139,11 +140,13 @@ class NilaiController extends Controller
             [
                 'mata_pelajaran_id' => 'required',
                 'cp_id' => 'required',
+                'semester_id' => 'required',
                 //'desk_tp.*'=> 'required',
             ],
             [
                 'mata_pelajaran_id.required' => 'Mata Pelajaran tidak boleh kosong!',
                 'cp_id.required' => 'Capaian Pembelajaran tidak boleh kosong!',
+                'semester_id.required' => 'Semester tidak boleh kosong!',
                 //'desk_tp.*.required' => 'Tujuan Pembelajaran tidak boleh kosong!',
             ]
         );
@@ -162,6 +165,7 @@ class NilaiController extends Controller
         foreach(array_filter($request['desk_tp']) as $tp){
             Tujuan_pembelajaran::create([
                 'cp_id' => request()->cp_id,
+                'semester_id' => request()->semester_id,
                 'deskripsi' => $tp,
             ]);
         }
@@ -201,14 +205,17 @@ class NilaiController extends Controller
     public function update_tp(){
         request()->validate(
             [
+                'semester_id' => 'required',
                 'deskripsi' => 'required',
             ],
             [
+                'semester_id.required' => 'Semester tidak boleh kosong!',
                 'deskripsi.required' => 'Deskripsi Tujuan Pembelajaran tidak boleh kosong!',
             ]
         );
         $tp = Tujuan_pembelajaran::find(request()->tp_id);
         $tp->deskripsi = request()->deskripsi;
+        $tp->semester_id = request()->semester_id;
         if($tp->save()){
             $data = [
                 'icon' => 'success',
@@ -404,7 +411,7 @@ class NilaiController extends Controller
         return response()->json($data);
     }
     public function get_tp(){
-        $data = Tujuan_pembelajaran::where('cp_id', request()->cp_id)->orderBy('created_at')->get();
+        $data = Tujuan_pembelajaran::where('cp_id', request()->cp_id)->where('semester_id', request()->semester_id)->orderBy('created_at')->get();
         return response()->json(['data_tp' => $data]);
     }
     public function get_siswa(){
@@ -817,7 +824,7 @@ class NilaiController extends Controller
             $result = ['data' => Penilaian::with(['jenis_penilaian'])->withCount('nilai')->where('pembelajaran_id', request()->id)->get()];
         }
         if($data == 'cp'){
-            $result = ['data' => Capaian_pembelajaran::with(['tp'])->find(request()->id)];
+            $result = ['data' => Capaian_pembelajaran::with(['tp.semester'])->find(request()->id)];
         }
         return response()->json($result);
     }
@@ -958,5 +965,9 @@ class NilaiController extends Controller
             'sorted' => $sorted->values()->all(),
         ];
         return response()->json($data);
+    }
+    public function get_semester(){
+        $data = Semester::orderBy('semester_id')->get();
+        return response()->json(['status' => 'success', 'data' => $data, 'semester_id' => request()->semester_id]);
     }
 }

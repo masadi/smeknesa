@@ -23,6 +23,15 @@
               </b-overlay>
             </b-form-group>
           </b-col>
+          <b-col cols="12">
+            <b-form-group label="Semester" label-for="semester_id" label-cols-md="3" :invalid-feedback="feedback.semester_id" :state="state.semester_id">
+              <v-select id="semester_id" v-model="form.semester_id" :reduce="nama => nama.semester_id" label="nama" :options="data_semester" placeholder="== Pilih Semester ==" :state="state.semester_id">
+                <template #no-options="{ search, searching, loading }">
+                  Tidak ada data untuk ditampilkan
+                </template>
+              </v-select>
+            </b-form-group> 
+          </b-col>
           <template v-for="tp in jumlah_form">
             <b-col cols="12">
               <b-form-group :label="`Tujuan Pembelajaran (${tp})`" :label-for="`desk-tp-${tp}`" label-cols-md="3" :invalid-feedback="feedback.desk_tp[tp]" :state="state.desk_tp[tp]">
@@ -69,19 +78,23 @@ export default {
       loading_cp: false,
       data_mapel: [],
       data_cp: [],
+      data_semester: [],
       form: {
         mata_pelajaran_id: '',
         cp_id: '',
+        semester_id: '',
         desk_tp: []
       },
       feedback: {
         mata_pelajaran_id: '',
         cp_id: '',
+        semester_id: '',
         desk_tp: {}
       },
       state: {
         mata_pelajaran_id: null,
         cp_id: null,
+        semester_id: null,
         desk_tp: {}
       },
       jumlah_form: 5,
@@ -104,7 +117,9 @@ export default {
       eventBus.$emit('loading', true);
       this.$http.post('/referensi/get-group-mapel', this.form).then(response => {
         eventBus.$emit('loading', false);
-        this.data_mapel = response.data
+        let getData = response.data
+        this.data_mapel = getData.mata_pelajaran
+        this.data_semester = getData.semester
         this.addModalShow = true
       });
     },
@@ -145,15 +160,17 @@ export default {
       let data = new FormData();
       data.append('mata_pelajaran_id', this.form.mata_pelajaran_id);
       data.append('cp_id', this.form.cp_id);
+      data.append('semester_id', this.form.semester_id);
       data.append('desk_tp', JSON.stringify(this.form.desk_tp));
       this.$http.post('/nilai/add-cp', data).then(response => {
         let getData = response.data
         if(getData.errors){
-          console.log(getData.errors);
           this.state.mata_pelajaran_id = (getData.errors.mata_pelajaran_id) ? false : null
           this.feedback.mata_pelajaran_id = (getData.errors.mata_pelajaran_id) ? getData.errors.mata_pelajaran_id.join(', ') : ''
           this.state.cp_id = (getData.errors.cp_id) ? false : null
           this.feedback.cp_id = (getData.errors.cp_id) ? getData.errors.cp_id.join(', ') : ''
+          this.state.semester_id = (getData.errors.semester_id) ? false : null
+          this.feedback.semester_id = (getData.errors.semester_id) ? getData.errors.semester_id.join(', ') : ''
           for (let i = 0; i < 5; i++) {
             this.feedback.desk_tp[i] = (getData.errors['desk_tp.'+i]) ? getData.errors['desk_tp.'+i].join(', ') : ''
             this.state.desk_tp[i] = (getData.errors['desk_tp.'+i]) ? false : null

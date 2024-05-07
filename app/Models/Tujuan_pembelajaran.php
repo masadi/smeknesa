@@ -27,4 +27,8 @@ class Tujuan_pembelajaran extends Model
 	{
 		return $this->hasOne(Tp_pkl::class, 'tp_id', 'tp_id');
 	}
+	public function semester()
+	{
+		return $this->hasOne(Semester::class, 'semester_id', 'semester_id');
+	}
 }
