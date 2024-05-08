@@ -137,6 +137,46 @@
 		<td> : {{(jmlAbsen($get_siswa->peserta_didik->presensi, 'A')) ? jmlAbsen($get_siswa->peserta_didik->presensi, 'A') : 0}} hari</td>
 	</tr>
 </table>
+<br />
+<?php
+if($get_siswa->rombongan_belajar->semester->semester == 2){
+	if($get_siswa->rombongan_belajar->rombel_empat_tahun){
+		$text_status = 'Kenaikan Kelas';
+		$not_yet = 'Belum dilakukan kenaikan kelas';
+	} elseif($get_siswa->rombongan_belajar->tingkat >= 12 ){
+		$text_status = 'Status Kelulusan';
+		$not_yet = 'Belum dilakukan kelulusan';
+	} else {
+		$text_status = 'Kenaikan Kelas';
+		$not_yet = 'Belum dilakukan kenaikan kelas';
+	}
+} else {
+	$text_status = '';
+	$not_yet = '';
+}
+?>
+@if($get_siswa->rombongan_belajar->semester->semester == 2)
+<table width="100%" class="table table-bordered">
+	<tr>
+		<th>Status Kelulusan</th>
+	</tr>
+	<tr>
+		<td style="padding:10px;">
+			@if($get_siswa->kenaikan_kelas)
+			@if($get_siswa->kenaikan_kelas->status == 3)
+			LULUS
+			@else
+			{{status_kenaikan($get_siswa->kenaikan_kelas->status)}} {{$get_siswa->kenaikan_kelas->nama_kelas}}
+			@endif
+			@else
+			{{$not_yet}}
+			@endif
+		</td>
+	</tr>
+</table>
+<br>
+@endif
+<br>
 <table width="100%">
 	<tr>
 	  <td style="width:40%">
