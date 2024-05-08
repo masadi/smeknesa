@@ -14,6 +14,7 @@ import {
     faHeartCircleCheck,
     faPersonSkating,
     faUnlock,
+    faStreetView,
 } from '@fortawesome/free-solid-svg-icons'
 import { 
     faCalendarDays,
@@ -26,4 +27,5 @@ library.add(
     faHeartCircleCheck,
     faPersonSkating,
     faUnlock,
+    faStreetView,
 )

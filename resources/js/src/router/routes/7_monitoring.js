@@ -94,4 +94,80 @@ export default [
       ],
     },
   },
+  {
+    path: '/ukk/paket',
+    name: 'ukk-paket',
+    component: () => import('@/views/ukk/Paket.vue'),
+    meta: {
+      pageTitle: 'Paket UKK',
+      resource: 'Kajur',
+      action: 'read',
+      breadcrumb: [
+        {
+          text: 'UKK',
+        },
+        {
+          text: 'Paket UKK',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/ukk/perencanaan',
+    name: 'ukk-perencanaan',
+    component: () => import('@/views/ukk/Perencanaan.vue'),
+    meta: {
+      pageTitle: 'Perencanaan UKK',
+      resource: 'Kajur',
+      action: 'read',
+      breadcrumb: [
+        {
+          text: 'UKK',
+        },
+        {
+          text: 'Perencanaan UKK',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/ukk/penilaian',
+    name: 'ukk-penilaian',
+    component: () => import('@/views/ukk/Penilaian.vue'),
+    meta: {
+      pageTitle: 'Penilaian UKK',
+      resource: 'Kajur',
+      action: 'read',
+      breadcrumb: [
+        {
+          text: 'UKK',
+        },
+        {
+          text: 'Penilaian UKK',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/ukk/sertifikat',
+    name: 'ukk-sertifikat',
+    component: () => import('@/views/ukk/Sertifikat.vue'),
+    meta: {
+      pageTitle: 'sertifikat UKK',
+      resource: 'Kajur',
+      action: 'read',
+      breadcrumb: [
+        {
+          text: 'UKK',
+        },
+        {
+          text: 'sertifikat UKK',
+          active: true,
+        },
+      ],
+    },
+  },
 ]

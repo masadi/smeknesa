@@ -6,14 +6,9 @@
       'disabled': item.disabled
     }"
   >
-    <b-link
-      v-bind="linkProps"
-      class="dropdown-item"
-    >
-      <feather-icon
-        :icon="item.icon || 'CircleIcon'"
-        size="24"
-      />
+    <b-link v-bind="linkProps" class="dropdown-item">
+      <component :is="item.icon || 'circle-dot-filled-icon'" />
+      <!-- feather-icon :icon="item.icon || 'CircleIcon'" size="24" /-->
       <span class="menu-title">{{ t(item.title) }}</span>
     </b-link>
   </li>

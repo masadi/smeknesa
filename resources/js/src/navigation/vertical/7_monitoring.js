@@ -46,5 +46,45 @@ export default [
       },
     ]
   },
+  {
+    icon: 'archive-icon',
+    title: 'UKK',
+    children: [
+      {
+        icon: 'hand-click-icon',
+        title: 'Paket UKK',
+        route: 'ukk-paket',
+        resource: 'Kajur',
+        action: 'read',
+      },
+      {
+        icon: 'hand-click-icon',
+        title: 'Nilai',
+        children: [
+          {
+            icon: 'hand-click-icon',
+            title: 'Perencanaan',
+            route: 'ukk-perencanaan',
+            resource: 'Kajur',
+            action: 'read',
+          },
+          {
+            icon: 'hand-click-icon',
+            title: 'Penilaian',
+            route: 'ukk-penilaian',
+            resource: 'Kajur',
+            action: 'read',
+          },
+        ],
+      },
+      {
+        icon: 'hand-click-icon',
+        title: 'Sertifikat',
+        route: 'ukk-sertifikat',
+        resource: 'Kajur',
+        action: 'read',
+      },
+    ]
+  },
 ]
   
