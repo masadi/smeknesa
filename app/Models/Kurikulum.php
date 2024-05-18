@@ -12,4 +12,9 @@ class Kurikulum extends Model
 	protected $table = 'kurikulum';
 	protected $primaryKey = 'kurikulum_id';
 	protected $guarded = [];
+	
+	public function rombongan_belajar()
+	{
+		return $this->hasMany(Rombongan_belajar::class, 'kurikulum_id', 'kurikulum_id');
+	}
 }

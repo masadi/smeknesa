@@ -97,7 +97,7 @@ export default [
   {
     path: '/ukk/paket',
     name: 'ukk-paket',
-    component: () => import('@/views/ukk/Paket.vue'),
+    component: () => import('@/views/ukk/paket/Index.vue'),
     meta: {
       pageTitle: 'Paket UKK',
       resource: 'Kajur',
@@ -111,6 +111,12 @@ export default [
           active: true,
         },
       ],
+      tombol_add: {
+        action: 'add-paket-ukk',
+        link: '',
+        variant: 'primary',
+        text: 'Tambah Data'
+      },
     },
   },
   {

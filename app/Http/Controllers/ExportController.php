@@ -17,6 +17,7 @@ use App\Models\Peserta_didik;
 use App\Models\Tujuan_pembelajaran;
 use App\Models\Penilaian;
 use App\Models\Guru;
+use App\Models\Paket_ukk;
 use Maatwebsite\Excel\Facades\Excel;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Rap2hpoutre\FastExcel\SheetCollection;
@@ -151,5 +152,17 @@ class ExportController extends Controller
         $rombel = Rombongan_belajar::find($rombongan_belajar_id);
         $file = 'LEGGER NILAI KELAS '.$rombel->nama.'.xlsx';
         return Excel::download(new LeggerNilai(request()->route('rombongan_belajar_id')), $file);
+    }
+    public function template_unit_ukk(){
+        $list = collect([
+            [
+                'No' => 1,
+                'Kode Unit' => 'Contoh Kode Unit', 
+                'Nama Unit Kompetensi' => 'Contoh Nama Unit Kompetensi' 
+            ],
+        ]);
+        $paket = Paket_ukk::find(request()->route('paket_ukk_id'));
+        $nama = clean($paket->nama_paket_id);
+        return (new FastExcel($list))->download($nama.'.xlsx');
     }
 }

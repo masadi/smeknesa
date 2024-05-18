@@ -19,6 +19,7 @@ use App\Http\Controllers\EkstraController;
 use App\Http\Controllers\PrakerinController;
 use App\Http\Controllers\ProjekController;
 use App\Http\Controllers\MonitoringController;
+use App\Http\Controllers\UkkController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -262,5 +263,14 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
   });
   Route::group(['prefix' => 'monitoring'], function () {
     Route::post('/legger', [MonitoringController::class, 'legger']);
+  });
+  Route::group(['prefix' => 'ukk'], function () {
+    Route::get('/', [UkkController::class, 'index']);
+    Route::post('/get-jurusan', [UkkController::class, 'get_jurusan']);
+    Route::post('/get-kurikulum', [UkkController::class, 'get_kurikulum']);
+    Route::post('/get-paket', [UkkController::class, 'get_paket']);
+    Route::delete('/destroy', [UkkController::class, 'destroy']);
+    Route::post('/status-ukk', [UkkController::class, 'status_ukk']);
+    Route::post('/update', [UkkController::class, 'update']);
   });
 });
