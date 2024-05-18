@@ -222,4 +222,80 @@ class UkkController extends Controller
         }])->find(request()->id);
         return response()->json($data);
     }
+    public function get_rencana(){
+        $rencana_ukk = [];
+        $get = Rencana_ukk::where(function($query){
+            $query->where('sekolah_id', request()->sekolah_id);
+            $query->where('semester_id', request()->semester_id);
+        })->withWhereHas('paket_ukk', function($query){
+            $query->withWhereHas('jurusan_sp', function($query){
+                $query->where('guru_id', request()->user()->guru_id);
+            });
+        })->get();
+        foreach($get as $val){
+            $rencana_ukk[] = [
+                'rencana_ukk_id' => $val->rencana_ukk_id,
+                'nama' => $val->paket_ukk->nama_paket_id,
+            ];
+        }
+        $data = [
+            'rencana_ukk' => $rencana_ukk,
+            'data_siswa' => (request()->rencana_ukk_id) ? Peserta_didik::withWhereHas('nilai_ukk', function($query){
+                $query->where('rencana_ukk_id', request()->rencana_ukk_id);
+            })->orderBy('nama')->get() : [],
+        ];
+        return response()->json($data);
+    }
+    public function siswa_ukk(){
+        $data = [
+            'rencana_ukk' => (request()->paket_ukk_id) ? Rencana_ukk::withWhereHas('paket_ukk', function($query){
+                $query->where('paket_ukk_id', request()->paket_ukk_id);
+            })->first() : NULL,
+            'data_siswa' => Peserta_didik::withWhereHas('nilai_ukk', function($query){
+                $query->where('rencana_ukk_id', request()->rencana_ukk_id);
+            })->orderBy('nama')->get(),
+        ];
+        return response()->json($data);
+    }
+    public function simpan_nilai_ukk(){
+        request()->validate(
+            [
+                'rencana_ukk_id' => 'required',
+            ],
+            [
+                'rencana_ukk_id.required' => 'Paket Kompetensi tidak boleh kosong!',
+            ]
+        );
+        $insert = 0;
+        foreach(request()->nilai as $uuid => $nilai_ukk){
+            $insert++;
+            $segments = Str::of($uuid)->split('/[\s#]+/');
+            Nilai_ukk::updateOrCreate(
+                [
+                    'sekolah_id' => request()->sekolah_id,
+                    'rencana_ukk_id' => request()->rencana_ukk_id,
+                    'anggota_rombel_id' => $segments->last(),
+                    'peserta_didik_id' => $segments->first(),
+                ],
+                [
+                    'nilai' => $nilai_ukk,
+                ]
+            );
+        }
+        if($insert){
+            $data = [
+                'icon' => 'success',
+                'title' => 'Berhasil!',
+                'text' => 'Nilai UKK berhasil disimpan',
+                'request' => request()->all(),
+            ];
+        } else {
+            $data = [
+                'icon' => 'error',
+                'title' => 'Gagal!',
+                'text' => 'Nilai UKK gagal disimpan. Silahkan coba beberapa saat lagi!',
+            ];
+        }
+        return response()->json($data);
+    }
 }

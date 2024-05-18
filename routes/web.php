@@ -29,6 +29,7 @@ Route::group(['prefix' => 'cetak'], function () {
         Route::get('/ekskul/{peserta_didik_id?}', [CetakController::class, 'ekskul']);
         Route::get('/pkl/{peserta_didik_id?}/{pkl_id?}/{semester_id?}', [CetakController::class, 'pkl']);
     });
+    Route::get('/sertifikat/{anggota_rombel_id}/{rencana_ukk_id}', [CetakController::class, 'sertifikat'])->name('sertifikat');
 });
 Route::group(['prefix' => 'export'], function () {
     Route::get('/rekap-absensi-siswa/{semester_id}/{rombongan_belajar_id}/{bulan}/{jenis}', [ExportController::class, 'rekap_absensi_siswa']);

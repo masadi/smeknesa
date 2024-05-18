@@ -15,6 +15,11 @@ use App\Models\Dimensi_projek;
 use App\Models\Ijin;
 use App\Models\User;
 use App\Models\Terlambat;
+use App\Models\Rencana_ukk;
+use App\Models\Nilai_ukk;
+use App\Models\Paket_ukk;
+use App\Models\Guru;
+use App\Models\Sekolah;
 use Carbon\Carbon;
 use PDF;
 
@@ -468,4 +473,26 @@ class CetakController extends Controller
             return view('cetak.cetak-perijinan', $data);
         }  
     }
+    public function sertifikat($anggota_rombel_id, $rencana_ukk_id){
+		$anggota_rombel = Anggota_rombel::with('peserta_didik')->find($anggota_rombel_id);
+		$callback = function($query) use ($anggota_rombel_id){
+			$query->where('anggota_rombel_id', $anggota_rombel_id);
+		};
+		$rencana_ukk = Rencana_ukk::with(['guru_internal', 'guru_eksternal', 'nilai_ukk' => $callback])->find($rencana_ukk_id);
+		$count_penilaian_ukk = Nilai_ukk::where('peserta_didik_id', $anggota_rombel->peserta_didik_id)->count();
+		$data['siswa'] = $anggota_rombel;
+		$data['sekolah_id'] = $anggota_rombel->sekolah_id;
+		$data['rencana_ukk'] = $rencana_ukk;
+		$data['count_penilaian_ukk'] = $count_penilaian_ukk;
+		$data['paket'] = Paket_ukk::with(['jurusan_sp', 'unit_ukk'])->find($rencana_ukk->paket_ukk_id);
+		$data['asesor'] = Guru::find($rencana_ukk->eksternal);
+		$data['sekolah'] = Sekolah::find($anggota_rombel->sekolah_id);
+        //return view('cetak.sertifikat1', $data);
+		$pdf = PDF::loadView('cetak.sertifikat1', $data);
+		$pdf->getMpdf()->AddPage('P');
+		$rapor_cover= view('cetak.sertifikat2', $data);
+		$pdf->getMpdf()->WriteHTML($rapor_cover);
+		$general_title = strtoupper($anggota_rombel->peserta_didik->nama);
+		return $pdf->stream($general_title.'-SERTIFIKAT.pdf');
+	}
 }
