@@ -272,5 +272,14 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::delete('/destroy', [UkkController::class, 'destroy']);
     Route::post('/status-ukk', [UkkController::class, 'status_ukk']);
     Route::post('/update', [UkkController::class, 'update']);
+    Route::group(['prefix' => 'rencana'], function () {
+      Route::get('/', [UkkController::class, 'rencana']);
+      Route::post('/get-penguji', [UkkController::class, 'get_penguji']);
+      Route::post('/get-siswa', [UkkController::class, 'get_siswa']);
+      Route::post('/get-paket', [UkkController::class, 'get_paket_ukk']);
+      Route::post('/store', [UkkController::class, 'store']);
+      Route::delete('/destroy', [UkkController::class, 'destroy']);
+      Route::post('/show', [UkkController::class, 'show']);
+    });
   });
 });

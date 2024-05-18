@@ -15,4 +15,7 @@ class Nilai_ukk extends Model
 	protected $table = 'nilai_ukk';
 	protected $primaryKey = 'nilai_ukk_id';
 	protected $guarded = [];
+	public function rencana_ukk(){
+		return $this->hasOne(Rencana_ukk::class, 'rencana_ukk_id', 'rencana_ukk_id');
+	}
 }

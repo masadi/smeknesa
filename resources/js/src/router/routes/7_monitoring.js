@@ -122,7 +122,7 @@ export default [
   {
     path: '/ukk/perencanaan',
     name: 'ukk-perencanaan',
-    component: () => import('@/views/ukk/Perencanaan.vue'),
+    component: () => import('@/views/ukk/perencanaan/Index.vue'),
     meta: {
       pageTitle: 'Perencanaan UKK',
       resource: 'Kajur',
@@ -136,6 +136,12 @@ export default [
           active: true,
         },
       ],
+      tombol_add: {
+        action: 'add-rencana-ukk',
+        link: '',
+        variant: 'primary',
+        text: 'Tambah Data'
+      },
     },
   },
   {

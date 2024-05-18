@@ -10,8 +10,6 @@
       </div>
     </b-card-body>
     <add-modal @reload="handleReload"></add-modal>
-    <add-unit @reload="handleReload"></add-unit>
-    <edit-modal @reload="handleReload"></edit-modal>
     <detil-modal></detil-modal>
   </b-card>
 </template>
@@ -19,10 +17,8 @@
 <script>
 import { BCard, BCardBody, BSpinner } from 'bootstrap-vue'
 import Datatable from './Datatable.vue' //IMPORT COMPONENT DATATABLENYA
-import AddModal from './../../components/modal/ukk/paket/AddModal.vue'
-import AddUnit from './../../components/modal/ukk/paket/AddUnit.vue'
-import EditModal from './../../components/modal/ukk/paket/EditModal.vue'
-import DetilModal from './../../components/modal/ukk/paket/DetilModal.vue'
+import AddModal from './../../components/modal/ukk/rencana/AddModal.vue'
+import DetilModal from './../../components/modal/ukk/rencana/DetilModal.vue'
 import eventBus from '@core/utils/eventBus'
 export default {
   components: {
@@ -31,8 +27,6 @@ export default {
     BSpinner,
     Datatable,
     AddModal,
-    AddUnit,
-    EditModal,
     DetilModal,
   },
   data() {
@@ -40,33 +34,26 @@ export default {
       isBusy: true,
       fields: [
         {
-          key: 'jurusan',
-          label: 'Kompetensi Keahlian',
+          key: 'paket_ukk',
+          label: 'Paket Kompetensi',
+          sortable: true,
+          thClass: 'text-center',
+        },
+        {
+          key: 'guru_internal',
+          label: 'Penguji Internal',
           sortable: false,
           thClass: 'text-center',
         },
         {
-          key: 'nomor_paket',
-          label: 'Nomor Paket',
-          sortable: false,
+          key: 'guru_eksternal',
+          label: 'Penguji Eksternal',
+          sortable: true,
           thClass: 'text-center',
         },
         {
-          key: 'nama_paket_id',
-          label: 'Nama Paket',
-          sortable: false,
-          thClass: 'text-center',
-        },
-        {
-          key: 'unit_ukk_count',
-          label: 'Jml Unit',
-          sortable: false,
-          thClass: 'text-center',
-          tdClass: 'text-center',
-        },
-        {
-          key: 'status',
-          label: 'Status',
+          key: 'pd_count',
+          label: 'Jml PD',
           sortable: false,
           thClass: 'text-center',
           tdClass: 'text-center',
@@ -76,7 +63,7 @@ export default {
           label: 'Aksi',
           sortable: false,
           thClass: 'text-center',
-          tdClass: 'text-center',
+          tdClass: 'text-center'
         },
       ],
       items: [],
@@ -89,12 +76,12 @@ export default {
     }
   },
   created() {
-    eventBus.$on('add-paket-ukk', this.handleEvent);
+    eventBus.$on('add-rencana-ukk', this.handleEvent);
     this.loadPostsData()
   },
   methods: {
     handleEvent(){
-      eventBus.$emit('open-modal-add-paket-ukk');
+      eventBus.$emit('open-modal-add-rencana-ukk');
     },
     handleReload(){
       this.loadPostsData()
@@ -104,7 +91,7 @@ export default {
       //let current_page = this.search == '' ? this.current_page : this.current_page != 1 ? 1 : this.current_page
       let current_page = this.current_page//this.search == '' ? this.current_page : 1
       //LAKUKAN REQUEST KE API UNTUK MENGAMBIL DATA POSTINGAN
-      this.$http.get('/ukk', {
+      this.$http.get('/ukk/rencana', {
         params: {
           user_id: this.user.user_id,
           sekolah_id: this.user.sekolah_id,
@@ -173,9 +160,9 @@ export default {
         }).then(result => {
           if (result.value) {
             this.$http.delete('/ukk/destroy', {
-              params: {
-                data: 'paket-ukk',
-                id: val.item.paket_ukk_id,
+              data: {
+                data: 'rencana-ukk',
+                id: val.item.rencana_ukk_id,
               }
             }).then(response => {
               let getData = response.data
@@ -230,11 +217,11 @@ export default {
           }
         })
       } else {
-        eventBus.$emit(`open-modal-${val.aksi}-paket-ukk`, val.item);
+        eventBus.$emit(`open-modal-${val.aksi}-rencana-ukk`, val.item);
       }
       console.log(val);
       //console.log(val);
-      //eventBus.$emit('open-modal-detil-paket-ukk', val);
+      //eventBus.$emit('open-modal-detil-rencana-ukk', val);
     },
   },
 }

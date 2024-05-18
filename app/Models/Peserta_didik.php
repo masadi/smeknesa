@@ -249,4 +249,14 @@ class Peserta_didik extends Model
 			'anggota_rombel_id'
         );
 	}
+	public function nilai_ukk(){
+		return $this->hasOneThrough(
+            Nilai_ukk::class,
+            Anggota_rombel::class,
+            'peserta_didik_id',
+            'anggota_rombel_id',
+            'peserta_didik_id',
+            'anggota_rombel_id'
+        );
+	}
 }
