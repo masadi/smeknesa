@@ -63,4 +63,15 @@ export default [
       pageTitle: 'System Setting',
     },
   },
+  {
+    path: '/perijinan',
+    name: 'perijinan',
+    component: () => import('@/views/pages/TouchScreen.vue'),
+    meta: {
+      layout: 'full',
+      resource: 'Auth',
+      action: 'read',
+      pageTitle: 'Laman tidak ditemukan',
+    },
+  },
 ]
