@@ -11,7 +11,9 @@ use App\Models\Nilai_ukk;
 use App\Models\Jurusan_sp;
 use App\Models\Kurikulum;
 use App\Models\Guru;
+use App\Models\Asesor;
 use App\Models\Peserta_didik;
+use App\Models\Rombongan_belajar;
 
 class UkkController extends Controller
 {
@@ -120,7 +122,7 @@ class UkkController extends Controller
             $query->withWhereHas('jurusan_sp', function($query){
                 $query->where('guru_id', request()->user()->guru_id);
             });
-        })->with(['guru_internal', 'guru_eksternal'])->withCount('pd')->orderBy(request()->sortby, request()->sortbydesc)
+        })->with(['guru_internal', 'asesor'])->withCount('pd')->orderBy(request()->sortby, request()->sortbydesc)
         ->when(request()->q, function($query) {
             $query->whereHas('paket_ukk', function($query){
                 $query->where('nomor_paket', 'ilike', '%'.request()->q.'%');
@@ -137,14 +139,17 @@ class UkkController extends Controller
         ]);
     }
     public function get_penguji(){
-        $data = Guru::orderBy('nama')->get();
+        $data = [
+            'guru' => Guru::orderBy('nama')->get(),
+            'asesor' => Asesor::orderBy('nama')->get(),
+        ];
         return response()->json($data);
     }
     public function get_siswa(){
         $rencana_ukk = Rencana_ukk::where(function($query){
             $query->where('sekolah_id', request()->sekolah_id);
             $query->where('internal', request()->internal);
-            $query->where('eksternal', request()->eksternal);
+            $query->where('asesor_id', request()->asesor_id);
             $query->where('tanggal_sertifikat', request()->tanggal_sertifikat);
         })->withWhereHas('paket_ukk', function($query){
             $query->where('paket_ukk_id', request()->paket_ukk_id);
@@ -169,7 +174,7 @@ class UkkController extends Controller
                 'tingkat' => ['required'],
                 'rombongan_belajar_id' => ['required'],
                 'internal' => ['required'],
-                'eksternal' => ['required'],
+                'asesor_id' => ['required'],
                 'tanggal_sertifikat' => ['required'],
                 'paket_ukk_id' => ['required'],
             ],
@@ -177,7 +182,7 @@ class UkkController extends Controller
                 'tingkat.required' => 'Tingkat Kelas tidak boleh kosong!',
                 'rombongan_belajar_id.required' => 'Kelas tidak boleh kosong!',
                 'internal.required' => 'Penguji Internal tidak boleh kosong!',
-                'eksternal.required' => 'Penguji Eksternal tidak boleh kosong!',
+                'asesor_id.required' => 'Penguji Eksternal tidak boleh kosong!',
                 'tanggal_sertifikat.required' => 'Tanggal Sertifikat tidak boleh kosong!',
                 'paket_ukk_id.required' => 'Paket Kompetensi tidak boleh kosong!',
             ],
@@ -187,7 +192,7 @@ class UkkController extends Controller
             'semester_id' => request()->semester_id,
             'paket_ukk_id' => request()->paket_ukk_id,
             'internal' => request()->internal,
-            'eksternal' => request()->eksternal,
+            'asesor_id' => request()->asesor_id,
             'tanggal_sertifikat' => request()->tanggal_sertifikat,
         ]);
         $deleted = [];
@@ -214,12 +219,20 @@ class UkkController extends Controller
         return response()->json(['icon' => 'success', 'title' => 'Berhasil', 'text' => 'Rencana Penilaian UKK berhasil disimpan']);
     }
     public function show(){
-        $data = Rencana_ukk::with(['guru_internal', 'guru_eksternal', 'paket_ukk', 'pd' => function($query){
+        $rencana_ukk = Rencana_ukk::with(['guru_internal', 'asesor', 'paket_ukk', 'pd' => function($query){
             $query->orderBy('nama');
             $query->with(['nilai_ukk' => function($query){
                 $query->where('rencana_ukk_id', request()->id);
             }]);
         }])->find(request()->id);
+        $data = [
+            'rencana_ukk' => $rencana_ukk,
+            'rombongan_belajar' => Rombongan_belajar::whereHas('anggota_rombel', function($query){
+                $query->whereHas('nilai_ukk', function($query){
+                    $query->where('rencana_ukk_id', request()->id);
+                });
+            })->first(),
+        ];
         return response()->json($data);
     }
     public function get_rencana(){
@@ -294,6 +307,70 @@ class UkkController extends Controller
                 'icon' => 'error',
                 'title' => 'Gagal!',
                 'text' => 'Nilai UKK gagal disimpan. Silahkan coba beberapa saat lagi!',
+            ];
+        }
+        return response()->json($data);
+    }
+    public function update_rencana(){
+        request()->validate(
+            [
+                'tingkat' => ['required'],
+                'rombongan_belajar_id' => ['required'],
+                'internal' => ['required'],
+                'asesor_id' => ['required'],
+                'tanggal_sertifikat' => ['required'],
+                'paket_ukk_id' => ['required'],
+            ],
+            [
+                'tingkat.required' => 'Tingkat Kelas tidak boleh kosong!',
+                'rombongan_belajar_id.required' => 'Kelas tidak boleh kosong!',
+                'internal.required' => 'Penguji Internal tidak boleh kosong!',
+                'asesor_id.required' => 'Penguji Eksternal tidak boleh kosong!',
+                'tanggal_sertifikat.required' => 'Tanggal Sertifikat tidak boleh kosong!',
+                'paket_ukk_id.required' => 'Paket Kompetensi tidak boleh kosong!',
+            ],
+        );
+        $find = Rencana_ukk::find(request()->rencana_ukk_id);
+        $find->paket_ukk_id = request()->paket_ukk_id;
+        $find->internal = request()->internal;
+        $find->asesor_id = request()->asesor_id;
+        $find->tanggal_sertifikat = request()->tanggal_sertifikat;
+        $deleted = [];
+        foreach(request()->siswa_dipilih as $uuid){
+            $segments = Str::of($uuid)->split('/[\s#]+/');
+            $peserta_didik_id = $segments->first();
+            $anggota_rombel_id = $segments->last();
+            $deleted[] = $anggota_rombel_id;
+            Nilai_ukk::firstOrCreate(
+                [
+                'rencana_ukk_id'		=> request()->rencana_ukk_id,
+                'anggota_rombel_id'		=> $anggota_rombel_id,
+                'peserta_didik_id'		=> $peserta_didik_id,
+                ],
+                [
+                'sekolah_id' 			=> request()->sekolah_id,
+                'nilai'					=> 0,
+                ]
+            );
+        }
+        if($deleted){
+            Nilai_ukk::where('rencana_ukk_id', request()->rencana_ukk_id)->whereNotIn('anggota_rombel_id', $deleted)->delete();
+        }
+        $find->save();
+        return response()->json(['icon' => 'success', 'title' => 'Berhasil', 'text' => 'Rencana Penilaian UKK berhasil diperbaharui']);
+        $insert = 1;
+        if($insert){
+            $data = [
+                'icon' => 'success',
+                'title' => 'Berhasil!',
+                'text' => 'Rencanan Penilaian UKK berhasil diperbaharui',
+                'request' => request()->all(),
+            ];
+        } else {
+            $data = [
+                'icon' => 'error',
+                'title' => 'Gagal!',
+                'text' => 'Rencanan Penilaian UKK gagal diperbaharui. Silahkan coba beberapa saat lagi!',
             ];
         }
         return response()->json($data);

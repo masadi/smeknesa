@@ -10,6 +10,7 @@
       </div>
     </b-card-body>
     <add-modal @reload="handleReload"></add-modal>
+    <edit-modal @reload="handleReload"></edit-modal>
     <detil-modal></detil-modal>
   </b-card>
 </template>
@@ -18,6 +19,7 @@
 import { BCard, BCardBody, BSpinner } from 'bootstrap-vue'
 import Datatable from './Datatable.vue' //IMPORT COMPONENT DATATABLENYA
 import AddModal from './../../components/modal/ukk/rencana/AddModal.vue'
+import EditModal from './../../components/modal/ukk/rencana/EditModal.vue'
 import DetilModal from './../../components/modal/ukk/rencana/DetilModal.vue'
 import eventBus from '@core/utils/eventBus'
 export default {
@@ -27,6 +29,7 @@ export default {
     BSpinner,
     Datatable,
     AddModal,
+    EditModal,
     DetilModal,
   },
   data() {
@@ -46,9 +49,9 @@ export default {
           thClass: 'text-center',
         },
         {
-          key: 'guru_eksternal',
+          key: 'asesor',
           label: 'Penguji Eksternal',
-          sortable: true,
+          sortable: false,
           thClass: 'text-center',
         },
         {
@@ -115,8 +118,6 @@ export default {
           per_page: getData.per_page,
           from: getData.from,
           to: getData.to,
-          role_id: this.role_id,
-          roles: response.data.roles,
         }
       })
     },

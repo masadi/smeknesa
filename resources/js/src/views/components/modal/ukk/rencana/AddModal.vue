@@ -15,7 +15,7 @@
           <b-col cols="12">
             <b-form-group label="Kelas" label-for="rombongan_belajar_id" label-cols-md="3" :invalid-feedback="feedback.rombongan_belajar_id" :state="state.rombongan_belajar_id">
               <b-overlay :show="loading_rombel" opacity="0.6" size="md" spinner-variant="secondary">
-                <v-select id="tingkat" v-model="form.rombongan_belajar_id" :reduce="nama => nama.rombongan_belajar_id" label="nama" :options="data_rombel" placeholder="== Pilih Kelas ==" :state="state.rombongan_belajar_id" @input="changeRombel">
+                <v-select id="rombongan_belajar_id" v-model="form.rombongan_belajar_id" :reduce="nama => nama.rombongan_belajar_id" label="nama" :options="data_rombel" placeholder="== Pilih Kelas ==" :state="state.rombongan_belajar_id" @input="changeRombel">
                   <template #no-options="{ search, searching, loading }">
                     Tidak ada data untuk ditampilkan
                   </template>
@@ -35,9 +35,9 @@
             </b-form-group>
           </b-col>
           <b-col cols="12">
-            <b-form-group label="Penguji Eksternal" label-for="eksternal" label-cols-md="3" :invalid-feedback="feedback.eksternal" :state="state.eksternal">
+            <b-form-group label="Penguji asesor_id" label-for="asesor_id" label-cols-md="3" :invalid-feedback="feedback.asesor_id" :state="state.asesor_id">
               <b-overlay :show="loading_guru" opacity="0.6" size="md" spinner-variant="secondary">
-                <v-select id="eksternal" v-model="form.eksternal" :reduce="nama => nama.guru_id" label="nama" :options="data_guru" placeholder="== Pilih Penguji Eksternal ==" :state="state.eksternal">
+                <v-select id="asesor_id" v-model="form.asesor_id" :reduce="nama => nama.asesor_id" label="nama" :options="data_asesor" placeholder="== Pilih Penguji asesor_id ==" :state="state.asesor_id">
                   <template #no-options="{ search, searching, loading }">
                     Tidak ada data untuk ditampilkan
                   </template>
@@ -152,12 +152,13 @@ export default {
       data_rombel: [],
       data_paket: [],
       data_guru: [],
+      data_asesor: [],
       data_siswa: [],
       feedback: {
         tingkat: '',
         rombongan_belajar_id: '',
         internal: '',
-        eksternal: '',
+        asesor_id: '',
         tanggal_sertifikat: '',
         paket_ukk_id: '',
       },
@@ -165,7 +166,7 @@ export default {
         tingkat: null,
         rombongan_belajar_id: null,
         internal: null,
-        eksternal: null,
+        asesor_id: null,
         tanggal_sertifikat: null,
         paket_ukk_id: null,
       },
@@ -173,7 +174,7 @@ export default {
         tingkat: '',
         rombongan_belajar_id: '',
         internal: '',
-        eksternal: '',
+        asesor_id: '',
         tanggal_sertifikat: '',
         paket_ukk_id: '',
         siswa_dipilih: {},
@@ -199,7 +200,7 @@ export default {
       this.form.tingkat = ''
       this.form.rombongan_belajar_id = ''
       this.form.internal = ''
-      this.form.eksternal = ''
+      this.form.asesor_id = ''
       this.form.tanggal_sertifikat = ''
       this.form.paket_ukk_id = ''
       this.form.siswa_dipilih = {}
@@ -207,7 +208,7 @@ export default {
         tingkat: '',
         rombongan_belajar_id: '',
         internal: '',
-        eksternal: '',
+        asesor_id: '',
         tanggal_sertifikat: '',
         paket_ukk_id: '',
       }
@@ -215,13 +216,14 @@ export default {
         tingkat: null,
         rombongan_belajar_id: null,
         internal: null,
-        eksternal: null,
+        asesor_id: null,
         tanggal_sertifikat: null,
         paket_ukk_id: null,
       }
       this.data_rombel = []
       this.data_paket = []
       this.data_guru = []
+      this.data_asesor = []
       this.data_siswa = []
     },
     handleOk(bvModalEvent){
@@ -238,7 +240,7 @@ export default {
             tingkat: (getData.errors.tingkat) ? getData.errors.tingkat.join(', ') : '',
             rombongan_belajar_id: (getData.errors.rombongan_belajar_id) ? getData.errors.rombongan_belajar_id.join(', ') : '',
             internal: (getData.errors.internal) ? getData.errors.internal.join(', ') : '',
-            eksternal: (getData.errors.eksternal) ? getData.errors.eksternal.join(', ') : '',
+            asesor_id: (getData.errors.asesor_id) ? getData.errors.asesor_id.join(', ') : '',
             tanggal_sertifikat: (getData.errors.tanggal_sertifikat) ? getData.errors.tanggal_sertifikat.join(', ') : '',
             paket_ukk_id: (getData.errors.paket_ukk_id) ? getData.errors.paket_ukk_id.join(', ') : '',
           }
@@ -246,7 +248,7 @@ export default {
             tingkat: (getData.errors.tingkat) ? false : null,
             rombongan_belajar_id: (getData.errors.rombongan_belajar_id) ? false : null,
             internal: (getData.errors.internal) ? false : null,
-            eksternal: (getData.errors.eksternal) ? false : null,
+            asesor_id: (getData.errors.asesor_id) ? false : null,
             tanggal_sertifikat: (getData.errors.tanggal_sertifikat) ? false : null,
             paket_ukk_id: (getData.errors.paket_ukk_id) ? false : null,
           }
@@ -270,7 +272,7 @@ export default {
     changeTingkat(val){
       this.form.rombongan_belajar_id = ''
       this.form.internal = ''
-      this.form.eksternal = ''
+      this.form.asesor_id = ''
       if(val){
         this.loading_rombel = true
         this.$http.post('/referensi/get-rombel', this.form).then(response => {
@@ -282,12 +284,14 @@ export default {
     changeRombel(val){
       this.$emit('hide_form')
       this.form.internal = ''
-      this.form.eksternal = ''
+      this.form.asesor_id = ''
       if(val){
         this.loading_guru = true
         this.$http.post('/ukk/rencana/get-penguji', this.form).then(response => {
           this.loading_guru = false
-          this.data_guru = response.data
+          let getData = response.data
+          this.data_guru = getData.guru
+          this.data_asesor = getData.asesor
         })
       }
     },

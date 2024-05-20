@@ -3,7 +3,7 @@
     <template v-if="token">
       <b-row class="match-height">
         <b-col cols="12" sm="4" v-for="(item, index) in items" :key="index">
-          <b-card class="text-center" @click="$bvModal.show(item.id)">
+          <b-card class="text-center" @click="showModal(item.id, item.text)">
             <b-img fluid :src="item.img" class="mb-2" />
             <div class="truncate">
               <h2 class="mb-25 font-weight-bolder">
@@ -11,14 +11,6 @@
               </h2>
             </div>
           </b-card>
-          <b-modal :id="item.id" @show="resetModal" ok-only ok-title="Tutup" ok-variant="secondary" size="xl">
-            <template #modal-title>
-              {{ item.text }}
-            </template>
-            <div class="d-block text-center">
-              <h3>Hello From This Modal! {{ item.text }}</h3>
-            </div>
-          </b-modal>
         </b-col>
       </b-row>
       <h1 class="font-weight-bolder text-center">Arsip Dokumen</h1>
@@ -50,15 +42,17 @@
         </b-form>
       </b-card>
     </template>
+    <add-modal :modalId="modalId" :modalTitle="modalTitle" :showModal="show" @hidden="hideModal"></add-modal>
   </b-container>
 </template>
 
 <script>
 import { BContainer, BCard, BAvatar, BImg, BRow, BCol, BButton, BForm, BInputGroup, BFormInput, BInputGroupAppend} from 'bootstrap-vue'
 import { getToken } from '@/auth/utils'
+import AddModal from './components/AddModal.vue'
 export default {
   components: {
-    BContainer, BCard, BAvatar, BImg, BRow, BCol, BButton, BForm, BInputGroup, BFormInput, BInputGroupAppend
+    BContainer, BCard, BAvatar, BImg, BRow, BCol, BButton, BForm, BInputGroup, BFormInput, BInputGroupAppend, AddModal
   },
   mounted() {
     this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
@@ -67,6 +61,9 @@ export default {
   },
   data() {
     return {
+      modalId: '',
+      modalTitle: '',
+      show: false,
       items: [
         {
           img: '/img/pages/izin/sick.png',
@@ -126,6 +123,16 @@ export default {
     this.loadPostData()
   },
   methods: {
+    showModal(id, title){
+      this.modalId = id
+      this.modalTitle = title
+      this.show = true
+    },
+    hideModal(){
+      this.modalId = ''
+      this.modalTitle = ''
+      this.show = false
+    },
     resetModal(){
       this.title = ''
     },

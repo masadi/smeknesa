@@ -20,6 +20,8 @@ use App\Http\Controllers\PrakerinController;
 use App\Http\Controllers\ProjekController;
 use App\Http\Controllers\MonitoringController;
 use App\Http\Controllers\UkkController;
+use App\Http\Controllers\PerijinanController;
+use App\Http\Controllers\AsesorController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -149,8 +151,14 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/simpan-absensi', [PrakerinController::class, 'simpan_absensi']);
     Route::post('/hapus-absensi', [PrakerinController::class, 'hapus_absensi']);
     Route::post('/hapus-data', [PrakerinController::class, 'hapus_data']);
-    //Route::post('/update-cp', [NilaiController::class, 'update_cp']);
-    //Route::post('/update-tp', [NilaiController::class, 'update_tp']);
+    Route::group(['prefix' => 'asesor'], function () {
+      Route::get('/', [AsesorController::class, 'index']);
+      Route::get('/dudi', [AsesorController::class, 'dudi']);
+      Route::post('/store', [AsesorController::class, 'store']);
+      Route::get('/show/{id}', [AsesorController::class, 'show']);
+      Route::post('/update/{id}', [AsesorController::class, 'update']);
+      Route::delete('/destroy/{id}', [AsesorController::class, 'destroy']);
+    });
   });
   Route::group(['prefix' => 'jadwal'], function () {
     Route::get('/', [JadwalController::class, 'index']);
@@ -276,13 +284,19 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/simpan-nilai-ukk', [UkkController::class, 'simpan_nilai_ukk']);
     Route::group(['prefix' => 'rencana'], function () {
       Route::get('/', [UkkController::class, 'rencana']);
-      Route::post('/get-penguji', [UkkController::class, 'get_penguji']);
+      Route::post('/get-dudi', [UkkController::class, 'get_dudi']);
       Route::post('/get-siswa', [UkkController::class, 'get_siswa']);
       Route::post('/get-paket', [UkkController::class, 'get_paket_ukk']);
       Route::post('/store', [UkkController::class, 'store']);
+      Route::post('/update', [UkkController::class, 'update_rencana']);
       Route::delete('/destroy', [UkkController::class, 'destroy']);
       Route::post('/show', [UkkController::class, 'show']);
       Route::post('/get-rencana', [UkkController::class, 'get_rencana']);
+      Route::post('/get-penguji', [UkkController::class, 'get_penguji']);
     });
+  });
+  Route::group(['prefix' => 'perijinan'], function () {
+    Route::get('/', [PerijinanController::class, 'index']);
+    Route::post('/store', [PerijinanController::class, 'store']);
   });
 });

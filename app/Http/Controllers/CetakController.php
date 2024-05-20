@@ -478,16 +478,16 @@ class CetakController extends Controller
 		$callback = function($query) use ($anggota_rombel_id){
 			$query->where('anggota_rombel_id', $anggota_rombel_id);
 		};
-		$rencana_ukk = Rencana_ukk::with(['guru_internal', 'guru_eksternal', 'nilai_ukk' => $callback])->find($rencana_ukk_id);
-		$count_penilaian_ukk = Nilai_ukk::where('peserta_didik_id', $anggota_rombel->peserta_didik_id)->count();
+		$rencana_ukk = Rencana_ukk::with(['sekolah.user' => function($query) use ($anggota_rombel){
+            $query->whereRoleIs('kepsek', $anggota_rombel->semester->nama);
+        }, 'guru_internal', 'asesor', 'paket_ukk' => function($query){
+            $query->with(['jurusan_sp', 'unit_ukk']);
+        }, 'nilai_ukk' => $callback])->withCount(['nilai_ukk' => $callback])->find($rencana_ukk_id);
 		$data['siswa'] = $anggota_rombel;
 		$data['sekolah_id'] = $anggota_rombel->sekolah_id;
 		$data['rencana_ukk'] = $rencana_ukk;
-		$data['count_penilaian_ukk'] = $count_penilaian_ukk;
-		$data['paket'] = Paket_ukk::with(['jurusan_sp', 'unit_ukk'])->find($rencana_ukk->paket_ukk_id);
-		$data['asesor'] = Guru::find($rencana_ukk->eksternal);
-		$data['sekolah'] = Sekolah::find($anggota_rombel->sekolah_id);
-        //return view('cetak.sertifikat1', $data);
+		$data['count_penilaian_ukk'] = $rencana_ukk->nilai_ukk_count;
+		//return view('cetak.sertifikat2', $data);
 		$pdf = PDF::loadView('cetak.sertifikat1', $data);
 		$pdf->getMpdf()->AddPage('P');
 		$rapor_cover= view('cetak.sertifikat2', $data);

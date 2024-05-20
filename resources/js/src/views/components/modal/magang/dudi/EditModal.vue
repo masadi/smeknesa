@@ -1,5 +1,5 @@
 <template>
-  <b-modal v-model="editModalShow" title="Edit Data Mata Pelajaran" size="lg" @hidden="hideModal" @ok="handleOk">
+  <b-modal v-model="editModalShow" title="Edit Data DUDI" size="lg" @hidden="hideModal" @ok="handleOk">
     <b-overlay :show="loading_form" rounded opacity="0.6" size="lg" spinner-variant="danger">
       <b-form ref="form" @submit.stop.prevent="handleSubmit">
         <b-row>

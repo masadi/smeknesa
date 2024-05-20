@@ -14,6 +14,10 @@ class Anggota_rombel extends Model
 	protected $table = 'anggota_rombel';
 	protected $primaryKey = 'anggota_rombel_id';
 	protected $guarded = [];
+	public function semester()
+	{
+		return $this->belongsTo(Semester::class, 'semester_id', 'semester_id');
+	}
     public function rombongan_belajar()
 	{
 		return $this->hasOne(Rombongan_belajar::class, 'rombongan_belajar_id', 'rombongan_belajar_id');
@@ -73,5 +77,9 @@ class Anggota_rombel extends Model
 	public function nilai()
 	{
 		return $this->hasOne(Nilai::class, 'anggota_rombel_id', 'anggota_rombel_id');
+	}
+	public function nilai_ukk()
+	{
+		return $this->hasOne(Nilai_ukk::class, 'anggota_rombel_id', 'anggota_rombel_id');
 	}
 }

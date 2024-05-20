@@ -7,11 +7,11 @@
       </BTr>
       <BTr>
         <BTd>Penguji Internal</BTd>
-        <BTd> {{detil.guru_internal.nama}}</BTd>
+        <BTd> {{(detil.guru_internal) ? detil.guru_internal.nama : ''}}</BTd>
       </BTr>
       <BTr>
         <BTd>Penguji Eksternal</BTd>
-        <BTd> {{detil.guru_eksternal.nama}}</BTd>
+        <BTd> {{(detil.asesor) ? detil.asesor.nama : ''}}</BTd>
       </BTr>
     </BTableSimple>
     <BTableSimple class="mt-2" v-if="detil" bordered>
@@ -22,7 +22,6 @@
           <BTh class="text-center">NISN</BTh>
           <BTh class="text-center">Nilai</BTh>
           <BTh class="text-center">Kesimpulan</BTh>
-          <BTh class="text-center">#</BTh>
         </BTr>
       </BThead>
       <BTbody>
@@ -36,9 +35,6 @@
             </BTd>
             <BTd class="text-center">
               {{ kesimpulan_ukk(item) }}
-            </BTd>
-            <BTd class="text-center">
-              {{ generate_link(item) }}
             </BTd>
           </BTr>
         </template>
@@ -79,7 +75,7 @@ export default {
             },
           })
         } else {
-          this.detil = getData
+          this.detil = getData.rencana_ukk
           this.detilModalShow = true
         }
       })

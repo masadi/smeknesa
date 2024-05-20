@@ -163,23 +163,4 @@ export default [
       ],
     },
   },
-  {
-    path: '/ukk/sertifikat',
-    name: 'ukk-sertifikat',
-    component: () => import('@/views/ukk/Sertifikat.vue'),
-    meta: {
-      pageTitle: 'sertifikat UKK',
-      resource: 'Kajur',
-      action: 'read',
-      breadcrumb: [
-        {
-          text: 'UKK',
-        },
-        {
-          text: 'sertifikat UKK',
-          active: true,
-        },
-      ],
-    },
-  },
 ]

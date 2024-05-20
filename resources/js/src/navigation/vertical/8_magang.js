@@ -12,6 +12,13 @@ export default [
             },
             {
                 icon: 'hand-click-icon',
+                title: 'Data Asesor',
+                route: 'magang-asesor',
+                resource: 'Magang_Dudi',
+                action: 'read',
+            },
+            {
+                icon: 'hand-click-icon',
                 title: 'Data Pembimbing',
                 route: 'magang-pembimbing',
                 action: 'read',

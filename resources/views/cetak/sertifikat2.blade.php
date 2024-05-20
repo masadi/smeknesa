@@ -13,8 +13,8 @@
 		</tr>
 	</thead>
 	<tbody>
-	@if($paket->unit_ukk->count())
-	@foreach($paket->unit_ukk as $unit_ukk)
+	@if($rencana_ukk->paket_ukk->unit_ukk->count())
+	@foreach($rencana_ukk->paket_ukk->unit_ukk as $unit_ukk)
 		<tr>
 			<td class="text-center">{{$loop->iteration}}</td>
 			<td>{{$unit_ukk->kode_unit}}</td>
@@ -33,11 +33,11 @@
 <table border="0" width="100%">
 	<tr>
 		<td width="200">Penguji Internal<br /><i>Internal Assessor</i></td>
-		<td>{{$rencana_ukk->guru_internal->nama_lengkap}} ({{$sekolah->nama}})</td>
+		<td>{{$rencana_ukk->guru_internal->nama}} ({{$rencana_ukk->sekolah->nama}})</td>
 	</tr>
 	<tr>
 		<td>Penguji Eksternal<br /><i>External Assessor</i></td>
-		<td>{{$rencana_ukk->guru_eksternal->nama_lengkap}} ({{($rencana_ukk->guru_eksternal->dudi) ? $rencana_ukk->guru_eksternal->dudi->nama : '-'}})</td>
+		<td>{{$rencana_ukk->asesor->nama}} ({{($rencana_ukk->asesor->dudi) ? $rencana_ukk->asesor->dudi->nama : '-'}})</td>
 	</tr>
 </table>
 </div>

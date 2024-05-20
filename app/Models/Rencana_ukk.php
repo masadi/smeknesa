@@ -15,11 +15,20 @@ class Rencana_ukk extends Model
 	protected $table = 'rencana_ukk';
 	protected $primaryKey = 'rencana_ukk_id';
 	protected $guarded = [];
-	public function guru_internal(){
-		return $this->hasOne(Guru::class, 'guru_id', 'internal');
+	public function sekolah()
+	{
+		return $this->belongsTo(Sekolah::class, 'sekolah_id', 'sekolah_id');
 	}
-	public function guru_eksternal(){
-		return $this->hasOne(Guru::class, 'guru_id', 'eksternal');
+	public function guru_internal()
+	{
+		return $this->belongsTo(Guru::class, 'internal', 'guru_id');
+	}
+	public function asesor()
+	{
+		return $this->belongsTo(Asesor::class, 'asesor_id', 'asesor_id');
+	}
+	public function dudi(){
+		return $this->hasOne(Dudi::class, 'dudi_id', 'dudi_id');
 	}
 	public function paket_ukk(){
 		return $this->hasOne(Paket_ukk::class, 'paket_ukk_id', 'paket_ukk_id');

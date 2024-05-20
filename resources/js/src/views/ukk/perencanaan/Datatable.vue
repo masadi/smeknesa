@@ -23,14 +23,15 @@
           {{row.item.paket_ukk.nama_paket_id}}
         </template>
         <template v-slot:cell(guru_internal)="row">
-          {{row.item.guru_internal.nama}}
+          {{(row.item.guru_internal) ? row.item.guru_internal.nama : ''}}
         </template>
-        <template v-slot:cell(guru_eksternal)="row">
-          {{row.item.guru_eksternal.nama}}
+        <template v-slot:cell(asesor)="row">
+          {{(row.item.asesor) ? row.item.asesor.nama : ''}}
         </template>
         <template v-slot:cell(actions)="row">
           <b-dropdown id="dropdown-dropleft" dropleft text="Aksi" variant="primary" size="sm" boundary="viewport">
             <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'detil')"><eye-icon /> Detil</b-dropdown-item>
+            <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'edit')"><pencil-icon /> Edit</b-dropdown-item>
             <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'hapus')"><trash-icon /> Hapus</b-dropdown-item>
           </b-dropdown>
         </template>

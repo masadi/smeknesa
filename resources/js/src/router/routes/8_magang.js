@@ -26,6 +26,32 @@ export default [
     },
   },
   {
+    path: '/magang/asesor',
+    name: 'magang-asesor',
+    component: () => import('@/views/magang/asesor/Index.vue'),
+    meta: {
+      resource: 'Magang_Dudi',
+      action: 'read',
+      pageTitle: 'Data Asesor',
+      breadcrumb: [
+        {
+          text: 'Magang',
+        },
+        {
+          text: 'Data Asesor',
+          active: true,
+        },
+      ],
+      tombol_add: {
+        action: 'add-asesor',
+        link: '',
+        variant: 'primary',
+        text: 'Tambah Data',
+        role: ['administrator'],
+      },
+    },
+  },
+  {
     path: '/magang/pembimbing',
     name: 'magang-pembimbing',
     component: () => import('@/views/magang/pembimbing/Index.vue'),
