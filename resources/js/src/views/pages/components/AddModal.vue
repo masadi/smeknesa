@@ -27,6 +27,11 @@
           <b-row>
             <template v-if="modalId == 'I'">
               <b-col cols="12">
+                <b-form-group label="Pilihan Izin" label-for="pilihan_ijin" label-cols-md="3" :invalid-feedback="feedback.pilihan_ijin" :state="state.pilihan_ijin">
+                  <b-form-radio-group id="pilihan_ijin" v-model="form.pilihan_ijin" :options="data_ijin" name="pilihan_ijin" :state="state.pilihan_ijin"></b-form-radio-group>
+                </b-form-group>
+              </b-col>
+              <b-col cols="12">
                 <b-form-group label="Jenis Ijin" label-for="jenis_ijin" label-cols-md="3" :invalid-feedback="feedback.jenis_ijin" :state="state.jenis_ijin">
                   <b-form-radio-group id="jenis_ijin" v-model="form.jenis_ijin" :options="data_jenis" name="jenis_ijin" :state="state.jenis_ijin" @input="changeJenis"></b-form-radio-group>
                 </b-form-group>
@@ -193,22 +198,32 @@ export default {
         tanggal_selesai: '',
         anggota_rombel_id: '',
         pilihan_ijin: '',
+        jenis_ijin: '',
         alasan: '',
         jam_ke: [],
       },
       feedback: {
         tanggal_mulai: '',
         tanggal_selesai: '',
+        pilihan_ijin: '',
+        jenis_ijin: '',
         jam_ke: '',
       },
       state: {
         tanggal_mulai: null,
         tanggal_selesai: null,
+        pilihan_ijin: null,
+        jenis_ijin: null,
         jam_ke: null,
       },
       jam_selected: [],
       allSelected: false,
       indeterminate: false,
+      data_ijin: [
+        { text: 'Sakit', value: 'S' },
+        { text: 'Izin', value: 'I' },
+        { text: 'Dispen', value: 'D' },
+      ],
       data_jenis: [
         { text: 'Perjam', value: 'jam' },
         { text: 'Harian', value: 'hari' },
