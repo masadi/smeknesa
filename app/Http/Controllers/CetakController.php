@@ -250,7 +250,10 @@ class CetakController extends Controller
         return $pdf->stream('document.pdf');
     }
     public function perijinan(){
-        $user = User::find(request()->route('user_id'));
+        $user = NULL;
+        if(request()->route('user_id')){
+            $user = User::find(request()->route('user_id'));
+        }
         $ijin = Ijin::with(['pd' => function($query){
             $query->withCount([
                 'presensi as A' => function($query){
@@ -275,7 +278,7 @@ class CetakController extends Controller
             }]);
         }])->with(['presensi'])->find(request()->route('ijin_id'));
         $data = [
-            'user' => $user->name,
+            'user' => $user?->name,
             'ijin' => $ijin,
             'qrcode' => base64_encode(QrCode::format('svg')->size(150)->errorCorrection('H')->generate($ijin->pd->peserta_didik_id??'string')),
         ];

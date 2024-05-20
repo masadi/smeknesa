@@ -35,6 +35,11 @@
                 <b-form-datepicker v-model="form.tanggal_selesai" show-decade-nav button-variant="outline-secondary" left locale="id" aria-controls="tanggal_selesai" @context="onContext" placeholder="== Pilih Sampai Tanggal ==" :min="minSelesai" :max="maxSelesai" />
               </b-form-group>  
             </b-col>
+            <b-col cols="12">
+              <b-form-group label="Alasan Ijin" label-for="alasan" label-cols-md="3">
+                <b-form-input v-model="form.alasan" placeholder="Isi alasan (jika ada)"></b-form-input>
+              </b-form-group>
+            </b-col>
           </b-row>
         </b-form>
       </template>
@@ -150,6 +155,8 @@ export default {
         tanggal_mulai: '',
         tanggal_selesai: '',
         anggota_rombel_id: '',
+        pilihan_ijin: '',
+        alasan: '',
       },
       feedback: {
         tanggal_mulai: '',
@@ -163,6 +170,7 @@ export default {
   },
   watch: {
     showModal(val){
+      this.form.pilihan_ijin = this.modalId
       this.addModalShow = val
     },
     sortBy(val) {
@@ -195,6 +203,7 @@ export default {
       this.feedback.tanggal_selesai = ''
       this.state.tanggal_mulai = null
       this.state.tanggal_selesai = null
+      this.showProses = false
     },
     handleOk(bvModalEvent){
       bvModalEvent.preventDefault()
@@ -216,11 +225,13 @@ export default {
             title: getData.title,
             html: getData.text,
             allowOutsideClick: false,
+            confirmButtonText: 'CETAK',
             customClass: {
               confirmButton: 'btn btn-success',
             },
           }).then(result => {
             this.hideModal()
+            window.open(`/cetak/perijinan/preview/${getData.ijin.ijin_id}/${getData.semester_id}`, '_blank')
           })
         }
       }).catch(error => {

@@ -68,32 +68,32 @@ export default {
         {
           img: '/img/pages/izin/sick.png',
           text: 'IZIN PULANG SAKIT',
-          id: 'satu',
+          id: 'PS',
         },
         {
           img: '/img/pages/izin/bed.png',
           text: 'IZIN SAKIT',
-          id: 'dua',
+          id: 'S',
         },
         {
           img: '/img/pages/izin/runner.png',
           text: 'IZIN TERLAMBAT',
-          id: 'tiga',
+          id: 'T',
         },
         {
           img: '/img/pages/izin/exit.png',
           text: 'IZIN KELUAR',
-          id: 'empat',
+          id: 'K',
         },
         {
           img: '/img/pages/izin/family.png',
           text: 'IZIN ACARA KELUARGA',
-          id: 'lima',
+          id: 'AK',
         },
         {
           img: '/img/pages/izin/snuggly.png',
           text: 'IZIN ISTIRAHAT',
-          id: 'enam',
+          id: 'IS',
         },
       ],
       arsip: [

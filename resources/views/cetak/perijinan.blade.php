@@ -28,6 +28,10 @@
   </table>
   <div class="kotak text-center">[A:{{$ijin->pd->A}}][I:{{$ijin->pd->I}}][S:{{$ijin->pd->S}}][D:{{$ijin->pd->D}}]</div>
   <br>
+  @if ($user)
   <p class="small text-center">Surat ini dicetak dari akun {{$user}}</p>
+  @else
+  <p class="small text-center">Surat ini dicetak laman perijinan mandiri</p>
+  @endif
   <div class="dotted"></div>
 @endsection

@@ -41,6 +41,11 @@ class Ijin extends Model
             'S' => 'Sakit',
             'I' => 'Izin',
             'D' => 'Dispen',
+            'PS' => 'Pulang Sakit',
+            'T' => 'Terlambat',
+            'K' => 'Keluar',
+            'AK' => 'Acara Keluarga',
+            'IS' => 'Istirahat',
         ];
         return $data[$this->pilihan_ijin];
     }
