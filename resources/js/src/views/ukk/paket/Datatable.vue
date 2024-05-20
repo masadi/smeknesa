@@ -27,7 +27,7 @@
           <b-badge variant="danger" v-else>Tidak Aktif</b-badge>
         </template>
         <template v-slot:cell(actions)="row">
-          <b-dropdown id="dropdown-dropleft" dropleft text="Aksi" variant="primary" size="sm" boundary="viewport">
+          <b-dropdown id="dropdown-dropleft" boundary="viewport" dropleft text="Aksi" variant="primary" size="sm">
             <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'add-unit')"><plus-icon /> Tambah Unit</b-dropdown-item>
             <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'detil')"><eye-icon /> Detil</b-dropdown-item>
             <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'status')" v-if="row.item.status"><x-icon /> Non Aktifkan</b-dropdown-item>

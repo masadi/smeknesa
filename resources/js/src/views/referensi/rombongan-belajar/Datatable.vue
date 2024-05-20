@@ -29,7 +29,7 @@
           {{row.item.kurikulum}}
         </template>
         <template v-slot:cell(actions)="row">
-          <b-dropdown id="dropdown-dropleft" dropleft text="Detil" variant="primary" size="sm">
+          <b-dropdown id="dropdown-dropleft" boundary="viewport" dropleft text="Detil" variant="primary" size="sm">
             <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'anggota')"><users-icon /> Anggota Rombel</b-dropdown-item>
             <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'pembelajaran')"><checklist-icon /> Pembelajaran</b-dropdown-item>
             <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'jadwal')"><clock-icon /> Jadwal</b-dropdown-item>

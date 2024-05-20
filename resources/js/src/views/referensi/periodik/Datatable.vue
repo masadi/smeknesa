@@ -29,7 +29,7 @@
           {{row.item.tanggal_cetak_str}}
         </template>
         <template v-slot:cell(actions)="row">
-          <b-dropdown id="dropdown-dropleft" dropleft text="Aksi" variant="success" size="sm">
+          <b-dropdown id="dropdown-dropleft" boundary="viewport" dropleft text="Aksi" variant="success" size="sm">
             <b-dropdown-item href="javascript:" @click="aksi(row.item.semester_id, 'edit')"><pencil-icon /> Edit</b-dropdown-item>
             <b-dropdown-item href="javascript:" @click="aksi(row.item.semester_id, 'delete')"><trash-icon /> Hapus</b-dropdown-item>
           </b-dropdown>

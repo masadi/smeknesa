@@ -22,7 +22,7 @@
               {{ (tp.semester) ? tp.semester.nama : '' }}
             </b-td>
             <b-td class="text-center">
-              <b-dropdown id="dropdown-dropleft" dropleft text="Aksi" variant="primary" size="sm">
+              <b-dropdown id="dropdown-dropleft" boundary="viewport" dropleft text="Aksi" variant="primary" size="sm">
                 <b-dropdown-item href="javascript:void(0)" @click="aksi(tp, 'edit')"><pencil-icon />Edit</b-dropdown-item>
                 <b-dropdown-item href="javascript:void(0)" @click="aksi(tp, 'hapus')"><trash-icon />Hapus</b-dropdown-item>
               </b-dropdown>

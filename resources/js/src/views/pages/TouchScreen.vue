@@ -54,11 +54,11 @@ export default {
   components: {
     BContainer, BCard, BAvatar, BImg, BRow, BCol, BButton, BForm, BInputGroup, BFormInput, BInputGroupAppend, AddModal
   },
-  mounted() {
+  /*mounted() {
     this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
       console.log('Modal is about to be shown', bvEvent, modalId)
     })
-  },
+  },*/
   data() {
     return {
       modalId: '',

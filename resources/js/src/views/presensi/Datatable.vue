@@ -91,7 +91,7 @@
           <b-button size="sm" variant="primary" @click="aksi(row.item, 'detil')">Detil</b-button>
         </template>
         <template v-slot:cell(aksi)="row">
-          <b-dropdown id="dropdown-dropleft" dropleft text="Detil" variant="primary" size="sm">
+          <b-dropdown id="dropdown-dropleft" boundary="viewport" dropleft text="Detil" variant="primary" size="sm">
             <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'detil')"><eye-icon /> Detil</b-dropdown-item>
             <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'hapus')"><trash-icon />Hapus</b-dropdown-item>
           </b-dropdown>

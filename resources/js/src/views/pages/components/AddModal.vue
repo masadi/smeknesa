@@ -15,10 +15,10 @@
         </div>
       </template>
       <template v-slot:cell(rombongan_belajar)="row">
-        {{row.item.kelas.nama}}
+        {{row.item.anggota_rombel.rombongan_belajar.nama}}
       </template>
       <template v-slot:cell(actions)="row">
-        <b-button variant="primary" @click="proses(row.item.peserta_didik_id)">Proses</b-button>
+        <b-button variant="primary" @click="proses(row.item.anggota_rombel.anggota_rombel_id)">Proses</b-button>
       </template>
     </b-table>
     <b-overlay :show="loading_form" rounded opacity="0.6" size="lg" spinner-variant="danger">
@@ -149,7 +149,7 @@ export default {
       form: {
         tanggal_mulai: '',
         tanggal_selesai: '',
-        peserta_didik_id: '',
+        anggota_rombel_id: '',
       },
       feedback: {
         tanggal_mulai: '',
@@ -190,7 +190,7 @@ export default {
       this.items = []
       this.form.tanggal_mulai = ''
       this.form.tanggal_selesai = ''
-      this.form.peserta_didik_id = ''
+      this.form.anggota_rombel_id = ''
       this.feedback.tanggal_mulai = ''
       this.feedback.tanggal_selesai = ''
       this.state.tanggal_mulai = null
@@ -274,8 +274,8 @@ export default {
     search: _.debounce(function (e) {
       this.loadPostsData(e)
     }, 500),
-    proses(peserta_didik_id){
-      this.form.peserta_didik_id = peserta_didik_id
+    proses(anggota_rombel_id){
+      this.form.anggota_rombel_id = anggota_rombel_id
       this.showProses = true
     }
   },

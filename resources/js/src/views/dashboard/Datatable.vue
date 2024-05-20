@@ -35,7 +35,7 @@
           </template>
         </template>
         <template v-slot:cell(actions)="row">
-          <b-dropdown id="dropdown-dropleft" dropleft size="sm" text="Aksi" variant="primary">
+          <b-dropdown id="dropdown-dropleft" boundary="viewport" dropleft size="sm" text="Aksi" variant="primary">
             <b-dropdown-item href="javascript:" @click="aksi(row.item.user_id, 'detil')"><eye-icon /> Detil</b-dropdown-item>
             <b-dropdown-item href="javascript:" @click="aksi(row.item.user_id, 'reset')"><lock-open-icon /> Reset Password</b-dropdown-item>
             <b-dropdown-item href="javascript:" @click="aksi(row.item.user_id, 'hapus')"><trash-icon /> Hapus Data</b-dropdown-item>

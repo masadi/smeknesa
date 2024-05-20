@@ -23,7 +23,7 @@ Route::group(['prefix' => 'cetak'], function () {
     Route::get('/rapor-projek/{anggota_rombel_id}/{semester_id}', [CetakController::class, 'rapor_projek'])->name('rapor-projek');
     Route::get('/rapor-pelengkap/{anggota_rombel_id}/{rombongan_belajar_id?}', [CetakController::class, 'rapor_pelengkap'])->name('rapor-pelengkap');
     Route::get('/rekap-remedial/{peserta_didik_id}', [CetakController::class, 'rekap_remedial']);
-    Route::get('/perijinan/{aksi}/{ijin_id}/{user_id}', [CetakController::class, 'perijinan']);
+    Route::get('/perijinan/{aksi}/{ijin_id}/{user_id}/{semester_id}', [CetakController::class, 'perijinan']);
     Route::get('/terlambat/{terlambat_id}/{semester_id}', [CetakController::class, 'terlambat']);
     Route::group(['prefix' => 'sertifikat'], function () {
         Route::get('/ekskul/{peserta_didik_id?}', [CetakController::class, 'ekskul']);

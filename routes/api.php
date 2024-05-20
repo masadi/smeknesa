@@ -295,8 +295,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
       Route::post('/get-penguji', [UkkController::class, 'get_penguji']);
     });
   });
-  Route::group(['prefix' => 'perijinan'], function () {
-    Route::get('/', [PerijinanController::class, 'index']);
-    Route::post('/store', [PerijinanController::class, 'store']);
-  });
+});
+Route::group(['prefix' => 'perijinan'], function () {
+  Route::get('/', [PerijinanController::class, 'index']);
+  Route::post('/store', [PerijinanController::class, 'store']);
 });

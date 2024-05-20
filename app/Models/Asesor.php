@@ -16,6 +16,6 @@ class Asesor extends Model
 	protected $guarded = [];
     public function dudi()
     {
-        return $this->belongsTo(dudi::class, 'dudi_id', 'dudi_id');
+        return $this->belongsTo(Dudi::class, 'dudi_id', 'dudi_id');
     }
 }

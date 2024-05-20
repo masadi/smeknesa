@@ -244,7 +244,7 @@ export default {
               this.hideModal()
               this.$emit('reload')
               if(getData.ijin){
-                window.open(`/cetak/perijinan/${aksi}/${getData.ijin.ijin_id}/${this.user.user_id}`, '_blank')
+                window.open(`/cetak/perijinan/${aksi}/${getData.ijin.ijin_id}/${this.user.user_id}/${this.user.semester.semester_id}`, '_blank')
               }
             }
           })
@@ -260,6 +260,7 @@ export default {
       this.loading_form = true
       this.$http.post('/presensi/get-siswa', {
         nama_siwa: val,
+        semester_id: this.user.semester.semester_id,
       }).then(response => {
         this.loading_form = false
         var getData = response.data
@@ -270,6 +271,7 @@ export default {
       if(search){
         vm.$http.post('/presensi/get-siswa', {
           nama_siwa: search,
+          semester_id: vm.user.semester.semester_id,
         }).then(response => {
           //res.json().then(json => (vm.data_siswa = json.items));
           loading(false);

@@ -8,8 +8,11 @@ use App\Models\Peserta_didik;
 class PerijinanController extends Controller
 {
     public function index(){
-        $data = Peserta_didik::withWhereHas('kelas', function($query){
-            $query->where('rombongan_belajar.semester_id', get_setting('semester_id'));
+        $data = Peserta_didik::withWhereHas('anggota_rombel', function($query){
+            $query->where('semester_id', get_setting('semester_id'));
+            $query->withWhereHas('rombongan_belajar', function($query){
+                $query->where('tingkat', '<>', 0);
+            });
         })->orderBy(request()->sortby, request()->sortbydesc)
         ->when(request()->q, function($query) {
             $query->where('nama', 'ilike', '%'.request()->q.'%');

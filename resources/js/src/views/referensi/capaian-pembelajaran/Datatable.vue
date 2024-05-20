@@ -26,7 +26,7 @@
           {{row.item.guru.nama}}
         </template>
         <template v-slot:cell(actions)="row">
-          <b-dropdown id="dropdown-dropleft" dropleft text="Detil" variant="primary" size="sm" v-if="hasRole('administrator')">
+          <b-dropdown id="dropdown-dropleft" boundary="viewport" dropleft text="Detil" variant="primary" size="sm" v-if="hasRole('administrator')">
             <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'edit')"><pencil-icon />Edit</b-dropdown-item>
             <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'hapus')"><trash-icon />Hapus</b-dropdown-item>
           </b-dropdown>
