@@ -29,4 +29,8 @@ class Terlambat extends Model
             'peserta_didik_id' // Local key on the cars table...
         );
 	}
+    public function jam_terlambat()
+    {
+        return $this->hasMany(Jam_terlambat::class, 'terlambat_id', 'terlambat_id');
+    }
 }

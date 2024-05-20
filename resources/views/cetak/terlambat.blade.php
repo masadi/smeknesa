@@ -25,6 +25,13 @@
       <td>:</td>
       <td>{{$data->pd->terlambat_count}}x | {{ $semester->tahun_ajaran_id }} {{substr($semester->nama,10)}}</td>
     </tr>
+    @if ($data->jam_terlambat->count())
+    <tr>
+      <td>Jam Terlambat</td>
+      <td>:</td>
+      <td>{{$data->jam_terlambat->implode('jam', ', ')}}</td>
+    </tr>
+    @endif
   </table>
   <div class="dotted"></div>
 @endsection

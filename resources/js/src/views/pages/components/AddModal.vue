@@ -37,13 +37,23 @@
                 </b-form-group>
               </b-col>
             </template>
-            <template v-else>
+            <!--template v-else>
               <b-col cols="12">
-                  <b-form-group label="Tanggal" label-for="tanggal_mulai" label-cols-md="3" :invalid-feedback="feedback.tanggal_mulai" :state="state.tanggal_mulai">
-                    <b-form-datepicker v-model="form.tanggal_mulai" show-decade-nav button-variant="outline-secondary" left locale="id" aria-controls="tanggal_mulai" @context="onContextStart" placeholder="== Pilih Tanggal ==" :min="minMulai" :max="maxMulai" />
-                  </b-form-group>  
-                </b-col>
-            </template>
+                <b-form-group label="Tanggal" label-for="tanggal_mulai" label-cols-md="3" :invalid-feedback="feedback.tanggal_mulai" :state="state.tanggal_mulai">
+                  <b-form-datepicker v-model="form.tanggal_mulai" show-decade-nav button-variant="outline-secondary" left locale="id" aria-controls="tanggal_mulai" @context="onContextStart" placeholder="== Pilih Tanggal ==" :min="minMulai" :max="maxMulai" />
+                </b-form-group>  
+              </b-col>
+              <b-col cols="12">
+                <b-form-group label="Jam Ke" label-for="jam_ke" label-cols-md="3" :invalid-feedback="feedback.jam_ke" :state="state.jam_ke">
+                  <b-overlay :show="loading_jam" rounded opacity="0.6" spinner-small spinner-variant="danger">
+                    <b-form-checkbox v-model="allSelected" :indeterminate="indeterminate" @change="toggleAll" class="mb-1" v-if="data_jam.length">
+                      {{ allSelected ? 'Lepas Semua' : 'Pilih Semua' }}
+                    </b-form-checkbox>
+                    <b-form-checkbox-group id="jam_ke" v-model="jam_selected" :options="data_jam" name="jam_ke" :state="state.jam_ke"></b-form-checkbox-group>
+                  </b-overlay>
+                </b-form-group>
+              </b-col>
+            </template-->
             <template v-if="form.jenis_ijin">
               <template v-if="form.jenis_ijin == 'hari'">
                 <b-col cols="12">
@@ -201,6 +211,7 @@ export default {
         jenis_ijin: '',
         alasan: '',
         jam_ke: [],
+        jam_terlambat: '',
       },
       feedback: {
         tanggal_mulai: '',
@@ -208,6 +219,7 @@ export default {
         pilihan_ijin: '',
         jenis_ijin: '',
         jam_ke: '',
+        jam_terlambat: '',
       },
       state: {
         tanggal_mulai: null,
@@ -215,6 +227,7 @@ export default {
         pilihan_ijin: null,
         jenis_ijin: null,
         jam_ke: null,
+        jam_terlambat: null,
       },
       jam_selected: [],
       allSelected: false,
@@ -234,6 +247,20 @@ export default {
   watch: {
     showModal(val){
       this.form.pilihan_ijin = this.modalId
+      if(this.modalId == 'T'){
+        const now = new Date()
+        var year  = now.getFullYear();
+        var month = (now.getMonth() + 1).toString().padStart(2, "0");
+        var day   = now.getDate().toString().padStart(2, "0");
+        this.form.tanggal_mulai = `${year}-${month}-${day}`
+        this.form.pilihan_ijin = 'T'
+        this.form.jenis_ijin = 'jam'
+        this.getJam()
+      } else {
+        this.form.tanggal_mulai = ''
+        this.form.pilihan_ijin = ''
+        this.form.jenis_ijin = ''
+      }
       this.addModalShow = val
     },
     sortBy(val) {
@@ -272,11 +299,8 @@ export default {
     },
     resetForm(){
       this.items = []
-      this.form.tanggal_mulai = ''
       this.form.tanggal_selesai = ''
       this.form.anggota_rombel_id = ''
-      this.form.pilihan_ijin = ''
-      this.form.jenis_ijin = ''
       this.form.jam_ke = []
       this.feedback.tanggal_mulai = ''
       this.feedback.tanggal_selesai = ''
@@ -309,8 +333,8 @@ export default {
           this.feedback.tanggal_mulai = (getData.errors.tanggal_mulai) ? getData.errors.tanggal_mulai.join(', ') : ''
           this.feedback.tanggal_selesai = (getData.errors.tanggal_selesai) ? getData.errors.tanggal_selesai.join(', ') : ''
           this.feedback.jam_ke = (getData.errors.jam_ke) ? getData.errors.jam_ke.join(', ') : ''
-          this.feedback.pilihan_ijin = (getData.errors.jam_ke) ? getData.errors.jam_ke.join(', ') : ''
-          this.feedback.jenis_ijin = (getData.errors.jam_ke) ? getData.errors.jam_ke.join(', ') : ''
+          this.feedback.pilihan_ijin = (getData.errors.pilihan_ijin) ? getData.errors.pilihan_ijin.join(', ') : ''
+          this.feedback.jenis_ijin = (getData.errors.jenis_ijin) ? getData.errors.jenis_ijin.join(', ') : ''
         } else {
           this.$swal({
             icon: getData.icon,
@@ -338,15 +362,18 @@ export default {
     toggleAll(checked) {
       this.jam_selected = checked ? this.data_jam.slice() : []
     },
+    getJam(){
+      this.loading_jam = true
+      this.$http.post('/perijinan/get-jam', this.form).then(response => {
+        this.loading_jam = false
+        var getData = response.data
+        this.data_jam = getData
+      })
+    },
     onContextStart(ctx){
       this.formatted = ctx.selectedFormatted
       if(this.form.jenis_ijin == 'jam'){
-        this.loading_jam = true
-        this.$http.post('/perijinan/get-jam', this.form).then(response => {
-          this.loading_jam = false
-          var getData = response.data
-          this.data_jam = getData
-        })
+        this.getJam()
       } else {
         const date = new Date(ctx.activeDate.getFullYear(), ctx.activeDate.getMonth(), ctx.activeDate.getDate())
         this.minSelesai = new Date(date)

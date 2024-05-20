@@ -7,6 +7,7 @@ use App\Models\Peserta_didik;
 use App\Models\Ijin;
 use App\Models\Presensi;
 use App\Models\Terlambat;
+use App\Models\Jam_terlambat;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 
@@ -63,6 +64,14 @@ class PerijinanController extends Controller
                 'keterangan' => request()->alasan,
                 'tanggal' => request()->tanggal_mulai,
             ]);
+            foreach(request()->jam_ke as $jam){
+                Jam_terlambat::create(
+                    [
+                        'terlambat_id' => $terlambat->terlambat_id,
+                        'jam' => $jam,
+                    ]
+                );
+            }
         } elseif(request()->jenis_ijin == 'hari'){
             $startDate = Carbon::createFromDate(request()->tanggal_mulai);
             $endDate = Carbon::createFromDate(request()->tanggal_selesai);

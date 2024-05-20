@@ -428,7 +428,7 @@ class CetakController extends Controller
             }]);
         }])->find(request()->route('terlambat_id'));
         dd($terlambat);*/
-        $terlambat = Terlambat::with(['pd' => function($query){
+        $terlambat = Terlambat::with(['jam_terlambat', 'pd' => function($query){
             $query->withCount(['terlambat' => function($query){
                 $query->whereHas('pd', function($query){
                     $query->whereHas('kelas', function($query){
