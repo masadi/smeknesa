@@ -18,7 +18,7 @@
         {{row.item.anggota_rombel.rombongan_belajar.nama}}
       </template>
       <template v-slot:cell(actions)="row">
-        <b-button variant="primary" @click="proses(row.item.anggota_rombel.anggota_rombel_id)">Proses</b-button>
+        <b-button variant="primary" @click="proses(row.item)">Proses</b-button>
       </template>
     </b-table>
     <b-overlay :show="loading_form" rounded opacity="0.6" size="lg" spinner-variant="danger">
@@ -275,10 +275,19 @@ export default {
       this.form.tanggal_mulai = ''
       this.form.tanggal_selesai = ''
       this.form.anggota_rombel_id = ''
+      this.form.pilihan_ijin = ''
+      this.form.jenis_ijin = ''
+      this.form.jam_ke = []
       this.feedback.tanggal_mulai = ''
       this.feedback.tanggal_selesai = ''
+      this.feedback.pilihan_ijin = ''
+      this.feedback.jenis_ijin = ''
+      this.feedback.jam_ke = ''
       this.state.tanggal_mulai = null
       this.state.tanggal_selesai = null
+      this.state.pilihan_ijin = null
+      this.state.jenis_ijin = null
+      this.state.jam_ke = null
       this.showProses = false
     },
     handleOk(bvModalEvent){
@@ -294,10 +303,14 @@ export default {
         if(getData.errors){
           this.state.tanggal_mulai = (getData.errors.tanggal_mulai) ? false : null
           this.state.tanggal_selesai = (getData.errors.tanggal_selesai) ? false : null
+          this.state.pilihan_ijin = (getData.errors.pilihan_ijin) ? false : null
+          this.state.jenis_ijin = (getData.errors.jenis_ijin) ? false : null
           this.state.jam_ke = (getData.errors.jam_ke) ? false : null
           this.feedback.tanggal_mulai = (getData.errors.tanggal_mulai) ? getData.errors.tanggal_mulai.join(', ') : ''
           this.feedback.tanggal_selesai = (getData.errors.tanggal_selesai) ? getData.errors.tanggal_selesai.join(', ') : ''
           this.feedback.jam_ke = (getData.errors.jam_ke) ? getData.errors.jam_ke.join(', ') : ''
+          this.feedback.pilihan_ijin = (getData.errors.jam_ke) ? getData.errors.jam_ke.join(', ') : ''
+          this.feedback.jenis_ijin = (getData.errors.jam_ke) ? getData.errors.jam_ke.join(', ') : ''
         } else {
           this.$swal({
             icon: getData.icon,
@@ -381,8 +394,13 @@ export default {
     search: _.debounce(function (e) {
       this.loadPostsData(e)
     }, 500),
-    proses(anggota_rombel_id){
-      this.form.anggota_rombel_id = anggota_rombel_id
+    proses(item){
+      const filtered = this.items.filter(function (el) {
+        return el.peserta_didik_id == item.peserta_didik_id
+      });
+      this.items = filtered
+      
+      this.form.anggota_rombel_id = item.anggota_rombel.anggota_rombel_id
       this.showProses = true
     },
     changeJenis(val){
