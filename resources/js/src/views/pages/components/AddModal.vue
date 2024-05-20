@@ -86,10 +86,10 @@
     </b-overlay>
     <template #modal-footer="{ ok, cancel }">
       <b-overlay :show="loading_form" rounded opacity="0.6" spinner-small spinner-variant="secondary" class="d-inline-block">
-        <b-button @click="cancel()">Tutup</b-button>
+        <b-button variant="danger" size="lg" @click="cancel()">Tutup</b-button>
       </b-overlay>
       <b-overlay :show="loading_form" rounded opacity="0.6" spinner-small spinner-variant="success" class="d-inline-block">
-        <b-button variant="success" @click="ok()" v-if="showProses">Simpan</b-button>
+        <b-button variant="primary" size="lg" @click="ok()" v-if="showProses">Simpan</b-button>
       </b-overlay>
     </template>
   </b-modal>
