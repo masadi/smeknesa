@@ -298,5 +298,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 });
 Route::group(['prefix' => 'perijinan'], function () {
   Route::get('/', [PerijinanController::class, 'index']);
+  Route::post('/get-jam', [PerijinanController::class, 'get_jam']);
   Route::post('/store', [PerijinanController::class, 'store']);
 });

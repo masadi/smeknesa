@@ -2,7 +2,7 @@
   <b-container class="mt-2">
     <template v-if="token">
       <b-row class="match-height">
-        <b-col cols="12" sm="4" v-for="(item, index) in items" :key="index">
+        <b-col cols="12" sm="6" v-for="(item, index) in items" :key="index">
           <b-card class="text-center" @click="showModal(item.id, item.text)">
             <b-img fluid :src="item.img" class="mb-2" />
             <div class="truncate">
@@ -66,6 +66,16 @@ export default {
       show: false,
       items: [
         {
+          img: '/img/pages/izin/exit.png',
+          text: 'IZIN',
+          id: 'I',
+        },
+        {
+          img: '/img/pages/izin/runner.png',
+          text: 'TERLAMBAT',
+          id: 'T',
+        },
+        /*{
           img: '/img/pages/izin/sick.png',
           text: 'IZIN PULANG SAKIT',
           id: 'PS',
@@ -76,16 +86,6 @@ export default {
           id: 'S',
         },
         {
-          img: '/img/pages/izin/runner.png',
-          text: 'IZIN TERLAMBAT',
-          id: 'T',
-        },
-        {
-          img: '/img/pages/izin/exit.png',
-          text: 'IZIN KELUAR',
-          id: 'K',
-        },
-        {
           img: '/img/pages/izin/family.png',
           text: 'IZIN ACARA KELUARGA',
           id: 'AK',
@@ -94,7 +94,7 @@ export default {
           img: '/img/pages/izin/snuggly.png',
           text: 'IZIN ISTIRAHAT',
           id: 'IS',
-        },
+        },*/
       ],
       arsip: [
         {

@@ -3,7 +3,7 @@
     <template #modal-title>
       {{ modalTitle }}
       </template>
-    <b-form-input @input="search" placeholder="Cari nama peserta didik..." size="lg"></b-form-input>
+    <b-form-input @input="search" placeholder="Cari nama peserta didik..." size="lg" class="mb-2"></b-form-input>
     <b-table responsive bordered striped :items="items" :fields="fields" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" show-empty :busy="isBusy" v-if="items.length">
       <template #empty="scope">
         <p class="text-center">Tidak ada data untuk ditampilkan</p>
@@ -25,16 +25,51 @@
       <template v-if="showProses">
         <b-form ref="form" @submit.stop.prevent="handleSubmit">
           <b-row>
-            <b-col cols="12">
-              <b-form-group label="Mulai Tanggal" label-for="tanggal_mulai" label-cols-md="3" :invalid-feedback="feedback.tanggal_mulai" :state="state.tanggal_mulai">
-                <b-form-datepicker v-model="form.tanggal_mulai" show-decade-nav button-variant="outline-secondary" left locale="id" aria-controls="tanggal_mulai" @context="onContextStart" placeholder="== Pilih Mulai Tanggal ==" :min="minMulai" :max="maxMulai" />
-              </b-form-group>  
+            <template v-if="modalId == 'I'">
+              <b-col cols="12">
+                <b-form-group label="Jenis Ijin" label-for="jenis_ijin" label-cols-md="3" :invalid-feedback="feedback.jenis_ijin" :state="state.jenis_ijin">
+                  <b-form-radio-group id="jenis_ijin" v-model="form.jenis_ijin" :options="data_jenis" name="jenis_ijin" :state="state.jenis_ijin" @input="changeJenis"></b-form-radio-group>
+                </b-form-group>
+              </b-col>
+            </template>
+            <template v-else>
+              <b-col cols="12">
+                  <b-form-group label="Tanggal" label-for="tanggal_mulai" label-cols-md="3" :invalid-feedback="feedback.tanggal_mulai" :state="state.tanggal_mulai">
+                    <b-form-datepicker v-model="form.tanggal_mulai" show-decade-nav button-variant="outline-secondary" left locale="id" aria-controls="tanggal_mulai" @context="onContextStart" placeholder="== Pilih Tanggal ==" :min="minMulai" :max="maxMulai" />
+                  </b-form-group>  
+                </b-col>
+            </template>
+            <template v-if="form.jenis_ijin">
+              <template v-if="form.jenis_ijin == 'hari'">
+                <b-col cols="12">
+                  <b-form-group label="Mulai Tanggal" label-for="tanggal_mulai" label-cols-md="3" :invalid-feedback="feedback.tanggal_mulai" :state="state.tanggal_mulai">
+                    <b-form-datepicker v-model="form.tanggal_mulai" show-decade-nav button-variant="outline-secondary" left locale="id" aria-controls="tanggal_mulai" @context="onContextStart" placeholder="== Pilih Mulai Tanggal ==" :min="minMulai" :max="maxMulai" />
+                  </b-form-group>  
+                </b-col>
+                <b-col cols="12">
+                  <b-form-group label="Sampai Tanggal" label-for="tanggal_selesai" label-cols-md="3" :invalid-feedback="feedback.tanggal_selesai" :state="state.tanggal_selesai">
+                    <b-form-datepicker v-model="form.tanggal_selesai" show-decade-nav button-variant="outline-secondary" left locale="id" aria-controls="tanggal_selesai" @context="onContext" placeholder="== Pilih Sampai Tanggal ==" :min="minSelesai" :max="maxSelesai" />
+                  </b-form-group>  
+                </b-col>
+              </template>
+              <template v-else>
+                <b-col cols="12">
+                  <b-form-group label="Tanggal" label-for="tanggal_mulai" label-cols-md="3" :invalid-feedback="feedback.tanggal_mulai" :state="state.tanggal_mulai">
+                    <b-form-datepicker v-model="form.tanggal_mulai" show-decade-nav button-variant="outline-secondary" left locale="id" aria-controls="tanggal_mulai" @context="onContextStart" placeholder="== Pilih Tanggal ==" :min="minMulai" :max="maxMulai" />
+                  </b-form-group>  
+                </b-col>
+                <b-col cols="12" v-if="form.tanggal_mulai">
+                <b-form-group label="Jam Ke" label-for="jam_ke" label-cols-md="3" :invalid-feedback="feedback.jam_ke" :state="state.jam_ke">
+                  <b-overlay :show="loading_jam" rounded opacity="0.6" spinner-small spinner-variant="danger">
+                    <b-form-checkbox v-model="allSelected" :indeterminate="indeterminate" @change="toggleAll" class="mb-1" v-if="data_jam.length">
+                      {{ allSelected ? 'Lepas Semua' : 'Pilih Semua' }}
+                    </b-form-checkbox>
+                    <b-form-checkbox-group id="jam_ke" v-model="jam_selected" :options="data_jam" name="jam_ke" :state="state.jam_ke"></b-form-checkbox-group>
+                  </b-overlay>
+                </b-form-group>
             </b-col>
-            <b-col cols="12">
-              <b-form-group label="Sampai Tanggal" label-for="tanggal_selesai" label-cols-md="3" :invalid-feedback="feedback.tanggal_selesai" :state="state.tanggal_selesai">
-                <b-form-datepicker v-model="form.tanggal_selesai" show-decade-nav button-variant="outline-secondary" left locale="id" aria-controls="tanggal_selesai" @context="onContext" placeholder="== Pilih Sampai Tanggal ==" :min="minSelesai" :max="maxSelesai" />
-              </b-form-group>  
-            </b-col>
+              </template>
+            </template>
             <b-col cols="12">
               <b-form-group label="Alasan Ijin" label-for="alasan" label-cols-md="3">
                 <b-form-input v-model="form.alasan" placeholder="Isi alasan (jika ada)"></b-form-input>
@@ -56,9 +91,8 @@
 </template>
 
 <script>
-import { BOverlay, BForm, BFormGroup, BFormInput, BRow, BCol, BButton, BFormDatepicker, BTableSimple, BThead, BTbody, BTr, BTh, BTd, BFormCheckbox, BTable, BSpinner } from 'bootstrap-vue'
+import { BOverlay, BForm, BFormGroup, BFormInput, BRow, BCol, BButton, BFormDatepicker, BTableSimple, BThead, BTbody, BTr, BTh, BTd, BFormCheckbox, BFormCheckboxGroup, BTable, BSpinner, BFormRadioGroup } from 'bootstrap-vue'
 import _ from 'lodash'
-import { required } from 'vee-validate/dist/rules'
 import vSelect from 'vue-select'
 export default {
   components: {
@@ -72,8 +106,10 @@ export default {
     BFormDatepicker,
     BTableSimple, BThead, BTbody, BTr, BTh, BTd,
     BFormCheckbox,
+    BFormCheckboxGroup,
     BTable,
     BSpinner,
+    BFormRadioGroup,
     vSelect,
   },
   props: {
@@ -114,6 +150,7 @@ export default {
       maxSelesai: maxDateSelesai,
       showProses: false,
       loading_form: false,
+      loading_jam: false,
       sortBy: null,
       sortDesc: false,
       isBusy: true,
@@ -157,15 +194,26 @@ export default {
         anggota_rombel_id: '',
         pilihan_ijin: '',
         alasan: '',
+        jam_ke: [],
       },
       feedback: {
         tanggal_mulai: '',
         tanggal_selesai: '',
+        jam_ke: '',
       },
       state: {
         tanggal_mulai: null,
         tanggal_selesai: null,
+        jam_ke: null,
       },
+      jam_selected: [],
+      allSelected: false,
+      indeterminate: false,
+      data_jenis: [
+        { text: 'Perjam', value: 'jam' },
+        { text: 'Harian', value: 'hari' },
+      ],
+      data_jam: [],
     }
   },
   watch: {
@@ -184,6 +232,19 @@ export default {
         sortBy: this.sortBy,
         sortDesc: this.sortDesc
       })
+    },
+    jam_selected(newValue, oldValue) {
+      // Handle changes in individual flavour checkboxes
+      if (newValue.length === 0) {
+        this.indeterminate = false
+        this.allSelected = false
+      } else if (newValue.length === this.data_jam.length) {
+        this.indeterminate = false
+        this.allSelected = true
+      } else {
+        this.indeterminate = true
+        this.allSelected = false
+      }
     }
   },
   created() {
@@ -210,6 +271,7 @@ export default {
       this.handleSubmit()
     },
     handleSubmit(){
+      this.form.jam_ke = this.jam_selected
       this.loading_form = true
       this.$http.post('/perijinan/store', this.form).then(response => {
         this.loading_form = false
@@ -217,8 +279,10 @@ export default {
         if(getData.errors){
           this.state.tanggal_mulai = (getData.errors.tanggal_mulai) ? false : null
           this.state.tanggal_selesai = (getData.errors.tanggal_selesai) ? false : null
+          this.state.jam_ke = (getData.errors.jam_ke) ? false : null
           this.feedback.tanggal_mulai = (getData.errors.tanggal_mulai) ? getData.errors.tanggal_mulai.join(', ') : ''
           this.feedback.tanggal_selesai = (getData.errors.tanggal_selesai) ? getData.errors.tanggal_selesai.join(', ') : ''
+          this.feedback.jam_ke = (getData.errors.jam_ke) ? getData.errors.jam_ke.join(', ') : ''
         } else {
           this.$swal({
             icon: getData.icon,
@@ -231,20 +295,37 @@ export default {
             },
           }).then(result => {
             this.hideModal()
-            window.open(`/cetak/perijinan/preview/${getData.ijin.ijin_id}/${getData.semester_id}`, '_blank')
+            if(getData.ijin){
+              window.open(`/cetak/perijinan/preview/${getData.ijin.ijin_id}/${getData.semester_id}`, '_blank')
+            } else {
+              //http://smeknesa.test/cetak/terlambat/1bf70e51-3bf8-48c0-90ea-83b2dd2c7a9c/20232
+              window.open(`/cetak/terlambat/${getData.terlambat.terlambat_id}/${getData.semester_id}`, '_blank')
+            }
           })
         }
       }).catch(error => {
         console.log(error);
       })
     },
+    toggleAll(checked) {
+      this.jam_selected = checked ? this.data_jam.slice() : []
+    },
     onContextStart(ctx){
       this.formatted = ctx.selectedFormatted
-      const date = new Date(ctx.activeDate.getFullYear(), ctx.activeDate.getMonth(), ctx.activeDate.getDate())
-      this.minSelesai = new Date(date)
-      const maxDateSelesai = new Date(date)
-      maxDateSelesai.setDate(maxDateSelesai.getDate() + 15)
-      this.maxSelesai = maxDateSelesai
+      if(this.form.jenis_ijin == 'jam'){
+        this.loading_jam = true
+        this.$http.post('/perijinan/get-jam', this.form).then(response => {
+          this.loading_jam = false
+          var getData = response.data
+          this.data_jam = getData
+        })
+      } else {
+        const date = new Date(ctx.activeDate.getFullYear(), ctx.activeDate.getMonth(), ctx.activeDate.getDate())
+        this.minSelesai = new Date(date)
+        const maxDateSelesai = new Date(date)
+        maxDateSelesai.setDate(maxDateSelesai.getDate() + 15)
+        this.maxSelesai = maxDateSelesai
+      }
     },
     onContext(ctx) {
       this.formatted = ctx.selectedFormatted
@@ -288,7 +369,16 @@ export default {
     proses(anggota_rombel_id){
       this.form.anggota_rombel_id = anggota_rombel_id
       this.showProses = true
-    }
+    },
+    changeJenis(val){
+      if(val == 'hari'){
+        this.jam_selected = []
+        this.allSelected = false
+        this.indeterminate = false
+        this.form.tanggal_mulai = ''
+        this.form.jam_ke = []
+      }
+    },
   },
 }
 </script>
