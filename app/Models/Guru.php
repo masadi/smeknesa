@@ -35,7 +35,7 @@ class Guru extends Model
 		return strtoupper($this->attributes['tempat_lahir']);
 	}
 	public function getNamaLengkapAttribute(){
-		return strtoupper($this->attributes['nama']);
+		return $this->attributes['nama'];
 		$gelar_depan = '';
 		$gelar_belakang = '';
 		if($this->gelar_depan()->exists()){

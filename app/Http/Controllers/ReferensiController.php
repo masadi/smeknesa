@@ -58,8 +58,10 @@ class ReferensiController extends Controller
             'mapel_tingkat.jurusan_sp'
         ])->where($this->kondisiMapel())->orderBy(request()->sortby, request()->sortbydesc)
         ->when(request()->q, function($query) {
-            $query->where($this->kondisiMapel());
             $query->where('nama', 'ilike', '%'.request()->q.'%');
+            $query->where($this->kondisiMapel());
+            $query->orWhere('jenis', 'ilike', '%'.request()->q.'%');
+            $query->where($this->kondisiMapel());
         })
         ->paginate(request()->per_page);
         return response()->json(['status' => 'success', 'data' => $data, 'semester_id' => request()->semester_id]);
@@ -834,7 +836,13 @@ class ReferensiController extends Controller
         return response()->json($data);
     }
     public function get_rombel(){
-        $data = Rombongan_belajar::where(function($query){
+        $rombel = NULL;
+        if(request()->aksi){
+            if(request()->aksi == 'kenaikan'){
+                $rombel = Rombongan_belajar::find(request()->id);
+            }
+        }
+        $data = Rombongan_belajar::where(function($query) use ($rombel){
             if(request()->tingkat){
                 $query->where('tingkat', request()->tingkat);
             }
@@ -854,8 +862,8 @@ class ReferensiController extends Controller
             }
             if(request()->aksi){
                 if(request()->aksi == 'kenaikan'){
-                    $rombel = Rombongan_belajar::find(request()->id);
-                    $query->where('tingkat', ($rombel->tingkat + 1));
+                    $tingkat = $rombel->tingkat + 1;
+                    $query->where('tingkat', $tingkat);
                     $query->where('jurusan_sp_id', $rombel->jurusan_sp_id);
                 }
             }
@@ -876,6 +884,34 @@ class ReferensiController extends Controller
             }
             $query->where('semester_id', request()->semester_id);
         })->select('rombongan_belajar_id', 'nama', 'semester_id')->orderBy('nama')->get();
+        if(request()->aksi){
+            if(request()->aksi == 'kenaikan'){
+                if($data->count()){
+                    $record = [];
+                    foreach($data as $rombel){
+                        $record[] = [
+                            'rombongan_belajar_id' => $rombel->rombongan_belajar_id,
+                            'nama' => $rombel->nama,
+                            'semester_id' => request()->semester_id,
+                        ];
+                    }
+                    $data = array_merge($record, [
+                        [
+                            'rombongan_belajar_id' => request()->id,
+                            'nama' => 'Entry manual',
+                            'semester_id' => request()->semester_id,
+                        ]
+                    ]);
+                } else {
+                    $record = [
+                        'rombongan_belajar_id' => request()->id,
+                        'nama' => 'Entry manual',
+                        'semester_id' => request()->semester_id,
+                    ];
+                    $data= [$record];
+                }
+            }
+        }
         return response()->json($data);
     }
     public function get_mapel(){
@@ -973,6 +1009,30 @@ class ReferensiController extends Controller
         ->select('nama_mata_pelajaran', 'mata_pelajaran_id')->orderBy('mata_pelajaran_id')->get();*/
         return response()->json($data);
     }
+    private function opsi_naik(){
+        return [
+            [
+                'code' => 0,
+                'label' => 'Tinggal Dikelas'
+            ],
+            [
+                'code' => 1,
+                'label' => 'Naik Ke Kelas'
+            ],
+        ];
+    }
+    private function opsi_lulus(){
+        return [
+            [
+                'code' => 3,
+                'label' => 'Lulus'
+            ],
+            [
+                'code' => 4,
+                'label' => 'Tidak Lulus'
+            ],
+        ];
+    }
     public function get_siswa(){
         $data = [];
         if(request()->data){
@@ -1006,6 +1066,10 @@ class ReferensiController extends Controller
                 ];        
             }
             if(request()->data == 'kenaikan'){
+                $rombongan_belajar = Rombongan_belajar::where(function($query){
+                    $query->where('guru_id', request()->guru_id);
+                    $query->where('semester_id', request()->semester_id);
+                })->first();
                 $data = [
                     'pd' => Peserta_didik::withWhereHas('kelas', function ($query) {
                         $query->where('guru_id', request()->guru_id);
@@ -1016,6 +1080,10 @@ class ReferensiController extends Controller
                             $query->where('semester_id', request()->semester_id);
                         });
                     })->with(['kenaikan_kelas'])->orderBy('nama')->get(),
+                    'rombongan_belajar' => $rombongan_belajar,
+                    'opsi' => ($rombongan_belajar->tingkat == 12) ? $this->opsi_lulus() : $this->opsi_naik(),
+                    'placeholder' => ($rombongan_belajar->tingkat == 12) ? '== Pilih Status Kelulusan ==' : '== Pilih Status Kenaikan ==',
+                    'kelulusan' => ($rombongan_belajar->tingkat == 12),
                     'semester' => Semester::find(request()->semester_id),
                 ];        
             }

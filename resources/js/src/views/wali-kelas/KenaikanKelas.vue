@@ -23,9 +23,14 @@
                     <b-th class="text-center">No</b-th>
                     <b-th class="text-center">Nama Siswa</b-th>
                     <b-th class="text-center">NISN</b-th>
-                    <b-th class="text-center">Status Kenaikan</b-th>
-                    <b-th class="text-center">Ke Kelas</b-th>
-                    <b-th class="text-center">Aksi</b-th>
+                    <template v-if="kelulusan">
+                      <b-th class="text-center">Status Kelulusan</b-th>
+                    </template>
+                    <template v-else>
+                      <b-th class="text-center">Status Kenaikan</b-th>
+                      <b-th class="text-center">Ke Kelas</b-th>
+                      <b-th class="text-center">Aksi</b-th>
+                    </template>
                   </b-tr>
                 </b-thead>
                 <b-tbody>
@@ -34,16 +39,15 @@
                     <b-td>{{siswa.nama}}</b-td>
                     <b-td class="text-center">{{siswa.nisn}}</b-td>
                     <b-td>
-                      <v-select v-model="form.status_kenaikan[siswa.anggota_rombel.anggota_rombel_id]" :reduce="label => label.code" :options="[
-                        {label: 'Tinggal Dikelas', code: 0},
-                        {label: 'Naik Ke Kelas', code: 1}
-                      ]" @input="naikKelas(siswa.anggota_rombel.anggota_rombel_id, siswa.kelas.nama, siswa.kelas.rombongan_belajar_id)" :clearable="false" :searchable="false" placeholder="== Pilih Status Kenaikan =="></v-select>
+                      <v-select v-model="form.status_kenaikan[siswa.anggota_rombel.anggota_rombel_id]" :reduce="label => label.code" :options="opsi" @input="naikKelas(siswa.anggota_rombel.anggota_rombel_id, siswa.kelas.nama, siswa.kelas.rombongan_belajar_id)" :clearable="false" :searchable="false" placeholder="== Pilih Status Kenaikan =="></v-select>
                     </b-td>
-                    <b-td class="text-center">
-                      <b-badge variant="success" v-if="naik[siswa.anggota_rombel.anggota_rombel_id]">{{naik[siswa.anggota_rombel.anggota_rombel_id]}}</b-badge>
-                      <b-badge variant="danger" v-if="tinggal[siswa.anggota_rombel.anggota_rombel_id]">{{tinggal[siswa.anggota_rombel.anggota_rombel_id]}}</b-badge>
-                    </b-td>
-                    <b-td class="text-center"></b-td>
+                    <template v-if="!kelulusan">
+                      <b-td class="text-center">
+                        <b-badge variant="success" v-if="naik[siswa.anggota_rombel.anggota_rombel_id]">{{naik[siswa.anggota_rombel.anggota_rombel_id]}}</b-badge>
+                        <b-badge variant="danger" v-if="tinggal[siswa.anggota_rombel.anggota_rombel_id]">{{tinggal[siswa.anggota_rombel.anggota_rombel_id]}}</b-badge>
+                      </b-td>
+                      <b-td class="text-center"></b-td>
+                    </template>
                   </b-tr>
                 </b-tbody>
               </b-table-simple>
@@ -54,13 +58,14 @@
       </div>
     </b-card-body>
     <b-modal v-model="modalShow" title="Pilih Kelas Tujuan" @ok="handleOk" cancel-title="Tutup" ok-title="Pilih">
-      <v-select v-model="rombel_tujuan" label="nama" :options="data_rombel" placeholder="== Pilih Kelas Tujuan =="></v-select>
+      <v-select v-model="rombel_tujuan" label="nama" :options="data_rombel" placeholder="== Pilih Kelas Tujuan ==" @input="changeRombel"></v-select>
+      <b-form-input v-model="rombel_manual" placeholder="Nama Kelas Tujuan" v-if="showManual" class="mt-2"></b-form-input>
     </b-modal>
   </b-card>
 </template>
 
 <script>
-import { BCard, BCardBody, BSpinner, BAlert, BForm, BOverlay, BTableSimple, BThead, BTbody, BTr, BTh, BTd, BBadge, BButton } from 'bootstrap-vue'
+import { BCard, BCardBody, BSpinner, BAlert, BForm, BOverlay, BTableSimple, BThead, BTbody, BTr, BTh, BTd, BBadge, BButton, BFormInput } from 'bootstrap-vue'
 import vSelect from 'vue-select'
 export default {
   components: {
@@ -79,6 +84,7 @@ export default {
     BTd,
     BBadge,
     BButton,
+    BFormInput,
   },
   data() {
     return {
@@ -97,11 +103,23 @@ export default {
       modalShow: false,
       data_rombel: [],
       anggota_rombel_id: '',
+      rombel_asal: '',
       rombel_tujuan: null,
+      showManual: false,
+      rombel_manual: null,
+      placeholder: null,
+      opsi: [],
+      kelulusan: false,
     }
   },
   created() {
     this.loadPostsData()
+    /*
+    [
+                        {label: 'Tinggal Dikelas', code: 0},
+                        {label: 'Naik Ke Kelas', code: 1}
+                      ]
+    */
   },
   methods: {
     loadPostsData() {
@@ -116,6 +134,9 @@ export default {
         let getData = response.data
         this.semester = getData.semester.semester
         this.data_siswa = getData.pd
+        this.placeholder = getData.placeholder
+        this.opsi = getData.opsi
+        this.kelulusan = getData.kelulusan
         this.data_siswa.forEach(element => {
           if(element.kenaikan_kelas){
             this.form.status_kenaikan[element.kenaikan_kelas.anggota_rombel_id] = element.kenaikan_kelas.status
@@ -129,25 +150,38 @@ export default {
         });
       })
     },
-    getNextRombel(id){
-      this.$http.post('/referensi/get-rombel', {
-        aksi: 'kenaikan',
-        id: id,
-      }).then(response => {
-        let getData = response.data
+    getNextRombel(id, angka){
+      if(angka === 1){
+        this.$http.post('/referensi/get-rombel', {
+          aksi: 'kenaikan',
+          id: id,
+          semester_id: this.user.semester.semester_id,
+        }).then(response => {
+          let getData = response.data
+          this.loading = false
+          this.modalShow = true
+          this.data_rombel = getData
+        })
+      } else {
         this.loading = false
-        this.modalShow = true
-        this.data_rombel = getData
-      })
+      }
     },
     naikKelas(val, nama, rombongan_belajar_id){
+      this.rombel_asal = rombongan_belajar_id
       this.anggota_rombel_id = val
       if(this.form.status_kenaikan[this.anggota_rombel_id]){
         this.loading = true
-        this.getNextRombel(rombongan_belajar_id)
+        this.getNextRombel(rombongan_belajar_id, this.form.status_kenaikan[this.anggota_rombel_id])
       } else {
+        this.naik[this.anggota_rombel_id] = null
         this.form.nama_kelas[this.anggota_rombel_id] = nama
         this.tinggal[this.anggota_rombel_id] = nama
+      }
+    },
+    changeRombel(val){
+      this.showManual = false
+      if(val.rombongan_belajar_id === this.rombel_asal){
+        this.showManual = true
       }
     },
     handleOk(bvModalEvent) {
@@ -156,8 +190,9 @@ export default {
     },
     handleSubmit() {
       this.modalShow = false
-      this.naik[this.anggota_rombel_id] = this.rombel_tujuan.nama
-      this.form.nama_kelas[this.anggota_rombel_id] = this.rombel_tujuan.nama
+      this.naik[this.anggota_rombel_id] = this.rombel_manual ?? this.rombel_tujuan.nama
+      this.form.nama_kelas[this.anggota_rombel_id] = this.rombel_manual ?? this.rombel_tujuan.nama
+      this.tinggal[this.anggota_rombel_id] = null
     },
     onSubmit(event) {
       console.log(this.form);
