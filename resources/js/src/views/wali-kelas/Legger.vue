@@ -18,7 +18,12 @@
               <b-th class="text-center">No</b-th>
               <b-th class="text-center">Nama Siswa</b-th>
               <b-th class="text-center">NISN</b-th>
-              <b-th class="text-center" v-for="(pembelajaran, index) in data_pembelajaran" :key="pembelajaran.pembelajaran_id">{{pembelajaran.nama_mata_pelajaran}}</b-th>
+              <template v-if="nilai_pkl">
+                <b-th class="text-center">{{ nilai_pkl.praktik_kerja_lapangan.pembelajaran.nama_mata_pelajaran }}</b-th>
+              </template>
+              <template v-else>
+                <b-th class="text-center" v-for="(pembelajaran, index) in data_pembelajaran" :key="pembelajaran.pembelajaran_id">{{pembelajaran.nama_mata_pelajaran}}</b-th>
+              </template>
             </b-tr>
           </b-thead>
           <b-tbody>
@@ -27,7 +32,14 @@
                 <b-td class="text-center">{{index + 1}}</b-td>
                 <b-td>{{siswa.nama}}</b-td>
                 <b-td class="text-center">{{siswa.nisn}}</b-td>
-                <b-td class="text-center" v-for="(pembelajaran, index) in data_pembelajaran" :key="pembelajaran.pembelajaran_id">{{Math.ceil(getNilai(pembelajaran.nilai, siswa.anggota_rombel.anggota_rombel_id))}}</b-td>
+                <template v-if="nilai_pkl">
+                  <b-td class="text-center">
+                    {{Math.round(siswa.avg_nilai_pkl)}}
+                  </b-td>
+                </template>
+                <template v-else>
+                  <b-td class="text-center" v-for="(pembelajaran, index) in data_pembelajaran" :key="pembelajaran.pembelajaran_id">{{Math.ceil(getNilai(pembelajaran.nilai, siswa.anggota_rombel.anggota_rombel_id))}}</b-td>
+                </template>
               </b-tr>
             </template>
           </b-tbody>
@@ -77,6 +89,7 @@ export default {
       anggota_rombel_id: '',
       rombel_tujuan: null,
       rombongan_belajar_id: '',
+      nilai_pkl: null,
       
     }
   },
@@ -100,6 +113,7 @@ export default {
         this.data_siswa = getData.pd
         this.data_pembelajaran = getData.pembelajaran
         this.rombongan_belajar_id = getData.rombongan_belajar.rombongan_belajar_id
+        this.nilai_pkl = getData.nilai_pkl
       })
     },
     getNilai(all_nilai, anggota_rombel_id){
@@ -110,7 +124,11 @@ export default {
       return arr.reduce((acc, val) => {
         return acc + (val.angka/length);
       }, 0);
-    }
+    },
+    /*rerataNilaiPkl(arr){
+      const average = arr.reduce((total, next) => total + next.nilai, 0) / arr.length;
+      return Math.round(average)
+    },*/
   },
 }
 </script>

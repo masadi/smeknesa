@@ -37,6 +37,7 @@ use App\Models\Capaian_pembelajaran;
 use App\Models\Tujuan_pembelajaran;
 use App\Models\Kajur;
 use App\Models\Terlambat;
+use App\Models\Nilai_pkl;
 use Carbon\Carbon;
 use Indonesia;
 
@@ -1046,7 +1047,12 @@ class ReferensiController extends Controller
                             $query->where('guru_id', request()->guru_id);
                             $query->where('semester_id', request()->semester_id);
                         });
-                    })->orderBy('nama')->get(),
+                    })->with([
+                        'pd_pkl.praktik_kerja_lapangan',
+                        'nilai_pkl.tp',
+                        'absensi_pkl',
+                        //'avgNilaiPkl',
+                    ])->orderBy('nama')->get(),
                     'pembelajaran' => Pembelajaran::withWhereHas('rombongan_belajar', function($query){
                         $query->where('semester_id', request()->semester_id);
                         $query->where('guru_id', request()->guru_id);
@@ -1062,6 +1068,12 @@ class ReferensiController extends Controller
                         $query->where('semester_id', request()->semester_id);
                         $query->where('guru_id', request()->guru_id);
                         $query->where('tingkat', '<>', 0);
+                    })->first(),
+                    'nilai_pkl' => Nilai_pkl::with('praktik_kerja_lapangan.pembelajaran')->whereHas('pd', function($query){
+                        $query->whereHas('kelas', function ($query) {
+                            $query->where('guru_id', request()->guru_id);
+                            $query->where('rombongan_belajar.semester_id', request()->semester_id);
+                        });
                     })->first(),
                 ];        
             }

@@ -43,4 +43,8 @@ class Praktik_kerja_lapangan extends Model
 	public function getTglSelesaiAttribute(){
 		return Carbon::parse($this->attributes['tanggal_selesai'])->translatedFormat('d F Y');
 	}
+	public function pembelajaran()
+	{
+		return $this->belongsTo(Pembelajaran::class, 'pembelajaran_id', 'pembelajaran_id');
+	}
 }

@@ -16,7 +16,7 @@ class Peserta_didik extends Model
 	protected $table = 'peserta_didik';
 	protected $primaryKey = 'peserta_didik_id';
 	protected $guarded = [];
-    protected $appends = ['nama_lengkap', 'tanggal_lahir_indo', 'diterima_indo'];
+    protected $appends = ['nama_lengkap', 'tanggal_lahir_indo', 'diterima_indo', 'avg_nilai_pkl'];
 	
 	public function anggota_rombel()
 	{
@@ -218,6 +218,23 @@ class Peserta_didik extends Model
 	public function nilai_pkl()
 	{
 		return $this->hasMany(Nilai_pkl::class, 'peserta_didik_id', 'peserta_didik_id');
+	}
+	public function rerataNilaiPkl()
+	{
+		return $this->nilai_pkl()
+		->selectRaw('avg(nilai) as aggregate, peserta_didik_id')
+		->groupBy('peserta_didik_id');
+	}
+
+	public function getAvgNilaiPklAttribute()
+	{
+		if ( ! array_key_exists('rerataNilaiPkl', $this->relations)) {
+			$this->load('rerataNilaiPkl');
+		}
+
+		$relation = $this->getRelation('rerataNilaiPkl')->first();
+
+		return ($relation) ? $relation->aggregate : null;
 	}
 	public function sekolah()
 	{
