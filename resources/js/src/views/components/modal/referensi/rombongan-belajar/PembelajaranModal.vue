@@ -175,7 +175,7 @@ export default {
           guru_id: _this.form.guru_id[objectKey],
           kelompok_id: _this.form.kelompok_id[objectKey],
           no_urut: _this.form.no_urut[objectKey],
-          semester_id: this.user.semester.semester_id,
+          semester_id: _this.user.semester.semester_id,
         }).then(response => {
           _this.loading_form = false
           _this.$toast({
