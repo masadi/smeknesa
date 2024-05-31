@@ -321,6 +321,7 @@ class ReferensiController extends Controller
             $pembelajaran->guru_id = request()->guru_id;
             $pembelajaran->kelompok_id = request()->kelompok_id;
             $pembelajaran->no_urut = request()->no_urut;
+            $pembelajaran->semester_id = request()->semester_id;
             if($pembelajaran->save()){
                 $data = [
                     'success' => TRUE,
