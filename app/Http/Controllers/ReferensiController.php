@@ -1323,13 +1323,105 @@ class ReferensiController extends Controller
     public function anggota_rombel(){
         $data = Peserta_didik::whereHas('anggota_rombel', function($query){
             $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
-        })->with(['agama'])->orderBy('nama')->get();
+        })->with(['agama'])->orderBy('nama')
+        ->when(request()->q, function($query) {
+            $query->where('nama', 'ilike', '%'.request()->q.'%');
+            $query->orWhere('nisn', 'ilike', '%'.request()->q.'%');
+        })
+        ->paginate(request()->per_page);
+        //->get();
         return response()->json($data);
     }
     public function anggota_ekskul(){
-        $data = Peserta_didik::whereHas('anggota_rombel', function($query){
+        $data = Peserta_didik::withWhereHas('anggota_rombel', function($query){
             $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
-        })->orderBy('nama')->get();
+        })->orderBy('nama')
+        ->when(request()->q, function($query) {
+            $query->where('nama', 'ilike', '%'.request()->q.'%');
+            $query->orWhere('nisn', 'ilike', '%'.request()->q.'%');
+        })
+        ->paginate(request()->per_page);
+        //->get();
+        return response()->json($data);
+    }
+    public function non_anggota(){
+        $data = Peserta_didik::where(function($query){
+            $query->whereDoesntHave('anggota_rombel', function($query){
+                $query->whereHas('rombongan_belajar', function($query){
+                    $query->where('tingkat', '<>', 0);
+                    $query->where('semester_id', request()->semester_id);
+                });
+            });
+            $query->whereDoesntHave('pd_keluar', function($query){
+                $query->where('semester_id', request()->semester_id);
+            });
+        })->orderBy('nama')
+        ->when(request()->filter_nama, function($query) {
+            $query->where('nama', 'ilike', '%'.request()->filter_nama.'%');
+            $query->orWhere('nisn', 'ilike', '%'.request()->filter_nama.'%');
+        })
+        ->when(request()->q, function($query) {
+            $query->where('nama', 'ilike', '%'.request()->q.'%');
+            $query->orWhere('nisn', 'ilike', '%'.request()->q.'%');
+        })
+        ->paginate(request()->per_page);
+        //->get();
+        return response()->json($data);
+    }
+    public function non_anggota_ekskul(){
+        $data = Peserta_didik::where(function($query){
+            $query->whereDoesntHave('anggota_rombel', function($query){
+                $query->whereHas('rombongan_belajar', function($query){
+                    $query->where('tingkat', 0);
+                    $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
+                    $query->where('semester_id', request()->semester_id);
+                });
+            });
+            $query->whereDoesntHave('pd_keluar', function($query){
+                $query->where('semester_id', request()->semester_id);
+            });
+        })->withWhereHas('kelas', function($query){
+            $query->where('tingkat', '<>', 0);
+            $query->where('rombongan_belajar.semester_id', request()->semester_id);
+        })->orderBy('nama')
+        ->when(request()->filter_nama, function($query) {
+            $query->where('nama', 'ilike', '%'.request()->filter_nama.'%');
+            $query->orWhere('nisn', 'ilike', '%'.request()->filter_nama.'%');
+        })->orderBy('nama')->when(request()->q, function($query) {
+            $query->where('nama', 'ilike', '%'.request()->q.'%');
+            $query->orWhere('nisn', 'ilike', '%'.request()->q.'%');
+        })
+        ->paginate(request()->per_page);
+        //->get();
+        return response()->json($data);
+    }
+    public function set_anggota(){
+        if(request()->data == 'masukkan'){
+            $insert = Anggota_rombel::updateOrCreate([
+                'peserta_didik_id' => request()->peserta_didik_id,
+                'rombongan_belajar_id' => request()->rombongan_belajar_id,
+                'sekolah_id' => sekolah_id(),
+                'semester_id' => request()->semester_id,
+            ]);
+        } else {
+            $insert = Anggota_rombel::where(function($query){
+                $query->where('peserta_didik_id', request()->peserta_didik_id);
+                $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
+            })->delete();
+        }
+        if($insert){
+            $data = [
+                'icon' => 'success',
+                'text' => 'Peserta Didik berhasil di'. request()->data,
+                'title' => 'Berhasil',
+            ];
+        } else {
+            $data = [
+                'icon' => 'error',
+                'text' => 'Peserta Didik gagal di'. request()->data .'. Silahkan coba beberapa saat lagi!',
+                'title' => 'Gagal',
+            ];
+        }
         return response()->json($data);
     }
     public function get_semester(){
@@ -2211,72 +2303,6 @@ class ReferensiController extends Controller
                 'errors' => NULL,
                 'icon' => 'error',
                 'text' => 'Data Guru gagal diperbaharui. Silahkan coba beberapa saat lagi!',
-                'title' => 'Gagal',
-            ];
-        }
-        return response()->json($data);
-    }
-    public function non_anggota(){
-        $data = Peserta_didik::where(function($query){
-            $query->whereDoesntHave('anggota_rombel', function($query){
-                $query->whereHas('rombongan_belajar', function($query){
-                    $query->where('tingkat', '<>', 0);
-                    $query->where('semester_id', request()->semester_id);
-                });
-            });
-            $query->whereDoesntHave('pd_keluar', function($query){
-                $query->where('semester_id', request()->semester_id);
-            });
-        })->when(request()->filter_nama, function($query) {
-            $query->where('nama', 'ilike', '%'.request()->filter_nama.'%');
-            $query->orWhere('nisn', 'ilike', '%'.request()->filter_nama.'%');
-        })->orderBy('nama')->get();
-        return response()->json($data);
-    }
-    public function non_anggota_ekskul(){
-        $data = Peserta_didik::where(function($query){
-            $query->whereDoesntHave('anggota_rombel', function($query){
-                $query->whereHas('rombongan_belajar', function($query){
-                    $query->where('tingkat', 0);
-                    $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
-                    $query->where('semester_id', request()->semester_id);
-                });
-            });
-            $query->whereDoesntHave('pd_keluar', function($query){
-                $query->where('semester_id', request()->semester_id);
-            });
-        })->withWhereHas('kelas', function($query){
-            $query->where('rombongan_belajar.semester_id', request()->semester_id);
-        })->when(request()->filter_nama, function($query) {
-            $query->where('nama', 'ilike', '%'.request()->filter_nama.'%');
-            $query->orWhere('nisn', 'ilike', '%'.request()->filter_nama.'%');
-        })->orderBy('nama')->get();
-        return response()->json($data);
-    }
-    public function set_anggota(){
-        if(request()->data == 'masukkan'){
-            $insert = Anggota_rombel::updateOrCreate([
-                'peserta_didik_id' => request()->peserta_didik_id,
-                'rombongan_belajar_id' => request()->rombongan_belajar_id,
-                'sekolah_id' => sekolah_id(),
-                'semester_id' => request()->semester_id,
-            ]);
-        } else {
-            $insert = Anggota_rombel::where(function($query){
-                $query->where('peserta_didik_id', request()->peserta_didik_id);
-                $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
-            })->delete();
-        }
-        if($insert){
-            $data = [
-                'icon' => 'success',
-                'text' => 'Peserta Didik berhasil di'. request()->aksi,
-                'title' => 'Berhasil',
-            ];
-        } else {
-            $data = [
-                'icon' => 'error',
-                'text' => 'Peserta Didik gagal di'. request()->aksi .'. Silahkan coba beberapa saat lagi!',
                 'title' => 'Gagal',
             ];
         }

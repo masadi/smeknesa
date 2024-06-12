@@ -37,23 +37,6 @@
                 </b-form-group>
               </b-col>
             </template>
-            <!--template v-else>
-              <b-col cols="12">
-                <b-form-group label="Tanggal" label-for="tanggal_mulai" label-cols-md="3" :invalid-feedback="feedback.tanggal_mulai" :state="state.tanggal_mulai">
-                  <b-form-datepicker v-model="form.tanggal_mulai" show-decade-nav button-variant="outline-secondary" left locale="id" aria-controls="tanggal_mulai" @context="onContextStart" placeholder="== Pilih Tanggal ==" :min="minMulai" :max="maxMulai" />
-                </b-form-group>  
-              </b-col>
-              <b-col cols="12">
-                <b-form-group label="Jam Ke" label-for="jam_ke" label-cols-md="3" :invalid-feedback="feedback.jam_ke" :state="state.jam_ke">
-                  <b-overlay :show="loading_jam" rounded opacity="0.6" spinner-small spinner-variant="danger">
-                    <b-form-checkbox v-model="allSelected" :indeterminate="indeterminate" @change="toggleAll" class="mb-1" v-if="data_jam.length">
-                      {{ allSelected ? 'Lepas Semua' : 'Pilih Semua' }}
-                    </b-form-checkbox>
-                    <b-form-checkbox-group id="jam_ke" v-model="jam_selected" :options="data_jam" name="jam_ke" :state="state.jam_ke"></b-form-checkbox-group>
-                  </b-overlay>
-                </b-form-group>
-              </b-col>
-            </template-->
             <template v-if="form.jenis_ijin">
               <template v-if="form.jenis_ijin == 'hari'">
                 <b-col cols="12">
@@ -302,6 +285,8 @@ export default {
       this.form.tanggal_selesai = ''
       this.form.anggota_rombel_id = ''
       this.form.jam_ke = []
+      this.form.alasan = ''
+      this.jam_selected = []
       this.feedback.tanggal_mulai = ''
       this.feedback.tanggal_selesai = ''
       this.feedback.pilihan_ijin = ''

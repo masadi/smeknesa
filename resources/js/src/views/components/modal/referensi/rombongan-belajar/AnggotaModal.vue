@@ -2,93 +2,98 @@
   <b-modal v-model="anggotaModalShow" title="Anggota Rombel" size="xl" ok-only ok-variant="secondary" ok-title="Tutup" modal-class="modal-fullscreen" scrollable>
     <b-row>
       <b-col cols="6">
-        <b-overlay :show="loading_anggota || loading_table" opacity="0.6" size="lg" spinner-variant="success">
-          <b-table-simple bordered responsive>
-            <b-thead>
-              <b-tr>
-                <b-th class="text-center">NO</b-th>
-                <b-th class="text-center">NAMA</b-th>
-                <b-th class="text-center">NISN</b-th>
-                <b-th class="text-center">AKSI</b-th>
-              </b-tr>
-            </b-thead>
-            <b-tbody>
-              <template v-for="(anggota, index) in data_anggota">
-                <b-tr>
-                  <b-td class="text-center">{{index + 1}}</b-td>
-                  <b-td>{{anggota.nama}}</b-td>
-                  <b-td class="text-center">{{anggota.nisn}}</b-td>
-                  <b-td class="text-center">
-                    <b-button size="sm" variant="danger" @click="keluarkan(anggota.peserta_didik_id)">Keluarkan</b-button>
-                  </b-td>
-                </b-tr>
-              </template>
-            </b-tbody>
-          </b-table-simple>
-        </b-overlay>
+        <h3>Anggota Rombel</h3>
+        <datatable :isBusy="loadingAnggota" :items="itemsAnggota" :fields="fieldsAnggota" :meta="metaAnggota" @per_page="handlePerPageAnggota" @pagination="handlePaginationAnggota" @search="handleSearchAnggota" @aksi="handleAksiAnggota" />
       </b-col>
       <b-col cols="6">
-        <b-row>
-          <b-col cols="12" class="mb-2">
-            <b-form-input v-model="filter_nama" @input="cari_nama" placeholder="Cari data..."></b-form-input>
-          </b-col>
-        </b-row>
-        <b-overlay :show="loading_non_anggota || loading_table" opacity="0.6" size="lg" spinner-variant="danger">
-          <b-table-simple bordered responsive>
-            <b-thead>
-              <b-tr>
-                <b-th class="text-center">NO</b-th>
-                <b-th class="text-center">NAMA</b-th>
-                <b-th class="text-center">NISN</b-th>
-                <b-th class="text-center">AKSI</b-th>
-              </b-tr>
-            </b-thead>
-            <b-tbody>
-              <template v-for="(non_anggota, index) in data_non_anggota">
-                <b-tr>
-                  <b-td class="text-center">{{index + 1}}</b-td>
-                  <b-td>{{non_anggota.nama}}</b-td>
-                  <b-td class="text-center">{{non_anggota.nisn}}</b-td>
-                  <b-td class="text-center">
-                    <b-button size="sm" variant="success" @click="masukkan(non_anggota.peserta_didik_id)">Masukkan</b-button>
-                  </b-td>
-                </b-tr>
-              </template>
-            </b-tbody>
-          </b-table-simple>
-        </b-overlay>
+        <h3>Non Anggota Rombel</h3>
+        <datatable :isBusy="loadingNonAnggota" :items="itemsNonAnggota" :fields="fieldsNonAnggota" :meta="metaNonAnggota" @per_page="handlePerPageNonAnggota" @pagination="handlePaginationNonAnggota" @search="handleSearchNonAnggota" @aksi="handleAksiNonAnggota" />
       </b-col>
     </b-row>
   </b-modal>
 </template>
 
 <script>
-import { BRow, BCol, BTableSimple, BThead, BTh, BTbody, BTr, BTd, BButton, BOverlay, BFormInput } from 'bootstrap-vue'
+import { BRow, BCol } from 'bootstrap-vue'
 import eventBus from '@core/utils/eventBus'
+import Datatable from './Datatable.vue'
+import vSelect from 'vue-select'
 export default {
   components: {
     BRow,
     BCol,
-    BTableSimple,
-    BThead,
-    BTh,
-    BTbody,
-    BTr,
-    BTd,
-    BButton,
-    BOverlay,
-    BFormInput,
+    Datatable,
+    vSelect,
   },
   data() {
     return {
       anggotaModalShow: false,
-      loading_anggota: false,
-      loading_non_anggota: false,
+      loadingAnggota: false,
+      loadingNonAnggota: false,
       loading_table: false,
       data_anggota: [],
       data_non_anggota: [],
       rombongan_belajar_id: '',
       filter_nama: '',
+      perPageAnggota: 10,
+      fromAnggota: 1,
+      toAnggota: 0,
+      totalAnggota: 0,
+      fieldsAnggota: [
+        {
+          key: 'nama',
+          label: 'Nama',
+          sortable: false,
+          thClass: 'text-center',
+        },
+        {
+          key: 'nisn',
+          label: 'NISN',
+          sortable: false,
+          thClass: 'text-center',
+          tdClass: 'text-center'
+        },
+        {
+          key: 'action',
+          label: 'Keluarkan',
+          sortable: false,
+          thClass: 'text-center',
+          tdClass: 'text-center'
+        },
+      ],
+      itemsAnggota: [],
+      metaAnggota: {},
+      sortDescAnggota: false,
+      currentPageAnggota: 1, //DEFAULT PAGE YANG AKTIF ADA PAGE 1
+      cariAnggota: '',
+      loadingNonAnggota: true,
+      perPageNonAnggota: 10,
+      currentPageNonAnggota: 1,
+      itemsNonAnggota: [],
+      fieldsNonAnggota: [
+        {
+          key: 'nama',
+          label: 'Nama',
+          sortable: false,
+          thClass: 'text-center',
+        },
+        {
+          key: 'nisn',
+          label: 'NISN',
+          sortable: false,
+          thClass: 'text-center',
+          tdClass: 'text-center'
+        },
+        {
+          key: 'action',
+          label: 'Masukkan',
+          sortable: false,
+          thClass: 'text-center',
+          tdClass: 'text-center'
+        },
+      ],
+      metaNonAnggota: {},
+      cariNonAnggota: '',
     }
   },
   created() {
@@ -101,11 +106,16 @@ export default {
       this.getNonAnggota()
     },
     getAnggota(){
-      this.loading_anggota = true
+      this.loadingAnggota = true
+      let current_page = this.cariAnggota == '' ? this.currentPageAnggota:1
       this.$http.post('/referensi/anggota-rombel', {
         rombongan_belajar_id: this.rombongan_belajar_id,
+        semester_id: this.user.semester.semester_id,
+        page: current_page,
+        per_page: this.perPageAnggota,
+        q: this.cariAnggota,
       }).then(response => {
-        this.loading_anggota = false
+        this.loadingAnggota = false
         var getData = response.data
         if(getData.errors){
           this.$swal({
@@ -117,17 +127,30 @@ export default {
             },
           })
         } else {
-          this.data_anggota = getData
+          this.itemsAnggota = getData.data
+          this.metaAnggota = {
+            actionText: 'Keluarkan',
+            variant: 'danger',
+            total: getData.total,
+            current_page: getData.current_page,
+            per_page: getData.per_page,
+            from: getData.from,
+            to: getData.to,
+          }
         }
       })
     },
     getNonAnggota(){
-      this.loading_non_anggota = true
+      this.loadingNonAnggota = true
+      let current_page = this.cariNonAnggota == '' ? this.currentPageNonAnggota:1
       this.$http.post('/referensi/non-anggota', {
         rombongan_belajar_id: this.rombongan_belajar_id,
-        filter_nama: this.filter_nama,
+        semester_id: this.user.semester.semester_id,
+        page: current_page,
+        per_page: this.perPageNonAnggota,
+        q: this.cariNonAnggota,
       }).then(response => {
-        this.loading_non_anggota = false
+        this.loadingNonAnggota = false
         var getData = response.data
         if(getData.errors){
           this.$swal({
@@ -139,24 +162,28 @@ export default {
             },
           })
         } else {
-          this.data_non_anggota = getData
+          this.itemsNonAnggota = getData.data
+          this.metaNonAnggota = {
+            actionText: 'Masukkan',
+            variant: 'success',
+            total: getData.total,
+            current_page: getData.current_page,
+            per_page: getData.per_page,
+            from: getData.from,
+            to: getData.to,
+          }
           this.anggotaModalShow = true
         }
       })
     },
     hideModal(){
+      this.$emit('reload')
       this.anggotaModalShow = false
       this.resetForm()
     },
     resetForm(){
       this.data_anggota = []
       this.data_non_anggota = []
-    },
-    keluarkan(peserta_didik_id){
-      this.setAnggota('keluarkan', peserta_didik_id)
-    },
-    masukkan(peserta_didik_id){
-      this.setAnggota('masukkan', peserta_didik_id)
     },
     setAnggota(data, peserta_didik_id){
       this.loading_table = true
@@ -170,10 +197,36 @@ export default {
         this.getNonAnggota()
       })
     },
-    cari_nama: _.debounce(function (e) {
-      console.log(e);
+    handlePerPageAnggota(val){
+      this.perPageAnggota = val
+      this.getAnggota()
+    },
+    handlePaginationAnggota(val){
+      this.currentPageAnggota = val
+      this.getAnggota()
+    },
+    handleSearchAnggota(val){
+      this.cariAnggota = val
+      this.getAnggota()
+    },
+    handleAksiAnggota(val){
+      this.setAnggota('keluarkan', val)
+    },
+    handlePerPageNonAnggota(val){
+      this.perPageNonAnggota = val
       this.getNonAnggota()
-    }, 500),
+    },
+    handleSearchNonAnggota(val){
+      this.cariNonAnggota = val
+      this.getNonAnggota()
+    },
+    handlePaginationNonAnggota(val){
+      this.currentPageNonAnggota = val
+      this.getNonAnggota()
+    },
+    handleAksiNonAnggota(val){
+      this.setAnggota('masukkan', val)
+    },
   },
 }
 </script>
