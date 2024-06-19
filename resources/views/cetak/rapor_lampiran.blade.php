@@ -86,7 +86,7 @@ if($get_siswa->rombongan_belajar->semester->semester == 2){
 @if($get_siswa->rombongan_belajar->semester->semester == 2)
 <table width="100%" class="table table-bordered">
 	<tr>
-		<th>Status Kelulusan</th>
+		<th>{{$text_status}}</th>
 	</tr>
 	<tr>
 		<td style="padding:10px;">

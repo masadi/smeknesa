@@ -183,16 +183,13 @@ function konversi_huruf($kkm, $nilai, $produktif = NULL){
     return $predikat;		
 }
 function status_kenaikan($status){
-    if ($status == 1) {
-        $status_teks = 'Naik ke kelas';
-    } elseif ($status == 2) {
-        $status_teks = 'Tetap dikelas';
-    } elseif ($status == 3) {
-        $status_teks = 'Lulus';
-    } else {
-        $status_teks = 'Tidak Lulus';
-    }
-    return $status_teks;
+    $data = [
+        0 => 'Tinggal Dikelas',
+        1 => 'Naik Ke Kelas',
+        2 => 'Lulus',
+        4 => 'Tidak Lulus',
+    ];
+    return (!is_null($status)) ? $data[$status] : NULL;
 }
 function warna_dimensi($id){
     $data = [
