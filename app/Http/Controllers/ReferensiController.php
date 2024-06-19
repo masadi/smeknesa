@@ -659,6 +659,8 @@ class ReferensiController extends Controller
             $get = Dudi::find(request()->id);
         } elseif(request()->data == 'terlambat'){
             $get = Terlambat::find(request()->id);
+        } elseif(request()->data == 'kenaikan'){
+            $get = Kenaikan_kelas::where('anggota_rombel_id', request()->id)->first();
         }
         
         if($get){
@@ -2413,18 +2415,20 @@ class ReferensiController extends Controller
         if(request()->data == 'kenaikan'){
             $insert = 0;
             foreach(request()->status_kenaikan as $anggota_rombel_id => $status){
-                $naik = Kenaikan_kelas::updateOrCreate(
-                    [
-                        'sekolah_id' => sekolah_id(),
-                        'anggota_rombel_id' => $anggota_rombel_id,
-                    ],
-                    [
-                        'nama_kelas' => request()->nama_kelas[$anggota_rombel_id],
-                        'status' => $status,
-                    ]
-                );
-                if($naik){
-                    $insert++;
+                if(!is_null($status)){
+                    $naik = Kenaikan_kelas::updateOrCreate(
+                        [
+                            'sekolah_id' => sekolah_id(),
+                            'anggota_rombel_id' => $anggota_rombel_id,
+                        ],
+                        [
+                            'nama_kelas' => request()->nama_kelas[$anggota_rombel_id],
+                            'status' => $status,
+                        ]
+                    );
+                    if($naik){
+                        $insert++;
+                    }
                 }
             }
             if($insert){

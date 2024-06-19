@@ -46,7 +46,11 @@
                         <b-badge variant="success" v-if="naik[siswa.anggota_rombel.anggota_rombel_id]">{{naik[siswa.anggota_rombel.anggota_rombel_id]}}</b-badge>
                         <b-badge variant="danger" v-if="tinggal[siswa.anggota_rombel.anggota_rombel_id]">{{tinggal[siswa.anggota_rombel.anggota_rombel_id]}}</b-badge>
                       </b-td>
-                      <b-td class="text-center"></b-td>
+                      <b-td class="text-center">
+                        <template v-if="form.status_kenaikan[siswa.anggota_rombel.anggota_rombel_id] !== null">
+                          <b-button @click="hapusKenaikan(siswa.anggota_rombel.anggota_rombel_id)" variant="danger" class="btn-icon"><trash-icon size="16"></trash-icon></b-button>
+                        </template>
+                      </b-td>
                     </template>
                   </b-tr>
                 </b-tbody>
@@ -146,6 +150,10 @@ export default {
             } else {
               this.tinggal[element.kenaikan_kelas.anggota_rombel_id] = element.kenaikan_kelas.nama_kelas
             }
+          } else {
+            this.naik[element.anggota_rombel.anggota_rombel_id] = null
+            this.tinggal[element.anggota_rombel.anggota_rombel_id] = null
+            this.form.status_kenaikan[element.anggota_rombel.anggota_rombel_id] = null
           }
         });
       })
@@ -211,6 +219,43 @@ export default {
         }).then(result => {
           this.loading = false
         })
+      })
+    },
+    hapusKenaikan(anggota_rombel_id){
+      console.log(anggota_rombel_id);
+      this.$swal({
+        title: 'Apakah Anda yakin?',
+        text: 'Tindakan ini tidak dapat dikembalikan!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yakin!',
+        customClass: {
+          confirmButton: 'btn btn-primary',
+          cancelButton: 'btn btn-outline-danger ml-1',
+        },
+        buttonsStyling: false,
+        allowOutsideClick: () => false,
+      }).then(result => {
+        if (result.value) {
+          this.loading_form = true
+          this.$http.post('/referensi/hapus-data', {
+            data: 'kenaikan',
+            id: anggota_rombel_id,
+          }).then(response => {
+            this.loading_form = false
+            let getData = response.data
+            this.$swal({
+              icon: getData.icon,
+              title: getData.title,
+              text: getData.text,
+              customClass: {
+                confirmButton: 'btn btn-success',
+              },
+            }).then(result => {
+              this.loadPostsData()
+            })
+          });
+        }
       })
     }
   },

@@ -119,6 +119,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/set-anggota', [ReferensiController::class, 'set_anggota']);
     Route::post('/proses-kelulusan', [ReferensiController::class, 'proses_kelulusan']);
     Route::post('/proses-kenaikan', [ReferensiController::class, 'proses_kenaikan']);
+    Route::post('/hapus-kenaikan', [ReferensiController::class, 'hapus_kenaikan']);
     Route::post('/prepare-data', [ReferensiController::class, 'prepare_data']);
     Route::post('/simpan-data', [ReferensiController::class, 'simpan_data']);
     Route::get('/ekstrakurikuler', [ReferensiController::class, 'ekstrakurikuler']);
