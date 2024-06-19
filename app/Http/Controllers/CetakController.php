@@ -144,8 +144,11 @@ class CetakController extends Controller
 			$general_title = $get_siswa->peserta_didik->nama.' - '.$get_siswa->rombongan_belajar->nama;
 			$pdf->getMpdf()->SetFooter($general_title.'|{PAGENO}|Dicetak dari '.config('app.name').' v.'.get_setting('app_version'));
 			$rapor_nilai = view('cetak.rapor_semester', $params);
+            $rapor_lampiran = view('cetak.rapor_lampiran', $params);
 			//dd($params);
 			$pdf->getMpdf()->WriteHTML($rapor_nilai);
+            $pdf->getMpdf()->AddPage();
+            $pdf->getMpdf()->WriteHTML($rapor_lampiran);
 			/*if (strpos($get_siswa->rombongan_belajar->kurikulum->nama_kurikulum, 'Pusat') == false){
 				$pdf->getMpdf()->WriteHTML('<pagebreak />');
 				$rapor_catatan = view('cetak.rapor_catatan', $params);

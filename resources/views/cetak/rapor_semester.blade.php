@@ -65,7 +65,7 @@
 	@endforeach
 	@foreach($all_pembelajaran as $kelompok => $data_pembelajaran)
 	<tr>
-		<td colspan="6" class="strong"><strong style="font-size: 13px;">{{$kelompok}}</strong></td>
+		<td colspan="4" class="strong"><strong style="font-size: 13px;">{{$kelompok}}</strong></td>
 	</tr>
 	@foreach($data_pembelajaran as $pembelajaran)
 	<?php $pembelajaran = (object) $pembelajaran; ?>
@@ -86,139 +86,11 @@
 			<td>{{$pembelajaran->nama_mata_pelajaran}}</td>
 			<td class="text-center">{{$pembelajaran->nilai_akhir}}</td>
 			<td>
-			@foreach ($pembelajaran->capaian_kompetensi as $capaian_kompetensi)
-			{{$capaian_kompetensi->deskripsi}} 
-			@if(count($pembelajaran->capaian_kompetensi) > 1)
-			<br><br>
-			@endif
-			@endforeach
+			{!! collect($pembelajaran->capaian_kompetensi)->implode('deskripsi', '<br>') !!}
 			</td>
 		</tr>
 	@endforeach
 	@endforeach
 	</tbody>
 </table>
-<br />
-<table class="table table-bordered">
-	<thead>
-		<tr>
-			<th style="width: 2px; vertical-align: middle;" class="text-center">No</th>
-			<th style="width: 200px; vertical-align: middle;" class="text-center">Ekstrakurikuler</th>
-			<th style="vertical-align: middle;" class="text-center">Keterangan</th>
-		</tr>
-	</thead>
-	<tbody>
-		@forelse ($ekstrakurikuler as $item)
-		<tr>
-			<td class="text-center">{{$loop->iteration}}</td>
-			<td>{{$item->nama}}</td>
-			<td>Melaksanakan kegiatan ekstrakurikuler {{$item->nama}} dengan {{predikat_ekstra($item->nilai_ekstra->avg('angka'))}}</td>
-		</tr>
-		@empty
-		<td colspan="3">&nbsp;</td>
-		@endforelse
-	</tbody>
-</table>
-<br />
-<table class="table table-bordered" style="width: 300px;">
-	<tr>
-		<th colspan="2">Ketidakhadiran</th>
-	</tr>
-	<tr>
-		<td width="100">Sakit</td>
-		<td> : {{(jmlAbsen($get_siswa->peserta_didik->presensi, 'S')) ? jmlAbsen($get_siswa->peserta_didik->presensi, 'S') : 0}} hari</td>
-	</tr>
-	<tr>
-		<td>Izin</td>
-		<td width="100"> : {{(jmlAbsen($get_siswa->peserta_didik->presensi, 'I')) ? jmlAbsen($get_siswa->peserta_didik->presensi, 'I') : 0}} hari</td>
-	</tr>
-	<tr>
-		<td>Tanpa Keterangan</td>
-		<td> : {{(jmlAbsen($get_siswa->peserta_didik->presensi, 'A')) ? jmlAbsen($get_siswa->peserta_didik->presensi, 'A') : 0}} hari</td>
-	</tr>
-</table>
-<br />
-<?php
-if($get_siswa->rombongan_belajar->semester->semester == 2){
-	if($get_siswa->rombongan_belajar->rombel_empat_tahun){
-		$text_status = 'Kenaikan Kelas';
-		$not_yet = 'Belum dilakukan kenaikan kelas';
-	} elseif($get_siswa->rombongan_belajar->tingkat >= 12 ){
-		$text_status = 'Status Kelulusan';
-		$not_yet = 'Belum dilakukan kelulusan';
-	} else {
-		$text_status = 'Kenaikan Kelas';
-		$not_yet = 'Belum dilakukan kenaikan kelas';
-	}
-} else {
-	$text_status = '';
-	$not_yet = '';
-}
-?>
-@if($get_siswa->rombongan_belajar->semester->semester == 2)
-<table width="100%" class="table table-bordered">
-	<tr>
-		<th>Status Kelulusan</th>
-	</tr>
-	<tr>
-		<td style="padding:10px;">
-			@if($get_siswa->kenaikan_kelas)
-			@if($get_siswa->kenaikan_kelas->status == 3)
-			LULUS
-			@else
-			{{status_kenaikan($get_siswa->kenaikan_kelas->status)}} {{$get_siswa->kenaikan_kelas->nama_kelas}}
-			@endif
-			@else
-			{{$not_yet}}
-			@endif
-		</td>
-	</tr>
-</table>
-<br>
-@endif
-<br>
-<table width="100%">
-	<tr>
-	  <td style="width:40%">
-		  <p>Orang Tua/Wali</p><br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-		  <p>...................................................................</p>
-	  </td>
-	  <td style="width:20%"></td>
-	  <td style="width:40%"><p>{{($get_siswa->peserta_didik->sekolah->kabupaten) ? str_replace('KABUPATEN ','',$get_siswa->peserta_didik->sekolah->kabupaten->name) : '-'}}, {{$tanggal_rapor}}<br>Wali Kelas</p><br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <p>
-  <u>{{$get_siswa->rombongan_belajar->wali_kelas->nama_lengkap }}</u><br />
-  NIP. {{$get_siswa->rombongan_belajar->wali_kelas->nip}}
-  </td>
-	</tr>
-  </table>
-  <table width="100%" style="margin-top:10px;">
-	<tr>
-	  <td style="width:100%;text-align:center;">
-		  <p>Mengetahui,<br>Kepala Sekolah</p>
-	  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <p><u>{{($kepala_sekolah) ? $kepala_sekolah->guru->nama : '-'}}</u><br />
-  NIP. {{($kepala_sekolah) ? $kepala_sekolah->guru->nip : ''}}
-  </p>
-	  </td>
-	</tr>
-  </table>
-{{--
-
-
-
---}}
 @endsection
