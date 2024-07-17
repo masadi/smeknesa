@@ -114,9 +114,10 @@ class SiswaController extends Controller
     public function teman(){
         $data = Rombongan_belajar::where(function($query){
             $query->whereHas('anggota_rombel', function($query){
-                $query->whereHas('peserta_didik', function($query){
+                $query->where('peserta_didik_id', request()->peserta_didik_id);
+                /*$query->whereHas('peserta_didik', function($query){
                     $query->where('peserta_didik_id', request()->peserta_didik_id);
-                });
+                });*/
                 $query->where('semester_id', request()->semester_id);
             });
             //$query->where('peserta_didik_id', '<>', request()->peserta_didik_id);
