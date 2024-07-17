@@ -39,8 +39,8 @@ class SiswaController extends Controller
                     });
                 }
             ], 'angka')->with(['all_nilai' => function($query){
-                $query->whereHas('pd', function($query){
-                    $query->where('anggota_rombel.peserta_didik_id', request()->peserta_didik_id);
+                $query->whereHas('anggota_rombel', function($query){
+                    $query->where('peserta_didik_id', request()->peserta_didik_id);
                     $query->where('semester_id', request()->semester_id);
                 });
             }])->orderBy('mata_pelajaran_id')->get();

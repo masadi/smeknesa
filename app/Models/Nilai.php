@@ -33,4 +33,8 @@ class Nilai extends Model
 			'peserta_didik_id'
         );
 	}
+	public function anggota_rombel()
+	{
+		return $this->belongsTo(Anggota_rombel::class, 'anggota_rombel_id', 'anggota_rombel_id');
+	}
 }
