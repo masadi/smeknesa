@@ -278,12 +278,12 @@ class NilaiController extends Controller
         foreach($set_nilai as $anggota_rombel_id => $data_tp){
             foreach($data_tp as $tp_id => $nilai){
                 if(request()->cp_id){
+                    $penilaian = Penilaian::updateOrCreate([
+                        'jenis_penilaian_id' => request()->jenis_id,
+                        'pembelajaran_id' => request()->pembelajaran_id,
+                        'nama' => $tp_id,
+                    ]);
                     if($nilai){
-                        $penilaian = Penilaian::updateOrCreate([
-                            'jenis_penilaian_id' => request()->jenis_id,
-                            'pembelajaran_id' => request()->pembelajaran_id,
-                            'nama' => $tp_id,
-                        ]);
                         Nilai::updateOrCreate(
                             [
                                 'anggota_rombel_id' => $anggota_rombel_id,
