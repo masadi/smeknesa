@@ -64,7 +64,7 @@ export default {
         },
         {
           key: 'tanggal_cetak',
-          label: 'Ranggal Rapor',
+          label: 'Tanggal Rapor',
           sortable: true,
           thClass: 'text-center',
           tdClass: 'text-center',
