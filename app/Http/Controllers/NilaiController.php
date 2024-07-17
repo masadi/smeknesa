@@ -310,6 +310,8 @@ class NilaiController extends Controller
                             ]
                         );
                     }
+                } else {
+                    Nilai::where('anggota_rombel_id', $anggota_rombel_id)->where('penilaian_id', $asesmen[$tp_id]->penilaian_id)->where('pembelajaran_id', request()->pembelajaran_id)->where('jenis_penilaian_id', request()->jenis_id)->delete();
                 }
             }
         }
