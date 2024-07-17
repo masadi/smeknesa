@@ -38,6 +38,7 @@ class SiswaController extends Controller
                         $query->where('semester_id', request()->semester_id);
                     });
                 },
+                'all_nilai as rerata_nilai'
             ], 'angka')->orderBy('mata_pelajaran_id')->get();
 
         }
