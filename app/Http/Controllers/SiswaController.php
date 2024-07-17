@@ -17,9 +17,10 @@ class SiswaController extends Controller
         if(request()->aksi == 'akademik'){
             $data = Pembelajaran::where(function($query){
                 $query->whereHas('rombongan_belajar', function($query){
+                    $query->where('tingkat', '>', 0);
+                    $query->where('semester_id', request()->semester_id);
                     $query->whereHas('anggota_rombel', function($query){
                         $query->where('peserta_didik_id', request()->peserta_didik_id);
-                        $query->where('semester_id', request()->semester_id);
                     });
                 });
             })->withAvg([
@@ -117,9 +118,6 @@ class SiswaController extends Controller
             $query->where('semester_id', request()->semester_id);
             $query->whereHas('anggota_rombel', function($query){
                 $query->where('peserta_didik_id', request()->peserta_didik_id);
-                /*$query->whereHas('peserta_didik', function($query){
-                    $query->where('peserta_didik_id', request()->peserta_didik_id);
-                });*/
             });
             //$query->where('peserta_didik_id', '<>', request()->peserta_didik_id);
         })->with(['pd' => function($query){
@@ -131,9 +129,10 @@ class SiswaController extends Controller
     public function guru(){
         $data = Guru::withWhereHas('pembelajaran', function($query){
             $query->whereHas('rombongan_belajar', function($query){
+                $query->where('tingkat', '>', 0);
+                $query->where('semester_id', request()->semester_id);
                 $query->whereHas('anggota_rombel', function($query){
                     $query->where('peserta_didik_id', request()->peserta_didik_id);
-                    $query->where('semester_id', request()->semester_id);
                 });
             });
         })->orderBy('nama')->get();
