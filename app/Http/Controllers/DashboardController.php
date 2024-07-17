@@ -349,7 +349,7 @@ class DashboardController extends Controller
             $query->where('user_id', loggedUser()->user_id);
             $query->where('terbaca', FALSE);
         })->get();
-        return response()->json(['notifications' => $data]);
+        return response()->json(['notifications' => $data, 'test' => 1]);
     }
     private function setNotifikasi(){
         $data = [];
