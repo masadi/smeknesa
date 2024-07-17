@@ -277,8 +277,8 @@ class NilaiController extends Controller
         $nama_penilaian = NULL;
         foreach($set_nilai as $anggota_rombel_id => $data_tp){
             foreach($data_tp as $tp_id => $nilai){
-                if($nilai){
-                    if(request()->cp_id){
+                if(request()->cp_id){
+                    if($nilai){
                         $penilaian = Penilaian::updateOrCreate([
                             'jenis_penilaian_id' => request()->jenis_id,
                             'pembelajaran_id' => request()->pembelajaran_id,
@@ -297,6 +297,10 @@ class NilaiController extends Controller
                             ]
                         );
                     } else {
+                        Nilai::where('anggota_rombel_id', $anggota_rombel_id)->where('tp_id', $tp_id)->where('penilaian_id', $penilaian->penilaian_id)->where('pembelajaran_id', request()->pembelajaran_id)->where('jenis_penilaian_id', request()->jenis_id)->delete();
+                    }
+                } else {
+                    if($nilai){
                         Nilai::updateOrCreate(
                             [
                                 'anggota_rombel_id' => $anggota_rombel_id,
@@ -309,9 +313,9 @@ class NilaiController extends Controller
                                 'angka' => $nilai
                             ]
                         );
+                    } else {
+                        Nilai::where('anggota_rombel_id', $anggota_rombel_id)->where('penilaian_id', $asesmen[$tp_id]->penilaian_id)->where('pembelajaran_id', request()->pembelajaran_id)->where('jenis_penilaian_id', request()->jenis_id)->delete();
                     }
-                } else {
-                    Nilai::where('anggota_rombel_id', $anggota_rombel_id)->where('penilaian_id', $asesmen[$tp_id]->penilaian_id)->where('pembelajaran_id', request()->pembelajaran_id)->where('jenis_penilaian_id', request()->jenis_id)->delete();
                 }
             }
         }
