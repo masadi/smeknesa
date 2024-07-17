@@ -16,7 +16,7 @@
       <b-col cols="12" md="8">
         <b-card no-body>
           <b-card-header>
-            <h4 class="card-title">Statistik edit lagi</h4>
+            <h4 class="card-title">Statistik</h4>
             <b-card-text class="text-muted">
               {{periode_aktif}}
             </b-card-text>
