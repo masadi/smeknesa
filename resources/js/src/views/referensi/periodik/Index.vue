@@ -58,7 +58,8 @@ export default {
         {
           key: 'tanggal_selesai',
           label: 'Tanggal Selesai',
-          sortable: true,
+          sortab
+          le: true,
           thClass: 'text-center',
           tdClass: 'text-center',
         },
