@@ -19,17 +19,19 @@
             <strong>Loading...</strong>
           </div>
         </template>
-        <template v-slot:cell(nama)="row">
-          {{row.item.pd.nama}}
-        </template>
         <template v-slot:cell(kelas)="row">
-          {{row.item.pd.kelas.nama}}
+          {{row.item.kelas.nama}}
+        </template>
+        <template v-slot:cell(terlambat_count)="row">
+          <b-badge :id="row.item.peserta_didik_id">{{row.item.terlambat_count}}</b-badge>
+          <b-tooltip :target="row.item.peserta_didik_id" triggers="hover">
+            <template v-for="lambat in row.item.terlambat">
+              &rightarrow; {{ lambat.tanggal_terlambat }}<br>
+            </template>
+          </b-tooltip>
         </template>
         <template v-slot:cell(actions)="row">
-          <b-dropdown id="dropdown-dropleft" boundary="viewport" dropleft text="Aksi" variant="primary" size="sm">
-            <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'print')"><printer-icon :size="`12`" /> Cetak</b-dropdown-item>
-            <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'hapus')"><trash-icon :size="`12`" /> Hapus</b-dropdown-item>
-          </b-dropdown>
+          <b-button :href="`/cetak/sering-terlambat/${user.semester.tahun_ajaran_id}/${user.semester.semester_id}/${row.item.peserta_didik_id}`" target="_blank" variant="warning">Cetak Panggilan Ortu</b-button>
         </template>
       </b-table>
     </b-overlay>
@@ -46,20 +48,21 @@
 
 <script>
 import _ from 'lodash'
-import { BRow, BCol, BFormInput, BTable, BSpinner, BPagination, BDropdown, BDropdownItem, BOverlay } from 'bootstrap-vue'
+import { BRow, BCol, BFormInput, BTable, BSpinner, BPagination, BButton, BOverlay, BBadge, BTooltip } from 'bootstrap-vue'
 import vSelect from 'vue-select'
 export default {
   components: {
+    vSelect,
     BRow,
     BCol,
     BFormInput,
     BTable,
     BSpinner,
     BPagination,
-    BDropdown,
-    BDropdownItem,
+    BButton,
     BOverlay,
-    vSelect,
+    BBadge,
+    BTooltip
   },
   props: {
     items: {

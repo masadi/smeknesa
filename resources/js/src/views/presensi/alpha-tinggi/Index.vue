@@ -9,25 +9,18 @@
         <datatable :loading="loading" :isBusy="isBusy" :items="items" :fields="fields" :meta="meta" @per_page="handlePerPage" @pagination="handlePagination" @search="handleSearch" @sort="handleSort" @aksi="handleAksi" />
       </div>
     </b-card-body>
-    <add-modal @reload="handleReload"></add-modal>
-    <edit-modal @reload="handleReload"></edit-modal>
   </b-card>
 </template>
 
 <script>
 import { BCard, BCardBody, BSpinner } from 'bootstrap-vue'
 import Datatable from './Datatable.vue' //IMPORT COMPONENT DATATABLENYA
-import AddModal from './../../components/modal/presensi/perijinan/AddModal.vue'
-import EditModal from './../../components/modal/presensi/perijinan/EditModal.vue'
-import eventBus from '@core/utils/eventBus'
 export default {
   components: {
     BCard,
     BCardBody,
     BSpinner,
     Datatable,
-    AddModal,
-    EditModal,
   },
   data() {
     return {
@@ -48,24 +41,11 @@ export default {
           tdClass: 'text-center'
         },
         {
-          key: 'pilihan_ijin',
-          label: 'Jenis Ijin',
+          key: 'presensi_count',
+          label: 'Jumlah Absensi',
           sortable: false,
           thClass: 'text-center',
           tdClass: 'text-center',
-        },
-        {
-          key: 'tanggal_ijin',
-          label: 'Tanggal',
-          sortable: false,
-          thClass: 'text-center',
-          tdClass: 'text-center',
-        },
-        {
-          key: 'alasan',
-          label: 'Alasan',
-          sortable: true,
-          thClass: 'text-center',
         },
         {
           key: 'actions',
@@ -80,18 +60,14 @@ export default {
       current_page: 1, //DEFAULT PAGE YANG AKTIF ADA PAGE 1
       per_page: 10, //DEFAULT LOAD PERPAGE ADALAH 10
       search: '',
-      sortBy: 'tanggal_mulai', //DEFAULT SORTNYA ADALAH CREATED_AT
+      sortBy: 'nama', //DEFAULT SORTNYA ADALAH CREATED_AT
       sortByDesc: false, //ASCEDING
     }
   },
   created() {
-    eventBus.$on('add-perijinan', this.handleEvent);
     this.loadPostsData()
   },
   methods: {
-    handleEvent(){
-      eventBus.$emit('open-modal-add-perijinan');
-    },
     handleReload(){
       this.loadPostsData()
     },
@@ -100,11 +76,12 @@ export default {
       //let current_page = this.search == '' ? this.current_page : this.current_page != 1 ? 1 : this.current_page
       let current_page = this.current_page//this.search == '' ? this.current_page : 1
       //LAKUKAN REQUEST KE API UNTUK MENGAMBIL DATA POSTINGAN
-      this.$http.get('/presensi/perijinan', {
+      this.$http.get('/presensi/alpha-tinggi', {
         params: {
           user_id: this.user.user_id,
           sekolah_id: this.user.sekolah_id,
           semester_id: this.user.semester.semester_id,
+          tahun_ajaran_id: this.user.semester.tahun_ajaran_id,
           periode_aktif: this.user.semester.nama,
           page: current_page,
           per_page: this.per_page,
@@ -152,49 +129,10 @@ export default {
       }
     },
     handleAksi(val){
-      this.loading = true
-      if(val.aksi === 'hapus'){
-        this.$swal({
-          title: 'Apakah Anda yakin?',
-          text: 'Tindakan ini tidak dapat dikembalikan!',
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonText: 'Yakin!',
-          customClass: {
-            confirmButton: 'btn btn-primary',
-            cancelButton: 'btn btn-outline-danger ml-1',
-          },
-          buttonsStyling: false,
-          allowOutsideClick: () => false,
-        }).then(result => {
-          if (result.value) {
-            this.loading_form = true
-            this.$http.post('/referensi/hapus-data', {
-              data: 'perijinan',
-              id: val.item.ijin_id,
-            }).then(response => {
-              this.loading_form = false
-              let getData = response.data
-              this.$swal({
-                icon: getData.icon,
-                title: getData.title,
-                text: getData.text,
-                customClass: {
-                  confirmButton: 'btn btn-success',
-                },
-              }).then(result => {
-                this.loadPostsData()
-              })
-            });
-          }
-        })
-      } else if(val.aksi === 'print'){
-        this.loading = false
-        window.open(`/cetak/perijinan/cetak/${val.item.ijin_id}/${this.user.semester.semester_id}/${this.user.user_id}`, '_blank')
-      } else {
-        eventBus.$emit(`open-modal-${val.aksi}-perijinan`, val.item);
-        this.loading = false
-      }
+      console.log(val);
+      return false
+      this.loading = false
+      window.open(`/cetak/terlambat/${val.item.terlambat_id}/${this.user.semester.semester_id}`, '_blank')
     },
   },
 }

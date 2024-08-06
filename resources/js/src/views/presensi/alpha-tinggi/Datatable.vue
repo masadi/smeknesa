@@ -19,17 +19,11 @@
             <strong>Loading...</strong>
           </div>
         </template>
-        <template v-slot:cell(nama)="row">
-          {{row.item.pd.nama}}
-        </template>
         <template v-slot:cell(kelas)="row">
-          {{row.item.pd.kelas.nama}}
+          {{row.item.kelas.nama}}
         </template>
         <template v-slot:cell(actions)="row">
-          <b-dropdown id="dropdown-dropleft" boundary="viewport" dropleft text="Aksi" variant="primary" size="sm">
-            <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'print')"><printer-icon :size="`12`" /> Cetak</b-dropdown-item>
-            <b-dropdown-item href="javascript:void(0)" @click="aksi(row.item, 'hapus')"><trash-icon :size="`12`" /> Hapus</b-dropdown-item>
-          </b-dropdown>
+          <b-button :href="`/cetak/alpha-tinggi/${user.semester.tahun_ajaran_id}/${user.semester.semester_id}/${row.item.peserta_didik_id}`" target="_blank" variant="warning">Cetak Panggilan Ortu</b-button>
         </template>
       </b-table>
     </b-overlay>
@@ -46,7 +40,7 @@
 
 <script>
 import _ from 'lodash'
-import { BRow, BCol, BFormInput, BTable, BSpinner, BPagination, BDropdown, BDropdownItem, BOverlay } from 'bootstrap-vue'
+import { BRow, BCol, BFormInput, BTable, BSpinner, BPagination, BButton, BOverlay } from 'bootstrap-vue'
 import vSelect from 'vue-select'
 export default {
   components: {
@@ -56,8 +50,7 @@ export default {
     BTable,
     BSpinner,
     BPagination,
-    BDropdown,
-    BDropdownItem,
+    BButton,
     BOverlay,
     vSelect,
   },

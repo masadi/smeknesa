@@ -6,7 +6,7 @@
         <strong>Loading...</strong>
       </div>
       <div v-else>
-        <datatable :isBusy="isBusy" :loading="loading" :items="items" :fields="fields" :meta="meta" @per_page="handlePerPage" @pagination="handlePagination" @search="handleSearch" @sort="handleSort" @aksi="handeleAksi" />
+        <datatable :loading="loading" :isBusy="isBusy" :items="items" :fields="fields" :meta="meta" @per_page="handlePerPage" @pagination="handlePagination" @search="handleSearch" @sort="handleSort" @aksi="handleAksi" />
       </div>
     </b-card-body>
     <add-modal @reload="handleReload"></add-modal>
@@ -15,57 +15,42 @@
 </template>
 
 <script>
-import { BCard, BCardBody, BSpinner, BForm, BFormGroup, BFormInput, BFormSelect, BButton, BOverlay, BCol, BRow, BTableSimple, BThead, BTbody, BTh, BTr, BTd } from 'bootstrap-vue'
+import { BCard, BCardBody, BSpinner } from 'bootstrap-vue'
 import Datatable from './Datatable.vue' //IMPORT COMPONENT DATATABLENYA
-import AddModal from './../../components/modal/referensi/periodik/AddModal.vue'
-import EditModal from './../../components/modal/referensi/periodik/EditModal.vue'
+import AddModal from './../../components/modal/presensi/terlambat/AddModal.vue'
+import EditModal from './../../components/modal/presensi/terlambat/EditModal.vue'
 import eventBus from '@core/utils/eventBus'
 export default {
   components: {
     BCard,
-    BCardBody, BSpinner, BForm, BFormGroup, BFormInput, BFormSelect, BButton, BOverlay, BCol, BRow,
-    BTableSimple, BThead, BTbody, BTh, BTr, BTd,
-    Datatable, AddModal, EditModal
+    BCardBody,
+    BSpinner,
+    Datatable,
+    AddModal,
+    EditModal,
   },
   data() {
     return {
-      jumlah_form: 5,
-      isBusy: true,
       loading: false,
-      loading_form: false,
-      loading_kurikulum: false,
+      isBusy: true,
       fields: [
         {
           key: 'nama',
-          label: 'Semester',
+          label: 'Nama',
           sortable: true,
           thClass: 'text-center',
         },
         {
-          key: 'tahun_ajaran_id',
-          label: 'Tahun Pelajaran',
-          sortable: true,
+          key: 'kelas',
+          label: 'Kelas',
+          sortable: false,
           thClass: 'text-center',
-          tdClass: 'text-center',
+          tdClass: 'text-center'
         },
         {
-          key: 'tanggal_mulai',
-          label: 'Tanggal Mulai',
-          sortable: true,
-          thClass: 'text-center',
-          tdClass: 'text-center',
-        },
-        {
-          key: 'tanggal_selesai',
-          label: 'Tanggal Selesai',
-          sortable: true,
-          thClass: 'text-center',
-          tdClass: 'text-center',
-        },
-        {
-          key: 'tanggal_cetak',
-          label: 'Tanggal Rapor',
-          sortable: true,
+          key: 'terlambat_count',
+          label: 'Terlambat',
+          sortable: false,
           thClass: 'text-center',
           tdClass: 'text-center',
         },
@@ -74,43 +59,35 @@ export default {
           label: 'Aksi',
           sortable: false,
           thClass: 'text-center',
-          tdClass: 'text-center',
+          tdClass: 'text-center'
         },
       ],
       items: [],
       meta: {},
-      current_page: 1, 
-      per_page: 10,
+      current_page: 1, //DEFAULT PAGE YANG AKTIF ADA PAGE 1
+      per_page: 10, //DEFAULT LOAD PERPAGE ADALAH 10
       search: '',
-      sortBy: 'semester_id',
-      sortByDesc: false,
-      form: {},
+      sortBy: 'nama', //DEFAULT SORTNYA ADALAH CREATED_AT
+      sortByDesc: false, //ASCEDING
     }
   },
   created() {
-    this.form.user_id = this.user.user_id
-    this.form.sekolah_id = this.user.sekolah_id
-    this.form.semester_id = this.user.semester.semester_id
-    this.form.periode_aktif = this.user.semester.nama
-    eventBus.$on('add-semester', this.handleEvent);
     this.loadPostsData()
   },
   methods: {
-    handleEvent(){
-      eventBus.$emit('open-modal-semester');
-    },
     handleReload(){
       this.loadPostsData()
     },
     loadPostsData() {
-      this.isBusy = true
+      this.loading = true
       //let current_page = this.search == '' ? this.current_page : this.current_page != 1 ? 1 : this.current_page
       let current_page = this.current_page//this.search == '' ? this.current_page : 1
       //LAKUKAN REQUEST KE API UNTUK MENGAMBIL DATA POSTINGAN
-      this.$http.get('/referensi/get-semester', {
+      this.$http.get('/presensi/sering-terlambat', {
         params: {
           user_id: this.user.user_id,
           sekolah_id: this.user.sekolah_id,
+          tahun_ajaran_id: this.user.semester.tahun_ajaran_id,
           semester_id: this.user.semester.semester_id,
           periode_aktif: this.user.semester.nama,
           page: current_page,
@@ -123,6 +100,7 @@ export default {
         //this.items = response.data.all_pd
         let getData = response.data.data
         this.isBusy = false
+        this.loading = false
         this.items = getData.data//MAKA ASSIGN DATA POSTINGAN KE DALAM VARIABLE ITEMS
         //DAN ASSIGN INFORMASI LAINNYA KE DALAM VARIABLE META
         this.meta = {
@@ -157,8 +135,9 @@ export default {
         this.loadPostsData() //DAN LOAD DATA BARU BERDASARKAN SORT
       }
     },
-    handeleAksi(val){
-      if(val.aksi === 'delete'){
+    handleAksi(val){
+      this.loading = true
+      if(val.aksi === 'hapus'){
         this.$swal({
           title: 'Apakah Anda yakin?',
           text: 'Tindakan ini tidak dapat dikembalikan!',
@@ -175,8 +154,8 @@ export default {
           if (result.value) {
             this.loading_form = true
             this.$http.post('/referensi/hapus-data', {
-              data: 'semester',
-              id: val.id,
+              data: 'terlambat',
+              id: val.item.terlambat_id,
             }).then(response => {
               this.loading_form = false
               let getData = response.data
@@ -193,18 +172,13 @@ export default {
             });
           }
         })
+      } else if(val.aksi === 'print'){
+        console.log('print');
+        this.loading = false
+        window.open(`/cetak/terlambat/${val.item.terlambat_id}/${this.user.semester.semester_id}`, '_blank')
       } else {
-        this.loading = true
-        this.$http.post('/referensi/detil-data', {
-          data: 'semester',
-          id: val.id,
-        }).then(response => {
-          this.loading = false
-          let getData = response.data
-          if(val.aksi === 'edit'){
-            eventBus.$emit('open-modal-edit-semester', getData);
-          }
-        })
+        eventBus.$emit(`open-modal-${val.aksi}-terlambat`, val.item);
+        this.loading = false
       }
     },
   },

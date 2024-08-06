@@ -232,6 +232,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/terlambat', [PresensiController::class, 'terlambat']);
     Route::post('/add-terlambat', [PresensiController::class, 'add_terlambat']);
     Route::post('/update-terlambat', [PresensiController::class, 'update_terlambat']);
+    Route::get('/alpha-tinggi', [PresensiController::class, 'alpha_tinggi']);
+    Route::get('/sering-terlambat', [PresensiController::class, 'sering_terlambat']);
   });
   Route::group(['prefix' => 'editor'], function () {
     Route::post('/edit-data', [EditorController::class, 'index']);

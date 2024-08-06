@@ -1035,4 +1035,60 @@ class PresensiController extends Controller
         }
         return response()->json($data);
     }
+    public function alpha_tinggi(){
+        $data = Peserta_didik::withWhereHas('kelas', function($query){
+            $query->where('rombongan_belajar.semester_id', request()->semester_id);
+        })->withWhereHas('anggota_rombel', function($query){
+            $query->where('semester_id', request()->semester_id);
+            $query->whereHas('rombongan_belajar', function($query){
+                $query->where('tingkat', '<>', 0);
+            });
+        })->withCount(['presensi' => function($query){
+            $query->where('absen', 'A');
+            $query->whereHas('anggota_rombel', function($query){
+                $query->whereHas('semester', function($query){
+                    $query->where('tahun_ajaran_id', request()->tahun_ajaran_id);
+                });
+            });
+        }])->whereHas('presensi', function($query){
+            $query->where('absen', 'A');
+            $query->whereHas('anggota_rombel', function($query){
+                $query->whereHas('semester', function($query){
+                    $query->where('tahun_ajaran_id', request()->tahun_ajaran_id);
+                });
+            });
+        }, '>', 9)->orderBy(request()->sortby, request()->sortbydesc)
+        ->when(request()->q, function($query) {
+            //$query->where($this->kondisiAbsen());
+            $query->where('nama', 'ilike', '%'.request()->q.'%');
+        })->paginate(request()->per_page);
+        return response()->json(['status' => 'success', 'data' => $data]);
+    }
+    public function sering_terlambat(){
+        $data = Peserta_didik::withWhereHas('kelas', function($query){
+            $query->where('rombongan_belajar.semester_id', request()->semester_id);
+        })->withWhereHas('anggota_rombel', function($query){
+            $query->where('semester_id', request()->semester_id);
+            $query->whereHas('rombongan_belajar', function($query){
+                $query->where('tingkat', '<>', 0);
+            });
+        })->withCount(['terlambat' => function($query){
+            $query->whereHas('anggota_rombel', function($query){
+                $query->whereHas('semester', function($query){
+                    $query->where('tahun_ajaran_id', request()->tahun_ajaran_id);
+                });
+            });
+        }])->withWhereHas('terlambat', function($query){
+            $query->whereHas('anggota_rombel', function($query){
+                $query->whereHas('semester', function($query){
+                    $query->where('tahun_ajaran_id', request()->tahun_ajaran_id);
+                });
+            });
+        }, '>', 3)->orderBy(request()->sortby, request()->sortbydesc)
+        ->when(request()->q, function($query) {
+            //$query->where($this->kondisiAbsen());
+            $query->where('nama', 'ilike', '%'.request()->q.'%');
+        })->paginate(request()->per_page);
+        return response()->json(['status' => 'success', 'data' => $data]);
+    }
 }

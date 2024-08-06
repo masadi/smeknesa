@@ -19,6 +19,10 @@ class Terlambat extends Model
 	public function getTanggalTerlambatAttribute(){
         return Carbon::parse($this->attributes['tanggal'])->translatedFormat('d F Y');
 	}
+    public function anggota_rombel()
+	{
+		return $this->hasOne(Anggota_rombel::class, 'anggota_rombel_id', 'anggota_rombel_id');
+	}
 	public function pd(){
 		return $this->hasOneThrough(
             Peserta_didik::class,

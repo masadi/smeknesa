@@ -426,11 +426,6 @@ class CetakController extends Controller
         return $pdf->stream($general_title.'.pdf');
     }
     public function terlambat(){
-        /*$terlambat = Terlambat::with(['pd' => function($query){
-            $query->withCount(['terlambat' => function($query){
-            }]);
-        }])->find(request()->route('terlambat_id'));
-        dd($terlambat);*/
         $terlambat = Terlambat::with(['jam_terlambat', 'pd' => function($query){
             $query->withCount(['terlambat' => function($query){
                 $query->whereHas('pd', function($query){
@@ -501,4 +496,84 @@ class CetakController extends Controller
 		$general_title = strtoupper($anggota_rombel->peserta_didik->nama);
 		return $pdf->stream($general_title.'-SERTIFIKAT.pdf');
 	}
+    public function alpha_tinggi(){
+        $semester = Semester::find(request()->route('semester_id'));
+        $user = User::with('guru')->whereRoleIs('kepsek', $semester->nama)->first();
+        $data = [
+            'user' => $user,
+            'pd' => Peserta_didik::withWhereHas('kelas', function($query){
+                $query->where('rombongan_belajar.semester_id', request()->route('semester_id'));
+            })->withWhereHas('anggota_rombel', function($query){
+                $query->where('semester_id', request()->semester_id);
+                $query->whereHas('rombongan_belajar', function($query){
+                    $query->where('tingkat', '<>', 0);
+                });
+            })->find(request()->route('peserta_didik_id')),
+            /*->withCount(['presensi' => function($query){
+                $query->where('absen', 'A');
+                $query->whereHas('anggota_rombel', function($query){
+                    $query->whereHas('semester', function($query){
+                        $query->where('tahun_ajaran_id', request()->route('tahun_ajaran_id'));
+                    });
+                });
+            }])->whereHas('presensi', function($query){
+                $query->where('absen', 'A');
+                $query->whereHas('anggota_rombel', function($query){
+                    $query->whereHas('semester', function($query){
+                        $query->where('tahun_ajaran_id', request()->route('tahun_ajaran_id'));
+                    });
+                });
+            }, '>', 9)->find(request()->route('peserta_didik_id')),*/
+        ];
+        $pdf = PDF::loadView('cetak.alpha-tinggi', $data, [], [
+            'format' => 'A4',
+            'margin_left' => 20,
+            'margin_right' => 20,
+            'margin_top' => 15,
+            'margin_bottom' => 15,
+            'margin_header' => 5,
+            'margin_footer' => 5,
+        ]);
+        $general_title = strtoupper($data['pd']?->nama);
+		return $pdf->stream($general_title.'-alpha-tinggi.pdf');
+    }
+    public function sering_terlambat(){
+        $semester = Semester::find(request()->route('semester_id'));
+        $user = User::with('guru')->whereRoleIs('kepsek', $semester->nama)->first();
+        $data = [
+            'user' => $user,
+            'pd' => Peserta_didik::withWhereHas('kelas', function($query){
+                $query->where('rombongan_belajar.semester_id', request()->route('semester_id'));
+            })->withWhereHas('anggota_rombel', function($query){
+                $query->where('semester_id', request()->semester_id);
+                $query->whereHas('rombongan_belajar', function($query){
+                    $query->where('tingkat', '<>', 0);
+                });
+            })->find(request()->route('peserta_didik_id')),
+            /*->withCount(['terlambat' => function($query){
+                $query->whereHas('anggota_rombel', function($query){
+                    $query->whereHas('semester', function($query){
+                        $query->where('tahun_ajaran_id', request()->route('tahun_ajaran_id'));
+                    });
+                });
+            }])->withWhereHas('terlambat', function($query){
+                $query->whereHas('anggota_rombel', function($query){
+                    $query->whereHas('semester', function($query){
+                        $query->where('tahun_ajaran_id', request()->route('tahun_ajaran_id'));
+                    });
+                });
+            }, '>', 3)->find(request()->route('peserta_didik_id')),*/
+        ];
+        $pdf = PDF::loadView('cetak.alpha-tinggi', $data, [], [
+            'format' => 'A4',
+            'margin_left' => 20,
+            'margin_right' => 20,
+            'margin_top' => 15,
+            'margin_bottom' => 15,
+            'margin_header' => 5,
+            'margin_footer' => 5,
+        ]);
+        $general_title = strtoupper($data['pd']?->nama);
+		return $pdf->stream($general_title.'-sering-terlambat.pdf');
+    }
 }
