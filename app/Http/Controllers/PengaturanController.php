@@ -41,7 +41,7 @@ class PengaturanController extends Controller
         Setting::where('key', 'app_version')->update(['value' => request()->app_version]);
         Setting::where('key', 'semester_id')->update(['value' => request()->semester_id]);
         Setting::where('key', 'periode_aktif')->update(['value' => $semester->nama]);
-        Semester::where('semester_id', '<>', request()->semester_id)->update(['periode_aktf' => 0]);
+        Semester::where('semester_id', '<>', request()->semester_id)->update(['periode_aktif' => 0]);
         if(request()->tanggal_whatsapp){
             Setting::updateOrCreate(
                 ['key' => 'tanggal_whatsapp'],
