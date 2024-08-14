@@ -683,7 +683,7 @@ class PresensiController extends Controller
             }
             $data = [
                 'pd' => Peserta_didik::with(['presensi' => function($query){
-                    $query->where('semester_id', request()->semester_id);
+                    $query->where('semester_id', semester_id());
                     $query->orderBy('tanggal');
                     $query->whereMonth('tanggal', $this->get_bulan());
                 }])->find(request()->peserta_didik_id),
@@ -696,22 +696,27 @@ class PresensiController extends Controller
                 $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
             })->withCount([
                 'presensi as H' => function($query){
+                    $query->where('semester_id', semester_id());
                     $query->where('absen', 'H');
                     $query->whereMonth('tanggal', $this->get_bulan());
                 },
                 'presensi as A' => function($query){
+                    $query->where('semester_id', semester_id());
                     $query->where('absen', 'A');
                     $query->whereMonth('tanggal', $this->get_bulan());
                 },
                 'presensi as S' => function($query){
+                    $query->where('semester_id', semester_id());
                     $query->where('absen', 'S');
                     $query->whereMonth('tanggal', $this->get_bulan());
                 },
                 'presensi as I' => function($query){
+                    $query->where('semester_id', semester_id());
                     $query->where('absen', 'I');
                     $query->whereMonth('tanggal', $this->get_bulan());
                 },
                 'presensi as D' => function($query){
+                    $query->where('semester_id', semester_id());
                     $query->where('absen', 'D');
                     $query->whereMonth('tanggal', $this->get_bulan());
                 },
