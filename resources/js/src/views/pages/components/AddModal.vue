@@ -18,7 +18,7 @@
         {{row.item.anggota_rombel.rombongan_belajar.nama}}
       </template>
       <template v-slot:cell(actions)="row">
-        <b-button variant="primary" @click="proses(row.item)">Proses</b-button>
+        <b-button variant="primary" @click="proses(row.item)" v-if="!showProses">Proses</b-button>
       </template>
     </b-table>
     <b-overlay :show="loading_form" rounded opacity="0.6" size="lg" spinner-variant="danger">
