@@ -162,13 +162,11 @@ export default {
   },
   created() {
     this.loadPostData()
-    console.log(this.currentTime);
     setInterval(this.updateCurrentTime, 1000)
   },
   methods: {
     updateCurrentTime(){
       this.currentTime = new Date()
-      console.log(this.currentTime);
     },
     showModal(id, title){
       this.modalId = id

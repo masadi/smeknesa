@@ -383,6 +383,7 @@ export default {
         }
       }).then(response => {
         //this.items = response.data.all_pd
+        this.showProses = false
         let getData = response.data.data
         this.isBusy = false
         this.loading = false
