@@ -415,7 +415,7 @@ export default {
       this.form.anggota_rombel_id = item.anggota_rombel.anggota_rombel_id
       this.showProses = false
       if(this.modalId == 'R'){
-        console.log('cetak rekap');
+        this.$emit('detil', item)
       } else {
         this.showProses = true
       }

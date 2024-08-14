@@ -26,22 +26,6 @@
           </b-card>
         </b-col>
       </b-row>
-      <h1 class="font-weight-bolder text-center">Arsip Dokumen</h1>
-      <b-row class="match-height">
-        <b-col cols="12" sm="6" v-for="(item, index) in arsip" :key="index">
-          <b-card class="text-center" @click="$bvModal.show(item.id)">
-            <h2 class="font-weight-bolder">{{ item.text }}</h2>
-          </b-card>
-          <b-modal :id="item.id" @show="resetModal" ok-only ok-title="Tutup" ok-variant="secondary" size="xl">
-            <template #modal-title>
-              {{ item.text }}
-            </template>
-            <div class="d-block text-center">
-              <h3>Hello From This Modal! {{ item.text }}</h3>
-            </div>
-          </b-modal>
-        </b-col>
-      </b-row>
     </template>
     <template v-else>
       <b-card class="text-center">
@@ -55,17 +39,20 @@
         </b-form>
       </b-card>
     </template>
-    <add-modal :modalId="modalId" :modalTitle="modalTitle" :showModal="show" @hidden="hideModal"></add-modal>
+    <add-modal :modalId="modalId" :modalTitle="modalTitle" :showModal="show" @hidden="hideModal" @detil="handleDetil"></add-modal>
+    <DetilPresensi></DetilPresensi>
   </b-container>
 </template>
 
 <script>
 import { BContainer, BCard, BAvatar, BImg, BRow, BCol, BButton, BForm, BInputGroup, BFormInput, BInputGroupAppend} from 'bootstrap-vue'
+import eventBus from '@core/utils/eventBus'
 import { getToken } from '@/auth/utils'
 import AddModal from './components/AddModal.vue'
+import DetilPresensi from './components/DetilPresensi.vue';
 export default {
   components: {
-    BContainer, BCard, BAvatar, BImg, BRow, BCol, BButton, BForm, BInputGroup, BFormInput, BInputGroupAppend, AddModal
+    BContainer, BCard, BAvatar, BImg, BRow, BCol, BButton, BForm, BInputGroup, BFormInput, BInputGroupAppend, AddModal, DetilPresensi
   },
   /*mounted() {
     this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
@@ -196,7 +183,10 @@ export default {
         localStorage.removeItem('userToken')
         this.loadPostData()
       }
-    }
+    },
+    handleDetil(val){
+      eventBus.$emit('open-modal-detil-presensi-pd', val)
+    },
   }
 }
 </script>
