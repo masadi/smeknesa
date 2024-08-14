@@ -1,5 +1,5 @@
 <template>
-  <b-modal v-model="addModalShow" :id="modalId" size="xl" @show="resetForm" @hidden="hideModal" @ok="handleOk">
+  <b-modal v-model="addModalShow" :id="modalId" size="lg" @show="resetForm" @hidden="hideModal" @ok="handleOk">
     <template #modal-title>
       {{ modalTitle }}
       </template>

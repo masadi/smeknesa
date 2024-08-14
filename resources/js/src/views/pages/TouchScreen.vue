@@ -1,6 +1,22 @@
 <template>
   <b-container class="mt-2">
     <template v-if="token">
+      <b-row class="justify-content-md-center">
+        <b-col cols="4" class="text-center">
+          <h2>{{ currentTime.toLocaleString('id-ID', {
+          hour12: false,
+          day: '2-digit',
+          month: 'long',
+          year: 'numeric',
+        }) }}</h2>
+        <h1>{{ currentTime.toLocaleString('id-ID', {
+          hour12: false,
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+        }) }}</h1>
+        </b-col>
+      </b-row>
       <b-row class="match-height">
         <div class="col-md-6 col-lg-4 mb-3" v-for="(item, index) in menu_baru" :key="index">
           <div class="card h-100">
@@ -141,12 +157,19 @@ export default {
       title: '',
       token: null,
       token_text: null,
+      currentTime: new Date(),
     }
   },
   created() {
     this.loadPostData()
+    console.log(this.currentTime);
+    setInterval(this.updateCurrentTime, 1000)
   },
   methods: {
+    updateCurrentTime(){
+      this.currentTime = new Date()
+      console.log(this.currentTime);
+    },
     showModal(id, title){
       this.modalId = id
       this.modalTitle = title
