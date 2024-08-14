@@ -22,7 +22,7 @@ class PerijinanController extends Controller
             });
         })->orderBy(request()->sortby, request()->sortbydesc)
         ->when(request()->q, function($query) {
-            $query->where('nama', 'ILIKE', '%'.request()->q.'%');
+            $query->where('nama1', 'ILIKE', '%'.request()->q.'%');
         })
         ->paginate(request()->per_page);
         return response()->json(['data' => $data, 'semester_id' => get_setting('semester_id')]);
