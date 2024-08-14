@@ -1403,7 +1403,7 @@ class ReferensiController extends Controller
                 'peserta_didik_id' => request()->peserta_didik_id,
                 'rombongan_belajar_id' => request()->rombongan_belajar_id,
                 'sekolah_id' => sekolah_id(),
-                'semester_id' => semester_id(),
+                'semester_id' => request()->semester_id,
             ]);
         } else {
             $insert = Anggota_rombel::where(function($query){
