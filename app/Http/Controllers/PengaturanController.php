@@ -36,7 +36,7 @@ class PengaturanController extends Controller
     public function umum(){
         $semester = Semester::find(request()->semester_id);
         $semester->periode_aktif = 1;
-        $$semester->save();
+        $semester->save();
         Setting::where('key', 'app_name')->update(['value' => request()->app_name]);
         Setting::where('key', 'app_version')->update(['value' => request()->app_version]);
         Setting::where('key', 'semester_id')->update(['value' => request()->semester_id]);
