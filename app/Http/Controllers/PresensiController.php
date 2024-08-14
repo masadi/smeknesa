@@ -685,7 +685,7 @@ class PresensiController extends Controller
                 'pd' => Peserta_didik::with(['presensi' => function($query){
                     $query->where('semester_id', request()->semester_id);
                     $query->orderBy('tanggal');
-                    $query->whereMonth('tanggal', Str::padLeft($this->get_bulan(), 2, 0));
+                    $query->whereMonth('tanggal', $this->get_bulan());
                 }])->find(request()->peserta_didik_id),
                 'data_bulan' => $this->bulan(),
                 'data_tanggal' => $data_tanggal,
