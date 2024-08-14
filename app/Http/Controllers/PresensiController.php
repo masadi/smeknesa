@@ -103,7 +103,7 @@ class PresensiController extends Controller
                     $query->whereHas('rombongan_belajar', function($query){
                         $query->whereHas('kelas_bk', function($query){
                             $query->where('semester_id', request()->semester_id);
-                            $query->where('guru_id', request()->tingkat);
+                            $query->where('guru_id', request()->guru_id);
                         });
                     });
                 }
@@ -197,7 +197,7 @@ class PresensiController extends Controller
         })->orderBy(request()->sortby, request()->sortbydesc)
         ->when(request()->q, function($query) {
             $query->where($this->kondisiAbsen());
-            $query->where('nama', 'ilike', '%'.request()->q.'%');
+            $query->where('nama', 'ILIKE', '%'.request()->q.'%');
         })->paginate(request()->per_page);
         return Anggota_rombel::where($this->kondisiAbsen())->withCount([
             'presensi as H' => function($query){
@@ -220,7 +220,7 @@ class PresensiController extends Controller
         }])->orderBy(request()->sortby, request()->sortbydesc)
         ->when(request()->q, function($query) {
             $query->where($this->kondisiAbsen());
-            $query->where('nama', 'ilike', '%'.request()->q.'%');
+            $query->where('nama', 'ILIKE', '%'.request()->q.'%');
         })->paginate(request()->per_page);
     }
     private function absensi_guru(){
@@ -246,7 +246,7 @@ class PresensiController extends Controller
         ])->orderBy(request()->sortby, request()->sortbydesc)
         ->when(request()->q, function($query) {
             $query->where($this->kondisiAbsen());
-            $query->where('nama', 'ilike', '%'.request()->q.'%');
+            $query->where('nama', 'ILIKE', '%'.request()->q.'%');
         })->paginate(request()->per_page);
     }
     public function get_hari(){
@@ -366,7 +366,7 @@ class PresensiController extends Controller
         ])->orderBy(request()->sortby, request()->sortbydesc)
         ->when(request()->q, function($query) {
             $query->where($this->kondisiAbsen());
-            $query->where('nama', 'ilike', '%'.request()->q.'%');
+            $query->where('nama', 'ILIKE', '%'.request()->q.'%');
         })->paginate(request()->per_page);
     }
     private function rekap_guru(){
@@ -389,7 +389,7 @@ class PresensiController extends Controller
         }])->orderBy(request()->sortby, request()->sortbydesc)
         ->when(request()->q, function($query) {
             $query->where($this->kondisiAbsen());
-            $query->where('nama', 'ilike', '%'.request()->q.'%');
+            $query->where('nama', 'ILIKE', '%'.request()->q.'%');
         })->paginate(request()->per_page);
     }
     public function dashboard(){
@@ -787,7 +787,7 @@ class PresensiController extends Controller
         ->orderBy('anggota_rombel_id')
         ->when(request()->q, function($query) {
             $query->whereHas('pd', function($query){
-                $query->where('nama', 'ilike', '%'.request()->q.'%');
+                $query->where('nama', 'ILIKE', '%'.request()->q.'%');
             });
         })->paginate(request()->per_page);
         return response()->json(['status' => 'success', 'data' => $data]);
@@ -802,7 +802,7 @@ class PresensiController extends Controller
                     $query->where('tingkat', '<>', 0);
                 });
             })->when(request()->nama_siswa, function($query) {
-                $query->where('nama', 'ilike', '%'.request()->nama_siswa.'%');
+                $query->where('nama', 'ILIKE', '%'.request()->nama_siswa.'%');
             })->orderBy('nama')->get(),
         ];
         return response()->json($data);
@@ -949,7 +949,7 @@ class PresensiController extends Controller
         })->orderBy(request()->sortby, request()->sortbydesc)
         ->when(request()->q, function($query) {
             //$query->where($this->kondisiAbsen());
-            $query->where('nama', 'ilike', '%'.request()->q.'%');
+            $query->where('nama', 'ILIKE', '%'.request()->q.'%');
         })->paginate(request()->per_page);
         return response()->json(['status' => 'success', 'data' => $data, 'semester_id' => request()->semester_id, 'data_bulan' => $this->bulan(), 'bulan' => ($this->get_bulan()) ?? date('m')]);                
     }
@@ -1060,7 +1060,7 @@ class PresensiController extends Controller
         }, '>', 9)->orderBy(request()->sortby, request()->sortbydesc)
         ->when(request()->q, function($query) {
             //$query->where($this->kondisiAbsen());
-            $query->where('nama', 'ilike', '%'.request()->q.'%');
+            $query->where('nama', 'ILIKE', '%'.request()->q.'%');
         })->paginate(request()->per_page);
         return response()->json(['status' => 'success', 'data' => $data]);
     }
@@ -1087,7 +1087,7 @@ class PresensiController extends Controller
         }, '>', 3)->orderBy(request()->sortby, request()->sortbydesc)
         ->when(request()->q, function($query) {
             //$query->where($this->kondisiAbsen());
-            $query->where('nama', 'ilike', '%'.request()->q.'%');
+            $query->where('nama', 'ILIKE', '%'.request()->q.'%');
         })->paginate(request()->per_page);
         return response()->json(['status' => 'success', 'data' => $data]);
     }

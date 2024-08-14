@@ -413,7 +413,12 @@ export default {
       this.items = filtered
       
       this.form.anggota_rombel_id = item.anggota_rombel.anggota_rombel_id
-      this.showProses = true
+      this.showProses = false
+      if(this.modalId == 'R'){
+        console.log('cetak rekap');
+      } else {
+        this.showProses = true
+      }
     },
     changeJenis(val){
       if(val == 'hari'){

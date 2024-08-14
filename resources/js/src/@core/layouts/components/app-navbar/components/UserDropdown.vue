@@ -1,5 +1,5 @@
 <template>
-  <b-nav-item-dropdown right toggle-class="d-flex align-items-center dropdown-user-link" class="dropdown-user">
+  <b-nav-item-dropdown right toggle-class="d-flex align-items-center dropdown-user-link" class="dropdown-user" v-if="userData">
     <template #button-content>
       <b-avatar size="40" :src="userData.photo ? `/storage/images/${userData.photo}` : null" variant="light-primary" badge class="badge-minimal" badge-variant="success">
         <feather-icon v-if="!userData.photo" icon="UserIcon" size="22"/>
@@ -34,7 +34,8 @@
         <span>Logout</span>
       </b-dropdown-item>
     </b-nav-item-dropdown>
-    </b-dropdown-item></b-nav-item-dropdown>
+    </b-dropdown-item>
+  </b-nav-item-dropdown>
 </template>
 
 <script>

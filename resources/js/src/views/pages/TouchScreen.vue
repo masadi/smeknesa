@@ -2,6 +2,19 @@
   <b-container class="mt-2">
     <template v-if="token">
       <b-row class="match-height">
+        <div class="col-md-6 col-lg-4 mb-3" v-for="(item, index) in menu_baru" :key="index">
+          <div class="card h-100">
+            <img class="card-img-top" :src="item.img" alt="Card image cap" />
+            <div class="card-body">
+              <h5 class="card-title">{{ item.title }}</h5>
+              <p class="card-text">{{ item.text }}</p>
+              <a href="javascript:void(0)" @click="showModal(item.id, item.title)" class="btn btn-outline-primary">{{
+                item.btn_text }}</a>
+            </div>
+          </div>
+        </div>
+      </b-row>
+      <b-row class="match-height" v-if="showLama">
         <b-col cols="12" sm="6" v-for="(item, index) in items" :key="index">
           <b-card class="text-center" @click="showModal(item.id, item.text)">
             <b-img fluid :src="item.img" class="mb-2" />
@@ -64,6 +77,30 @@ export default {
       modalId: '',
       modalTitle: '',
       show: false,
+      showLama: false,
+      menu_baru: [
+        {
+          img: '/img/elements/1.jpg',
+          title: 'TITLE IJIN',
+          text: 'TEXT IJIN',
+          btn_text: 'GO IJIN',
+          id: 'I',
+        },
+        {
+          img: '/img/elements/2.jpg',
+          title: 'TITLE TERLAMBAT',
+          text: 'TEXT TERLAMBAT',
+          btn_text: 'GO TERLAMBAT',
+          id: 'T',
+        },
+        {
+          img: '/img/elements/3.jpg',
+          title: 'TITLE REKAP',
+          text: 'TEXT REKAP',
+          btn_text: 'GO REKAP',
+          id: 'R',
+        }
+      ],
       items: [
         {
           img: '/img/pages/izin/exit.png',
