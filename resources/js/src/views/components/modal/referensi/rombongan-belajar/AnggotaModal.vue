@@ -191,6 +191,7 @@ export default {
         data: data,
         peserta_didik_id: peserta_didik_id,
         rombongan_belajar_id: this.rombongan_belajar_id,
+        semester_id: this.user.semester.semester_id,
       }).then(response => {
         this.loading_table = false
         this.getAnggota()

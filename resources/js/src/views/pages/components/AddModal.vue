@@ -1,5 +1,5 @@
 <template>
-  <b-modal v-model="addModalShow" :id="modalId" size="xl" @show="resetForm" @hidden="hideModal" @ok="handleOk">
+  <b-modal v-model="addModalShow" :id="modalId" size="lg" @show="resetForm" @hidden="hideModal" @ok="handleOk">
     <template #modal-title>
       {{ modalTitle }}
       </template>
@@ -18,7 +18,7 @@
         {{row.item.anggota_rombel.rombongan_belajar.nama}}
       </template>
       <template v-slot:cell(actions)="row">
-        <b-button variant="primary" @click="proses(row.item)">Proses</b-button>
+        <b-button variant="primary" @click="proses(row.item)" v-if="!showProses">Proses</b-button>
       </template>
     </b-table>
     <b-overlay :show="loading_form" rounded opacity="0.6" size="lg" spinner-variant="danger">
@@ -28,7 +28,7 @@
             <template v-if="modalId == 'I'">
               <b-col cols="12">
                 <b-form-group label="Pilihan Izin" label-for="pilihan_ijin" label-cols-md="3" :invalid-feedback="feedback.pilihan_ijin" :state="state.pilihan_ijin">
-                  <b-form-radio-group id="pilihan_ijin" v-model="form.pilihan_ijin" :options="data_ijin" name="pilihan_ijin" :state="state.pilihan_ijin"></b-form-radio-group>
+                <b-form-radio-group id="pilihan_ijin" v-model="form.pilihan_ijin" :options="data_ijin" name="pilihan_ijin" :state="state.pilihan_ijin"></b-form-radio-group>
                 </b-form-group>
               </b-col>
               <b-col cols="12">
@@ -383,6 +383,7 @@ export default {
         }
       }).then(response => {
         //this.items = response.data.all_pd
+        this.showProses = false
         let getData = response.data.data
         this.isBusy = false
         this.loading = false
@@ -413,7 +414,12 @@ export default {
       this.items = filtered
       
       this.form.anggota_rombel_id = item.anggota_rombel.anggota_rombel_id
-      this.showProses = true
+      this.showProses = false
+      if(this.modalId == 'R'){
+        this.$emit('detil', item)
+      } else {
+        this.showProses = true
+      }
     },
     changeJenis(val){
       if(val == 'hari'){

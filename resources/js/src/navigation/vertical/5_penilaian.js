@@ -156,5 +156,19 @@ export default [
     resource: 'Perijinan',
     action: 'read',
   },
+  {
+    icon: 'trending-up-2-icon',
+    title: 'Data Alpha Tinggi',
+    route: 'alpha-tinggi',
+    resource: 'Perijinan',
+    action: 'read',
+  },
+  {
+    icon: 'certificate-icon',
+    title: 'Sering Terlambat',
+    route: 'siswa-sering-terlambat',
+    resource: 'Perijinan',
+    action: 'read',
+  },
 ]
   

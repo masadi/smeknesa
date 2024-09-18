@@ -1,7 +1,40 @@
 <template>
   <b-container class="mt-2">
     <template v-if="token">
+      <b-row class="justify-content-md-center">
+        <b-col cols="4" class="text-center">
+          <span class="badge bg-success">
+          {{ currentTime.toLocaleString('id-ID', {
+          hour12: false,
+          day: '2-digit',
+          month: 'long',
+          year: 'numeric',
+          }) }}
+          </span>
+        <h1 class="display-4 mb-0 text-primary"><strong>{{ currentTime.toLocaleString('id-ID', {
+          hour12: false,
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+        }) }}</strong></h1>
+        </b-col>
+      </b-row>
       <b-row class="match-height">
+        <div class="col-md-6 col-lg-4 mb-3" v-for="(item, index) in menu_baru" :key="index">
+          <div class="card h-100">
+            <img class="card-img-top" :src="item.img" alt="Card image cap" />
+            <div class="card-body">
+              <figure class="text-center mt-2">
+                <!--<h5 class="card-title">{{ item.title }}</h5>
+                <p class="card-text">{{ item.text }}</p>-->
+                <a href="javascript:void(0)" @click="showModal(item.id, item.title)" class="btn btn-xl btn-primary btn-lg btn-block" type="button">{{
+                item.btn_text }}</a>
+              </figure>
+            </div>
+          </div>
+        </div>
+      </b-row>
+      <b-row class="match-height" v-if="showLama">
         <b-col cols="12" sm="6" v-for="(item, index) in items" :key="index">
           <b-card class="text-center" @click="showModal(item.id, item.text)">
             <b-img fluid :src="item.img" class="mb-2" />
@@ -11,22 +44,6 @@
               </h2>
             </div>
           </b-card>
-        </b-col>
-      </b-row>
-      <h1 class="font-weight-bolder text-center">Arsip Dokumen</h1>
-      <b-row class="match-height">
-        <b-col cols="12" sm="6" v-for="(item, index) in arsip" :key="index">
-          <b-card class="text-center" @click="$bvModal.show(item.id)">
-            <h2 class="font-weight-bolder">{{ item.text }}</h2>
-          </b-card>
-          <b-modal :id="item.id" @show="resetModal" ok-only ok-title="Tutup" ok-variant="secondary" size="xl">
-            <template #modal-title>
-              {{ item.text }}
-            </template>
-            <div class="d-block text-center">
-              <h3>Hello From This Modal! {{ item.text }}</h3>
-            </div>
-          </b-modal>
         </b-col>
       </b-row>
     </template>
@@ -42,17 +59,20 @@
         </b-form>
       </b-card>
     </template>
-    <add-modal :modalId="modalId" :modalTitle="modalTitle" :showModal="show" @hidden="hideModal"></add-modal>
-  </b-container>
+    <add-modal :modalId="modalId" :modalTitle="modalTitle" :showModal="show" @hidden="hideModal" @detil="handleDetil"></add-modal>
+    <DetilPresensi></DetilPresensi>
+  </b-container> 
 </template>
 
 <script>
 import { BContainer, BCard, BAvatar, BImg, BRow, BCol, BButton, BForm, BInputGroup, BFormInput, BInputGroupAppend} from 'bootstrap-vue'
+import eventBus from '@core/utils/eventBus'
 import { getToken } from '@/auth/utils'
 import AddModal from './components/AddModal.vue'
+import DetilPresensi from './components/DetilPresensi.vue';
 export default {
   components: {
-    BContainer, BCard, BAvatar, BImg, BRow, BCol, BButton, BForm, BInputGroup, BFormInput, BInputGroupAppend, AddModal
+    BContainer, BCard, BAvatar, BImg, BRow, BCol, BButton, BForm, BInputGroup, BFormInput, BInputGroupAppend, AddModal, DetilPresensi
   },
   /*mounted() {
     this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
@@ -64,6 +84,30 @@ export default {
       modalId: '',
       modalTitle: '',
       show: false,
+      showLama: false,
+      menu_baru: [
+        {
+          img: '/img/elements/izinku.png',
+          title: 'Perizinan',
+          text: 'TEXT IJIN',
+          btn_text: 'Cetak Surat Izin',
+          id: 'I',
+        },
+        {
+          img: '/img/elements/telatku.png',
+          title: 'Keterlambatan',
+          text: 'TEXT TERLAMBAT',
+          btn_text: 'Cetak Keterangan Terlambat',
+          id: 'T',
+        },
+        {
+          img: '/img/elements/rekapku.png',
+          title: 'Rekap Absensi',
+          text: 'TEXT REKAP',
+          btn_text: 'Lihat Rekap Absensi',
+          id: 'R',
+        }
+      ],
       items: [
         {
           img: '/img/pages/izin/exit.png',
@@ -117,12 +161,17 @@ export default {
       title: '',
       token: null,
       token_text: null,
+      currentTime: new Date(),
     }
   },
   created() {
     this.loadPostData()
+    setInterval(this.updateCurrentTime, 1000)
   },
   methods: {
+    updateCurrentTime(){
+      this.currentTime = new Date()
+    },
     showModal(id, title){
       this.modalId = id
       this.modalTitle = title
@@ -159,7 +208,10 @@ export default {
         localStorage.removeItem('userToken')
         this.loadPostData()
       }
-    }
+    },
+    handleDetil(val){
+      eventBus.$emit('open-modal-detil-presensi-pd', val)
+    },
   }
 }
 </script>

@@ -396,4 +396,36 @@ export default [
       },
     },
   },
+  {
+    path: '/alpha-tinggi',
+    name: 'alpha-tinggi',
+    component: () => import('@/views/presensi/alpha-tinggi/Index.vue'),
+    meta: {
+      pageTitle: 'Data Alpha Tinggi',
+      resource: 'Perijinan',
+      action: 'read',
+      breadcrumb: [
+        {
+          text: 'Data Alpha Tinggi',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
+    path: '/siswa-sering-terlambat',
+    name: 'siswa-sering-terlambat',
+    component: () => import('@/views/presensi/siswa-sering-terlambat/Index.vue'),
+    meta: {
+      pageTitle: 'Siswa Sering Terlambat',
+      resource: 'Perijinan',
+      action: 'read',
+      breadcrumb: [
+        {
+          text: 'Siswa Sering Terlambat',
+          active: true,
+        },
+      ],
+    },
+  },
 ]

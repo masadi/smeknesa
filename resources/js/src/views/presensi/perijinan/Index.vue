@@ -189,10 +189,8 @@ export default {
           }
         })
       } else if(val.aksi === 'print'){
-        console.log('print');
         this.loading = false
-        //window.open(`/cetak/perijinan/${val.item.ijin_id}/${this.user.user_id}`, '_blank')
-        window.open(`/cetak/perijinan/cetak/${val.item.ijin_id}/${this.user.user_id}/${this.user.semester.semester_id}`, '_blank')
+        window.open(`/cetak/perijinan/cetak/${val.item.ijin_id}/${this.user.semester.semester_id}/${this.user.user_id}`, '_blank')
       } else {
         eventBus.$emit(`open-modal-${val.aksi}-perijinan`, val.item);
         this.loading = false

@@ -103,7 +103,7 @@ class PresensiController extends Controller
                     $query->whereHas('rombongan_belajar', function($query){
                         $query->whereHas('kelas_bk', function($query){
                             $query->where('semester_id', request()->semester_id);
-                            $query->where('guru_id', request()->tingkat);
+                            $query->where('guru_id', request()->guru_id);
                         });
                     });
                 }
@@ -197,7 +197,7 @@ class PresensiController extends Controller
         })->orderBy(request()->sortby, request()->sortbydesc)
         ->when(request()->q, function($query) {
             $query->where($this->kondisiAbsen());
-            $query->where('nama', 'ilike', '%'.request()->q.'%');
+            $query->where('nama', 'ILIKE', '%'.request()->q.'%');
         })->paginate(request()->per_page);
         return Anggota_rombel::where($this->kondisiAbsen())->withCount([
             'presensi as H' => function($query){
@@ -220,7 +220,7 @@ class PresensiController extends Controller
         }])->orderBy(request()->sortby, request()->sortbydesc)
         ->when(request()->q, function($query) {
             $query->where($this->kondisiAbsen());
-            $query->where('nama', 'ilike', '%'.request()->q.'%');
+            $query->where('nama', 'ILIKE', '%'.request()->q.'%');
         })->paginate(request()->per_page);
     }
     private function absensi_guru(){
@@ -246,7 +246,7 @@ class PresensiController extends Controller
         ])->orderBy(request()->sortby, request()->sortbydesc)
         ->when(request()->q, function($query) {
             $query->where($this->kondisiAbsen());
-            $query->where('nama', 'ilike', '%'.request()->q.'%');
+            $query->where('nama', 'ILIKE', '%'.request()->q.'%');
         })->paginate(request()->per_page);
     }
     public function get_hari(){
@@ -366,7 +366,7 @@ class PresensiController extends Controller
         ])->orderBy(request()->sortby, request()->sortbydesc)
         ->when(request()->q, function($query) {
             $query->where($this->kondisiAbsen());
-            $query->where('nama', 'ilike', '%'.request()->q.'%');
+            $query->where('nama', 'ILIKE', '%'.request()->q.'%');
         })->paginate(request()->per_page);
     }
     private function rekap_guru(){
@@ -389,7 +389,7 @@ class PresensiController extends Controller
         }])->orderBy(request()->sortby, request()->sortbydesc)
         ->when(request()->q, function($query) {
             $query->where($this->kondisiAbsen());
-            $query->where('nama', 'ilike', '%'.request()->q.'%');
+            $query->where('nama', 'ILIKE', '%'.request()->q.'%');
         })->paginate(request()->per_page);
     }
     public function dashboard(){
@@ -683,9 +683,9 @@ class PresensiController extends Controller
             }
             $data = [
                 'pd' => Peserta_didik::with(['presensi' => function($query){
-                    $query->where('semester_id', request()->semester_id);
+                    $query->where('semester_id', semester_id());
                     $query->orderBy('tanggal');
-                    $query->whereMonth('tanggal', Str::padLeft($this->get_bulan(), 2, 0));
+                    $query->whereMonth('tanggal', $this->get_bulan());
                 }])->find(request()->peserta_didik_id),
                 'data_bulan' => $this->bulan(),
                 'data_tanggal' => $data_tanggal,
@@ -696,22 +696,27 @@ class PresensiController extends Controller
                 $query->where('rombongan_belajar_id', request()->rombongan_belajar_id);
             })->withCount([
                 'presensi as H' => function($query){
+                    $query->where('semester_id', semester_id());
                     $query->where('absen', 'H');
                     $query->whereMonth('tanggal', $this->get_bulan());
                 },
                 'presensi as A' => function($query){
+                    $query->where('semester_id', semester_id());
                     $query->where('absen', 'A');
                     $query->whereMonth('tanggal', $this->get_bulan());
                 },
                 'presensi as S' => function($query){
+                    $query->where('semester_id', semester_id());
                     $query->where('absen', 'S');
                     $query->whereMonth('tanggal', $this->get_bulan());
                 },
                 'presensi as I' => function($query){
+                    $query->where('semester_id', semester_id());
                     $query->where('absen', 'I');
                     $query->whereMonth('tanggal', $this->get_bulan());
                 },
                 'presensi as D' => function($query){
+                    $query->where('semester_id', semester_id());
                     $query->where('absen', 'D');
                     $query->whereMonth('tanggal', $this->get_bulan());
                 },
@@ -787,7 +792,7 @@ class PresensiController extends Controller
         ->orderBy('anggota_rombel_id')
         ->when(request()->q, function($query) {
             $query->whereHas('pd', function($query){
-                $query->where('nama', 'ilike', '%'.request()->q.'%');
+                $query->where('nama', 'ILIKE', '%'.request()->q.'%');
             });
         })->paginate(request()->per_page);
         return response()->json(['status' => 'success', 'data' => $data]);
@@ -802,7 +807,7 @@ class PresensiController extends Controller
                     $query->where('tingkat', '<>', 0);
                 });
             })->when(request()->nama_siswa, function($query) {
-                $query->where('nama', 'ilike', '%'.request()->nama_siswa.'%');
+                $query->where('nama', 'ILIKE', '%'.request()->nama_siswa.'%');
             })->orderBy('nama')->get(),
         ];
         return response()->json($data);
@@ -949,7 +954,7 @@ class PresensiController extends Controller
         })->orderBy(request()->sortby, request()->sortbydesc)
         ->when(request()->q, function($query) {
             //$query->where($this->kondisiAbsen());
-            $query->where('nama', 'ilike', '%'.request()->q.'%');
+            $query->where('nama', 'ILIKE', '%'.request()->q.'%');
         })->paginate(request()->per_page);
         return response()->json(['status' => 'success', 'data' => $data, 'semester_id' => request()->semester_id, 'data_bulan' => $this->bulan(), 'bulan' => ($this->get_bulan()) ?? date('m')]);                
     }
@@ -1034,5 +1039,61 @@ class PresensiController extends Controller
             ];
         }
         return response()->json($data);
+    }
+    public function alpha_tinggi(){
+        $data = Peserta_didik::withWhereHas('kelas', function($query){
+            $query->where('rombongan_belajar.semester_id', request()->semester_id);
+        })->withWhereHas('anggota_rombel', function($query){
+            $query->where('semester_id', request()->semester_id);
+            $query->whereHas('rombongan_belajar', function($query){
+                $query->where('tingkat', '<>', 0);
+            });
+        })->withCount(['presensi' => function($query){
+            $query->where('absen', 'A');
+            $query->whereHas('anggota_rombel', function($query){
+                $query->whereHas('semester', function($query){
+                    $query->where('tahun_ajaran_id', request()->tahun_ajaran_id);
+                });
+            });
+        }])->whereHas('presensi', function($query){
+            $query->where('absen', 'A');
+            $query->whereHas('anggota_rombel', function($query){
+                $query->whereHas('semester', function($query){
+                    $query->where('tahun_ajaran_id', request()->tahun_ajaran_id);
+                });
+            });
+        }, '>', 9)->orderBy(request()->sortby, request()->sortbydesc)
+        ->when(request()->q, function($query) {
+            //$query->where($this->kondisiAbsen());
+            $query->where('nama', 'ILIKE', '%'.request()->q.'%');
+        })->paginate(request()->per_page);
+        return response()->json(['status' => 'success', 'data' => $data]);
+    }
+    public function sering_terlambat(){
+        $data = Peserta_didik::withWhereHas('kelas', function($query){
+            $query->where('rombongan_belajar.semester_id', request()->semester_id);
+        })->withWhereHas('anggota_rombel', function($query){
+            $query->where('semester_id', request()->semester_id);
+            $query->whereHas('rombongan_belajar', function($query){
+                $query->where('tingkat', '<>', 0);
+            });
+        })->withCount(['terlambat' => function($query){
+            $query->whereHas('anggota_rombel', function($query){
+                $query->whereHas('semester', function($query){
+                    $query->where('tahun_ajaran_id', request()->tahun_ajaran_id);
+                });
+            });
+        }])->withWhereHas('terlambat', function($query){
+            $query->whereHas('anggota_rombel', function($query){
+                $query->whereHas('semester', function($query){
+                    $query->where('tahun_ajaran_id', request()->tahun_ajaran_id);
+                });
+            });
+        }, '>', 3)->orderBy(request()->sortby, request()->sortbydesc)
+        ->when(request()->q, function($query) {
+            //$query->where($this->kondisiAbsen());
+            $query->where('nama', 'ILIKE', '%'.request()->q.'%');
+        })->paginate(request()->per_page);
+        return response()->json(['status' => 'success', 'data' => $data]);
     }
 }
