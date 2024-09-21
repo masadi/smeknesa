@@ -32,10 +32,10 @@ class GenerateUser extends Command
     public function handle()
     {
         $role = Role::where('name', 'administrator')->first();
-        $semester = Semester::find(request()->semester_id);
+        $semester = Semester::find(semester_id());
         $user = User::updateOrCreate(
             [
-                'email' => 'administrator@smkn1sampang.sch.id'
+                'email' => 'administrator@smkn3buduran.sch.id'
             ],
             [
                 'name' => 'Administrator',
