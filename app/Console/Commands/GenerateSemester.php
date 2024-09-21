@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use App\Models\Rombongan_belajar;
 use App\Models\Tahun_ajaran;
 use App\Models\Semester;
+use App\Models\Team;
 
 class GenerateSemester extends Command
 {
