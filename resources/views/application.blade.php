@@ -45,6 +45,10 @@
   <script>
     var app_url = '{{ url('/') }}';
     var app_name = '{{ config('app.name') }}';
+    var app_version = '{{ config('app.version') }}';
+    var sideImg = '{{ config('app.side_img') }}';
+    var footer_link = '{{ config('app.footer_link') }}';
+    var nama_sekolah = '{{ config('app.nama_sekolah') }}';
   </script>   
   <script src="{{ asset(mix('js/app.js')) }}"></script>
 

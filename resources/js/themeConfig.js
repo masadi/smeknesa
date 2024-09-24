@@ -10,8 +10,13 @@ export const $themeBreakpoints = {}
 export const $themeConfig = {
   app: {
     appName: app_name, // Will update name in navigation menu (Branding)
+    appVersion: app_version,
     // eslint-disable-next-line global-require
     appLogoImage: '/img/logo/logo.svg',
+    sideImg: sideImg,
+    footerLink: footer_link,
+    namaSekolah: nama_sekolah,
+    //'/img/pages/login-Integrated-system.webp',
     //require('@/assets/images/logo/logo.svg'), // Will update logo in navigation menu (Branding)
   },
   layout: {

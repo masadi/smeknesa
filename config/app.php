@@ -15,9 +15,12 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'e-Rapor SMK'),
-    'version' => env('APP_VERSION', '7.0.0'),
+    'name' => env('APP_NAME', 'LARAVEL'),
+    'version' => env('APP_VERSION', '1.0.0'),
     'registration' => env('REGISTRATION', FALSE),
+    'side_img' => env('FRONT_IMG', '/img/pages/login-Integrated-system.webp'),
+    'footer_link' => env('FOOTER_LINK', FALSE),
+    'nama_sekolah' => env('NAMA_SEKOLAH', FALSE),
 
     /*
     |--------------------------------------------------------------------------

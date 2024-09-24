@@ -110,6 +110,7 @@ import {
   BOverlay,
 } from 'bootstrap-vue'
 import useJwt from '@/auth/jwt/useJwt'
+import { $themeConfig } from '@themeConfig'
 import { required, email } from '@validations'
 import { togglePasswordVisibility } from '@core/mixins/ui/forms'
 import store from '@/store/index'
@@ -151,7 +152,8 @@ export default {
       userEmail: '',
       semester_id: '',
       data_semester: [],
-      sideImg: '/img/pages/login-Integrated-system.webp',
+      sideImg: $themeConfig.app.sideImg,
+      //'/img/pages/login-Integrated-system.webp',
 
       // validation rules
       required,
@@ -165,7 +167,8 @@ export default {
     imgUrl() {
       if (store.state.appConfig.layout.skin === 'dark') {
         // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-        this.sideImg = '/img/pages/login-Integrated-system.webp'
+        this.sideImg = $themeConfig.app.sideImg
+        //'/img/pages/login-Integrated-system.webp'
         return this.sideImg
       }
       return this.sideImg
