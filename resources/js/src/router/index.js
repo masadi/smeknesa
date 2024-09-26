@@ -16,6 +16,7 @@ import tatib from './routes/9_tatib'
 import rekapitulasi from './routes/10_rekapitulasi'
 import bottom from './routes/99_bottom'
 import pages from './routes/pages'
+import { $themeConfig } from '@themeConfig'
 /*
 import apps from './routes/apps'
 import uiElements from './routes/ui-elements/index'
@@ -63,9 +64,9 @@ router.beforeEach((to, _, next) => {
   console.log(title);
   
   if (title) {
-    document.title = title +' | SMKN 1 SAMPANG'
+    document.title = title +' | '+ $themeConfig.app.namaSekolah
   } else {
-    document.title = 'SMKN 1 SAMPANG'
+    document.title = $themeConfig.app.namaSekolah
   }
   if (to.meta.resource && !canNavigate(to)) {
     // Redirect to login if not logged in
