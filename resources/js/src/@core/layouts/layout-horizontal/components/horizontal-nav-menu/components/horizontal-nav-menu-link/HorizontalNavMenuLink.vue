@@ -1,13 +1,12 @@
 <template>
   <li
-    v-if="canViewHorizontalNavMenuLink(item)"
     :class="{
       'active': isActive,
       'disabled': item.disabled
     }"
   >
     <b-link v-bind="linkProps" class="dropdown-item">
-      <component :is="item.icon || 'circle-dot-filled-icon'" />
+      <component :is="item.icon || 'hand-click-icon'" />
       <!-- feather-icon :icon="item.icon || 'CircleIcon'" size="24" /-->
       <span class="menu-title">{{ t(item.title) }}</span>
     </b-link>

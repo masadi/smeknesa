@@ -1,5 +1,10 @@
 export default [
   {
+    title: 'Beranda',
+    icon: 'home-icon',
+    route: 'homepage',
+  },
+  {
     header: 'Dashboards',
     icon: 'HomeIcon',
     children: [

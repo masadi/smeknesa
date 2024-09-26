@@ -32,7 +32,7 @@ const router = new VueRouter({
     return { x: 0, y: 0 }
   },
   routes: [
-    { path: '/', redirect: { name: 'dashboard' } },
+    { path: '/', redirect: { name: 'homepage' } },
     ...dashboard,
     ...referensi,
     ...presensi,
@@ -60,12 +60,14 @@ const router = new VueRouter({
 router.beforeEach((to, _, next) => {
   const isLoggedIn = isUserLoggedIn()
   const title = to.meta.pageTitle || to.meta.webTitle
+  console.log(title);
+  
   if (title) {
     document.title = title +' | SMKN 1 SAMPANG'
   } else {
     document.title = 'SMKN 1 SAMPANG'
   }
-  if (!canNavigate(to)) {
+  if (to.meta.resource && !canNavigate(to)) {
     // Redirect to login if not logged in
     if (!isLoggedIn) return next({ name: 'auth-login' })
 

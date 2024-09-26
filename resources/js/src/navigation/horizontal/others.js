@@ -1,7 +1,7 @@
 export default [
   {
     header: 'Others',
-    icon: 'MoreHorizontalIcon',
+    icon: 'DotsIcon',
     children: [
       {
         title: 'Access Control',
@@ -44,7 +44,7 @@ export default [
       {
         title: 'Raise Support',
         href: 'https://pixinvent.ticksy.com/',
-        icon: 'LifeBuoyIcon',
+        icon: 'hand-click-icon',
       },
       {
         title: 'Documentation',

@@ -32,6 +32,7 @@ use App\Http\Controllers\AsesorController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::get('menu', [DashboardController::class, 'menu']);
 Route::get('sekolah', [DashboardController::class, 'hitung_sekolah']);
 Route::get('no-access', [DashboardController::class, 'no_access'])->name('login');
 Route::get('profile/data', [AuthController::class, 'profile_pd']);

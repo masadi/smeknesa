@@ -1,11 +1,11 @@
 export default [
   {
     header: 'Charts & Maps',
-    icon: 'PieChartIcon',
+    icon: 'chart-pie-icon',
     children: [
       {
         title: 'Charts',
-        icon: 'PieChartIcon',
+        icon: 'chart-pie-icon',
         children: [
           {
             title: 'Apex Chart',

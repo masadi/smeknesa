@@ -5,18 +5,29 @@
 </template>
 
 <script>
-import navMenuItems from '@/navigation/horizontal'
+//import navMenuItems from '@/navigation/horizontal'
+
 import HorizontalNavMenuItems from './components/horizontal-nav-menu-items/HorizontalNavMenuItems.vue'
 
 export default {
   components: {
     HorizontalNavMenuItems,
   },
-  setup() {
+  data() {
+    return {
+      navMenuItems: [],
+    }
+  },
+  created(){
+    this.$http.get('/menu').then(res => {
+      this.navMenuItems = res.data
+    })
+  },
+  /*setup() {
     return {
       navMenuItems,
     }
-  },
+  },*/
 }
 </script>
 

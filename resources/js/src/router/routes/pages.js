@@ -1,5 +1,29 @@
 export default [
   {
+    path: '/post/:slug',
+    name: 'post',
+    component: () => import('@/views/homepage/Post.vue'),
+    meta: {
+      layout: 'horizontal',
+    },
+  },
+  {
+    path: '/page/:slug',
+    name: 'page',
+    component: () => import('@/views/homepage/Page.vue'),
+    meta: {
+      layout: 'horizontal',
+    },
+  },
+  {
+    path: '/category/:category',
+    name: 'category',
+    component: () => import('@/views/homepage/Category.vue'),
+    meta: {
+      layout: 'horizontal',
+    },
+  },
+  {
     path: '/login',
     name: 'auth-login',
     component: () => import('@/views/pages/Login.vue'),

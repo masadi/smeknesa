@@ -29,12 +29,12 @@ export default function useHorizontalNavMenuGroup(item) {
 
         const refChildDropdownTop = refChildDropdown.value.getBoundingClientRect().top
         const refChildDropdownHeight = refChildDropdown.value.getBoundingClientRect().height
-        if (window.innerHeight - refChildDropdownTop - refChildDropdownHeight - 28 < 1) {
+        /*if (window.innerHeight - refChildDropdownTop - refChildDropdownHeight - 28 < 1) {
           const maxHeight = window.innerHeight - refChildDropdownTop - 70
           refChildDropdown.value.style.maxHeight = `${maxHeight}px`
           refChildDropdown.value.style.overflowY = 'auto'
           refChildDropdown.value.style.overflowX = 'hidden'
-        }
+        }*/
       })
     } else {
       openChildDropdownOnLeft.value = false

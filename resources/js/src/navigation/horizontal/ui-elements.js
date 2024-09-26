@@ -1,12 +1,12 @@
 export default [
   {
     header: 'User Interface',
-    icon: 'LayersIcon',
+    icon: 'layers-intersect-icon',
     children: [
       {
         title: 'Typography',
         route: 'ui-typography',
-        icon: 'TypeIcon',
+        icon: 'cursor-text-icon',
       },
       {
         title: 'Colors',

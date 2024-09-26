@@ -62,7 +62,7 @@ export default [
       {
         title: 'Faq',
         route: 'pages-faq',
-        icon: 'HelpCircleIcon',
+        icon: 'HelpIcon',
       },
       {
         title: 'Knowledge Base',
@@ -72,7 +72,7 @@ export default [
       {
         title: 'Pricing',
         route: 'pages-pricing',
-        icon: 'DollarSignIcon',
+        icon: 'currency-dollar-icon',
       },
       {
         title: 'Blog',

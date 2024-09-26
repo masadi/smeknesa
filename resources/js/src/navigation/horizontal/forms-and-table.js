@@ -94,7 +94,7 @@ export default [
       {
         title: 'Form Validation',
         route: 'form-validation',
-        icon: 'CheckCircleIcon',
+        icon: 'circle-check-icon',
       },
       {
         title: 'Form Repeater',
@@ -109,7 +109,7 @@ export default [
       {
         title: 'Good Table',
         route: 'table-good-table',
-        icon: 'GridIcon',
+        icon: 'layout-grid-icon',
       },
     ],
   },

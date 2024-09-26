@@ -11,12 +11,12 @@ export default [
       {
         title: 'Chat',
         route: 'apps-chat',
-        icon: 'MessageSquareIcon',
+        icon: 'hand-click-icon',
       },
       {
         title: 'Todo',
         route: 'apps-todo',
-        icon: 'CheckSquareIcon',
+        icon: 'hand-click-icon',
       },
       {
         title: 'Calendar',
