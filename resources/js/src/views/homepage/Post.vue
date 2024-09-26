@@ -59,7 +59,7 @@
 <script>
 import { BRow, BCol, BCard, BImg, BCardBody, BCardTitle, BMediaAside, BMedia, BMediaBody, BLink, BAvatar, BBadge } from 'bootstrap-vue'
 import ContentWithSidebar from '@core/layouts/components/content-with-sidebar/ContentWithSidebar.vue'
-
+import { $themeConfig } from '@themeConfig'
 export default {
   components: {
     ContentWithSidebar,
@@ -78,6 +78,7 @@ export default {
   },
   data() {
     return {
+      namaSekolah: $themeConfig.app.namaSekolah,
       recentPosts: [
         {
           id: 7,
@@ -120,12 +121,8 @@ export default {
       }
     }
   },
-  //webTitle: 'Beranda',
-  beforeCreate() {
-    document.title = 'POST | SMKN 1 SAMPANG'
-  },
   created() {
-    console.log(this.$route);
+    document.title = this.blog.title + ' | ' + this.namaSekolah
   },
   methods: {
     tagsColor(tag) {
