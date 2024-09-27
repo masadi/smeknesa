@@ -22,6 +22,7 @@ use App\Http\Controllers\MonitoringController;
 use App\Http\Controllers\UkkController;
 use App\Http\Controllers\PerijinanController;
 use App\Http\Controllers\AsesorController;
+use App\Http\Controllers\PostController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -36,6 +37,10 @@ Route::get('menu', [DashboardController::class, 'menu']);
 Route::get('sekolah', [DashboardController::class, 'hitung_sekolah']);
 Route::get('no-access', [DashboardController::class, 'no_access'])->name('login');
 Route::get('profile/data', [AuthController::class, 'profile_pd']);
+Route::group(['prefix' => 'artikel'], function () {
+  Route::get('/', [PostController::class, 'artikel']);
+  Route::post('/baca', [PostController::class, 'baca']);
+});
 Route::group(['prefix' => 'auth'], function () {
   Route::get('/semester', [AuthController::class, 'semester']);
   Route::post('login', [AuthController::class, 'login']);
@@ -298,6 +303,14 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
       Route::post('/get-rencana', [UkkController::class, 'get_rencana']);
       Route::post('/get-penguji', [UkkController::class, 'get_penguji']);
     });
+  });
+  Route::group(['prefix' => 'post'], function () {
+    Route::get('/', [PostController::class, 'index']);
+    Route::get('/category', [PostController::class, 'category']);
+    Route::post('/save-category', [PostController::class, 'save_category']);
+    Route::post('/save', [PostController::class, 'save']);
+    Route::post('/delete', [PostController::class, 'destroy']);
+    Route::post('/show', [PostController::class, 'show']);
   });
 });
 Route::group(['prefix' => 'perijinan'], function () {

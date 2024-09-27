@@ -86,7 +86,7 @@ class GenerateAkses extends Command
             [
                 'role' => 'wakahumas',
                 'display_name' => 'Waka Humas',
-                'akses' => ['Ref_Mapel', 'Ref_Guru', 'Jadwal', 'Magang_Absensi', 'Magang_Nilai'],
+                'akses' => ['Ref_Mapel', 'Ref_Guru', 'Jadwal', 'Magang_Absensi', 'Magang_Nilai', 'Post'],
                 'action' => 'read',
             ],
             [

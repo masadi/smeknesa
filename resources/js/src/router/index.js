@@ -61,8 +61,6 @@ const router = new VueRouter({
 router.beforeEach((to, _, next) => {
   const isLoggedIn = isUserLoggedIn()
   const title = to.meta.pageTitle || to.meta.webTitle
-  console.log(title);
-  
   if (title) {
     document.title = title +' | '+ $themeConfig.app.namaSekolah
   } else {

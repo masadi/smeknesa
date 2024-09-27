@@ -18,4 +18,34 @@ export default [
       webTitle: 'Dashboard',
     },
   },
+  {
+    path: '/artikel',
+    name: 'post-artikel',
+    component: () => import('@/views/artikel/ListArtikel.vue'),
+    meta: {
+      resource: 'Post',
+      action: 'read',
+      webTitle: 'List Artikel',
+    },
+  },
+  {
+    path: '/tambah-artikel/:id?',
+    name: 'post-add-artikel',
+    component: () => import('@/views/artikel/TambahArtikel.vue'),
+    meta: {
+      resource: 'Post',
+      action: 'read',
+      webTitle: 'Tambah Artikel Baru',
+    },
+  },
+  {
+    path: '/kategori',
+    name: 'post-kategori',
+    component: () => import('@/views/artikel/Kategori.vue'),
+    meta: {
+      resource: 'Post',
+      action: 'read',
+      webTitle: 'Kategori Artikel',
+    },
+  },
 ]

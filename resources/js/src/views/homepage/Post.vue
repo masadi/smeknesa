@@ -2,31 +2,52 @@
   <content-with-sidebar class="cws-container cws-sidebar-right blog-wrapper">
     <div class="blog-detail-wrapper">
       <b-row>
-        <b-col cols="12">
-          <b-card :img-src="blog.img" img-top img-alt="Blog Detail Pic" :title="blog.title">
-            <b-media no-body>
-              <b-media-aside vertical-align="center" class="mr-50">
-                <b-avatar href="javascript:void(0)" size="24" :src="blog.avatar" />
-              </b-media-aside>
-              <b-media-body>
-                <small class="text-muted mr-50">by</small>
-                <small>
-                  <b-link class="text-body">{{ blog.userFullName }}</b-link>
-                </small>
-                <span class="text-muted ml-75 mr-50">|</span>
-                <small class="text-muted">{{ blog.createdTime }}</small>
-              </b-media-body>
-            </b-media>
-            <div class="my-1 py-25">
-              <b-link v-for="tag in blog.tags" :key="tag">
-                <b-badge pill class="mr-75" :variant="tagsColor(tag)">
-                  {{ tag }}
-                </b-badge>
-              </b-link>
-            </div>
-            <div class="blog-content" v-html="blog.content" />
-          </b-card>
-        </b-col>
+        <template v-if="isBusy">
+          <b-col cols="12">
+            <b-card>
+              <div class="text-center text-danger my-2">
+                <b-spinner class="align-middle"></b-spinner>
+                <strong>Loading...</strong>
+              </div>
+            </b-card>
+          </b-col>
+        </template>
+        <template v-else>
+          <b-col cols="12" v-if="blog">
+            <b-card :img-src="`/storage/post-images/${blog.post_image}`" img-top img-alt="Blog Detail Pic"
+              :title="blog.post_title">
+              <b-media no-body>
+                <b-media-aside vertical-align="center" class="mr-50">
+                  <b-avatar href="javascript:void(0)" size="24" :src="blog.post_avatar" />
+                </b-media-aside>
+                <b-media-body>
+                  <small class="text-muted mr-50">by</small>
+                  <small>
+                    <b-link class="text-body">{{ blog.post_author }}</b-link>
+                  </small>
+                  <span class="text-muted ml-75 mr-50">|</span>
+                  <small class="text-muted">{{ new Date(blog.created_at).toLocaleString('id-ID', {
+                    hour12: false,
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                  }) }}</small>
+                </b-media-body>
+              </b-media>
+              <div class="my-1 py-25">
+                <b-link v-for="tag in blog.tags" :key="tag.id">
+                  <b-badge pill class="mr-75" :variant="tagsColor(tag.name)">
+                    {{ tag.name }}
+                  </b-badge>
+                </b-link>
+              </div>
+              <div class="blog-content" v-html="blog.post_content" />
+            </b-card>
+          </b-col>
+          <b-col cols="12" v-else>
+            <h3 class="text-center">Artikel tidak ditemukan</h3>
+          </b-col>
+        </template>
       </b-row>
     </div>
     <div slot="sidebar" class="blog-sidebar py-2 py-lg-0">
@@ -34,30 +55,44 @@
         <h6 class="section-label mb-75">
           Recent Posts
         </h6>
-        <b-media v-for="(recentpost, index) in recentPosts" :key="recentpost.img" no-body :class="index ? 'mt-2' : ''">
-          <b-media-aside class="mr-2">
-            <b-link :href="`/post/${recentpost.slug}`">
-              <b-img :src="recentpost.img" :alt="recentpost.img.slice(6)" width="100" rounded height="70" />
-            </b-link>
-          </b-media-aside>
-          <b-media-body>
-            <h6 class="blog-recent-post-title">
-              <b-link class="text-body-heading" :href="`/post/${recentpost.slug}`">
-                {{ recentpost.title }}
+        <template v-if="isBusy">
+          <div class="text-center text-danger my-2">
+            <b-spinner class="align-middle"></b-spinner>
+            <strong>Loading...</strong>
+          </div>
+        </template>
+        <template v-else>
+          <b-media v-for="(recentpost, index) in recentPosts" :key="recentpost.id" no-body
+            :class="index ? 'mt-2' : ''">
+            <b-media-aside class="mr-2">
+              <b-link :href="`/post/${recentpost.post_name}`">
+                <b-img :src="`/storage/post-images/${recentpost.post_image}`" :alt="recentpost.post_title" width="100" rounded height="70" />
               </b-link>
-            </h6>
-            <span class="text-muted mb-0">
-              {{ recentpost.createdTime }}
-            </span>
-          </b-media-body>
-        </b-media>
+            </b-media-aside>
+            <b-media-body>
+              <h6 class="blog-recent-post-title">
+                <b-link class="text-body-heading" :href="`/post/${recentpost.post_name}`">
+                  {{ recentpost.post_title }}
+                </b-link>
+              </h6>
+              <span class="text-muted mb-0">
+                {{ new Date(recentpost.created_at).toLocaleString('id-ID', {
+                    hour12: false,
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                  }) }}
+              </span>
+            </b-media-body>
+          </b-media>
+        </template>
       </div>
     </div>
   </content-with-sidebar>
 </template>
 
 <script>
-import { BRow, BCol, BCard, BImg, BCardBody, BCardTitle, BMediaAside, BMedia, BMediaBody, BLink, BAvatar, BBadge } from 'bootstrap-vue'
+import { BRow, BCol, BCard, BImg, BCardBody, BCardTitle, BMediaAside, BMedia, BMediaBody, BLink, BAvatar, BBadge, BSpinner } from 'bootstrap-vue'
 import ContentWithSidebar from '@core/layouts/components/content-with-sidebar/ContentWithSidebar.vue'
 import { $themeConfig } from '@themeConfig'
 export default {
@@ -75,11 +110,14 @@ export default {
     BLink,
     BAvatar,
     BBadge,
+    BSpinner,
   },
   data() {
     return {
+      isBusy: true,
       namaSekolah: $themeConfig.app.namaSekolah,
-      recentPosts: [
+      recentPosts: [],
+      recentPosts_salah: [
         {
           id: 7,
           slug: 'satu',
@@ -109,7 +147,8 @@ export default {
           createdTime: 'Oct 08 2020',
         },
       ],
-      blog: {
+      blog: null,
+      blog_salah: {
         img: '/img/banner/banner-12.jpg',
         title: 'The Best Features Coming to iOS and Web design',
         avatar: '/img/portrait/small/avatar-s-7.jpg',
@@ -122,11 +161,25 @@ export default {
     }
   },
   created() {
-    document.title = this.blog.title + ' | ' + this.namaSekolah
+    this.getPost(this.$route.params.slug)
   },
   methods: {
     tagsColor(tag) {
       return 'light-primary'
+    },
+    getPost(slug) {
+      this.isBusy = true
+      this.$http.post('/artikel/baca', {
+        slug: slug,
+      }).then(res => {
+        this.isBusy = false
+        let getData = res.data
+        this.blog = getData.post
+        this.recentPosts = getData.latest
+        if(this.blog){
+          document.title = this.blog.post_title + ' | ' + this.namaSekolah
+        }
+      });
     },
   },
 }

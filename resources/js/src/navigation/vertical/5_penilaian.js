@@ -36,7 +36,7 @@ export default [
         title: 'Modul',
         route: 'penilaian-modul',
         action: 'read',
-        resource: 'Modul_HIDE',
+        resource: 'Modul',
       },
       {
         icon: 'hand-click-icon',
