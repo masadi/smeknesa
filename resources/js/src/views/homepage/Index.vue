@@ -16,7 +16,7 @@
           <template v-if="items.length">
             <b-col md="6" lg="4" v-for="item in items" :key="item.id">
               <b-card :img-src="`/storage/post-images/${item.post_image}`" img-alt="Card image cap" img-top :title="item.post_title">
-                <b-card-text v-html="fn(item.post_content, 20)"></b-card-text>
+                <b-card-text v-html="fn(item.post_content, 150)"></b-card-text>
                 <b-button v-ripple.400="'rgba(113, 102, 240, 0.15)'" variant="outline-primary" :to="{name: 'post', params: {slug: item.post_name}}">
                   Selengkapnya &raquo;
                 </b-button>
