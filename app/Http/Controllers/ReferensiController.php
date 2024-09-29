@@ -154,7 +154,7 @@ class ReferensiController extends Controller
                         $query->where('semester_id', request()->semester_id);
                     },
                     'agama',
-                ])->whereHas('kelas', function($query){
+                ])/*->whereHas('kelas', function($query){
                     $query->where('rombongan_belajar.semester_id', request()->semester_id);
                     if($this->loggedUser()->hasRole('walas', periode_aktif())){
                         $query->where('guru_id', loggedUser()->guru_id);
@@ -163,7 +163,7 @@ class ReferensiController extends Controller
                             $query->where('guru_id', loggedUser()->guru_id);
                         });
                     }
-                })->withAvg([
+                })*/->withAvg([
                     'nilai as rerata' => function($query){
                         $query->where('jenis_penilaian_id', '<>', 1);
                     },
