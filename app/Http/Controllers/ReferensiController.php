@@ -146,15 +146,8 @@ class ReferensiController extends Controller
                 })
                 ->paginate(request()->per_page);
             } else {
-                $data = Peserta_didik::with([
-                    'kelas' => function($query){
-                        $query->where('rombongan_belajar.semester_id', request()->semester_id);
-                    },
-                    'anggota_rombel' => function($query){
-                        $query->where('semester_id', request()->semester_id);
-                    },
-                    'agama',
-                ])/*->whereHas('kelas', function($query){
+                /*
+                ->whereHas('kelas', function($query){
                     $query->where('rombongan_belajar.semester_id', request()->semester_id);
                     if($this->loggedUser()->hasRole('walas', periode_aktif())){
                         $query->where('guru_id', loggedUser()->guru_id);
@@ -163,7 +156,17 @@ class ReferensiController extends Controller
                             $query->where('guru_id', loggedUser()->guru_id);
                         });
                     }
-                })*/->withAvg([
+                })
+                */
+                $data = Peserta_didik::with([
+                    'kelas' => function($query){
+                        $query->where('rombongan_belajar.semester_id', request()->semester_id);
+                    },
+                    'anggota_rombel' => function($query){
+                        $query->where('semester_id', request()->semester_id);
+                    },
+                    'agama',
+                ])->withAvg([
                     'nilai as rerata' => function($query){
                         $query->where('jenis_penilaian_id', '<>', 1);
                     },
