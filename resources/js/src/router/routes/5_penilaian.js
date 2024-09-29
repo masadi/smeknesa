@@ -87,7 +87,7 @@ export default [
       ],
     },
   },
-  {
+  /*{
     path: '/penilaian/modul',
     name: 'penilaian-modul',
     component: () => import('@/views/pages/Blank.vue'),
@@ -105,7 +105,7 @@ export default [
         },
       ],
     },
-  },
+  },*/
   {
     path: '/penilaian/sikap',
     name: 'penilaian-sikap',

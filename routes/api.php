@@ -23,6 +23,7 @@ use App\Http\Controllers\UkkController;
 use App\Http\Controllers\PerijinanController;
 use App\Http\Controllers\AsesorController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\ModuleController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -40,6 +41,10 @@ Route::get('profile/data', [AuthController::class, 'profile_pd']);
 Route::group(['prefix' => 'artikel'], function () {
   Route::get('/', [PostController::class, 'artikel']);
   Route::post('/baca', [PostController::class, 'baca']);
+});
+Route::group(['prefix' => 'module'], function () {
+  Route::get('/', [ModuleController::class, 'index']);
+  Route::post('/download/{id}', [ModuleController::class, 'download']);
 });
 Route::group(['prefix' => 'auth'], function () {
   Route::get('/semester', [AuthController::class, 'semester']);
@@ -136,6 +141,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/add-cp', [ReferensiController::class, 'add_cp']);
     Route::post('/update-cp', [ReferensiController::class, 'update_cp']);
     Route::post('/get-cp', [ReferensiController::class, 'get_cp']);
+    Route::get('/bahan-ajar', [ModuleController::class, 'index']);
+    Route::post('/add-bahan-ajar', [ModuleController::class, 'add_bahan_ajar']);
   });
   Route::group(['prefix' => 'magang'], function () {
     Route::get('/dudi', [PrakerinController::class, 'dudi']);

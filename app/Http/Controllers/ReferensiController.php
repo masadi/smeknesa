@@ -2479,7 +2479,13 @@ class ReferensiController extends Controller
     public function get_pembelajaran(){
         $data = Mata_pelajaran::whereHas('mapel_tingkat', function($query){
             $query->where('tingkat', request()->tingkat);
-        })->whereHas('pembelajaran', function($query){
+        })->withWhereHas('pembelajaran', function($query){
+            if(request()->jurusan_sp_id){
+                $query->whereHas('rombongan_belajar', function($query){
+                    $query->where('jurusan_sp_id', request()->jurusan_sp_id);
+                });
+                $query->where('guru_id', $this->loggedUser()->guru_id);
+            }
             $query->where('semester_id', request()->semester_id);
         })->orderBy('mata_pelajaran_id')->get();
         return response()->json($data);

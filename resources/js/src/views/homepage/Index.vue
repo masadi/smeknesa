@@ -38,12 +38,47 @@
         </b-row>
       </b-card>
     </b-col>
+    <b-col cols="12" class="mt-2">
+      <b-card title="MODUL AJAR">
+        <b-row class="match-height">
+          <template v-if="modul_ajar.length">
+            <b-col md="6" lg="4" v-for="modul in modul_ajar" :key="modul.id">
+              <b-card no-body :img-src="`/storage/images/${modul.gambar}`" img-alt="Card image cap" img-top>
+                <b-card-body>
+                  <b-row>
+                    <b-col>{{ modul.pembelajaran.nama_mata_pelajaran }}</b-col>
+                    <b-col class="text-right">{{ modul.download_count }} <font-awesome-icon icon="fa-solid fa-cloud-arrow-down" /></b-col>
+                  </b-row>
+                  <b-card-title class="mt-2">{{ modul.judul }}</b-card-title>
+                  <b-card-text>{{ modul.deskripsi }}</b-card-text>
+                </b-card-body>
+                <b-button v-ripple.400="'rgba(113, 102, 240, 0.15)'" variant="outline-primary" :href="`/unduh-modul/${modul.id}`">
+                  UNDUH
+                </b-button>
+              </b-card>
+            </b-col>
+          </template>
+          <template v-else>
+            <b-col cols="12">
+              <b-card>
+                <h2 class="text-center">Tidak ada data untuk ditampilkan</h2>
+              </b-card>
+            </b-col>
+          </template>
+        </b-row>
+        <b-row v-if="modul_ajar.length">
+          <b-col cols="12">
+            <b-pagination v-model="current_page_modul_ajar" :total-rows="meta_modul_ajar.total" :per-page="modul_ajar_per_page" @change="changePageModuleAjar" align="center"></b-pagination>
+          </b-col>
+        </b-row>
+      </b-card>
+    </b-col>
   </b-row>
 </template>
 
 <script>
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
-import { BRow, BCol, BCard, BImg, BCardText, BButton, BPagination } from 'bootstrap-vue'
+import { BRow, BCol, BCard, BImg, BCardText, BButton, BPagination, BCardBody, BCardTitle } from 'bootstrap-vue'
 import 'swiper/css/swiper.css'
 import Ripple from 'vue-ripple-directive'
 export default {
@@ -57,6 +92,8 @@ export default {
     BCardText,
     BButton,
     BPagination,
+    BCardBody,
+    BCardTitle,
   },
   directives: {
     Ripple,
@@ -98,10 +135,15 @@ export default {
       per_page: 3, //DEFAULT LOAD PERPAGE ADALAH 10
       sortBy: 'created_at', //DEFAULT SORTNYA ADALAH CREATED_AT
       sortByDesc: true, //ASCEDING
+      modul_ajar: [],
+      meta_modul_ajar: {},
+      current_page_modul_ajar: 1,
+      modul_ajar_per_page: 9,
     }
   },
   created() {
     this.loadPostData()
+    this.loadModuleData()
   },
   methods: {
     loadPostData() {
@@ -124,9 +166,31 @@ export default {
         }
       })
     },
+    loadModuleData() {
+      this.$http.get('/module', {
+        params: {
+          page: this.current_page,
+          per_page: this.per_page,
+          sortby: this.sortBy,
+          sortbydesc: this.sortByDesc ? 'DESC' : 'ASC'
+        }
+      }).then(response => {
+        let getData = response.data.data
+        this.modul_ajar = getData.data
+        this.meta_modul_ajar = {
+          total: getData.total,
+          current_page: getData.current_page,
+          per_page: getData.per_page,
+          from: getData.from,
+          to: getData.to,
+        }
+      })
+    },
     changePage(val) {
       console.log(val);
-      
+    },
+    changePageModuleAjar(val){
+      console.log(val);
     },
     fn(text, count){
       return text.slice(0, count) + (text.length > count ? "..." : "");

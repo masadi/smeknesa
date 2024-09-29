@@ -33,13 +33,6 @@ export default [
       },
       {
         icon: 'hand-click-icon',
-        title: 'Modul',
-        route: 'penilaian-modul',
-        action: 'read',
-        resource: 'Modul',
-      },
-      {
-        icon: 'hand-click-icon',
         title: 'Penilaian Sikap',
         route: 'penilaian-sikap',
         action: 'read',

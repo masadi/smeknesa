@@ -43,4 +43,5 @@ Route::group(['prefix' => 'export'], function () {
     Route::get('/legger/{rombongan_belajar_id}', [ExportController::class, 'legger']);
     Route::get('/template-unit-ukk/{paket_ukk_id}', [ExportController::class, 'template_unit_ukk']);
 });
+Route::get('/unduh-modul/{id}', [ExportController::class, 'unduh_modul']);
 Route::get('/{any}', [ApplicationController::class, 'index'])->where('any', '.*');
