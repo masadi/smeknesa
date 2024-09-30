@@ -22,6 +22,8 @@ use App\Http\Controllers\MonitoringController;
 use App\Http\Controllers\UkkController;
 use App\Http\Controllers\PerijinanController;
 use App\Http\Controllers\AsesorController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\ModuleController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -32,9 +34,20 @@ use App\Http\Controllers\AsesorController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::get('menu', [DashboardController::class, 'menu']);
 Route::get('sekolah', [DashboardController::class, 'hitung_sekolah']);
 Route::get('no-access', [DashboardController::class, 'no_access'])->name('login');
 Route::get('profile/data', [AuthController::class, 'profile_pd']);
+Route::group(['prefix' => 'artikel'], function () {
+  Route::get('/', [PostController::class, 'artikel']);
+  Route::post('/baca', [PostController::class, 'baca']);
+});
+Route::group(['prefix' => 'module'], function () {
+  Route::get('/', [ModuleController::class, 'index']);
+  Route::post('/download/{id}', [ModuleController::class, 'download']);
+  Route::get('/video', [ModuleController::class, 'video']);
+  Route::get('/slider', [ModuleController::class, 'slider']);
+});
 Route::group(['prefix' => 'auth'], function () {
   Route::get('/semester', [AuthController::class, 'semester']);
   Route::post('login', [AuthController::class, 'login']);
@@ -130,6 +143,12 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/add-cp', [ReferensiController::class, 'add_cp']);
     Route::post('/update-cp', [ReferensiController::class, 'update_cp']);
     Route::post('/get-cp', [ReferensiController::class, 'get_cp']);
+    Route::get('/bahan-ajar', [ModuleController::class, 'index']);
+    Route::post('/add-bahan-ajar', [ModuleController::class, 'add_bahan_ajar']);
+    Route::get('/get-video', [ModuleController::class, 'get_video']);
+    Route::post('/add-video', [ModuleController::class, 'add_video']);
+    Route::get('/get-slider', [ModuleController::class, 'get_slider']);
+    Route::post('/add-slider', [ModuleController::class, 'add_slider']);
   });
   Route::group(['prefix' => 'magang'], function () {
     Route::get('/dudi', [PrakerinController::class, 'dudi']);
@@ -297,6 +316,14 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
       Route::post('/get-rencana', [UkkController::class, 'get_rencana']);
       Route::post('/get-penguji', [UkkController::class, 'get_penguji']);
     });
+  });
+  Route::group(['prefix' => 'post'], function () {
+    Route::get('/', [PostController::class, 'index']);
+    Route::get('/category', [PostController::class, 'category']);
+    Route::post('/save-category', [PostController::class, 'save_category']);
+    Route::post('/save', [PostController::class, 'save']);
+    Route::post('/delete', [PostController::class, 'destroy']);
+    Route::post('/show', [PostController::class, 'show']);
   });
 });
 Route::group(['prefix' => 'perijinan'], function () {

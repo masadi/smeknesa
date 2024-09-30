@@ -16,6 +16,7 @@ import tatib from './routes/9_tatib'
 import rekapitulasi from './routes/10_rekapitulasi'
 import bottom from './routes/99_bottom'
 import pages from './routes/pages'
+import { $themeConfig } from '@themeConfig'
 /*
 import apps from './routes/apps'
 import uiElements from './routes/ui-elements/index'
@@ -32,7 +33,7 @@ const router = new VueRouter({
     return { x: 0, y: 0 }
   },
   routes: [
-    { path: '/', redirect: { name: 'dashboard' } },
+    { path: '/', redirect: { name: 'homepage' } },
     ...dashboard,
     ...referensi,
     ...presensi,
@@ -61,11 +62,11 @@ router.beforeEach((to, _, next) => {
   const isLoggedIn = isUserLoggedIn()
   const title = to.meta.pageTitle || to.meta.webTitle
   if (title) {
-    document.title = title +' | SMKN 1 SAMPANG'
+    document.title = title +' | '+ $themeConfig.app.namaSekolah
   } else {
-    document.title = 'SMKN 1 SAMPANG'
+    document.title = $themeConfig.app.namaSekolah
   }
-  if (!canNavigate(to)) {
+  if (to.meta.resource && !canNavigate(to)) {
     // Redirect to login if not logged in
     if (!isLoggedIn) return next({ name: 'auth-login' })
 

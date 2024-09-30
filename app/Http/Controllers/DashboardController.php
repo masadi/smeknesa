@@ -410,4 +410,14 @@ class DashboardController extends Controller
         $data->terbaca = TRUE;
         $data->save();
     }
+    public function menu(){
+        $data = [
+            [
+                'icon' => "home-icon",
+                'route' => "homepage",
+                'title' => "Beranda",
+            ]
+        ];
+        return response()->json($data);
+    }
 }

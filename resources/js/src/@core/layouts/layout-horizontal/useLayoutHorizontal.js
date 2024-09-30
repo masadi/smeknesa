@@ -37,6 +37,7 @@ export default function useLayoutHorizontal(navbarMenuType, footerType, isVertic
   // }
 
   const navbarMenuTypeClass = computed(() => {
+    console.log(navbarMenuType.value);
     if (navbarMenuType.value === 'sticky') return 'fixed-top'
     if (navbarMenuType.value === 'static') return ''
     if (navbarMenuType.value === 'hidden') return 'd-none'

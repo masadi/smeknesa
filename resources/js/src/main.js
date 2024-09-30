@@ -6,7 +6,7 @@ import i18n from '@/libs/i18n'
 import router from './router'
 import store from './store'
 import App from './App.vue'
-
+import VueYouTubeEmbed from 'vue-youtube-embed'
 // Global Components
 import './global-components'
 
@@ -26,7 +26,7 @@ import '@/libs/vue-select'
 // BSV Plugin Registration
 Vue.use(ToastPlugin)
 Vue.use(ModalPlugin)
-
+Vue.use(VueYouTubeEmbed)
 // Composition API
 Vue.use(VueCompositionAPI)
 

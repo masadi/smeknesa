@@ -296,4 +296,30 @@ export default [
       },
     },
   },
+  {
+    path: '/referensi/bahan-ajar',
+    name: 'referensi-bahan-ajar',
+    component: () => import('@/views/referensi/bahan-ajar/Index.vue'),
+    meta: {
+      resource: 'Modul',
+      action: 'read',
+      pageTitle: 'Bahan Ajar',
+      breadcrumb: [
+        {
+          text: 'Referensi',
+        },
+        {
+          text: 'Bahan Ajar',
+          active: true,
+        },
+      ],
+      tombol_add: {
+        action: 'add-bahan-ajar',
+        link: '',
+        variant: 'primary',
+        text: 'Tambah Data',
+        //role: ['administrator'],
+      },
+    },
+  },
 ]

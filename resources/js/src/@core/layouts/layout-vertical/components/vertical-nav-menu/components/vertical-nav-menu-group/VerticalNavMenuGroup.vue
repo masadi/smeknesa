@@ -12,7 +12,7 @@
       class="d-flex align-items-center"
       @click="() => updateGroupOpen(!isOpen)"
     >
-      <component :is="item.icon || 'circle-dot-filled-icon'" />
+      <component :is="item.icon || 'hand-click-icon'" />
       <!--feather-icon :icon="item.icon || 'CircleIcon'" /-->
       <span class="menu-title text-truncate">{{ t(item.title) }}</span>
       <b-badge

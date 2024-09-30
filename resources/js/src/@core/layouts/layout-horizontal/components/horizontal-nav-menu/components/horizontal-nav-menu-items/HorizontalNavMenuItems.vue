@@ -15,11 +15,13 @@
 <script>
 import HorizontalNavMenuHeaderLink from '../horizontal-nav-menu-header-link/HorizontalNavMenuHeaderLink.vue'
 import HorizontalNavMenuHeaderGroup from '../horizontal-nav-menu-header-group/HorizontalNavMenuHeaderGroup.vue'
+import HorizontalNavMenuLink from '../horizontal-nav-menu-link/HorizontalNavMenuLink.vue'
 
 export default {
   components: {
     HorizontalNavMenuHeaderLink,
     HorizontalNavMenuHeaderGroup,
+    HorizontalNavMenuLink,
   },
   props: {
     items: {
@@ -29,8 +31,9 @@ export default {
   },
   setup() {
     const resolveNavComponent = item => {
+      if (item.header) return 'horizontal-nav-menu-header-group'
       if (item.children) return 'horizontal-nav-menu-header-group'
-      return 'horizontal-nav-menu-header-link'
+      return 'horizontal-nav-menu-link'
     }
 
     return {

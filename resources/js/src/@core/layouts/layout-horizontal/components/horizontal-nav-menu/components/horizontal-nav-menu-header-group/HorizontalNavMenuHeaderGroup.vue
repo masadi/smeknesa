@@ -1,6 +1,5 @@
 <template>
   <li
-    v-if="canViewHorizontalNavMenuHeaderGroup(item)"
     class="dropdown nav-item"
     :class="{
       'sidebar-group-active active open': isActive,
@@ -10,10 +9,8 @@
     @mouseleave="() => updateGroupOpen(false)"
   >
     <b-link class="nav-link dropdown-toggle d-flex align-items-center">
-      <feather-icon
-        size="14"
-        :icon="item.icon"
-      />
+      <component :is="item.icon || 'hand-click-icon'" />
+      <!--feather-icon size="14" :icon="item.icon" /-->
       <span>{{ t(item.header) }}</span>
     </b-link>
     <ul class="dropdown-menu">

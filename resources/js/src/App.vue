@@ -44,6 +44,7 @@ export default {
   computed: {
     layout() {
       if (this.$route.meta.layout === 'full') return 'layout-full'
+      if (this.$route.meta.layout === 'horizontal') return 'layout-horizontal'
       return `layout-${this.contentLayoutType}`
     },
     contentLayoutType() {

@@ -18,15 +18,26 @@
 
     <!-- Left Col -->
     <div class="bookmark-wrapper align-items-center flex-grow-1 d-none d-lg-flex">
-      <bookmarks />
+      <!--bookmarks /-->
+      <b-link
+          class="navbar-brand"
+          to="/"
+        >
+          <span class="brand-logo">
+            <b-img
+              :src="appLogoImage"
+              alt="logo"
+            />
+          </span>
+          <h2 class="brand-text mb-0">
+            {{ appName }}
+          </h2>
+        </b-link>
     </div>
 
     <!-- Right Col -->
     <b-navbar-nav class="nav align-items-center ml-auto">
-      <locale />
       <dark-Toggler class="d-none d-lg-block" />
-      <search-bar />
-      <cart-dropdown />
       <notification-dropdown />
       <user-dropdown />
     </b-navbar-nav>
@@ -35,7 +46,7 @@
 
 <script>
 import {
-  BLink, BNavbarNav,
+  BLink, BImg, BNavbarNav,
 } from 'bootstrap-vue'
 import Bookmarks from './components/Bookmarks.vue'
 import Locale from './components/Locale.vue'
@@ -44,11 +55,12 @@ import SearchBar from './components/SearchBar.vue'
 import CartDropdown from './components/CartDropdown.vue'
 import NotificationDropdown from './components/NotificationDropdown.vue'
 import UserDropdown from './components/UserDropdown.vue'
+import { $themeConfig } from '@themeConfig'
 
 export default {
   components: {
     BLink,
-
+    BImg,
     // Navbar Components
     BNavbarNav,
     Bookmarks,
@@ -65,6 +77,30 @@ export default {
       default: () => {},
     },
   },
-
+  data() {
+    return {
+      appName: $themeConfig.app.appName,
+      appLogoImage: $themeConfig.app.appLogoImage,
+    }
+  }
 }
 </script>
+<style>
+.brand-logo img {
+  max-width: 36px;
+}
+.navbar-brand .brand-text {
+  padding-left: 1rem;
+  -webkit-animation: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) 0s normal forwards 1 fadein;
+  animation: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) 0s normal forwards 1 fadein;
+  color: #7367f0;
+  font-weight: 600;
+  letter-spacing: 0.01rem;
+  font-size: 1.45rem;
+  margin-top: 4px;
+  float: right;
+}
+/*.horizontal-menu .header-navbar.navbar-horizontal.floating-nav {
+  top: 75px !important;
+}*/
+</style>

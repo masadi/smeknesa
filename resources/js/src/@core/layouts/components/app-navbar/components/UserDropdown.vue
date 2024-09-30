@@ -1,15 +1,18 @@
 <template>
-  <b-nav-item-dropdown right toggle-class="d-flex align-items-center dropdown-user-link" class="dropdown-user" v-if="userData">
+  <b-nav-item-dropdown right toggle-class="d-flex align-items-center dropdown-user-link" class="dropdown-user"
+    v-if="userData">
     <template #button-content>
-      <b-avatar size="40" :src="userData.photo ? `/storage/images/${userData.photo}` : null" variant="light-primary" badge class="badge-minimal" badge-variant="success">
-        <feather-icon v-if="!userData.photo" icon="UserIcon" size="22"/>
+      <b-avatar size="40" :src="userData.photo ? `/storage/images/${userData.photo}` : null" variant="light-primary"
+        badge class="badge-minimal" badge-variant="success">
+        <feather-icon v-if="!userData.photo" icon="UserIcon" size="22" />
       </b-avatar>
     </template>
     <b-dropdown-text link-class="d-flex align-items-center">
       <b-media no-body>
         <b-media-aside vertical-align="center" class="mr-75">
-          <b-avatar size="40" :src="userData.photo ? `/storage/images/${userData.photo}` : null" variant="light-primary" badge class="badge-minimal" badge-variant="success">
-            <feather-icon v-if="!userData.photo" icon="UserIcon" size="22"/>
+          <b-avatar size="40" :src="userData.photo ? `/storage/images/${userData.photo}` : null" variant="light-primary"
+            badge class="badge-minimal" badge-variant="success">
+            <feather-icon v-if="!userData.photo" icon="UserIcon" size="22" />
           </b-avatar>
         </b-media-aside>
         <b-media-body class="my-auto">
@@ -21,19 +24,18 @@
       </b-media>
     </b-dropdown-text>
     <b-dropdown-divider />
-    <b-dropdown-item :to="{ name: 'pengaturan-umum' }" link-class="d-flex align-items-center" v-if="hasRole('administrator')">
-        <feather-icon size="16" icon="ToolIcon" class="mr-50" />
-        <span>System Setting</span>
-      </b-dropdown-item>
-      <b-dropdown-item :to="{ name: 'profile' }" link-class="d-flex align-items-center" v-if="!hasRole('pd')">
-        <feather-icon size="16" icon="UserIcon" class="mr-50" />
-        <span>Profile</span>
-      </b-dropdown-item>
-      <b-dropdown-item link-class="d-flex align-items-center" @click="logout">
-        <feather-icon size="16" icon="LogOutIcon" class="mr-50" />
-        <span>Logout</span>
-      </b-dropdown-item>
-    </b-nav-item-dropdown>
+    <b-dropdown-item :to="{ name: 'pengaturan-umum' }" link-class="d-flex align-items-center"
+      v-if="hasRole('administrator')">
+      <feather-icon size="16" icon="ToolIcon" class="mr-50" />
+      <span>System Setting</span>
+    </b-dropdown-item>
+    <b-dropdown-item :to="{ name: 'profile' }" link-class="d-flex align-items-center" v-if="!hasRole('pd')">
+      <feather-icon size="16" icon="UserIcon" class="mr-50" />
+      <span>Profile</span>
+    </b-dropdown-item>
+    <b-dropdown-item link-class="d-flex align-items-center" @click="logout">
+      <feather-icon size="16" icon="LogOutIcon" class="mr-50" />
+      <span>Logout</span>
     </b-dropdown-item>
   </b-nav-item-dropdown>
 </template>
@@ -60,7 +62,7 @@ export default {
   },
   data() {
     return {
-      mainProps: {width: 40, height: 40 },
+      mainProps: { width: 40, height: 40 },
       userData: JSON.parse(localStorage.getItem('userData')),
       avatarText,
     }

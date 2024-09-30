@@ -18,6 +18,7 @@ use App\Models\Tujuan_pembelajaran;
 use App\Models\Penilaian;
 use App\Models\Guru;
 use App\Models\Paket_ukk;
+use App\Models\BahanAjar;
 use Maatwebsite\Excel\Facades\Excel;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Rap2hpoutre\FastExcel\SheetCollection;
@@ -164,5 +165,16 @@ class ExportController extends Controller
         $paket = Paket_ukk::find(request()->route('paket_ukk_id'));
         $nama = clean($paket->nama_paket_id);
         return (new FastExcel($list))->download($nama.'.xlsx');
+    }
+    public function unduh_modul($id){
+        $find = BahanAjar::with('pembelajaran')->find($id);
+        $find->download_count = $find->download_count + 1;
+        $find->save();
+        $name = 'Bahan Ajar '.$find->pembelajaran->nama_mata_pelajaran.' Kelas '.$find->tingkat;
+        $pathToFile= public_path(). "/storage/file-pdf/".$find->file_pdf;
+        $headers = array(
+            'Content-Type: application/pdf',
+        );
+        return response()->download($pathToFile, $name, $headers);
     }
 }

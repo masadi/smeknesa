@@ -80,6 +80,13 @@ export default [
         resource: 'System',
         action: 'read',
       },
+      {
+        icon: 'hand-click-icon',
+        title: 'Bahan Ajar',
+        route: 'referensi-bahan-ajar',
+        action: 'read',
+        resource: 'Modul',
+      },
     ],
   },
 ]

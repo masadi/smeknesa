@@ -1,4 +1,9 @@
 /*!
+ * Vue YouTube Embed version 2.2.2
+ * under MIT License copyright 2019 kaorun343
+ */
+
+/*!
  * Vue.js v2.6.12
  * (c) 2014-2020 Evan You
  * Released under the MIT License.

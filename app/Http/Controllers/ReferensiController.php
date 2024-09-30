@@ -38,6 +38,8 @@ use App\Models\Tujuan_pembelajaran;
 use App\Models\Kajur;
 use App\Models\Terlambat;
 use App\Models\Nilai_pkl;
+use App\Models\Video;
+use App\Models\Slider;
 use Carbon\Carbon;
 use Indonesia;
 
@@ -193,15 +195,8 @@ class ReferensiController extends Controller
                 });
             })
             ->paginate(request()->per_page);*/
-            $data = Peserta_didik::with([
-                'kelas' => function($query){
-                    $query->where('rombongan_belajar.semester_id', request()->semester_id);
-                },
-                'anggota_rombel' => function($query){
-                    $query->where('semester_id', request()->semester_id);
-                },
-                'agama'
-            ])->whereHas('kelas', function($query){
+            /*
+            ->whereHas('kelas', function($query){
                 $query->where('rombongan_belajar.semester_id', request()->semester_id);
                 if($this->loggedUser()->hasRole('guru', periode_aktif())){
                     if($this->loggedUser()->hasRole('walas', periode_aktif())){
@@ -212,7 +207,17 @@ class ReferensiController extends Controller
                         });
                     }
                 }
-            })->withAvg([
+            })
+            */
+            $data = Peserta_didik::with([
+                'kelas' => function($query){
+                    $query->where('rombongan_belajar.semester_id', request()->semester_id);
+                },
+                'anggota_rombel' => function($query){
+                    $query->where('semester_id', request()->semester_id);
+                },
+                'agama'
+            ])->withAvg([
                 'nilai as rerata' => function($query){
                     $query->where('jenis_penilaian_id', '<>', 1);
                 },
@@ -220,11 +225,8 @@ class ReferensiController extends Controller
             ->orderBy(request()->sortby, request()->sortbydesc)
             ->when(request()->q, function($query) {
                 $query->where('nama', 'ilike', '%'.request()->q.'%');
-                $query->whereHas('kelas', function($query){
+                /*$query->whereHas('kelas', function($query){
                     $query->where('rombongan_belajar.semester_id', request()->semester_id);
-                    /*$query->whereHas('pembelajaran', function($query){
-                        $query->where('guru_id', loggedUser()->guru_id);
-                    });*/
                     if($this->loggedUser()->hasRole('guru', periode_aktif())){
                         if($this->loggedUser()->hasRole('walas', periode_aktif())){
                             $query->where('guru_id', loggedUser()->guru_id);
@@ -234,7 +236,7 @@ class ReferensiController extends Controller
                             });
                         }
                     }
-                });
+                });*/
             })
             ->paginate(request()->per_page);
         }
@@ -661,6 +663,10 @@ class ReferensiController extends Controller
             $get = Terlambat::find(request()->id);
         } elseif(request()->data == 'kenaikan'){
             $get = Kenaikan_kelas::where('anggota_rombel_id', request()->id)->first();
+        } elseif(request()->data == 'video'){
+            $get = Video::find(request()->id);
+        } elseif(request()->data == 'slider'){
+            $get = Slider::find(request()->id);
         }
         
         if($get){
@@ -2479,7 +2485,13 @@ class ReferensiController extends Controller
     public function get_pembelajaran(){
         $data = Mata_pelajaran::whereHas('mapel_tingkat', function($query){
             $query->where('tingkat', request()->tingkat);
-        })->whereHas('pembelajaran', function($query){
+        })->withWhereHas('pembelajaran', function($query){
+            if(request()->jurusan_sp_id){
+                $query->whereHas('rombongan_belajar', function($query){
+                    $query->where('jurusan_sp_id', request()->jurusan_sp_id);
+                });
+                $query->where('guru_id', $this->loggedUser()->guru_id);
+            }
             $query->where('semester_id', request()->semester_id);
         })->orderBy('mata_pelajaran_id')->get();
         return response()->json($data);

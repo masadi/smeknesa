@@ -15,6 +15,7 @@ import {
     faPersonSkating,
     faUnlock,
     faStreetView,
+    faCloudArrowDown,
 } from '@fortawesome/free-solid-svg-icons'
 import { 
     faCalendarDays,
@@ -28,4 +29,5 @@ library.add(
     faPersonSkating,
     faUnlock,
     faStreetView,
+    faCloudArrowDown,
 )
