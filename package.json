@@ -92,6 +92,7 @@
     "vue-toastification": "1.7.11",
     "vue-tour": "^1.5.0",
     "vue-tree-halower": "^1.8.3",
+    "vue-youtube-embed": "^2.2.2",
     "vue2-leaflet": "^2.7.1",
     "vuex": "^3.6.2"
   }

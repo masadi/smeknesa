@@ -38,6 +38,8 @@ use App\Models\Tujuan_pembelajaran;
 use App\Models\Kajur;
 use App\Models\Terlambat;
 use App\Models\Nilai_pkl;
+use App\Models\Video;
+use App\Models\Slider;
 use Carbon\Carbon;
 use Indonesia;
 
@@ -661,6 +663,10 @@ class ReferensiController extends Controller
             $get = Terlambat::find(request()->id);
         } elseif(request()->data == 'kenaikan'){
             $get = Kenaikan_kelas::where('anggota_rombel_id', request()->id)->first();
+        } elseif(request()->data == 'video'){
+            $get = Video::find(request()->id);
+        } elseif(request()->data == 'slider'){
+            $get = Slider::find(request()->id);
         }
         
         if($get){

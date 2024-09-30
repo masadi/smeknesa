@@ -33,5 +33,19 @@ export default [
         },
       ]
     },
+    {
+      icon: 'brand-youtube-icon',
+      route: 'post-video',
+      title: 'Video',
+      resource: 'Post',
+      action: 'read',
+    },
+    {
+      icon: 'message-code-icon',
+      route: 'post-slider',
+      title: 'Slider',
+      resource: 'Post',
+      action: 'read',
+    },
   ]
   

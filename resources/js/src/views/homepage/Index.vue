@@ -1,15 +1,15 @@
 <template>
   <b-row>
-    <b-col cols="12">
-      <swiper class="swiper-autoplay" :options="swiperOptions" :dir="$store.state.appConfig.isRTL ? 'rtl' : 'ltr'">
-        <swiper-slide v-for="data in swiperData" :key="data.img">
-          <b-img :src="data.img" fluid />
-        </swiper-slide>
-        <div slot="pagination" class="swiper-pagination" />
-        <div slot="button-next" class="swiper-button-next" />
-        <div slot="button-prev" class="swiper-button-prev" />
-      </swiper>
-    </b-col>
+    <template v-if="data_slider.length">
+      <b-col cols="12">
+        <swiper class="swiper-autoplay" :options="swiperOptions" :dir="$store.state.appConfig.isRTL ? 'rtl' : 'ltr'">
+          <swiper-slide v-for="slider in data_slider" :key="slider.id">
+            <b-img :src="`/storage/images/${slider.gambar}`" fluid />
+          </swiper-slide>
+          <div slot="pagination" class="swiper-pagination" />
+        </swiper>
+      </b-col>
+  </template>
     <b-col cols="12" class="mt-2">
       <b-card title="LATEST POST">
         <b-row class="match-height">
@@ -73,6 +73,28 @@
         </b-row>
       </b-card>
     </b-col>
+    <b-col cols="12" class="mt-2">
+      <b-card class="pb-2">
+        <b-row class="match-height">
+          <template v-if="data_video.length">
+            <b-col md="6" lg="4" v-for="video in data_video" :key="video.id">
+              <div class="videowrapper mb-1">
+                <youtube :video-id="$youtube.getIdFromURL(video.link_youtube)"></youtube>
+              </div>
+              <h4>{{ video.judul }}</h4>
+              <p v-html="video.deskripsi"></p>
+            </b-col>
+          </template>
+          <template v-else>
+            <b-col cols="12">
+              <b-card>
+                <h2 class="text-center">Tidak ada data untuk ditampilkan</h2>
+              </b-card>
+            </b-col>
+          </template>
+        </b-row>
+      </b-card>
+    </b-col>
   </b-row>
 </template>
 
@@ -100,6 +122,7 @@ export default {
   },
   data() {
     return {
+      videoId: null,
       current_page: 1,
       total: 10,
       per_page: 3,
@@ -139,13 +162,29 @@ export default {
       meta_modul_ajar: {},
       current_page_modul_ajar: 1,
       modul_ajar_per_page: 9,
+      data_video: [],
+      data_slider: [],
     }
   },
   created() {
     this.loadPostData()
     this.loadModuleData()
+    this.loadVideo()
+    this.loadSlider()
   },
   methods: {
+    loadVideo(){
+      this.$http.get('/module/video').then(res => {
+        let getData = res.data
+        this.data_video = getData
+      })
+    },
+    loadSlider(){
+      this.$http.get('/module/slider').then(res => {
+        let getData = res.data
+        this.data_slider = getData
+      })
+    },
     loadPostData() {
       this.$http.get('/artikel', {
         params: {
@@ -198,3 +237,6 @@ export default {
   },
 }
 </script>
+<style>
+.videowrapper { float: none; clear: both; width: 100%; position: relative; padding-bottom: 56.25%; padding-top: 25px; height: 0; } .videowrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+</style>

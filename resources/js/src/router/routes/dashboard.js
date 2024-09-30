@@ -48,4 +48,48 @@ export default [
       webTitle: 'Kategori Artikel',
     },
   },
+  {
+    path: '/video',
+    name: 'post-video',
+    component: () => import('@/views/artikel/Video.vue'),
+    meta: {
+      resource: 'Post',
+      action: 'read',
+      pageTitle: 'Video',
+      breadcrumb: [
+        {
+          text: 'Video',
+          active: true,
+        },
+      ],
+      tombol_add: {
+        action: 'add-video',
+        link: '',
+        variant: 'primary',
+        text: 'Tambah Data'
+      },
+    },
+  },
+  {
+    path: '/slider',
+    name: 'post-slider',
+    component: () => import('@/views/artikel/Slider.vue'),
+    meta: {
+      resource: 'Post',
+      action: 'read',
+      pageTitle: 'Slider',
+      breadcrumb: [
+        {
+          text: 'Slider',
+          active: true,
+        },
+      ],
+      tombol_add: {
+        action: 'add-slider',
+        link: '',
+        variant: 'primary',
+        text: 'Tambah Data'
+      },
+    },
+  },
 ]

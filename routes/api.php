@@ -45,6 +45,8 @@ Route::group(['prefix' => 'artikel'], function () {
 Route::group(['prefix' => 'module'], function () {
   Route::get('/', [ModuleController::class, 'index']);
   Route::post('/download/{id}', [ModuleController::class, 'download']);
+  Route::get('/video', [ModuleController::class, 'video']);
+  Route::get('/slider', [ModuleController::class, 'slider']);
 });
 Route::group(['prefix' => 'auth'], function () {
   Route::get('/semester', [AuthController::class, 'semester']);
@@ -143,6 +145,10 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/get-cp', [ReferensiController::class, 'get_cp']);
     Route::get('/bahan-ajar', [ModuleController::class, 'index']);
     Route::post('/add-bahan-ajar', [ModuleController::class, 'add_bahan_ajar']);
+    Route::get('/get-video', [ModuleController::class, 'get_video']);
+    Route::post('/add-video', [ModuleController::class, 'add_video']);
+    Route::get('/get-slider', [ModuleController::class, 'get_slider']);
+    Route::post('/add-slider', [ModuleController::class, 'add_slider']);
   });
   Route::group(['prefix' => 'magang'], function () {
     Route::get('/dudi', [PrakerinController::class, 'dudi']);
